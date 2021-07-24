@@ -264,7 +264,13 @@ public @Data class Project implements Serializable {
 		}
 	}
 
-	
+	/**
+	 * @return true if this project has a local repository.
+	 */
+	public boolean hasLocalRepository() {
+		return ((this.locationRepository != null) && (this.locationRepository.length() > 1));
+	}
+
 	/**
 	 * @return a not null list of {@link SonarProject}
 	 */

@@ -55,12 +55,12 @@ describe(`HttpRefreshTokenErrorInterceptor`, () => {
 
 		const httpHeaders = new HttpHeaders()
 			.append('www-authenticate', 'Bearer error="invalid_token", error_description="Invalid refresh token (expired):');
-		req.error( 
+		req.error(
 			error,
-			{	
+			{
 				headers: httpHeaders,
-				status: 401, 
-				statusText: 'Unauthorized!', 
+				status: 401,
+				statusText: 'Unauthorized!',
 			});
 		expect(navigateSpy).toHaveBeenCalledWith(['/login']);
 	});
@@ -78,12 +78,12 @@ describe(`HttpRefreshTokenErrorInterceptor`, () => {
 
 		const httpHeaders = new HttpHeaders()
 			.append('WWW-Authenticate', 'Bearer realm="my_rest_api", error="unauthorized", error_description="Full authentication is required to access this resource"');
-		req.error( 
+		req.error(
 			error,
-			{	
+			{
 				headers: httpHeaders,
-				status: 401, 
-				statusText: 'Unauthorized!', 
+				status: 401,
+				statusText: 'Unauthorized!',
 			});
 		expect(navigateSpy).toHaveBeenCalledWith(['/login']);
 	});
@@ -99,12 +99,12 @@ describe(`HttpRefreshTokenErrorInterceptor`, () => {
 
 		const httpHeaders = new HttpHeaders()
 			.append('WWW-Authenticate', 'Bearer realm="my_rest_api", error="invalid_token", error_description="Access token expired');
-		req.error( 
+		req.error(
 			error,
-			{	
+			{
 				headers: httpHeaders,
-				status: 401, 
-				statusText: 'Unauthorized!', 
+				status: 401,
+				statusText: 'Unauthorized!',
 			});
 		expect(navigateSpy).not.toHaveBeenCalledWith(['/login']);
 	});
@@ -116,7 +116,7 @@ describe(`HttpRefreshTokenErrorInterceptor`, () => {
 			next: response => {
 				expect(response).toBeTruthy();
 			},
-			error: error => { console.log ('error catched', error)}
+			error: error => { console.log ('error catched', error); }
 		});
 	}
 

@@ -1,6 +1,3 @@
-/**
- * 
- */
 package com.fitzhi.data.internal;
 
 import java.time.LocalDate;
@@ -32,7 +29,7 @@ import lombok.Data;
  * This object represents also the login/pass associated to each collaborator
  * inside the company.
  * </p>
- * <img style="width:400px" SRC="https://fitzhi.com/class-diagram-staff.png"></img>
+ * <img style="width:400px" src="https://fitzhi.com/class-diagram-staff.png"></img>
  * 
  * @author Fr&eacute;d&eacute;ric VIDAL
  */
@@ -101,7 +98,7 @@ public @Data class Staff implements UserDetails {
 	 * Empty construction.
 	 */
 	public Staff() {
-    	authorities.add(new CustomGrantedAuthority(ROLE_TRUSTED_USER));
+		authorities.add(new CustomGrantedAuthority(ROLE_TRUSTED_USER));
 		missions = new ArrayList<>();
 		experiences = new ArrayList<>();
 	}
@@ -120,19 +117,19 @@ public @Data class Staff implements UserDetails {
 		this.password = password;
 		missions = new ArrayList<>();
 		experiences = new ArrayList<>();
-    	authorities.add(new CustomGrantedAuthority(ROLE_TRUSTED_USER));
+		authorities.add(new CustomGrantedAuthority(ROLE_TRUSTED_USER));
 	}
 
 	/**
 	 * Construction of an <b>ACTIVE</b> staff member.
 	 * 
-	 * @param idStaff   staff identifier
+	 * @param idStaff staff identifier
 	 * @param firstName first name of this staff member
-	 * @param lastName  last name of this staff member
-	 * @param nickName  nickName of this staff member
-	 * @param login     login of this staff member
-	 * @param email     email of this staff member
-	 * @param level     the level of this staff member
+	 * @param lastName last name of this staff member
+	 * @param nickName nickName of this staff member
+	 * @param login login of this staff member
+	 * @param email email of this staff member
+	 * @param level the level of this staff member
 	 */
 	public Staff(final int idStaff, String firstName, String lastName, String nickName, String login, String email,
 			String level) {
@@ -145,7 +142,7 @@ public @Data class Staff implements UserDetails {
 		this.level = level;
 		missions = new ArrayList<>();
 		experiences = new ArrayList<>();
-    	authorities.add(new CustomGrantedAuthority(ROLE_TRUSTED_USER));
+		authorities.add(new CustomGrantedAuthority(ROLE_TRUSTED_USER));
 	}
 
 	/**
@@ -177,7 +174,7 @@ public @Data class Staff implements UserDetails {
 		this.external = external;
 		missions = new ArrayList<>();
 		experiences = new ArrayList<>();
-    	authorities.add(new CustomGrantedAuthority(ROLE_TRUSTED_USER));
+		authorities.add(new CustomGrantedAuthority(ROLE_TRUSTED_USER));
 	}
 
 	/**
@@ -235,9 +232,10 @@ public @Data class Staff implements UserDetails {
 	 * @param contributor source contributor updated
 	 */
 	public void updateMission(final int idProject, final Contributor contributor) {
-		Optional<Mission> optMission = missions.stream()
-				.filter(mission -> mission.getIdProject() == idProject)
-				.findFirst();
+		Optional<Mission> optMission = missions
+			.stream()
+			.filter(mission -> mission.getIdProject() == idProject)
+			.findFirst();
 		if (optMission.isPresent()) {
 			Mission missionSelected = optMission.get();
 			missionSelected.setFirstCommit(contributor.getFirstCommit());

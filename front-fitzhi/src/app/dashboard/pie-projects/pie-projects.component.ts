@@ -47,17 +47,17 @@ export class PieProjectsComponent extends BaseComponent implements OnDestroy, On
 	/**
 	 * The paginator of the displayed datasource.
 	 */
-	 @ViewChild(MatPaginator, {static: true}) paginator: MatPaginator;
+	@ViewChild(MatPaginator, {static: true}) paginator: MatPaginator;
 
-	 /**
-	  * The array listed in the Table
-	  */
+	/**
+	 * The array listed in the Table
+	 */
 	public projects: Project[] = [];
 
 	/**
 	 * Key used to save the page size in the local storage.
 	 */
-	 public pageSize = new UserSetting('pie-projects-staff.pageSize', 5);
+	public pageSize = new UserSetting('pie-projects-staff.pageSize', 5);
 
 	constructor(
 		public pieDashboardService: PieDashboardService,
@@ -65,28 +65,28 @@ export class PieProjectsComponent extends BaseComponent implements OnDestroy, On
 		private router: Router) {
 
 		super();
-		
+
 		// Set the color of the colum header depending on the activated slice.
 		this.subscriptions.add(
 			this.pieDashboardService.sliceActivated$
 				.subscribe({
 					next: slice => {
 						this.colorHeader = slice.backgroundColor;
-						this.dataSource.data = slice.children; 
+						this.dataSource.data = slice.children;
 					}
 				})
 		);
 	}
-	
+
 	ngOnInit(): void {
 		this.manageDataSource();
 	}
-	
+
 	/**
 	 * Manage the datasource associated to the table
 	 */
-	 manageDataSource(): void {
-		this.dataSource.paginator = this.paginator; 
+	manageDataSource(): void {
+		this.dataSource.paginator = this.paginator;
 	}
 
 	ngAfterViewInit(): void {
@@ -101,47 +101,47 @@ export class PieProjectsComponent extends BaseComponent implements OnDestroy, On
 
 	/**
 	 * Route the application to the corresponding Project form.
-	 * 
+	 *
 	 * @param id the selected project identifier
 	 */
-	 routeProject(id: number): void {
-		if (traceOn()){
+	routeProject(id: number): void {
+		if (traceOn()) {
 			console.log ('Project %d is selected', id);
 		}
-		this.cinematicService.currentActiveForm$.next(new Form(Constants.PROJECT_TAB_FORM, 'Project') );
+		this.cinematicService.currentActiveFormSubject$.next(new Form(Constants.PROJECT_TAB_FORM, 'Project') );
 		this.router.navigate(['/project/' + id], {});
 	}
 
 	/**
 	 * Highlight the line of an activated project.
-	 * 
+	 *
 	 * @param id the highlighted project identifier
 	 */
-	 enterProject(id: number): void {
-		if (traceOn()){
+	enterProject(id: number): void {
+		if (traceOn()) {
 			console.log ('Project %d is activated', id);
 		}
 		document.getElementById('project-' + id).setAttribute('style', 'background-color: ' + this.colorHeader );
 	}
-	
+
 	/**
 	 * This method is invoked if the user change the page size.
-	 * @param $pageEvent event 
+	 * @param $pageEvent event
 	 */
-	 public page($pageEvent: PageEvent) {
+	public page($pageEvent: PageEvent) {
 		this.pageSize.saveSetting($pageEvent.pageSize);
 	}
 
 	/**
 	 * Inactive the line of an unactivated project.
-	 * 
+	 *
 	 * @param id the left project identifier
 	 */
-	 leaveProject(id: number): void {
-		if (traceOn()){
+	leaveProject(id: number): void {
+		if (traceOn()) {
 			console.log ('Project %d is left', id);
 		}
-		document.getElementById('project-' + id).setAttribute('style', 'background-color: '  );
+		document.getElementById('project-' + id).setAttribute('style', 'background-color: ' );
 	}
 
 }

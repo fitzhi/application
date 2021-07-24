@@ -1,6 +1,7 @@
 import { Component, Input, OnDestroy, OnInit } from '@angular/core';
 import { BaseComponent } from 'src/app/base/base.component';
 import { ActivityLog } from 'src/app/data/activity-log';
+import { ProjectService } from 'src/app/service/project/project.service';
 import { SunburstCinematicService } from '../service/sunburst-cinematic.service';
 import { SsewatcherService } from './service/ssewatcher.service';
 
@@ -14,12 +15,8 @@ import { SsewatcherService } from './service/ssewatcher.service';
 })
 export class SSEWatcherComponent extends BaseComponent implements OnInit, OnDestroy {
 
-	/**
-	 * URL of the server
-	 */
-	@Input() url: string;
-
 	constructor(
+		private projectService: ProjectService,
 		private sunburstCinematicService: SunburstCinematicService,
 		public ssewatcherService: SsewatcherService) { super(); }
 
@@ -28,7 +25,7 @@ export class SSEWatcherComponent extends BaseComponent implements OnInit, OnDest
 			this.sunburstCinematicService.listenEventsFromServer$.subscribe({
 				next: doneAndOk => {
 					if (doneAndOk) {
-						this.ssewatcherService.initEventSource(this.url);
+						this.ssewatcherService.initEventSource(`/project/${this.projectService.project.id}/tasks/stream/dashboardGeneration`);
 					}
 				}
 			})

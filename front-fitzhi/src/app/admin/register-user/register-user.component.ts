@@ -1,14 +1,13 @@
-import { Component, OnInit, OnDestroy, Input, EventEmitter, Output } from '@angular/core';
-import { FormControl, Validators, FormGroup, FormBuilder } from '@angular/forms';
-import { BaseComponent } from '../../base/base.component';
-import { MustMatch } from 'src/app/service/mustmatch';
-import { BackendSetupService } from 'src/app/service/backend-setup/backend-setup.service';
-import { Constants } from 'src/app/constants';
-import { MessageService } from 'src/app/interaction/message/message.service';
-import { StaffDataExchangeService } from 'src/app/tabs-staff/service/staff-data-exchange.service';
-import { MessageBoxService } from 'src/app/interaction/message-box/service/message-box.service';
-import { StaffService } from 'src/app/tabs-staff/service/staff.service';
+import { Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angular/core';
+import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
+import { Collaborator } from 'src/app/data/collaborator';
 import { traceOn } from 'src/app/global';
+import { MessageBoxService } from 'src/app/interaction/message-box/service/message-box.service';
+import { MessageService } from 'src/app/interaction/message/message.service';
+import { BackendSetupService } from 'src/app/service/backend-setup/backend-setup.service';
+import { MustMatch } from 'src/app/service/mustmatch';
+import { StaffService } from 'src/app/tabs-staff/service/staff.service';
+import { BaseComponent } from '../../base/base.component';
 import { InstallService } from '../service/install/install.service';
 
 @Component({
@@ -43,7 +42,6 @@ export class RegisterUserComponent extends BaseComponent implements OnInit, OnDe
 		private formBuilder: FormBuilder,
 		private staffService: StaffService,
 		private backendSetupService: BackendSetupService,
-		private staffDataExchangeService: StaffDataExchangeService,
 		private messageBoxService: MessageBoxService,
 		private installService: InstallService,
 		private messageService: MessageService) {
@@ -100,23 +98,25 @@ export class RegisterUserComponent extends BaseComponent implements OnInit, OnDe
 		}
 
 		this.subscriptions
-			.add(this.staffService.registerUser(
+			.add(this.staffService.registerUser$(
 					this.veryFirstConnection,
 					username,
 					password)
-				.subscribe(
-					staff => {
+				.subscribe({
+					next: (staff: Collaborator) => {
 						if (traceOn()) {
 							console.log('Empty staff created with id ' + staff.idStaff);
 						}
-						this.staffDataExchangeService.changeCollaborator(staff);
+						this.staffService.changeCollaborator(staff);
 						this.messengerUserRegistered.emit(staff.idStaff);
 					},
-					error => {
+					error: error => {
 						if (traceOn()) {
 							console.log('Connection error ', error);
 						}
-					}));
+					}
+				})
+			);
 	}
 
 	/**

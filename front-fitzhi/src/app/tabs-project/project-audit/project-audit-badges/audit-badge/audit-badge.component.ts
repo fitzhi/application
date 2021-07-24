@@ -1,16 +1,15 @@
-import { Component, OnInit, Input, OnDestroy, EventEmitter, Output, AfterViewInit } from '@angular/core';
-import { Constants } from 'src/app/constants';
-import { CinematicService } from 'src/app/service/cinematic.service';
-import { BaseComponent } from 'src/app/base/base.component';
-import { ProjectService } from 'src/app/service/project.service';
+import { AfterViewInit, Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angular/core';
 import { MatSliderChange } from '@angular/material/slider';
+import { take } from 'rxjs/operators';
+import { BaseComponent } from 'src/app/base/base.component';
+import { AuditDetail } from 'src/app/data/audit-detail';
+import { traceOn } from 'src/app/global';
+import { CinematicService } from 'src/app/service/cinematic.service';
+import { ProjectService } from 'src/app/service/project/project.service';
+import { ReferentialService } from 'src/app/service/referential.service';
 import { TopicEvaluation } from '../topic-evaluation';
 import { TopicWeight } from '../topic-weight';
 import { AuditChosenDetail } from './audit-chosen-detail';
-import { AuditDetail } from 'src/app/data/audit-detail';
-import { ReferentialService } from 'src/app/service/referential.service';
-import { take } from 'rxjs/operators';
-import { traceOn } from 'src/app/global';
 
 @Component({
 	selector: 'app-audit-badge',
@@ -46,12 +45,6 @@ export class AuditBadgeComponent extends BaseComponent implements OnInit, AfterV
 
 	/**
 	 * This messenger emits a signal to inform the parent component
-	 * that an evaluation has been made on this topic.
-	 */
-	@Output() messengerEvaluationChange = new EventEmitter<TopicEvaluation>();
-
-	/**
-	 * This messenger emits a signal to inform the parent component
 	 * that a weight in the global note has been given to this topic.
 	 */
 	@Output() messengerWeightChange = new EventEmitter<TopicWeight>();
@@ -74,7 +67,8 @@ export class AuditBadgeComponent extends BaseComponent implements OnInit, AfterV
 						this.drawHeaderColor(this.evaluation);
 					}
 				}
-			});
+			}
+		);
 	}
 
 	/* tslint:disable: no-trailing-whitespace */
@@ -119,14 +113,14 @@ export class AuditBadgeComponent extends BaseComponent implements OnInit, AfterV
 	 */
 	switchTopic(id: number) {
 		if (traceOn()) {
-			console.log ('switching to ' + id + ' ' + this.title);
+			console.log (`switching to ${id} ${this.title}`);
 		}
-		this.cinematicService.auditTopicSelected$.next(id);
+		this.cinematicService.auditTopicSelectedSubject$.next(id);
 		this.cinematicService.idTopicSelected = id;
 	}
 
 	/**
-	 * This function emits asignal broadcasting that audit-task form should be visible, or hidden.
+	 * This function broadcasts a signal that audit-task form should be visible, or hidden.
 	 */
 	public showHideAuditTasks() {
 		this.cinematicService.auditHistory[this.id].tasksVisible = !this.cinematicService.auditHistory[this.id].tasksVisible;
@@ -134,7 +128,7 @@ export class AuditBadgeComponent extends BaseComponent implements OnInit, AfterV
 	}
 
 	/**
-	 * This function emits asignal broadcasting that audit-task form should be visible, or hidden.
+	 * This function broadcasts a signal that audit-report form should be visible, or hidden.
 	 */
 	public showHideAuditReport() {
 		this.cinematicService.auditHistory[this.id].reportVisible = !this.cinematicService.auditHistory[this.id].reportVisible;
@@ -142,13 +136,13 @@ export class AuditBadgeComponent extends BaseComponent implements OnInit, AfterV
 	}
 
 	/**
-	 * This function is receiving a signal from `app-audit-graphic-badge` when the end-user has given
-	 * a new evaluation of an audit topic.
+	 * This function is receiving a signal from `app-audit-graphic-badge` when the end-user has given a new evaluation of an audit topic.
 	 * @param evalution the evaluation.
 	 */
 	onEvaluationChange(topicEvaluation: TopicEvaluation): void {
 		this.drawHeaderColor(topicEvaluation.value);
-		this.messengerEvaluationChange.emit(topicEvaluation);
+		topicEvaluation.typeOfOperation = 2;
+		this.projectService.topicEvaluation$.next(topicEvaluation);
 	}
 
 	/**
@@ -157,7 +151,11 @@ export class AuditBadgeComponent extends BaseComponent implements OnInit, AfterV
 	 */
 	drawHeaderColor(evaluation: number): void {
 		const colorEvaluation = this.projectService.getEvaluationColor (evaluation);
-		document.getElementById('headerRisk-' + this.id).setAttribute('style', 'background-color: ' + colorEvaluation);
+		// We colorize the header after the UI event loop to avoid a transparent header, 'for an unknwon reason' (shame on me)
+		setTimeout(() => {
+			document.getElementById('headerRisk-' + this.id)
+				.setAttribute('style', 'background-color: ' + colorEvaluation);
+		}, 0);
 	}
 
 	/**

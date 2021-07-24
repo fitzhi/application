@@ -106,7 +106,6 @@ describe('SkillComponent', () => {
 		component = fixture.componentInstance;
 		debugElement = fixture.debugElement;
 
-		
 	});
 
 });

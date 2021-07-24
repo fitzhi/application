@@ -2,10 +2,11 @@ import { HttpClient } from '@angular/common/http';
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { ControlledRisingSkylineService } from 'controlled-rising-skyline';
 import { BehaviorSubject } from 'rxjs';
-import { switchMap, take } from 'rxjs/operators';
+import { take } from 'rxjs/operators';
 import { BaseComponent } from 'src/app/base/base.component';
 import { Constants } from 'src/app/constants';
-import { ProjectService } from 'src/app/service/project.service';
+import { ProjectService } from 'src/app/service/project/project.service';
+import { FitzhiSettings } from '../data/FitzhiSettings';
 import { FitzhiDashboardPopupHelper } from './fitzhi-dashboard-popup-helper';
 import { selection } from './selection';
 import { PieDashboardService } from './service/pie-dashboard.service';
@@ -19,6 +20,8 @@ import { SkylineService } from './skyline/service/skyline.service';
 export class FitzhiDashboardComponent extends BaseComponent implements OnInit, OnDestroy {
 
 	public selection = selection;
+
+	public settings = new FitzhiSettings();
 
 	/**
 	 * Selected button. End-user has clicked on it.
@@ -52,7 +55,7 @@ export class FitzhiDashboardComponent extends BaseComponent implements OnInit, O
 	 */
 	skylineDimension = {
 		width: 1195,
-		widthWithUnitOfMesure:'1195px',
+		widthWithUnitOfMesure: '1195px',
 		height: 500,
 		heightWithUnitOfMesure: '500px',
 	};
@@ -91,7 +94,7 @@ export class FitzhiDashboardComponent extends BaseComponent implements OnInit, O
 				.subscribe({
 					next: skyline => {
 						// this.controlledRisingSkylineService.randomSkylineHistory(this.skylineService.skyline$);
-						this.skylineService.loadSkyline$(this.skylineDimension.width, this.skylineDimension.height - this.heightControlPanel)						
+						this.skylineService.loadSkyline$(this.skylineDimension.width, this.skylineDimension.height - this.heightControlPanel);
 						this.skylineService.skylineLoaded$.next(true);
 				}
 		}));
@@ -105,6 +108,10 @@ export class FitzhiDashboardComponent extends BaseComponent implements OnInit, O
 		super.ngOnDestroy();
 	}
 
+	/**
+	 * In progress method...
+	 * @returns ALWAYS **true**
+	 */
 	lastYearMinimized(): boolean {
 		return true;
 	}
@@ -115,7 +122,7 @@ export class FitzhiDashboardComponent extends BaseComponent implements OnInit, O
 	 */
 	switchTo(clickedselection: number) {
 		this.selected = clickedselection;
-		this.skylineSelected$.next((this.selected === selection.skyline))
+		this.skylineSelected$.next((this.selected === selection.skyline));
 	}
 
 	/**

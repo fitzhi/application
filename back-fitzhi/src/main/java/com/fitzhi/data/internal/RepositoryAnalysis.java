@@ -155,7 +155,7 @@ public class RepositoryAnalysis {
 	}
 	
 	/**
-AddingA	 * Add a change into the collection.
+	 * Add a change into the collection.
 	 * @param fullPath the complete path of the source file
 	 * @param change the activity change .
 	 * @return <code>boolean</code> if this collection changed as a result of the call
@@ -260,8 +260,12 @@ AddingA	 * Add a change into the collection.
 	}
 	
 	/**
-	 * Gather a distinct list of <u>identified</u> contributors.<br/>
+	 * <p>
+	 * Gather a distinct list of <em>identified</em> contributors.
+	 * </p>
+	 * <p>
 	 * The returned list contains <b>staff identifier</b>.
+	 * </p>
 	 * @return the list of registered contributors involved in the project
 	 */
 	public Set<Integer> contributors() {
@@ -275,8 +279,12 @@ AddingA	 * Add a change into the collection.
 	}
 	
 	/**
-	 * Gather a distinct list of authors.<br/>
-	 * The returned list contains distinct contributor login (identified or not inside techxhì)
+	 * <p>
+	 * Gather a distinct list of authors.
+	 * </p>
+	 * <p>
+	 * The returned list contains distinct contributor login (identified or not inside Fitzhì)
+	 * </p>
 	 * @return the list of contributors involved in the project
 	 */
 	public List<Author> authors() {

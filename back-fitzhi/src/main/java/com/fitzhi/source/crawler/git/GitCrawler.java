@@ -144,7 +144,7 @@ public class GitCrawler extends AbstractScannerDataGenerator {
 
 	/**
 	 * <p>
-	 * Do we create dynamicaly staff member from the ghosts list 
+	 * Do we create dynamicaly staff member from the ghosts list.
 	 * </p>
 	 */
 	@Value("${autoStaffCreation}")
@@ -177,7 +177,7 @@ public class GitCrawler extends AbstractScannerDataGenerator {
 	 * <em>Optional</em> repositories location.
 	 * </p>
 	 * <ul>
-	 * <Li>
+	 * <li>
 	 * If this member variable is {@code null}, GitCrawler will create a temporary directory.
 	 * </li>
 	 * <li>
@@ -223,7 +223,7 @@ public class GitCrawler extends AbstractScannerDataGenerator {
 	 * This {@code boolean} is setting the fact that the eligibility validation is
 	 * made <u>prior</u> to the creation of the repository-chart data file, or
 	 * <u>after</u>.<br/>
-	 * Techxhì is storing intermediate data on a file named
+	 * Fitzhì is storing intermediate data on a file named
 	 * "{@link Project#getId()}-{@link Project#getName()}.json".
 	 * </p>
 	 * <p>
@@ -435,7 +435,7 @@ public class GitCrawler extends AbstractScannerDataGenerator {
 			}
 		} else {
 
-			try (Git git = Git.open(Paths.get(getLocalDotGitFile(project)).toFile())) {
+			try (Git git = GitUtil.git(project)) {
 
 				if (log.isInfoEnabled()) {
 					log.info(String.format("Git pull of project %s", project.getName()));
@@ -715,6 +715,7 @@ public class GitCrawler extends AbstractScannerDataGenerator {
 				
 				return entry;
 			} catch (final Exception e) {
+				log.error(pathname);
 				log.error(getStackTrace(e));
 				throw new ApplicationException(CODE_PARSING_SOURCE_CODE, String.format(MESSAGE_PARSING_SOURCE_CODE, pathname), e);
 			}
@@ -1184,7 +1185,7 @@ public class GitCrawler extends AbstractScannerDataGenerator {
 		FileRepositoryBuilder builder = new FileRepositoryBuilder();
 
 		try (Repository repo = builder.setGitDir(
-			new File(getLocalDotGitFile(project))).readEnvironment().findGitDir().build()) {
+			new File(GitUtil.getLocalDotGitFile(project))).readEnvironment().findGitDir().build()) {
 
 			//
 			// load or generate all raw changes declared in the given repository.
@@ -1337,13 +1338,11 @@ public class GitCrawler extends AbstractScannerDataGenerator {
 	 * @throws ApplicationException thrown if any exception occurs
 	 */
 	private void updateProjectEcosystem(Project project, RepositoryAnalysis analysis) throws ApplicationException {
+
 		//
 		// To identify the eco-system, all files are taken in account.
 		//
-		Set<String> allPaths = new HashSet<>();
-		allPaths.addAll(analysis.getPathsModified());
-		allPaths.addAll(analysis.getPathsAdded());
-		List<Ecosystem> ecosystems = ecosystemAnalyzer.detectEcosystems(new ArrayList<String>(allPaths));
+		List<Ecosystem> ecosystems = ecosystemAnalyzer.detectEcosystems(analysis.getPathsAll());
 
 		if (log.isDebugEnabled()) {
 			log.debug("List of ecosystems detected");
@@ -1551,10 +1550,10 @@ public class GitCrawler extends AbstractScannerDataGenerator {
 		CommitRepository personalizedRepo = new BasicCommitRepository();
 		for (CommitHistory commits : globalRepo.getRepository().values()) {
 			commits.operations.stream().filter(
-					it -> ((it.getIdStaff() == settings.getIdStaffSelected()) || (settings.getIdStaffSelected() == 0)))
-					.filter(it -> (it.getDateCommit()).isAfter(startingDate))
-					.forEach(item -> personalizedRepo.addCommit(commits.getSourcePath(), item.getIdStaff(),
-							item.getAuthorName(), item.getDateCommit(), commits.getImportance()));
+				it -> ((it.getIdStaff() == settings.getIdStaffSelected()) || (settings.getIdStaffSelected() == 0)))
+				.filter(it -> (it.getDateCommit()).isAfter(startingDate))
+				.forEach(item -> personalizedRepo.addCommit(commits.getSourcePath(), item.getIdStaff(),
+						item.getAuthorName(), item.getDateCommit(), commits.getImportance()));
 		}
 		return personalizedRepo;
 	}
@@ -1627,12 +1626,16 @@ public class GitCrawler extends AbstractScannerDataGenerator {
 	}
 
 	@Override
-	public boolean hasAvailableGeneration(Project project) throws IOException {
-		boolean result = cacheDataHandler.hasCommitRepositoryAvailable(project);
-		if (log.isDebugEnabled()) {
-			log.debug(String.format("hasAvailableGeneration(%d)? : %s", project.getId(), result));
+	public boolean hasAvailableGeneration(Project project) throws ApplicationException {
+		try {
+			boolean result = cacheDataHandler.hasCommitRepositoryAvailable(project);
+			if (log.isDebugEnabled()) {
+				log.debug(String.format("hasAvailableGeneration(%d)? : %s", project.getId(), result));
+			}
+			return result;
+		} catch (IOException ioe) {
+			throw new ApplicationException(CODE_IO_EXCEPTION, ioe.getLocalizedMessage());
 		}
-		return result;
 	}
 
 	@Override
@@ -1650,7 +1653,6 @@ public class GitCrawler extends AbstractScannerDataGenerator {
 
 			if (staff == null) {
 
-				
 				// A setting in applications.properties is equal to TRUE
 				// We create staff member with the ghost data 
 				if (autoStaffCreation && (authorName.split(" ").length > 1)) {
@@ -1670,7 +1672,6 @@ public class GitCrawler extends AbstractScannerDataGenerator {
 				//
 				analysis.updateStaff(authorName, staff.getIdStaff());
 			}
-
 		}
 
 		this.tasks.logMessage(DASHBOARD_GENERATION, PROJECT, project.getId(),
@@ -1691,7 +1692,7 @@ public class GitCrawler extends AbstractScannerDataGenerator {
 			.findFirst();
 		if (oGhost.isPresent()) {
 			Ghost selectedGhost = oGhost.get();
-			if (staffHandler.getStaff(selectedGhost.getIdStaff()) == null) {
+			if (staffHandler.lookup(selectedGhost.getIdStaff()) == null) {
 				throw new ApplicationRuntimeException("Ghost " + selectedGhost.getPseudo()
 						+ " has an invalid idStaff " + selectedGhost.getIdStaff());
 			}
@@ -1893,17 +1894,6 @@ public class GitCrawler extends AbstractScannerDataGenerator {
 			}
 		}
 		return true;
-	}
-
-	/**
-	 * @return the location repository entry point <br/>
-	 *         <i>i.e. the absolute path to the .git file.</i>
-	 */
-	private String getLocalDotGitFile(Project project) {
-		return (project.getLocationRepository()
-				.charAt(project.getLocationRepository().length() - 1) == File.pathSeparatorChar)
-						? project.getLocationRepository() + ".git"
-						: project.getLocationRepository() + "/.git";
 	}
 
 	@Override

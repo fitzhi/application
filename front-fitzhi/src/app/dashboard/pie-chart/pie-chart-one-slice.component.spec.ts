@@ -16,7 +16,6 @@ describe('PieChartComponent with only One Slice', () => {
 	let component: TestHostComponent;
 	let fixture: ComponentFixture<TestHostComponent>;
 
-
 	@Component({
 		selector: 'app-host-component',
 		template: `<table>

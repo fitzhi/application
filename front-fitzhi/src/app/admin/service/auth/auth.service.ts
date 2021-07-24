@@ -23,7 +23,7 @@ export class AuthService extends InternalService {
 		private tokenService: TokenService,
 		private httpClient: HttpClient) { super(); }
 
-	public connect(username: string, password: string): Observable<boolean> {
+	public connect$(username: string, password: string): Observable<boolean> {
 
 		if (traceOn()) {
 			console.log('Trying a connection with user/pass ' + username + ':' + password
@@ -40,7 +40,8 @@ export class AuthService extends InternalService {
 			.set('grant_type', 'password');
 
 		return this.httpClient.post<Token>(
-			localStorage.getItem('backendUrl') + '/oauth/token', '', { headers: headers, params: params })
+			localStorage.getItem('backendUrl') + '/oauth/token', '',
+				{ headers: headers, params: params })
 			.pipe(
 				take(1),
 				switchMap(
@@ -55,18 +56,17 @@ export class AuthService extends InternalService {
 						this.tokenService.saveToken(token);
 						this.connected = true;
 						return of (this.connected);
-					}),
-					catchError(
-						error => {
-							console.log ('error   !!!', error);
-							if (traceOn()) {
-								if (typeof error !== 'undefined') {
-									console.log ('error', error);
-								}
-							}
-							this.connected = false;
-							return of (this.connected);
-						} ));
+				}),
+				catchError(
+					error => {
+						if (traceOn() && (error)) {
+							console.log ('Error', error);
+						}
+						this.connected = false;
+						return of (this.connected);
+					}
+				)
+		);
 	}
 
 	/**

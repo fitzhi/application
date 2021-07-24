@@ -1,16 +1,15 @@
 package com.fitzhi.controller;
 
+import static com.fitzhi.Error.CODE_PROJECT_NOFOUND;
 import static com.fitzhi.Error.CODE_STAFF_ACTIVE_ON_PROJECT;
 import static com.fitzhi.Error.CODE_STAFF_NOFOUND;
-import static com.fitzhi.Error.CODE_PROJECT_NOFOUND;
+import static com.fitzhi.Error.MESSAGE_PROJECT_NOFOUND;
 import static com.fitzhi.Error.MESSAGE_STAFF_ACTIVE_ON_PROJECT;
 import static com.fitzhi.Error.MESSAGE_STAFF_NOFOUND;
-import static com.fitzhi.Error.MESSAGE_PROJECT_NOFOUND;
-import static com.fitzhi.Global.BACKEND_RETURN_CODE;
-import static com.fitzhi.Global.BACKEND_RETURN_MESSAGE;
 
 import java.text.MessageFormat;
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
@@ -20,6 +19,26 @@ import java.util.Optional;
 import java.util.function.Predicate;
 
 import javax.servlet.http.HttpServletRequest;
+
+import com.fitzhi.ApplicationRuntimeException;
+import com.fitzhi.bean.ProjectHandler;
+import com.fitzhi.bean.ShuffleService;
+import com.fitzhi.bean.SkillHandler;
+import com.fitzhi.bean.StaffHandler;
+import com.fitzhi.data.external.StaffResume;
+import com.fitzhi.data.internal.Experience;
+import com.fitzhi.data.internal.Mission;
+import com.fitzhi.data.internal.PeopleCountExperienceMap;
+import com.fitzhi.data.internal.Project;
+import com.fitzhi.data.internal.Resume;
+import com.fitzhi.data.internal.ResumeSkill;
+import com.fitzhi.data.internal.ResumeSkillIdentifier;
+import com.fitzhi.data.internal.Staff;
+import com.fitzhi.exception.ApplicationException;
+import com.fitzhi.exception.NotFoundException;
+import com.fitzhi.service.FileType;
+import com.fitzhi.service.ResumeParserService;
+import com.fitzhi.service.StorageService;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -37,35 +56,15 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.util.UriComponents;
 import org.springframework.web.util.UriComponentsBuilder;
 
-import com.fitzhi.ApplicationRuntimeException;
-import com.fitzhi.bean.ProjectHandler;
-import com.fitzhi.bean.ShuffleService;
-import com.fitzhi.bean.SkillHandler;
-import com.fitzhi.bean.StaffHandler;
-import com.fitzhi.controller.in.BodyParamResumeSkills;
-import com.fitzhi.controller.in.BodyParamStaffProject;
-import com.fitzhi.controller.in.BodyParamStaffSkill;
-import com.fitzhi.data.external.BooleanDTO;
-import com.fitzhi.data.external.ResumeDTO;
-import com.fitzhi.data.external.StaffDTO;
-import com.fitzhi.data.internal.Experience;
-import com.fitzhi.data.internal.Mission;
-import com.fitzhi.data.internal.PeopleCountExperienceMap;
-import com.fitzhi.data.internal.Project;
-import com.fitzhi.data.internal.Resume;
-import com.fitzhi.data.internal.ResumeSkill;
-import com.fitzhi.data.internal.Staff;
-import com.fitzhi.exception.NotFoundException;
-import com.fitzhi.exception.ApplicationException;
-import com.fitzhi.service.FileType;
-import com.fitzhi.service.ResumeParserService;
-import com.fitzhi.service.StorageService;
-
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiParam;
 import lombok.extern.slf4j.Slf4j;
 
 
@@ -78,7 +77,11 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 @RestController
 @RequestMapping("/api/staff")
-public class StaffController extends BaseRestController {
+@Api(
+	tags="Staff controller API",
+	description = "API endpoints to manage the developers declared in the application. By convention we consider all employees as developers."	
+)
+public class StaffController {
 
 	@Autowired
 	ProjectHandler projectHandler;
@@ -114,13 +117,19 @@ public class StaffController extends BaseRestController {
 	 * @return a ResponseEntity with just the location containing the URI of the newly
 	 *         created staff
 	 */
+	@ApiOperation(
+		value="Create a new developer in th staff.", 
+		notes = "If the ID is filled and registered, a CONFLICT response error will be returned."
+	)
 	@PostMapping("")
-	public ResponseEntity<Void> create(UriComponentsBuilder builder, @RequestBody Staff staff)
+	public ResponseEntity<Void> create(UriComponentsBuilder builder, 
+			@ApiParam(value="An unregistered developer. The ID should be equal to -1")
+			@RequestBody Staff staff)
 			throws ApplicationException {
 
 		// This is not a creation.
 		if (staffHandler.containsStaffMember(staff.getIdStaff())) {
-			return new ResponseEntity<Void>(null, headers(), HttpStatus.CONFLICT);
+			return ResponseEntity.status(HttpStatus.CONFLICT).build();
 		}
 
 		if (log.isDebugEnabled()) {
@@ -149,6 +158,7 @@ public class StaffController extends BaseRestController {
 	 * @param staff the staff to update. This staff is hosted inside the body of the {@code PUT} Medhod.
 	 * @return an empty content for an update request
 	 */
+	@ApiOperation(value = "Update an existing developer.")
 	@PutMapping("/{idStaff}")
 	public ResponseEntity<Void> updateStaff(@PathVariable("idStaff") int idStaff, @RequestBody Staff staff)
 			throws NotFoundException, ApplicationException {
@@ -175,6 +185,8 @@ public class StaffController extends BaseRestController {
 	 * Read all staff members from the workforce.
 	 * @return the complete workforce of the company
 	 */
+	@ResponseBody
+	@ApiOperation(value = "Read and return all developers declared in the staff.")
 	@GetMapping("")
 	public Collection<Staff> readAll() {
 		
@@ -193,6 +205,8 @@ public class StaffController extends BaseRestController {
 		return staffTeam;
 	}
 
+	@ResponseBody
+	@ApiOperation(value = "Aggregate and count by skills all ACTIVE developers")
 	@GetMapping("/countGroupByExperiences/active")
 	public Map<String, Long> countActive() {
 		
@@ -205,7 +219,9 @@ public class StaffController extends BaseRestController {
 		return peopleCountExperienceMap.getData();
 	}
 
+	@ResponseBody
 	@GetMapping("/countGroupByExperiences/all")
+	@ApiOperation(value = "Aggregate and count by skills ALL developers")
 	public Map<String, Long> countAll() {
 		
 		final PeopleCountExperienceMap peopleCountExperienceMap = staffHandler.countAllStaffGroupBySkillLevel(false);
@@ -222,118 +238,63 @@ public class StaffController extends BaseRestController {
 	 *            staff member's identifier
 	 * @return the staff member identified by its id
 	 */
+	@ApiOperation(value = "Retrieve a developer by his identifier")
+	@ResponseBody
 	@GetMapping(value = "/{idStaff}")
-	public ResponseEntity<Staff> read(@PathVariable("idStaff") int idStaff) {
-
-		final ResponseEntity<Staff> responseEntity;
-
-		
-		HttpHeaders headers = new HttpHeaders();
-		
-		Staff searchCollab = staffHandler.getStaff().get(idStaff);
-		if (searchCollab != null) {
-			responseEntity = new ResponseEntity<>(searchCollab, headers, HttpStatus.OK);
-			if (log.isDebugEnabled()) {
-				Staff staff = responseEntity.getBody();
-				log.debug(String.format(
-						"looking for id %d in the Staff collection returns %s %s",
-						idStaff, 
-						(staff != null) ? staff.getFirstName() : "null", 
-						(staff != null) ? staff.getLastName()  : "null"));
-			}
-		} else {
-			headers.set(BACKEND_RETURN_CODE, "O");
-			headers.set(BACKEND_RETURN_MESSAGE, "There is no collaborator associated to the id " + idStaff);
-			responseEntity = new ResponseEntity<>(new Staff(), headers, HttpStatus.NOT_FOUND);
-			if (log.isDebugEnabled()) {
-				log.debug(String.format(
-						"Cannot find a staff member for id %d in the Staff collection",
-						idStaff));
-			}
-		}
-		return responseEntity;
+	public Staff read(@PathVariable("idStaff") int idStaff) throws ApplicationException {
+		return staffHandler.getStaff(idStaff);
 	}
 
 	/**
-	 * @param idStaff
-	 *            staff member's identifier
+	 * @param idStaff staff member's identifier
 	 * @return the list of projects where the staff member is involved
 	 */
-	@GetMapping(value = "/projects/{idStaff}")
-	public ResponseEntity<List<Mission>> readProjects(@PathVariable("idStaff") int idStaff) throws ApplicationException {
+	@ResponseBody
+	@ApiOperation(value = "Retrieve the projects where a developer has been involved.")
+	@GetMapping(value = "/{idStaff}/project")
+	public List<Mission> readProjects(@PathVariable("idStaff") int idStaff) 
+		throws ApplicationException {
 
-		ResponseEntity<Staff> responseEntityStaffMember = read(idStaff);
-		final Staff staff = responseEntityStaffMember.getBody();
-		if (staff == null) {
-			throw new ApplicationException(
-				CODE_STAFF_NOFOUND, 
-				MessageFormat.format(MESSAGE_STAFF_NOFOUND, idStaff));
-		}
+		final Staff staff = staffHandler.getStaff(idStaff);
 
 		// Adding the name of project.
 		for (Mission mission : staff.getMissions()) {
-				mission.setName(projectHandler.get(mission.getIdProject()).getName());
+				mission.setName(projectHandler.lookup(mission.getIdProject()).getName());
 		}
 		
-		ResponseEntity<List<Mission>> re = new ResponseEntity<>(
-				staff.getMissions(), 
-				responseEntityStaffMember.getHeaders(),
-				responseEntityStaffMember.getStatusCode());
-		return re;
-			
+		return staff.getMissions();
 	}
 
 	/**
-	 * @param idStaff
-	 *            staff member's identifier
+	 * @param idStaff The Staff member's identifier
 	 * @return the given developer's experience as list of skills.
+	 * @throws ApplicationException thrown if any problem occurs, such as the staff identifier does not exist.
 	 */
-	@GetMapping(value = "/experiences/{idStaff}")
-	public ResponseEntity<List<Experience>> readExperiences(@PathVariable("idStaff") int idStaff) {
-
-		ResponseEntity<Staff> responseEntityStaffMember = read(idStaff);
-		final Staff staff = responseEntityStaffMember.getBody();
-		if (staff == null) {
-			throw new RuntimeException("getBody() Should not be null");
-		}
-
-		return new ResponseEntity<>(
-				staff.getExperiences(), 
-				responseEntityStaffMember.getHeaders(),
-				responseEntityStaffMember.getStatusCode());
+	@ResponseBody
+	@ApiOperation(
+		value = "Retrieve the experiences collection of a developer.", 
+		notes = "An experience is a skill with a level. An experience belongs to an application."
+	)
+	@GetMapping(value = "/{idStaff}/experience")
+	public List<Experience> readExperiences(@PathVariable("idStaff") int idStaff) throws ApplicationException {
+		Staff staff = staffHandler.getStaff(idStaff);
+		return staff.getExperiences();
 	}
 
-	/**
-	 * Switch the 'active' status of a developer<br/>
-	 * <ul>
-	 * <li>
-	 * If the given developer is active, it will become inactive.
-	 * </li>
-	 * <li>
-	 * If inactive, it will be switched to active.
-	 * </li>
-	 * </ul>
-	 * @param idStaff the identifier of the staff member to activate, or deactivate.
-	 * @return {@code true} ALWAYS. Either the application return {@code true}, or an exception is thrown.
-	 * @throws ApplicationException thrown if any exception occurs during the treatment, most probably if there is no staff member for the given id.
-	 * @see #processActiveStatus(int)
-	 */
-	@GetMapping("/forceActiveStatus/{idStaff}")
-	public ResponseEntity<Boolean> switchActiveState(@PathVariable("idStaff") int idStaff) throws ApplicationException {
-		
+	@ResponseBody
+	@ApiOperation(
+		value = "Switch the 'active' status of a developer",
+		notes = "If the given developer is active, it will become inactive. If inactive, it will be switched to active.")
+	@PostMapping("/{idStaff}/switchActiveStatus")
+	public boolean switchActiveState(@PathVariable("idStaff") int idStaff) throws ApplicationException {
 		final Staff staff = staffHandler.getStaff(idStaff);
-		if (staff == null) {
-			throw new ApplicationException(CODE_STAFF_NOFOUND, MessageFormat.format(MESSAGE_STAFF_NOFOUND, idStaff));
-		}
-	
 		this.staffHandler.forceActiveStatus(staff);
-		
-		return new ResponseEntity<>(true, new HttpHeaders(), HttpStatus.OK);
+		return true;
 	}
 
 	/**
 	 * <p>
-	 * Update the active status of a developer.
+	 * Update the active status for a developer.
 	 * </p>
 	 * <p>
 	 * This URL is invoked when the end-user decides that the 'active' state should be automatically processed.<br/>
@@ -344,21 +305,24 @@ public class StaffController extends BaseRestController {
 	 * @throws ApplicationException thrown if any exception occurs during the treatment, most probably if there is no staff member for the given id.
 	 * @see #switchActiveState(int)
 	 */
-	@GetMapping("/processActiveStatus/{idStaff}")
-	public ResponseEntity<Staff> processActiveStatus(@PathVariable("idStaff") int idStaff) throws ApplicationException {
+	@ApiOperation(
+		value = "Update the active status for a developer.",
+		notes = 
+			"This endpoint is invoked to set that the 'active' state should be forced by the application."
+		 + 	"When forced, the application will scan the activity of this developer in order to compare his/her latest commit with the global parameter 'inactivity.delay'."
+	)
+	@ResponseBody
+	@PostMapping("/{idStaff}/processActiveStatus")
+	public Staff processActiveStatus(@PathVariable("idStaff") int idStaff) throws ApplicationException {
 		
 		final Staff staff = staffHandler.getStaff(idStaff);
-		if (staff == null) {
-			throw new ApplicationException(CODE_STAFF_NOFOUND, MessageFormat.format(MESSAGE_STAFF_NOFOUND, idStaff));
-		}
 		
 		// We process the active status, therefore we property forceActiveStatus should be set to False.
 		staff.setForceActiveState(false);
 		
 		this.staffHandler.processActiveStatus(staff);
 		
-		HttpHeaders headers = new HttpHeaders();
-		return new ResponseEntity<>(staff, headers, HttpStatus.OK);
+		return staff;
 	}
 
 	
@@ -367,22 +331,21 @@ public class StaffController extends BaseRestController {
 	 * @param idStaff the Staff member identifier candidate for deletion
 	 * @return an empty HTTP response after the deletion.
 	 */
+	@ResponseBody
+	@ApiOperation(value = "Remove a developer from the company staff.")
 	@DeleteMapping(value = "/{idStaff}")
-	public ResponseEntity<Object> removeStaff(@PathVariable("idStaff") int idStaff) throws NotFoundException, ApplicationException {
-		Staff staff = staffHandler.getStaff(idStaff);
-		if (staff == null) {
-			throw new NotFoundException(CODE_STAFF_NOFOUND, MessageFormat.format(MESSAGE_STAFF_NOFOUND, idStaff));
-		}
-		
+	public void removeStaff(@PathVariable("idStaff") int idStaff) throws NotFoundException, ApplicationException {
+		// We test first the existence of a Staff member for this Staff identifier
+		staffHandler.getStaff(idStaff);
+		// Then We remove
 		staffHandler.removeStaff(idStaff);
-
-		return new ResponseEntity<>(null, new HttpHeaders(), HttpStatus.OK);
 	}
 	
 	/**
 	 * We do not allow to remove all staff members
 	 * @return an empty HTTP Response because this method is not allowed.
 	 */
+	@ApiOperation(value = "This method is not allowed.")
 	@DeleteMapping()
 	public ResponseEntity<Object> removeAllStaff() throws ApplicationException {		
 		return new ResponseEntity<>(HttpStatus.METHOD_NOT_ALLOWED);
@@ -397,32 +360,29 @@ public class StaffController extends BaseRestController {
 	 *            in JSON format
 	 * @return
 	 */
-	@PostMapping("/experiences/add")
-	public ResponseEntity<Boolean> addExperience(@RequestBody BodyParamStaffSkill param) throws ApplicationException {
+	@ResponseBody
+	@ApiOperation(value = "Add an experience to a developer.", notes = "An experience is a skill and a level.")
+	@PostMapping("{idStaff}/experience")
+	public boolean updateExperience(
+		@PathVariable("idStaff") int idStaff,
+		@RequestBody Experience experience) throws ApplicationException {
 
-		HttpHeaders headers = new HttpHeaders();
-		
 		if (log.isDebugEnabled()) {
 			log.debug(String.format(
 					"POST command on /staff/experiences/add with params id:%d, idSkill:%d, level:%d", 
-					param.getIdStaff(), param.getIdSkill(), param.getLevel()));
+					idStaff, experience.getId(), experience.getLevel()));
 		}
 
-		final Staff staff = staffHandler.getStaff(param.getIdStaff());
-		if (staff == null) {
-			throw new ApplicationException(CODE_STAFF_NOFOUND, MessageFormat.format(MESSAGE_STAFF_NOFOUND, param.getIdStaff()));
-		}
+		final Staff staff = staffHandler.getStaff(idStaff);
 		
-		
-		Experience experience = staff.getExperience(param.getIdSkill());
-		if (experience == null) {
-			this.staffHandler.addExperience(param.getIdStaff(), new Experience(param.getIdSkill(), param.getLevel()));
+		Experience formerExperience = staff.getExperience(experience.getId());
+		if (formerExperience == null) {
+			this.staffHandler.addExperience(idStaff, new Experience(experience.getId(), experience.getLevel()));
 		} else {
-			this.staffHandler.removeExperience(param.getIdStaff(), experience);
-			this.staffHandler.addExperience(param.getIdStaff(), new Experience(param.getIdSkill(), param.getLevel()));
+			this.staffHandler.removeExperience(idStaff, formerExperience);
+			this.staffHandler.addExperience(idStaff, new Experience(experience.getId(), experience.getLevel()));
 		}
-		return new ResponseEntity<>(Boolean.TRUE, headers, HttpStatus.OK);
-		
+		return true;
 	}
 	
 	/**
@@ -432,106 +392,85 @@ public class StaffController extends BaseRestController {
 	 *            in JSON format
 	 * @return
 	 */
-	@PostMapping("/experiences/remove")
-	public ResponseEntity<Boolean> removeExperience(@RequestBody BodyParamStaffSkill param) throws ApplicationException {
+	@ResponseBody
+	@ApiOperation(value = "Remove a skill from a developer.")
+	@DeleteMapping(value = "{idStaff}/experience/{idSkill}")
+	public boolean removeExperience(
+		@PathVariable("idStaff") int idStaff,
+		@PathVariable("idSkill") int idSkill) throws ApplicationException {
 
-		HttpHeaders headers = new HttpHeaders();
-		
 		if (log.isDebugEnabled()) {
 			log.debug(String.format(
-					"POST command on /staff/experiences/remove with params id:%d, idSkill:%d, level:%d", 
-					param.getIdStaff(), param.getIdSkill(), param.getLevel()));
+					"POST command on /staff/experiences/remove with params idStaff:%d, idSkill:%d", 
+					idStaff, idSkill));
 		}
 
-		final Staff staff = staffHandler.getStaff(param.getIdStaff());
-		if (staff == null) {
-			throw new ApplicationException(CODE_STAFF_NOFOUND, MessageFormat.format(MESSAGE_STAFF_NOFOUND, param.getIdStaff()));
-		} 
+		final Staff staff = staffHandler.getStaff(idStaff);
 		
-		Experience experience = staff.getExperience(param.getIdSkill());
+		Experience experience = staff.getExperience(idSkill);
 		if (experience != null) {
-			this.staffHandler.removeExperience(param.getIdStaff(), experience);
+			this.staffHandler.removeExperience(idStaff, experience);
 		}
-		return new ResponseEntity<>(Boolean.TRUE, headers, HttpStatus.OK);
-		
-	}
-	
-	/**
-	 * Adding or changing the level of an experience assign to a developer.
-	 * 
-	 * @param param
-	 *            the body of the post containing an instance of ParamStaffSkill
-	 *            in JSON format
-	 * @see StaffController.ParamStaffSkill
-	 * @throws ApplicationException thrown if any problem occurs
-	 * @return
-	 */
-	@PostMapping("/experiences/update")
-	public ResponseEntity<Boolean> saveExperience(@RequestBody BodyParamStaffSkill param) throws ApplicationException {
-		
-		HttpHeaders headers = new HttpHeaders();		
-		if (log.isDebugEnabled()) {
-			log.debug(String.format(
-					"POST command on /staff/experiences/update with params id:%d, idSkill:%d, level:%d", 
-					param.getIdStaff(), param.getIdSkill(), param.getLevel()));
-		}
-
-		final Staff staff = staffHandler.getStaff().get(param.getIdStaff());
-		if (staff == null) {
-			throw new ApplicationException(CODE_STAFF_NOFOUND, MessageFormat.format(MESSAGE_STAFF_NOFOUND, param.getIdStaff()));
-		} 
-		
-		
-		Experience experience = staff.getExperience(param.getIdSkill());
-		if (experience != null) {
-			this.staffHandler.updateExperience(param.getIdStaff(), new Experience(param.getIdSkill(), param.getLevel()));
-		}
-		return new ResponseEntity<>(Boolean.TRUE, headers, HttpStatus.OK);
+		return true;		
 	}
 	
 	/**
 	 * Upload the application of a staff member on a server.
+	 * 
+	 * <p>
+	 * The verb is {@code POST} because we upload a file on the file system and we consider that an upload is a modification.
+	 * </p>
+	 *
+	 * @param idStaff the staff identifier whose application will be uploaded
 	 * @param file the application
-	 * @param id the staff identifier
 	 * @param type the type of file (WORD, PDF...)
 	 * @throws ApplicationException thrown if any problem occurs
+	 * 
 	 * @return the resume parsed from the uploaded file.
 	 */
-	@PostMapping("/api/uploadCV")
-	public ResponseEntity<ResumeDTO> uploadApplicationFile(
+	@ResponseBody
+	@ApiOperation(value = "Upload an application file and return an array of experiences detected in this file.")
+	@PostMapping("/{idStaff}/uploadCV")
+	public StaffResume uploadApplicationFile(
+			@PathVariable("idStaff") int idStaff, 
 			@RequestParam("file") MultipartFile file, 
-			@RequestParam("id") int id, 
 			@RequestParam("type") int type) throws ApplicationException {
-
-		
-		HttpHeaders headers = new HttpHeaders();
 		
 		String filename = StringUtils.cleanPath(file.getOriginalFilename());
 
 		if (log.isDebugEnabled()) {
-			log.debug(String.format("Uploading %s for staff identifer %d of type %s", filename, id, type));
+			log.debug(String.format("Uploading %s for staff identifer %d of type %s", 
+				filename, idStaff, type));
 		}
 
 		FileType typeOfApplication = FileType.valueOf(type);
 		
-		final Staff staff = staffHandler.getStaff().get(id);
-		assert (staff != null);
+		final Staff staff = staffHandler.getStaff(idStaff);
 
 		storageService.store(file, buildFileName(staff, filename));
 
 		staff.updateApplication(filename, typeOfApplication);
 		
-		final Resume exp = resumeParserService.extract(buildFileName(staff, filename), typeOfApplication);
-		ResumeDTO resumeDTO = new ResumeDTO();
-		exp.data().forEach(item -> resumeDTO.experience.add(
-				new ResumeSkill(item.getIdSkill(), 
-								skillHandler.getSkills().get(item.getIdSkill()).getTitle(), 
-								item.getCount())));
-		/**
-		 * We put the most often repeated keywords at the beginning of the list.
-		 */
-		Collections.sort(resumeDTO.experience);
-		return new ResponseEntity<>(resumeDTO, headers, HttpStatus.OK);
+		final Resume resume = resumeParserService.extract(buildFileName(staff, filename), typeOfApplication);
+		
+		final List<ResumeSkill> experiences = genResume(resume);
+
+		return new StaffResume(experiences);
+	}
+
+	private List<ResumeSkill> genResume(Resume resume) throws ApplicationException {
+		List<ResumeSkill> experiences = new ArrayList<ResumeSkill>();
+		for (ResumeSkillIdentifier rsi : resume.getExperiences()) {
+			experiences.add(new ResumeSkill(
+				rsi.getIdSkill(), 
+				skillHandler.getSkill(rsi.getIdSkill()).getTitle(),
+				rsi.getCount()));
+		}
+		//
+		// We put the most often repeated keywords at the beginning of the list.
+		//
+		Collections.sort(experiences);
+		return experiences;
 	}
 
 	/**
@@ -554,6 +493,7 @@ public class StaffController extends BaseRestController {
 	 * @param request type type of request
 	 * @return the file resource
 	 */
+	@ApiOperation(value = "Download the application for the given developer, if any.")
 	@GetMapping(value = "{id}/application")
 	public ResponseEntity<Resource> downloadApplicationFile(
 		    @PathVariable("id") int id, 
@@ -583,67 +523,62 @@ public class StaffController extends BaseRestController {
                 .body(resource);
 	}
 		
-	@PostMapping("/api/experiences/resume/save")
-	public ResponseEntity<StaffDTO> saveExperiences(@RequestBody BodyParamResumeSkills param) throws ApplicationException {
+	@ResponseBody
+	@ApiOperation("Save the given resume for the staff member.")
+	@PutMapping("/{idStaff}/resume")
+	public Staff saveResume(
+		@PathVariable("idStaff") int idStaff, 
+		@RequestBody ResumeSkill[] skills) 
+		throws ApplicationException {
 
 		if (log.isDebugEnabled()) {
-			log.debug(String.format("Adding %d skills for the staff ID %d", param.getSkills().length, param.getIdStaff()));
+			log.debug(String.format("Adding %d skills for the staff ID %d", skills.length, idStaff));
 		}
 		if (log.isTraceEnabled()) {
-			log.trace(String.format("Adding the skills below for the staff identifier %d", param.getIdStaff()));
-			Arrays.asList(param.getSkills()).stream().forEach(skill -> log.trace(String.format("%s %s", skill.getIdSkill(), skill.getTitle())));
+			log.trace(String.format("Adding the skills below for the staff identifier %d", idStaff));
+			Arrays.asList(skills).stream().forEach(skill -> log.trace(String.format("%s %s", skill.getIdSkill(), skill.getTitle())));
 		}
 
-		Staff staff = staffHandler.addExperiences(param.getIdStaff(), param.getSkills());
-		return new ResponseEntity<>(new StaffDTO(staff, 1, 
-				staff.getFirstName() + " " + staff.getLastName() + " has " + staff.getExperiences().size() + " skills now!"), 
-				HttpStatus.OK);
-
+		return staffHandler.addExperiences(idStaff, skills);
 	}	
 	
+
 	/**
-	 * <p>Add a project assigned to a developer.</p>
+	 * <p>
+	 * Involve a developer in a project.
+	 * </p>
 	 * 
-	 * @param param
-	 *            the body of the post containing an instance of
-	 *            ParamStaffProject in JSON format
-	 * @return
+	 * @param idStaff the staff identifier
+	 * @param idProject the project identifier
+	 * @return {@code true} if the operation is successful, {@code false} otherwiose
 	 */
-	@PostMapping("/project/add")
-	public ResponseEntity<BooleanDTO> addProject(@RequestBody BodyParamStaffProject param) throws ApplicationException {
+	@ResponseBody
+	@ApiOperation(value = "Involve a developer in a project.")
+	@PutMapping("/{idStaff}/project/{idProject}")
+	public boolean addProject(
+		@PathVariable("idStaff") int idStaff, 
+		@PathVariable("idProject") int idProject) throws ApplicationException {
 
-		HttpHeaders headers = new HttpHeaders();
-		
 		if (log.isDebugEnabled()) {
-			log.debug(
-					String.format("POST command on /staff/project/add with params idStaff: %d, idProject: %d", 
-							param.getIdStaff(), param.getIdProject()));
+			log.debug(String.format("POST command on /api/staff/%d/project/%d", idStaff, idProject));
 		}
-		final ResponseEntity<BooleanDTO> responseEntity;
 
-		final Staff staff = staffHandler.getStaff().get(param.getIdStaff());
-		assert (staff != null);
+		final Staff staff = staffHandler.getStaff(idStaff);
 		
-		final Project project = projectHandler.get(param.getIdProject());
-		assert (project != null);
+		final Project project = projectHandler.getProject(idProject);
 
-		/*
-		 * If the passed project is already present in the staff member's
-		 * project list, we send back a BAD_REQUEST to avoid duplicate
-		 * entries
-		 */
-		Predicate<Mission> predicate = pr -> (pr.getIdProject() == param.getIdProject());
+		//
+		// If the passed project is already present in the staff member's
+		// project list, we send back a FALSE, to avoid duplicate entries
+		//
+		Predicate<Mission> predicate = pr -> (pr.getIdProject() == idProject);
 		if (staff.getMissions().stream().anyMatch(predicate)) {
-			responseEntity = new ResponseEntity<>(
-					new BooleanDTO(-1, "The collaborator " + staff.fullName() + " is already involved in " + project.getName()),
-					headers, HttpStatus.INTERNAL_SERVER_ERROR);
-			return responseEntity;
+			return false;
 		}
 
-		staffHandler.addMission(param.getIdStaff(), param.getIdProject(), project.getName());
-		responseEntity = new ResponseEntity<>(new BooleanDTO(), headers, HttpStatus.OK);
+		staffHandler.addMission(idStaff, idProject, project.getName());
 		
-		return responseEntity;
+		return true;
 	}
 
 	/**
@@ -656,8 +591,10 @@ public class StaffController extends BaseRestController {
 	 * @param idProject the given Project identifier
 	 * @param idStaff the given Staff identifier
 	 */
+	@ResponseBody
+	@ApiOperation(value = "Revoke the participation of a developer from a project.")
 	@DeleteMapping("/{idStaff}/project/{idProject}")
-	public ResponseEntity<Boolean> revokeProject(
+	public boolean revokeProject(
 		@PathVariable("idProject") int idProject, 
 		@PathVariable("idStaff") int idStaff) throws ApplicationException, NotFoundException {
 
@@ -666,11 +603,8 @@ public class StaffController extends BaseRestController {
 		}
 
 		final Staff staff = staffHandler.getStaff(idStaff);
-		if (staff == null) {
-			throw new NotFoundException(CODE_STAFF_NOFOUND, MessageFormat.format(MESSAGE_STAFF_NOFOUND, idStaff));
-		}
 
-		final Project project = projectHandler.get(idProject);
+		final Project project = projectHandler.lookup(idProject);
 		if (project == null) {
 			throw new NotFoundException(CODE_PROJECT_NOFOUND, MessageFormat.format(MESSAGE_PROJECT_NOFOUND, idProject));
 		}
@@ -693,15 +627,6 @@ public class StaffController extends BaseRestController {
 			}
 		}
 
-		return new ResponseEntity<>(Boolean.TRUE, new HttpHeaders(), HttpStatus.OK);
-	}
-	
-	ResponseEntity<StaffDTO> postErrorReturnBodyMessage(int code, String message) {
-		return postErrorReturnBodyMessage(code, message, new Staff());
-	}
-
-	ResponseEntity<StaffDTO> postErrorReturnBodyMessage(int code, String message, Staff staffMember) {
-		return new ResponseEntity<>(new StaffDTO(staffMember, code, message), new HttpHeaders(),
-				HttpStatus.BAD_REQUEST);
+		return true;
 	}
 }

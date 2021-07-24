@@ -1,0 +1,6 @@
+div.treemap-projects {
+	margin-left: auto;
+	margin-right: auto;
+	width: var(--treemap-projects-width);
+	height: var(--treemap-projects-height);
+} 

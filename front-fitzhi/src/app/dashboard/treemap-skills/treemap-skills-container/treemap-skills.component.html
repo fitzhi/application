@@ -1,0 +1,28 @@
+<div id="host-treemap" class="container" *ngIf="projectService.allProjectsIsLoaded$|async">
+	<div class="host">
+		<div>
+			<app-treemap-skills-header></app-treemap-skills-header>
+			<div style="width: 1000px; height: 500px">
+				<app-treemap-skills-chart></app-treemap-skills-chart>
+			</div>
+		</div>
+		<div class="legend">
+			<div class="gradient"></div>
+			<div>
+				<p class="high sign">+</p>
+				<p class="low sign">-</p>
+			</div>
+		</div>
+	</div>
+	<div class="help">
+		<em class="fas fa-info info"></em>
+		<p class="help">
+			This chart represents all skills in proportion to their weight in the registered portfolio.
+			Each tile is filled with a color corresponding to the "staffing" risk on its underlying skills.
+		</p>
+		<ul>
+			<li class="good">A "skill" tile with this color has enough developers to maintain its related projects.</li>
+			<li class="bad">On the contrary, this color proves a lack of developers.</li>
+		</ul>
+	</div>
+</div>

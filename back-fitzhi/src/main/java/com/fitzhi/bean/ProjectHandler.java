@@ -6,6 +6,10 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
 
+import javax.validation.constraints.NotNull;
+
+import com.fitzhi.data.internal.Experience;
+import com.fitzhi.data.internal.ExperienceDetectionTemplate;
 import com.fitzhi.data.internal.FilesStats;
 import com.fitzhi.data.internal.Ghost;
 import com.fitzhi.data.internal.Library;
@@ -14,18 +18,30 @@ import com.fitzhi.data.internal.ProjectSkill;
 import com.fitzhi.data.internal.ProjectSonarMetricValue;
 import com.fitzhi.data.internal.SonarEvaluation;
 import com.fitzhi.data.internal.SonarProject;
+import com.fitzhi.data.internal.Staff;
+import com.fitzhi.data.internal.StaffExperienceTemplate;
 import com.fitzhi.data.source.CommitHistory;
 import com.fitzhi.data.source.Contributor;
 import com.fitzhi.exception.ApplicationException;
+import com.fitzhi.exception.NotFoundException;
 
 public interface ProjectHandler extends DataSaverLifeCycle {
 
 	/**
-	 * @return the complete collection of projects.
+	 * <em>The key of the Map id the {@link Project#id Project identifier}</em>
+	 * 
+	 * @return the complete map of projects.
 	 * @throws ApplicationException
 	 *             thrown most probably if an IO exception occurs
 	 */
 	Map<Integer, Project> getProjects() throws ApplicationException;
+
+	/**
+	 * Filter and return the active projects.
+	 * @return a list of active projects
+	 * @throws ApplicationException thrown if any problem occurs, most probably if an {@link IOException IO exception}.
+	 */
+	List<Project> activeProjects() throws ApplicationException;
 
 	/**
 	 * Search for a project associated to the passed name.
@@ -38,7 +54,7 @@ public interface ProjectHandler extends DataSaverLifeCycle {
 	Optional<Project> lookup(String projectName) throws ApplicationException;
 
 	/**
-	 * Retrieve a project.
+	 * Retrieve a project from the portfolio on the given ID.
 	 * 
 	 * @param idProject
 	 *            project identifier
@@ -47,7 +63,17 @@ public interface ProjectHandler extends DataSaverLifeCycle {
 	 * @throws ApplicationException
 	 *             thrown most probably if an IO exception occurs
 	 */
-	Project get(int idProject) throws ApplicationException;
+	Project lookup(int idProject) throws ApplicationException;
+
+	/**
+	 * Find a <b>NON NULLABLE</b> project on a given ID. A result is mandatory for this method.
+	 * 
+	 * @param idProject the given project identifier.
+	 * @return a non-nullable project retrieved in the projects repository.
+	 * @throws ApplicationException thrown if an error occurs during the search, most probably an {@link IOException}
+	 * @throws NotFoundException thrown if the project identifier is not retrieved in the application portfolio
+	 */
+	@NotNull Project getProject(int idProject) throws ApplicationException, NotFoundException;
 
 	/**
 	 * <p>
@@ -69,8 +95,17 @@ public interface ProjectHandler extends DataSaverLifeCycle {
 	 * If project is not identified (e.g. the {@link Project#getId()} is less than 1), we will generate an ID.
 	 * @param project the passed project
 	 * @return the newly created project
+	 * 
 	 */
 	Project addNewProject(Project project) throws ApplicationException;
+
+	/**
+	 * Generate the next project identifier.
+	 * 
+	 * @return the next available {@code idProject}
+	 * @throws ApplicationException thrown if an error occurs during the treatment, (most probably due to an {@link IOException})
+	 */
+	int nextIdProject() throws ApplicationException;
 
 	/**
 	 * @param idProject
@@ -88,7 +123,7 @@ public interface ProjectHandler extends DataSaverLifeCycle {
 
 	/**
 	 * Remove the given project from the collection.
-	 * @param project the project identifier
+	 * @param idProject the project identifier
 	 * @throws ApplicationException exception thrown if any problem occurs, most probably an {@link IOException}. 
 	 */
 	void removeProject(int idProject) throws ApplicationException;
@@ -247,9 +282,9 @@ public interface ProjectHandler extends DataSaverLifeCycle {
 	 * Remove a sonar entry from the entries collection.
 	 * </p>
 	 * @param project the given project
-	 * @param sonarEntry the given sonar entry
+	 * @param sonarKey the given sonar key
 	 */
-	void removeSonarEntry(Project project, SonarProject sonarEntry);
+	void removeSonarEntry(Project project, String sonarKey);
 
 	/**
 	 * <p>
@@ -298,14 +333,14 @@ public interface ProjectHandler extends DataSaverLifeCycle {
 	void saveUrlSonarServer(Project project, String newUrlSonarServer);
 	
 	/**
-	 * Save the ecosystems detected inside the project
+	 * Save the ecosystems detected inside the project.
 	 * @param project the given project
 	 * @param ecosystems the list of ecosystem-identifiers
 	 */
 	void saveEcosystems(Project project, List<Integer> ecosystems);
 	
 	/**
-	 * Update the skills of the project based on the commit detected on the repository 
+	 * Update the skills of the project based on the commit detected on the repository.
 	 * @param project the given project the given project
 	 * @param entries the list of entries of {@link CommitHistory commits}
 	 * @throws ApplicationException thrown if any exception occurs during the treatment
@@ -314,7 +349,7 @@ public interface ProjectHandler extends DataSaverLifeCycle {
 	
 	/**
 	 * <p>
-	 * Reset the metrics attached to the skills of a given project
+	 * Reset the metrics attached to the skills of a given project.
 	 * </p>
 	 * <p><i>
 	 * This method is most probably used  at the beginning of {@link #updateSkills(Project, List)}.
@@ -327,7 +362,40 @@ public interface ProjectHandler extends DataSaverLifeCycle {
 	 * <p>
 	 * Test if the path location declared in the project is still valid.
 	 * </p>
+	 * @param project the given project
 	 * @return {@code true} if the path location declared inside the project is valid.
 	 */
 	boolean hasValidRepository(Project project);
+
+	/**
+	 * <p>
+	 * Process <b>AND SAVE</b> the staff experiences for all active projects history.
+	 * </p>
+	 * 
+	 * @throws ApplicationException thrown if any problem occurs.
+	 */
+	void processProjectsExperiences() throws ApplicationException;
+
+	/**
+	 * <p>
+	 * Aggregate the experiences of all <b>active</b> projects.
+	 * </p>
+	 * 
+	 * @return a Map indexed by the couple ({@link Staff#getIdStaff() idStaff}; {@link ExperienceDetectionTemplate#getIdEDT() idExperienceTemplate}) 
+	 * associated with an aggregation of field value
+	 * @throws ApplicationException thrown if any problem occurs.
+	 */
+	Map<StaffExperienceTemplate, Integer> processGlobalExperiences() throws ApplicationException;
+
+	/**
+	 * <p>
+	 * Update for all staff members declared in the application, 
+	 * the <b>"system"</b> {@link Experience level for all skills} detected in the projects.
+	 * </p>
+	 * 
+	 * @param experiences the map containing the experiences retrieved from the activities 
+	 * @throws ApplicationException thrown if any problem occurs.
+	 */
+	void updateStaffSkillLevel(Map<StaffExperienceTemplate, Integer> experiences) throws ApplicationException;
+
 }

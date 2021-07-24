@@ -1,27 +1,25 @@
-import { AfterViewInit, Component, OnInit, ViewChild } from '@angular/core';
-import {Constants} from '../../constants';
-import {Project} from '../../data/project';
-import { ListProjectsService } from './list-projects-service/list-projects.service';
-import { Router } from '@angular/router';
+import { AfterViewInit, Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { MatPaginator, PageEvent } from '@angular/material/paginator';
-import { MatTable, MatTableDataSource } from '@angular/material/table';
 import { MatSort } from '@angular/material/sort';
-import { ProjectService } from '../../service/project.service';
-import { StaffListService } from '../../service/staff-list-service/staff-list.service';
-import { Commit } from '../../data/commit';
-import { traceOn } from '../../global';
-import { ReferentialService } from '../../service/referential.service';
-import { ProjectsDataSource } from './projects-data-source';
+import { MatTable } from '@angular/material/table';
+import { Router } from '@angular/router';
 import { BaseComponent } from 'src/app/base/base.component';
 import { UserSetting } from 'src/app/base/user-setting';
 import { CinematicService } from 'src/app/service/cinematic.service';
+import { Commit } from '../../data/commit';
+import { Project } from '../../data/project';
+import { ProjectService } from '../../service/project/project.service';
+import { ReferentialService } from '../../service/referential.service';
+import { StaffListService } from '../../service/staff-list-service/staff-list.service';
+import { ListProjectsService } from './list-projects-service/list-projects.service';
+import { ProjectsDataSource } from './projects-data-source';
 
 @Component({
 	selector: 'app-list-project',
 	templateUrl: './list-project.component.html',
 	styleUrls: ['./list-project.component.css']
 })
-export class ListProjectComponent extends BaseComponent implements OnInit, AfterViewInit {
+export class ListProjectComponent extends BaseComponent implements OnInit, AfterViewInit, OnDestroy {
 
 	/**
 	 * The datasource that contains the filtered projects
@@ -86,7 +84,7 @@ export class ListProjectComponent extends BaseComponent implements OnInit, After
 	}
 
 	ngAfterViewInit(): void {
-		this.dataSource.paginator = this.paginator; 
+		this.dataSource.paginator = this.paginator;
 		this.dataSource.sort = this.sort;
 	}
 
@@ -112,7 +110,7 @@ export class ListProjectComponent extends BaseComponent implements OnInit, After
 					return this.retrieveLastCommit(item.id).dateCommit;
 			}
 		};
-		this.dataSource.paginator = this.paginator; 
+		this.dataSource.paginator = this.paginator;
 		this.dataSource.sort = this.sort;
 	}
 
@@ -142,7 +140,7 @@ export class ListProjectComponent extends BaseComponent implements OnInit, After
 
 	/**
 	 * This method is invoked if the user change the page size.
-	 * @param $pageEvent event 
+	 * @param $pageEvent event
 	 */
 	public page($pageEvent: PageEvent) {
 		this.pageSize.saveSetting($pageEvent.pageSize);

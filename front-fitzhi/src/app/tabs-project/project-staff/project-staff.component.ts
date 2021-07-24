@@ -1,21 +1,21 @@
-import { Component, OnInit, ViewChild, OnDestroy, Input, AfterContentInit } from '@angular/core';
-import { ProjectService } from '../../service/project.service';
+import { AfterContentInit, Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { MatPaginator, PageEvent } from '@angular/material/paginator';
+import { MatSort } from '@angular/material/sort';
+import { MatTable, MatTableDataSource } from '@angular/material/table';
+import { ActivatedRoute, Router } from '@angular/router';
+import { EMPTY } from 'rxjs';
+import { switchMap, take } from 'rxjs/operators';
+import { UserSetting } from 'src/app/base/user-setting';
+import { Contributor } from 'src/app/data/contributor';
+import { ProjectContributors } from 'src/app/data/external/ProjectContributors';
+import { traceOn } from 'src/app/global';
+import { TabsStaffListService } from 'src/app/tabs-staff-list/service/tabs-staff-list.service';
+import { BaseComponent } from '../../base/base.component';
 import { Constants } from '../../constants';
 import { MessageService } from '../../interaction/message/message.service';
 import { CinematicService } from '../../service/cinematic.service';
-import { ActivatedRoute, Router } from '@angular/router';
-import { MatSort } from '@angular/material/sort';
-import { MatTableDataSource, MatTable } from '@angular/material/table';
+import { ProjectService } from '../../service/project/project.service';
 import { ProjectStaffService } from '../project-staff-service/project-staff.service';
-import { BaseComponent } from '../../base/base.component';
-import { TabsStaffListService } from 'src/app/tabs-staff-list/service/tabs-staff-list.service';
-import { EMPTY } from 'rxjs';
-import { take, switchMap } from 'rxjs/operators';
-import { ContributorsDTO } from 'src/app/data/external/contributorsDTO';
-import { Contributor } from 'src/app/data/contributor';
-import { traceOn } from 'src/app/global';
-import { MatPaginator, PageEvent } from '@angular/material/paginator';
-import { UserSetting } from 'src/app/base/user-setting';
 
 @Component({
 	selector: 'app-project-staff',
@@ -31,20 +31,20 @@ export class ProjectStaffComponent extends BaseComponent implements OnInit, OnDe
 	@ViewChild(MatSort) sort: MatSort;
 
 	/**
-	 * The table 
+	 * The table
 	 */
 	@ViewChild(MatTable) table: MatTable<any>;
 
 	/**
 	 * The paginator of the staff data source.
 	 */
-	 @ViewChild(MatPaginator, {static: true}) paginator: MatPaginator;
+	@ViewChild(MatPaginator, {static: true}) paginator: MatPaginator;
 
 	/**
 	 * Key used to save the page size in the local storage.
 	 */
-	 public pageSize = new UserSetting('project-staff.pageSize', 5);
-	 
+	public pageSize = new UserSetting('project-staff.pageSize', 5);
+
 	constructor(
 		private projectService: ProjectService,
 		private route: ActivatedRoute,
@@ -57,7 +57,6 @@ export class ProjectStaffComponent extends BaseComponent implements OnInit, OnDe
 	}
 
 	ngOnInit() {
-
 		this.subscriptions.add(
 			this.cinematicService.tabProjectActivated$.subscribe(
 				index => {
@@ -81,7 +80,6 @@ export class ProjectStaffComponent extends BaseComponent implements OnInit, OnDe
 	}
 
 	ngAfterContentInit() {
-
 		this.subscriptions.add(
 			this.cinematicService.tabProjectActivated$.pipe(
 				//
@@ -90,7 +88,8 @@ export class ProjectStaffComponent extends BaseComponent implements OnInit, OnDe
 				switchMap( (tabSelected: number) => {
 					return (tabSelected === Constants.PROJECT_IDX_TAB_STAFF) ?
 						this.projectService.projectLoaded$ : EMPTY;
-				})).subscribe({
+				}))
+				.subscribe({
 					next: doneAndOk => {
 						if (traceOn()) {
 							this.projectService.dump(this.projectService.project, 'projectStaffComponent.ngOnInit()');
@@ -99,7 +98,9 @@ export class ProjectStaffComponent extends BaseComponent implements OnInit, OnDe
 							this.loadContributors();
 						}
 					}
-				}));
+				}
+			)
+		);
 	}
 
 	/**
@@ -129,14 +130,14 @@ export class ProjectStaffComponent extends BaseComponent implements OnInit, OnDe
 	}
 
 	/**
-	 * Manage the datasource associated to the table
+	 * Manage the datasource associated with the table
 	 * @param contributorsDTO container of contributors retrieved from the back-end.
 	 */
-	manageDataSource(contributorsDTO: ContributorsDTO) {
+	manageDataSource(projectContributors: ProjectContributors) {
 		if (!this.dataSource) {
-			this.dataSource = new MatTableDataSource(contributorsDTO.contributors);
+			this.dataSource = new MatTableDataSource(projectContributors.contributors);
 			this.dataSource.sort = this.sort;
-			this.dataSource.paginator = this.paginator; 
+			this.dataSource.paginator = this.paginator;
 			this.projectStaffService.contributors = this.dataSource.data;
 			this.subscriptions.add(
 				this.dataSource.connect().subscribe(data => this.projectStaffService.contributors = data));
@@ -147,7 +148,7 @@ export class ProjectStaffComponent extends BaseComponent implements OnInit, OnDe
 				return data[sortHeaderId];
 			};
 		} else {
-			this.dataSource.data = contributorsDTO.contributors;
+			this.dataSource.data = projectContributors.contributors;
 			this.table.renderRows();
 		}
 	}
@@ -165,20 +166,23 @@ export class ProjectStaffComponent extends BaseComponent implements OnInit, OnDe
 	 * @param idStaff the Staff identifier selected
 	 */
 	public routeStaff(idStaff: number) {
-		this.tabsStaffListComponent.inMasterDetail = true;
 		this.router.navigate(['/user/' + idStaff], {});
 		this.cinematicService.setForm(Constants.DEVELOPERS_CRUD, '/staff/' + idStaff);
-		this.cinematicService.emitActualCollaboratorDisplay.next(idStaff);
+		this.cinematicService.currentCollaboratorSubject$.next(idStaff);
+		setTimeout(() => {
+			this.cinematicService.masterDetailSubject$.next(true);
+		}, 0);
+
 	}
 
 	/**
 	 * This method is invoked if the user change the page size.
-	 * @param $pageEvent event 
+	 * @param $pageEvent event
 	 */
 	public page($pageEvent: PageEvent) {
 		this.pageSize.saveSetting($pageEvent.pageSize);
 	}
-	
+
 	/**
 	 * Calling the base class to unsubscribe all subscriptions.
 	 */

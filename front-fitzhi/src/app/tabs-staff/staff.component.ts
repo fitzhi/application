@@ -1,16 +1,15 @@
-import { Component, OnInit, OnDestroy } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { Collaborator } from '../data/collaborator';
-import { Constants } from '../constants';
-
-import { StaffListService } from '../service/staff-list-service/staff-list.service';
-import { StaffDataExchangeService } from './service/staff-data-exchange.service';
-import { CinematicService } from '../service/cinematic.service';
-import { MessageService } from '../interaction/message/message.service';
+import { Subject } from 'rxjs';
 import { BaseComponent } from '../base/base.component';
-import { Subject, BehaviorSubject } from 'rxjs';
+import { Constants } from '../constants';
+import { Collaborator } from '../data/collaborator';
 import { traceOn } from '../global';
+import { MessageService } from '../interaction/message/message.service';
+import { CinematicService } from '../service/cinematic.service';
+import { StaffListService } from '../service/staff-list-service/staff-list.service';
 import { StaffService } from './service/staff.service';
+
 
 @Component({
 	selector: 'app-staff',
@@ -39,7 +38,6 @@ export class StaffComponent extends BaseComponent implements OnInit, OnDestroy {
 		private route: ActivatedRoute,
 		public staffListService: StaffListService,
 		public messageService: MessageService,
-		public staffDataExchangeService: StaffDataExchangeService,
 		public staffService: StaffService,
 		private router: Router) {
 		super();
@@ -59,8 +57,7 @@ export class StaffComponent extends BaseComponent implements OnInit, OnDestroy {
 			// Either we are in creation mode, or we load the collaborator from the back-end...
 			// We create an empty collaborator until the subscription is complete
 			this.collaborator = this.staffService.emptyStaff();
-
-			this.staffDataExchangeService.changeCollaborator(this.collaborator);
+			this.staffService.changeCollaborator(this.collaborator);
 
 			/*
 			 * By default, you cannot add a project/skill for an unregistered developer.
@@ -69,14 +66,14 @@ export class StaffComponent extends BaseComponent implements OnInit, OnDestroy {
 			if (this.idStaff != null) {
 				this.staffListService.getCollaborator$(this.idStaff).subscribe(
 					(collab: Collaborator) => {
-						this.staffDataExchangeService.changeCollaborator(collab);
+						this.staffService.changeCollaborator(collab);
 						this.collaborator = collab;
 						if (collab.active) {
 							document.querySelector('body').style.cssText = '--actions-button-visible: visible';
 						} else {
 							document.querySelector('body').style.cssText = '--actions-button-visible: hidden';
 						}
-						this.cinematicService.emitActualCollaboratorDisplay.next(this.collaborator.idStaff);
+						this.cinematicService.currentCollaboratorSubject$.next(this.collaborator.idStaff);
 						this.cinematicService.setForm(Constants.DEVELOPERS_CRUD, this.router.url);
 					},
 					error => {

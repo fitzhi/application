@@ -156,7 +156,7 @@ public class SkylineProcessorImpl implements SkylineProcessor {
 			if (layer.getIdStaff() <= 0) {
 				building.addInactiveLines(layer.getLines(), layer.getYear(), layer.getWeek());
 			} else {
-				Staff staff = staffHandler.getStaff(layer.getIdStaff());
+				Staff staff = staffHandler.lookup(layer.getIdStaff());
 				if (staff == null) {
 					building.addInactiveLines(layer.getLines(), layer.getYear(), layer.getWeek());
 					if (log.isWarnEnabled()) {

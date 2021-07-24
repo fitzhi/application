@@ -20,12 +20,12 @@ export class ProjectGhostsDataSource extends MatTableDataSource<Unknown> {
 
 	/**
 	 * @param ghosts list of unregistered contributors.
-     * @param allStaff _(optional)_ the complete list of staff members, if necessary
-     */
+	 * @param allStaff _(optional)_ the complete list of staff members, if necessary
+	 */
 	constructor(ghosts: Unknown[], allStaff?: Collaborator[]) {
 		super();
 		this.ghosts = ghosts;
-		
+
 		// If the staff list is not given, it's because we do need to fill the related staff at this level
 		if (allStaff) {
 			this.updateRelatedStaff(ghosts, allStaff);
@@ -88,7 +88,7 @@ export class ProjectGhostsDataSource extends MatTableDataSource<Unknown> {
 	 * @param pseudo the ghost pseudo who has been linked to a current developer.
 	 * @param idStaff staff identifier
 	 */
-	 updateStaffMember (pseudo: string, idStaff: number) {
+	updateStaffMember (pseudo: string, idStaff: number) {
 		const indexPseudo = this.ghosts.findIndex(ghost => pseudo === ghost.pseudo);
 		if (indexPseudo === -1) {
 			console.error ('Pseudo ' + pseudo + ' has disappeared from the ghosts list');

@@ -1,10 +1,11 @@
 import { Injectable, NgZone } from '@angular/core';
 import { Subject } from 'rxjs';
+import { TokenService } from 'src/app/admin/service/token/token.service';
 import { ActivityLog } from 'src/app/data/activity-log';
 import { traceOn } from 'src/app/global';
 import { MessageService } from 'src/app/interaction/message/message.service';
 import { BackendSetupService } from 'src/app/service/backend-setup/backend-setup.service';
-import { ProjectService } from 'src/app/service/project.service';
+import { ProjectService } from 'src/app/service/project/project.service';
 
 @Injectable({
 	providedIn: 'root'
@@ -23,6 +24,7 @@ export class SsewatcherService {
 
 	constructor(
 		private backendSetupService: BackendSetupService,
+		private tokenService: TokenService,
 		private zone: NgZone,
 		private messageService: MessageService,
 		private projectService: ProjectService) { }
@@ -46,9 +48,9 @@ export class SsewatcherService {
 	 */
 	public listenServer(url: string): EventSource {
 
-		const completeUrl = this.backendSetupService.url() + url + this.projectService.project.id;
+		const completeUrl = this.backendSetupService.url() + url;
 		if (traceOn()) {
-			console.log('starting to listen events @ ' + url + this.projectService.project.id);
+			console.log(`starting to listen events @url ${url}`);
 		}
 		const eventSource = new EventSource(completeUrl);
 
@@ -68,7 +70,7 @@ export class SsewatcherService {
 		const activityLog: ActivityLog = new ActivityLog(JSON.parse(messageEvent.data));
 		// We need to execute the work INSIDE the Angular zone.
 		if (traceOn()) {
-			console.log('Event message : %s, progression %d', activityLog.message, activityLog.progressionPercentage);
+			console.log(`Event message : ${activityLog.message}, progression ${activityLog.progressionPercentage}`);
 		}
 		this.zone.run(() => {
 			if (activityLog.isKo()) {
@@ -116,7 +118,7 @@ export class SsewatcherService {
 	closeEventSource() {
 		if (this.eventSource) {
 			if (traceOn()) {
-				console.log('Stop to listen events for project identifier %d', this.projectService.project.id);
+				console.log(`Stop to listen events for project identifier ${this.projectService.project.id}`);
 			}
 			this.eventSource.close();
 			this.eventSource = null;

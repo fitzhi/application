@@ -1,11 +1,9 @@
 import { Component, OnInit, Input, OnDestroy } from '@angular/core';
 import { BaseComponent } from 'src/app/base/base.component';
 import { AttachmentFile } from 'src/app/data/AttachmentFile';
-import { Constants } from 'src/app/constants';
-import { Project } from 'src/app/data/project';
 import { MatDialogConfig, MatDialog } from '@angular/material/dialog';
 import { AuditUploadAttachmentComponent } from './audit-upload-attachment/audit-upload-attachment.component';
-import { ProjectService } from 'src/app/service/project.service';
+import { ProjectService } from 'src/app/service/project/project.service';
 import { FileService } from 'src/app/service/file.service';
 import { MessageService } from 'src/app/interaction/message/message.service';
 import { AuditAttachmentService } from '../service/audit-attachment.service';
@@ -98,10 +96,8 @@ export class AuditAttachmentComponent extends BaseComponent implements OnInit, O
 			dialogReference.afterClosed().subscribe((auditAttachment: AuditAttachment)  => {
 				if (auditAttachment) {
 					if (traceOn()) {
-						console.log('Adding the file %s labelled with %s', auditAttachment.filename, this.label);
+						console.log(`Adding the file ${auditAttachment.filename} labelled with ${this.label}`);
 					}
-					this.auditAttachmentService.emitAddUpdAttachmentFile(
-						new AttachmentFile(id, auditAttachment.filename, auditAttachment.type, this.label));
 					this.projectService.loadMapSkills(this.projectService.project);
 					if (traceOn()) {
 						this.projectService.dump(this.projectService.project, 'uploadFile');
@@ -119,17 +115,16 @@ export class AuditAttachmentComponent extends BaseComponent implements OnInit, O
 	}
 
 	/**
-	 * Download the audit file from the backend.
-	 * @param idFile the file identifier inside this topic
+	 * Delete the attachment file from the system for a topic inside a project.
 	 */
 	deleteFile() {
 		this.projectService.deleteAuditAttachment(this.projectService.project.id, this.idTopic, this.attachmentFile)
 			.subscribe(doneAndOk => {
 				if (doneAndOk) {
-					this.messageService.success('The file \'' + this.attachmentFile.fileName + '\' has been removed from system.');
-					this.auditAttachmentService.emitRemoveAttachmentFile(this.id);
+					this.messageService.success(`The file '${this.attachmentFile.fileName}' has been removed from the system.`);
+					this.auditAttachmentService.removeAttachmentFile(this.idTopic, this.id);
 					if (traceOn()) {
-						this.projectService.dump(this.projectService.project, 'uploadFile');
+						this.projectService.dump(this.projectService.project, 'deleteFile');
 					}
 				}
 			});

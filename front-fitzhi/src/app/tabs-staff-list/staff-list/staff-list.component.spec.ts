@@ -1,10 +1,8 @@
 import { async, ComponentFixture, TestBed, TestModuleMetadata } from '@angular/core/testing';
-
-import { StaffListComponent } from './staff-list.component';
-import { InitTest } from 'src/app/test/init-test';
-import { RouterModule } from '@angular/router';
 import { RouterTestingModule } from '@angular/router/testing';
-import { StaffService } from 'src/app/tabs-staff/service/staff.service';
+import { InitTest } from 'src/app/test/init-test';
+import { StaffListComponent } from './staff-list.component';
+
 describe('StaffListComponent', () => {
 	let component: StaffListComponent;
 	let fixture: ComponentFixture<StaffListComponent>;

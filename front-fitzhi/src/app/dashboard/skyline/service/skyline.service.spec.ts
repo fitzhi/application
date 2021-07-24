@@ -6,7 +6,7 @@ import { Project } from 'src/app/data/project';
 import { ProjectFloor } from 'src/app/data/project-floor';
 import { SkylineAnimation } from 'src/app/data/skyline-animation';
 import { CinematicService } from 'src/app/service/cinematic.service';
-import { ProjectService } from 'src/app/service/project.service';
+import { ProjectService } from 'src/app/service/project/project.service';
 import { ReferentialService } from 'src/app/service/referential.service';
 
 import { SkylineService } from './skyline.service';
@@ -34,16 +34,16 @@ describe('SkylineService', () => {
 	it('Testing the method function evaluateMaxNumberOfLines(...)', () => {
 		expect(service).toBeTruthy();
 		const floors: ProjectFloor[] = [];
-		floors.push( {idProject: 1, year:2020, week: 10, linesActiveDevelopers: 10, linesInactiveDevelopers: 30})
-		floors.push( {idProject: 1, year:2020, week: 11, linesActiveDevelopers: 20, linesInactiveDevelopers: 300})
-		floors.push( {idProject: 1, year:2020, week: 12, linesActiveDevelopers: 30, linesInactiveDevelopers: 300})
+		floors.push( {idProject: 1, year: 2020, week: 10, linesActiveDevelopers: 10, linesInactiveDevelopers: 30});
+		floors.push( {idProject: 1, year: 2020, week: 11, linesActiveDevelopers: 20, linesInactiveDevelopers: 300});
+		floors.push( {idProject: 1, year: 2020, week: 12, linesActiveDevelopers: 30, linesInactiveDevelopers: 300});
 		expect(service.evaluateMaxNumberOfLines(floors)).toBe(330);
 	});
 
 	it('Testing the method function generateSkylineToDraw(...)', () => {
 		const skylineAnimation = new SkylineAnimation();
 		skylineAnimation.floors = [];
-		skylineAnimation.floors.push ( {idProject: 1, year:2020, week: 10, linesActiveDevelopers: 50, linesInactiveDevelopers: 50});
+		skylineAnimation.floors.push ( {idProject: 1, year: 2020, week: 10, linesActiveDevelopers: 50, linesInactiveDevelopers: 50});
 		const skylineToBeDrawn = service.generateSkylineToDraw(skylineAnimation, 1000, 300);
 		console.table (skylineToBeDrawn);
 		expect(skylineToBeDrawn.length).toBe(1);
@@ -58,5 +58,4 @@ describe('SkylineService', () => {
 
 	});
 
-	
 });

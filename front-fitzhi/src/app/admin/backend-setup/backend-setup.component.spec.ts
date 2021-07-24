@@ -74,7 +74,7 @@ describe('BackendSetupComponent', () => {
 		expect('http://localhost:8080').toEqual(field('#url').value);
 
 		const backendSetupService = TestBed.inject(BackendSetupService);
-		const spy = spyOn(backendSetupService, 'isVeryFirstConnection').and.returnValue(of(new FirstConnection(true, null)));
+		const spy = spyOn(backendSetupService, 'isVeryFirstConnection$').and.returnValue(of(new FirstConnection(true, null)));
 
 		expect(field('#submitButton').getAttribute('class')).toEqual('urlEdition');
 
@@ -100,7 +100,7 @@ describe('BackendSetupComponent', () => {
 		expect('http://localhost:8080').toEqual(field('#url').value);
 
 		const backendSetupService = TestBed.inject(BackendSetupService);
-		const spy = spyOn(backendSetupService, 'isVeryFirstConnection')
+		const spy = spyOn(backendSetupService, 'isVeryFirstConnection$')
 			.and.returnValue(throwError({code: 500, message: 'Error message'}));
 
 		expect(field('#submitButton').getAttribute('class')).toEqual('urlEdition');

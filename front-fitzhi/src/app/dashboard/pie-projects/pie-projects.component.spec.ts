@@ -46,8 +46,8 @@ describe('PieProjectsComponent', () => {
 	beforeEach(async(() => {
 		TestBed.configureTestingModule({
 			declarations: [ TestHostComponent, PieProjectsComponent, ProjectFormComponent ],
-			imports: [MatTableModule, HttpClientTestingModule, 
-				RouterTestingModule.withRoutes([		
+			imports: [MatTableModule, HttpClientTestingModule,
+				RouterTestingModule.withRoutes([
 					{ path: 'project/:id', component: ProjectFormComponent }
 				]),
 			MatDialogModule, MatPaginatorModule, BrowserAnimationsModule],
@@ -55,7 +55,7 @@ describe('PieProjectsComponent', () => {
 		})
 		.compileComponents();
 	}));
-	
+
 	beforeEach(() => {
 		localStorage.setItem('pie-projects-staff.pageSize', '5');
 		fixture = TestBed.createComponent(TestHostComponent);
@@ -67,8 +67,8 @@ describe('PieProjectsComponent', () => {
 	it('should create the 5 elements first-page list  of of Projects associated with the selected slice', () => {
 		expect(component).toBeTruthy();
 		for (let i = 0; i < 5; i++) {
-			const project = fixture.debugElement.query(By.css('#project-' + i));
-			expect(project).toBeDefined();
+			const prj = fixture.debugElement.query(By.css('#project-' + i));
+			expect(prj).toBeDefined();
 		}
 		// The project 5 is not present
 		const project = fixture.debugElement.query(By.css('#project-5'));
@@ -82,10 +82,10 @@ describe('PieProjectsComponent', () => {
 		// We set in th local storage that the end-user has chosen to have a 10-lines table
 		//
 		localStorage.setItem('pie-projects-staff.pageSize', '10');
-		
+
 		for (let i = 0; i < 10; i++) {
-			const project = fixture.debugElement.query(By.css('#project-' + i));
-			expect(project).toBeDefined();
+			const prj = fixture.debugElement.query(By.css('#project-' + i));
+			expect(prj).toBeDefined();
 		}
 		// The project 10 is not present
 		const project = fixture.debugElement.query(By.css('#project-10'));
@@ -115,7 +115,7 @@ describe('PieProjectsComponent', () => {
 				bubbles: true,
 				cancelable: true
 			})
-		);	
+		);
 
 		fixture.detectChanges();
 		expect(project.nativeElement.style.backgroundColor).toBe('lightgreen');
@@ -134,7 +134,7 @@ describe('PieProjectsComponent', () => {
 				bubbles: true,
 				cancelable: true
 			})
-		);	
+		);
 		fixture.detectChanges();
 		expect(project.nativeElement.style.backgroundColor).toBe('lightgreen');
 
@@ -144,7 +144,7 @@ describe('PieProjectsComponent', () => {
 				bubbles: true,
 				cancelable: true
 			})
-		);	
+		);
 		expect(project.nativeElement.style.backgroundColor).toBe('');
 
 	});

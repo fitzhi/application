@@ -35,8 +35,8 @@ describe(`TokenService`, () => {
 		tokenService.saveToken(token);
 
 		tokenService.refreshToken$().subscribe({
-			next: token => console.log (token)
-		})
+			next: tk => console.log (tk)
+		});
 
 		const httpRequest = httpMock.expectOne('myBackendUrl/oauth/token?refresh_token=refresh_token_value&grant_type=refresh_token');
 		expect(httpRequest.request.headers.has('authorization')).toEqual(true);
@@ -45,13 +45,13 @@ describe(`TokenService`, () => {
 
 	it('should refresh the authorization token with the refresh token saved in the localstorage', () => {
 
-		tokenService.saveToken(null);		
+		tokenService.saveToken(null);
 		localStorage.setItem('refresh_token', 'refresh_token_value');
 		localStorage.setItem('access_token', 'access_token_value');
 
 		tokenService.refreshToken$().subscribe({
 			next: token => console.log (token)
-		})
+		});
 
 		const httpRequest = httpMock.expectOne('myBackendUrl/oauth/token?refresh_token=refresh_token_value&grant_type=refresh_token');
 		expect(httpRequest.request.headers.has('authorization')).toEqual(true);

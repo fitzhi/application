@@ -1,24 +1,17 @@
+import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { HttpClient, HttpHeaders } from '@angular/common/http';
-
+import { NO_CONTENT } from 'http-status-codes';
+import { BehaviorSubject, EMPTY, Observable, of, Subject } from 'rxjs';
+import { switchMap, take } from 'rxjs/operators';
 import { Collaborator } from '../../data/collaborator';
-import { Project } from '../../data/project';
-import { StaffDTO } from '../../data/external/staffDTO';
-
 import { DeclaredExperience } from '../../data/declared-experience';
 import { Experience } from '../../data/experience';
-import { Observable, Subject, of, EMPTY } from 'rxjs';
-
-import { BackendSetupService } from '../../service/backend-setup/backend-setup.service';
-import { take, switchMap } from 'rxjs/operators';
-import { BooleanDTO } from '../../data/external/booleanDTO';
-import { FileService } from '../../service/file.service';
-import { HttpCodes, traceOn } from '../../global';
-import { StaffDataExchangeService } from './staff-data-exchange.service';
+import { StaffDTO } from '../../data/external/staffDTO';
+import { Project } from '../../data/project';
+import { traceOn } from '../../global';
 import { MessageService } from '../../interaction/message/message.service';
-import { StaffListService } from '../../service/staff-list-service/staff-list.service';
-import { Constants } from '../../constants';
-import { CinematicService } from '../../service/cinematic.service';
+import { BackendSetupService } from '../../service/backend-setup/backend-setup.service';
+import { FileService } from '../../service/file.service';
 
 const httpOptions = {
 	headers: new HttpHeaders({ 'Content-Type': 'application/json', 'observe': 'response' })
@@ -30,6 +23,19 @@ const httpOptions = {
 export class StaffService {
 
 	/**
+	 * This observable emits a boolan **TRUE** if a new staff member has been loaded.
+	 */
+	public collaboratorLoaded$ = new BehaviorSubject<boolean>(false);
+
+	/**
+	 * Current Staff member.
+	 */
+	public collaborator: Collaborator;
+
+	/**	 * @param idStaff the staff identifier.
+	 * @param idProject the project identifier to add.
+	 * @returns an observable emetting the staff record updated or an empty staff if any error occurs.
+
 	 * Observable to a map containig the count of staff members aggregated by skill & level (i.e. experience)
 	 */
 	public peopleCountExperience$ = new Subject<Map<string, number>>();
@@ -38,14 +44,15 @@ export class StaffService {
 		private fileService: FileService,
 		private messageService: MessageService,
 		private httpClient: HttpClient,
-		private staffDataExchangeService: StaffDataExchangeService,
 		private backendSetupService: BackendSetupService) {
 	}
 
 	/**
-	 * Return the global list of ALL collaborators, working for the company.
+	 * Load the global list of IT staff working for this company.
+	 *
+	 * @returns an observable emitting all staff members.
 	 */
-	getAll(): Observable<Collaborator[]> {
+	getAll$(): Observable<Collaborator[]> {
 		if (traceOn()) {
 			console.log('Fetching the collaborators');
 		}
@@ -53,12 +60,13 @@ export class StaffService {
 	}
 
 	/**
-		 * GET staff member associated to this id. Will throw a 404 if id not found.
-		 */
-	get(id: number): Observable<Collaborator> {
+	* GET staff member associated to this id. Will throw a 404 if id not found.
+	* @param id Staff identifier
+	*/
+	get$(id: number): Observable<Collaborator> {
 		const url = this.backendSetupService.url() + '/staff' + '/' + id;
 		if (traceOn()) {
-			console.log('Fetching the collaborator ' + id + ' on the address ' + url);
+			console.log(`Fetching the collaborator ${id} on the address ${url}`);
 		}
 		return this.httpClient.get<Collaborator>(url);
 	}
@@ -79,10 +87,10 @@ export class StaffService {
 
 	/**
 	 * Create a new staff member inside the workforce.
-	 * 
-	 * The Angular application will invoke the Rest server with a **POST** verb, 
+	 *
+	 * The Angular application will invoke the Rest server with a **POST** verb,
 	 * and then after, invoke an HTTP Get with the returned location.
-	 * 
+	 *
 	 * @param staff a staff member to be added in the company workforce
 	 * @returns the newly created collaborator with his/her personal ID.
 	 */
@@ -105,7 +113,7 @@ export class StaffService {
 
 	/**
 	 * Execute an HTTP **PUT** to the Rest Server in order to update the given staff member.
-	 * 
+	 *
 	 * @param staff the staff to be updated
 	 */
 	update$(staff: Collaborator): Observable<Collaborator> {
@@ -118,13 +126,14 @@ export class StaffService {
 				take(1),
 				switchMap(
 					response => {
-						if (response.status === HttpCodes.noContent) {
+						if (response.status === NO_CONTENT) {
 							return of(staff);
 						} else {
-							throw 'The staff ' + staff.firstName + staff.lastName + ' has not been updated for an unknown reason.';
+							throw new Error(`The staff ${staff.firstName} ${staff.lastName} has not been updated for an unknown reason.`);
 						}
 					}
-				));
+				)
+			);
 	}
 
 	/**
@@ -133,7 +142,7 @@ export class StaffService {
 	 * This method is returning an observable emitting **true** if the removal is successfull.
 	 */
 	removeStaff$(): Observable<boolean> {
-		const idStaffToDelete = this.staffDataExchangeService.collaborator.idStaff;
+		const idStaffToDelete = this.collaborator.idStaff;
 		if (traceOn()) {
 			console.log('Removing the collaborator with id ' + idStaffToDelete);
 		}
@@ -201,47 +210,48 @@ export class StaffService {
 					if (traceOn()) {
 						console.log('%s is now %s', staff.lastName, staff.active ? 'active' : 'inactive');
 					}
-					this.staffDataExchangeService.collaborator.active = staff.active;
-					this.staffDataExchangeService.collaborator.dateInactive = staff.dateInactive;
-					this.staffDataExchangeService.collaboratorLoaded$.next(true);
+					this.collaborator.active = staff.active;
+					this.collaborator.dateInactive = staff.dateInactive;
+					this.collaboratorLoaded$.next(true);
 				}
 			});
 	}
 
 	/**
-		 * DELETE delete a staff member from the server
-		 */
-	delete(collaborater: Collaborator | number): Observable<Collaborator> {
-		const id = typeof collaborater === 'number' ? collaborater : collaborater.idStaff;
-		const url = `${this.backendSetupService.url() + '/staff'}/${id}`;
-
-		return this.httpClient.delete<Collaborator>(url, httpOptions);
+	 * Remove a staff member from the staff collection.
+	 *
+	 * @param staff the collaborator to delete
+	 * @returns an observable emitting a Void return if the deletion (SC_200) succees, an error code if not.
+	 */
+	delete$(staff: Collaborator | number) {
+		const id = typeof staff === 'number' ? staff : staff.idStaff;
+		const url = `${this.backendSetupService.url()}/staff/${id}`;
+		return this.httpClient.delete<any>(url, httpOptions);
 	}
 
 	/**
-		 * POST Verb :
 	 * Add the contribution of a staff member into a project.
 	 * @param idStaff the staff identifier.
 	 * @param idProject the project identifier to add.
 	 * @returns an observable emetting the staff record updated or an empty staff if any error occurs.
-		 */
-	addProject(idStaff: number, idProject: number): Observable<BooleanDTO> {
+	 */
+	addProject$(idStaff: number, idProject: number): Observable<Boolean> {
 		if (traceOn()) {
 			console.log('Adding the collaborator with the id : ' + idStaff + ' into the project id ' + idProject);
 		}
-		const body = { idStaff: idStaff, idProject: idProject };
-		return this.httpClient.post<BooleanDTO>(this.backendSetupService.url() + '/staff' + '/project/add', body, httpOptions);
+		return this.httpClient.put<Boolean>(
+			this.backendSetupService.url() + '/staff' + idStaff + '/project/' + idProject, '', httpOptions);
 	}
 
 	/**
 	 * Verb : 'DELETE'
-	 * 
+	 *
 	 * Unregister the contribution of a staff member into a project.
 	 * @param idStaff the staff identifier.
 	 * @param idProject the project identifier to remove from the missions.
 	 * @returns an observable emetting the staff record updated or an empty staff if any error occurs.
 	 */
-	removeProject(idStaff: number, idProject: number): Observable<Boolean> {
+	removeProject$(idStaff: number, idProject: number): Observable<Boolean> {
 		if (traceOn()) {
 			console.log('Removing the collaborator with id : ' + idStaff + ' from project with id ' + idProject);
 		}
@@ -250,17 +260,26 @@ export class StaffService {
 	}
 
 	/**
-		 * Load the projects associated with the staff member identified by this id.
-		 */
-	loadProjects(idStaff: number): Observable<Project[]> {
-		return this.httpClient.get<Project[]>(this.backendSetupService.url() + '/staff' + '/projects/' + idStaff);
+	* Load the projects associated with the staff member identified by this id.
+	*/
+
+	/**
+	 * Load the projects where the given collaborator is involved.
+	 * @param idStaff the Staff identifier
+	 * @returns an observable emitting an array of projects.
+	 */
+	loadProjects$(idStaff: number): Observable<Project[]> {
+		return this.httpClient.get<Project[]>(this.backendSetupService.url() + '/staff/' + idStaff + '/project');
 	}
 
 	/**
-		* Load the experience of the staff member identified by this id.
-		*/
-	loadExperiences(idStaff: number): Observable<Experience[]> {
-		return this.httpClient.get<Experience[]>(this.backendSetupService.url() + '/staff' + '/experiences/' + idStaff);
+	 * Load the skills of a given collaborator.
+	 * @param idStaff the Staff identifier
+	 * @returns an observable emitting an array of experiences.
+	 */
+
+	loadExperiences$(idStaff: number): Observable<Experience[]> {
+		return this.httpClient.get<Experience[]>(this.backendSetupService.url() + '/staff/' + idStaff + '/experience');
 	}
 
 	/**
@@ -275,19 +294,21 @@ export class StaffService {
 	}
 
 	/**
-		 * POST: Add the relevant declared experiences (certainly retrieved from the resume)
-		 */
-	addDeclaredExperience(idStaff: number, skills: DeclaredExperience[]): Observable<StaffDTO> {
+	* PUT: set the relevant declared experiences (certainly retrieved from the resume)
+	*/
+	setDeclaredExperience$(idStaff: number, skills: DeclaredExperience[]): Observable<Collaborator> {
 		if (traceOn()) {
-			console.log('Adding ' + skills.length + ' experiences to the staff Id  ' + idStaff);
+			console.log('Setting ' + skills.length + ' experiences to the staff Id  ' + idStaff);
 		}
 		const body = { idStaff: idStaff, skills: skills };
-		return this.httpClient.post<StaffDTO>(this.backendSetupService.url() + '/staff' + '/api/experiences/resume/save',
+		return this.httpClient.put<Collaborator>(
+			this.backendSetupService.url() + '/staff' + idStaff + '/resume',
 			body, httpOptions);
 	}
+
 	/**
-		 * POST: Revoke an experience from a staff member.
-		 */
+	* POST: Revoke an experience from a staff member.
+	*/
 	revokeExperience(idStaff: number, idSkill: number): Observable<StaffDTO> {
 		if (traceOn()) {
 			console.log('Revoking the experence ' + idSkill + ' from the collaborator application');
@@ -297,45 +318,44 @@ export class StaffService {
 	}
 
 	/**
-		 * POST: Revoke an experience from a staff member.
-		 */
-	removeExperience(idStaff: number, idSkill: number): Observable<boolean> {
+	* DELETE: Revoke an experience from a staff member.
+	*/
+	removeExperience$(idStaff: number, idSkill: number): Observable<boolean> {
 		if (traceOn()) {
-			console.log('Revoking the experence ' + idSkill + ' from the collaborator ' + idStaff);
+			console.log('Revoking the experience ' + idSkill + ' from the collaborator ' + idStaff);
 		}
-		const body = { idStaff: idStaff, idSkill: idSkill };
-		return this.httpClient.post<boolean>
-			(this.backendSetupService.url() + '/staff' + '/experiences/remove', body, httpOptions)
+		return this.httpClient.delete<boolean>
+			(this.backendSetupService.url() + '/staff/' + idStaff + '/experience/' + idSkill, httpOptions)
 			.pipe(take(1));
 	}
 
 	/**
 		 * POST Method: Add an experience to a staff member.
 		 */
-	addExperience({ idStaff, idSkill, level }: { idStaff: number; idSkill: number; level: number; }): Observable<boolean> {
+	addExperience$({ idStaff, idSkill, level }: { idStaff: number; idSkill: number; level: number; }): Observable<boolean> {
 		if (traceOn()) {
-			console.log('Adding the skill  ' + idSkill + ' to the staff member whom id is ' + idStaff);
+			console.log('Adding the experience  ' + idSkill + ' to the staff member whom id is ' + idStaff);
 		}
-		const body = { idStaff: idStaff, idSkill: idSkill, level: level };
-		return this.httpClient.post<boolean>(this.backendSetupService.url() + '/staff' + '/experiences/add', body, httpOptions)
+		const body = { id: idSkill, level: level };
+		return this.httpClient.post<boolean>(this.backendSetupService.url() + '/staff/' + idStaff + '/experience', body, httpOptions)
 			.pipe(take(1));
 	}
 
 	/**
-		 * POST Method: Add an experience to a staff member.
-		 */
-	updateExperienceLevel({ idStaff, idSkill, level }: { idStaff: number; idSkill: number; level: number; }): Observable<boolean> {
+	* POST Method: Add an experience to a staff member.
+	*/
+	updateExperience$({ idStaff, idSkill, level }: { idStaff: number; idSkill: number; level: number; }): Observable<boolean> {
 		if (traceOn()) {
 			console.log('Adding the skill  ' + idSkill + ' to the staff member whom id is ' + idStaff);
 		}
-		const body = { idStaff: idStaff, idSkill: idSkill, level: level };
-		return this.httpClient.post<boolean>(this.backendSetupService.url() + '/staff' + '/experiences/update', body, httpOptions)
+		const body = { id: idSkill, level: level };
+		return this.httpClient.post<boolean>(this.backendSetupService.url() + '/staff/' + idStaff + '/experience', body, httpOptions)
 			.pipe(take(1));
 	}
 
 	/**
-		 * POST: Change the experience defined by its title, or its level for a developer.
-		 */
+	* POST: Change the experience defined by its title, or its level for a developer.
+	*/
 	changeExperience(idStaff: number, formerSkillTitle: string, newSkillTitle: string, level: number): Observable<StaffDTO> {
 		if (traceOn()) {
 			console.log('Change the skill for the collaborator with id : '
@@ -346,10 +366,10 @@ export class StaffService {
 	}
 
 	/**
-		 * GET : Download the application file of a staff member.
-	 * @param the given staff member whose application has to be retrieved
-		 */
-	downloadApplication(staff: Collaborator) {
+	 * Download the application file of a staff member.
+	 * @param staff the given staff member whose application has to be retrieved
+	 */
+	downloadApplication(staff: Collaborator): void {
 		if ((staff.application === null) || (staff.application.length === 0)) {
 			return;
 		}
@@ -364,9 +384,9 @@ export class StaffService {
 	}
 
 	/**
-		 * Retrieving the sum of staff members aggregated by skill & level (i.e. experience)
-		 * @param activeOnly : Only active employees count into the aggregation.
-		 */
+	 * Retrieving the sum of staff members aggregated by skill & level (i.e. experience)
+	 * @param activeOnly : Only active employees count into the aggregation.
+	 */
 	countAll_groupBy_experience(activeOnly: boolean) {
 		if (traceOn()) {
 			console.log('countAll_groupBy_experience loading aggegations count from the server');
@@ -408,11 +428,35 @@ export class StaffService {
 	 * @param username the given username
 	 * @param password  the given password
 	 */
-	registerUser(veryFirstConnection: boolean, username: string, password: string): Observable<Collaborator> {
-		return this.httpClient.get<Collaborator>(
+	registerUser$(veryFirstConnection: boolean, username: string, password: string): Observable<Collaborator> {
+		let params: HttpParams = new HttpParams();
+		params = params.set('login', username);
+		params = params.set('password', password);
+
+		return this.httpClient.post<Collaborator>(
 			this.backendSetupService.url() + '/admin/' +
 			(veryFirstConnection ? 'veryFirstUser' : 'register'),
-			{ params: { login: username, password: password } });
+			null,
+			{params});
+	}
+
+	/**
+	 * A new collaborator has been loaded and data has to be shared.
+	 * @param collaborator the new collaborator loaded
+	 */
+	changeCollaborator(collaborator: Collaborator) {
+		if (traceOn()) {
+			console.log('collaborator switch from ' + ((this.collaborator) ? this.collaborator.lastName : 'empty') + ' to ' + collaborator.lastName);
+		}
+		this.collaborator = collaborator;
+		this.collaboratorLoaded$.next(true);
+	}
+
+	/**
+	 * Return **true** if an existing collaborator has been loaded, and is not an empty one.
+	 */
+	isStaffMemberLoaded(): boolean {
+		return ((this.collaborator) && (this.collaborator.idStaff > 0));
 	}
 
 	/**

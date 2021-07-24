@@ -1,7 +1,7 @@
 import { Constants } from '../../../constants';
 import { Collaborator } from '../../../data/collaborator';
 import { DeclaredExperience } from '../../../data/declared-experience';
-import { DeclaredExperienceDTO } from '../../../data/external/declaredExperienceDTO';
+import { StaffResume } from '../../../data/StaffResume';
 import { MessageBoxService } from '../../../interaction/message-box/service/message-box.service';
 import { HttpClient } from '@angular/common/http';
 import { HttpResponse } from '@angular/common/http';
@@ -89,13 +89,12 @@ export class StaffUploadCvComponent extends BaseComponent implements OnInit, OnD
 		// create a new multipart-form for the file to upload.
 		const formData: FormData = new FormData();
 		formData.append('file', file, file.name);
-		formData.append('id', <string><any>this.staff.idStaff);
 		formData.append('type', <string><any>Constants.APPLICATION_FILE_TYPE_ALLOWED.get(this.applicationFile.type));
 
 		// create a HTTP-post request and pass the form
 		// tell it to report the upload progress
 		const req = new HttpRequest('POST',
-		this.backendSetupService.url() + '/staff/api/uploadCV', formData, {
+		this.backendSetupService.url() + '/staff/' + this.staff.idStaff + '/uploadCV', formData, {
 			reportProgress: true
 		});
 
@@ -108,11 +107,11 @@ export class StaffUploadCvComponent extends BaseComponent implements OnInit, OnD
 					// pass the percentage into the progress-stream
 					this.progression.next(percentDone);
 				} else if (event instanceof HttpResponse) {
-					const response = <DeclaredExperienceDTO>event.body;
-					this.declaredExperience = response.experience;
+					const response = <StaffResume>event.body;
+					this.declaredExperience = response.experiences;
 					if (traceOn()) {
 						console.groupCollapsed(this.declaredExperience.length + ' experiences detected : ');
-						response.experience.forEach(element => console.log (element.title));
+						response.experiences.forEach(element => console.log (element.title));
 						console.groupEnd();
 					}
 
@@ -122,8 +121,9 @@ export class StaffUploadCvComponent extends BaseComponent implements OnInit, OnD
 					// Close the progress-stream if we get an answer form the API
 					// The upload is complete
 					this.progression.complete();
+
 					// We close this dialog and returns the skills detected on the application.
-					this.dialogRef.close(response.experience);
+					this.dialogRef.close(response.experiences);
 				}
 			},
 				responseInError => {

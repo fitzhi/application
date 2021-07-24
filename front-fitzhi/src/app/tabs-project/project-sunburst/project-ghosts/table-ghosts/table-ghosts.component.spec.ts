@@ -13,7 +13,7 @@ import { ProjectGhostsDataSource } from '../project-ghosts-data-source';
 import { Project } from 'src/app/data/project';
 import { StaffService } from 'src/app/tabs-staff/service/staff.service';
 import { By } from '@angular/platform-browser';
-import { ProjectService } from 'src/app/service/project.service';
+import { ProjectService } from 'src/app/service/project/project.service';
 import { SunburstCacheService } from '../../service/sunburst-cache.service';
 import { StaffListService } from 'src/app/service/staff-list-service/staff-list.service';
 
@@ -24,7 +24,7 @@ describe('TableGhostsComponent', () => {
 	let projectService: ProjectService;
 	let staffListService: StaffListService;
 
-	let allStaff = [
+	const allStaff = [
 		{
 			idStaff: 1964,
 			login: 'frvidal',
@@ -47,7 +47,6 @@ describe('TableGhostsComponent', () => {
 		template:
 			`
 			<h2 style="margin: 10px">The Ghosts...</h2>
-			
 			<div style="width:80%;height:50%">
 				<app-table-ghosts [dataSourceGhosts$]="dataSourceGhosts$">
 				</app-table-ghosts>
@@ -62,9 +61,9 @@ describe('TableGhostsComponent', () => {
 
 		@ViewChild(TableGhostsComponent) tableGhostsComponent: TableGhostsComponent;
 
-		constructor(projectService: ProjectService) {
+		constructor(ps: ProjectService) {
 
-			projectService.project = new Project(1789, 'Revolutionary project');
+			ps.project = new Project(1789, 'Revolutionary project');
 
 			this.projectGhostsDataSource = new ProjectGhostsDataSource(
 				[
@@ -153,7 +152,7 @@ describe('TableGhostsComponent', () => {
 		expect(component).toBeTruthy();
 
 		const spyClearCache = spyOn(sunburstCacheService, 'clearReponse');
-		
+
 		const staffService = TestBed.inject(StaffService);
 		const spy = spyOn(staffService, 'save$')
 			.and.returnValue(of(
@@ -191,7 +190,7 @@ describe('TableGhostsComponent', () => {
 		const spyClearCache = spyOn(sunburstCacheService, 'clearReponse');
 		const spyUpdateGhost$ = spyOn(projectService, 'updateGhost$');
 
-		let login: HTMLInputElement = fixture.debugElement.query(By.css('#login-1')).nativeElement;
+		const login: HTMLInputElement = fixture.debugElement.query(By.css('#login-1')).nativeElement;
 		expect(login).toBeDefined();
 		login.value = 'some Value';
 		login.dispatchEvent(new Event('input'));
@@ -213,7 +212,7 @@ describe('TableGhostsComponent', () => {
 		const buttonAddStaff: HTMLInputElement = fixture.debugElement.query(By.css('#addStaff-1')).nativeElement;
 		expect(buttonAddStaff.disabled).toBeFalsy();
 
-		let firstName = fixture.debugElement.query(By.css('#firstname-1')).nativeElement;
+		const firstName = fixture.debugElement.query(By.css('#firstname-1')).nativeElement;
 		expect(firstName.value).toBe('');
 
 		const lastName = fixture.debugElement.query(By.css('#lastname-1')).nativeElement;
@@ -224,7 +223,7 @@ describe('TableGhostsComponent', () => {
 
 		staffListService.allStaff$.next(allStaff);
 
-		let login: HTMLInputElement = fixture.debugElement.query(By.css('#login-1')).nativeElement;
+		const login: HTMLInputElement = fixture.debugElement.query(By.css('#login-1')).nativeElement;
 		expect(login).toBeDefined();
 		login.value = 'frvidal';
 		login.dispatchEvent(new Event('input'));

@@ -1,32 +1,30 @@
-import { Component, OnInit, AfterViewInit, Input, OnDestroy, Output, EventEmitter } from '@angular/core';
-import Sunburst from 'sunburst-chart';
-import { Constants } from '../../constants';
-import { MessageService } from '../../interaction/message/message.service';
-import { ProjectService } from '../../service/project.service';
-import { ActivatedRoute } from '@angular/router';
-import { CinematicService } from '../../service/cinematic.service';
-import { Project } from '../../data/project';
-import { MatDialogConfig, MatDialog } from '@angular/material/dialog';
-import { ProjectGhostsDataSource } from './project-ghosts/project-ghosts-data-source';
-import { MessageBoxService } from '../../interaction/message-box/service/message-box.service';
-import { DialogFilterComponent } from './dialog-filter/dialog-filter.component';
-import { BaseComponent } from '../../base/base.component';
-import { SettingsGeneration } from '../../data/settingsGeneration';
-import { ProjectStaffService } from '../project-staff-service/project-staff.service';
-import { Filename } from '../../data/filename';
-import { FilenamesDataSource } from './node-detail/filenames-data-source';
-import { ContributorsDataSource } from './node-detail/contributors-data-source';
-import { BehaviorSubject, Subject, Subscription, interval, Observable, of, EMPTY } from 'rxjs';
-import { Contributor } from '../../data/contributor';
-import { take, switchMap } from 'rxjs/operators';
+import { AfterViewInit, Component, EventEmitter, OnDestroy, OnInit, Output } from '@angular/core';
+import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
 import { MatTableDataSource } from '@angular/material/table';
-import { ContributorsDTO } from 'src/app/data/external/contributorsDTO';
-import { traceOn } from 'src/app/global';
-import { SunburstCinematicService } from './service/sunburst-cinematic.service';
-import { SunburstCacheService } from './service/sunburst-cache.service';
+import { ActivatedRoute } from '@angular/router';
+import { BehaviorSubject, EMPTY, Observable, of, Subscription } from 'rxjs';
+import { switchMap, take } from 'rxjs/operators';
 import { Collaborator } from 'src/app/data/collaborator';
+import { ProjectContributors } from 'src/app/data/external/ProjectContributors';
+import { traceOn } from 'src/app/global';
 import { StaffListService } from 'src/app/service/staff-list-service/staff-list.service';
 import { StaffService } from 'src/app/tabs-staff/service/staff.service';
+import Sunburst from 'sunburst-chart';
+import { BaseComponent } from '../../base/base.component';
+import { Constants } from '../../constants';
+import { Contributor } from '../../data/contributor';
+import { Filename } from '../../data/filename';
+import { Project } from '../../data/project';
+import { SettingsGeneration } from '../../data/settingsGeneration';
+import { MessageBoxService } from '../../interaction/message-box/service/message-box.service';
+import { MessageService } from '../../interaction/message/message.service';
+import { CinematicService } from '../../service/cinematic.service';
+import { ProjectService } from '../../service/project/project.service';
+import { ProjectStaffService } from '../project-staff-service/project-staff.service';
+import { DialogFilterComponent } from './dialog-filter/dialog-filter.component';
+import { ProjectGhostsDataSource } from './project-ghosts/project-ghosts-data-source';
+import { SunburstCacheService } from './service/sunburst-cache.service';
+import { SunburstCinematicService } from './service/sunburst-cinematic.service';
 
 
 //
@@ -242,6 +240,9 @@ export class ProjectSunburstComponent extends BaseComponent implements OnInit, A
 				if (doneAndOk) {
 					return this.projectService.loadDashboardData$(this.settings);
 				} else {
+					if (traceOn()) {
+						console.log(`Sunburst generation for ${this.projectService.project.id} has returned false`);
+					}
 					return of(EMPTY);
 				}
 			}));
@@ -254,9 +255,9 @@ export class ProjectSunburstComponent extends BaseComponent implements OnInit, A
 	loadContributors$(): Observable<boolean> {
 		return this.projectService.contributors$(this.projectService.project.id).pipe(
 			take(1),
-			switchMap((contributorsDTO: ContributorsDTO) => {
+			switchMap((projectContributors: ProjectContributors) => {
 				this.projectStaffService.contributors = [];
-				this.projectStaffService.contributors.push(...contributorsDTO.contributors);
+				this.projectStaffService.contributors.push(...projectContributors.contributors);
 				if (traceOn()) {
 					this.projectStaffService.dumpContributors();
 				}
@@ -294,35 +295,23 @@ export class ProjectSunburstComponent extends BaseComponent implements OnInit, A
 		this.shouldReload = false;
 		this.loadData$()
 			.pipe(take(1))
-			.subscribe(
-				response => {
-					switch (response.code) {
-						case 0:
-							this.setActiveContext (PreviewContext.SUNBURST_READY);
-							setTimeout(() => {
-								this.cacheService.saveResponse(response);
-								this.generateChart(response);
-							}, 0);
-							break;
-						case 201:
-						case -1008:
-							//
-							// The generation has started in asynchronous mode.
-							// We will receive notification, so we do not set taskReportManagement as complete.
-							//
-							this.messageService.warning(response.message);
-							this.shouldReload = true;
-							break;
-						default:
-							console.error('Unknown code message %d for message %s',
-								response.code, response.message);
-							this.messageService.error(response.message);
-							break;
-					}
+			.subscribe({
+				next: data => {
+					this.setActiveContext (PreviewContext.SUNBURST_READY);
+					setTimeout(() => {
+						this.cacheService.saveResponse(data);
+						this.generateChart(data);
+					}, 0);
 				},
-				responseInError => {
-					this.handleErrorData(responseInError);
-				});
+				error: error => {
+					if (error instanceof String) {
+						this.messageService.error(<string>error);
+					}
+					if (traceOn()) {
+						console.log (error);
+					}
+				}
+			});
 	}
 
 	/**
@@ -361,7 +350,7 @@ export class ProjectSunburstComponent extends BaseComponent implements OnInit, A
 					filenames.push(new Filename(element.filename, element.lastCommit));
 				});
 				this.filenames.data = filenames;
-				const contributors = new Map<number, Contributor>();;
+				const contributors = new Map<number, Contributor>();
 				nodeClicked.classnames.forEach(file => {
 					if ( (file.idStaffs) && (file.idStaffs.length > 0) ) {
 						file.idStaffs.filter(idStaff => idStaff !== -1).forEach(idStaff => {
@@ -412,10 +401,9 @@ export class ProjectSunburstComponent extends BaseComponent implements OnInit, A
 				.size('importance')
 				.color('color')
 				(document.getElementById('chart'));
-	
+
 			const dataSourceGhosts = new ProjectGhostsDataSource(response.ghosts, this.allStaff);
 			this.dataSourceGhosts$.next(dataSourceGhosts);
-	
 			//
 			// We update the underlying project in the projects array
 			// because the Sunburst generation has probably updated the skills involved in the project.
@@ -538,7 +526,7 @@ export class ProjectSunburstComponent extends BaseComponent implements OnInit, A
     * @param idPanel Panel identifier
     */
 	public show(idPanel: number) {
-		
+
 		if (traceOn()) {
 			console.log ('Showing panel %d', idPanel);
 		}
@@ -547,7 +535,7 @@ export class ProjectSunburstComponent extends BaseComponent implements OnInit, A
 			return;
 		}
 		this.sunburstCinematicService.initActivatedButton();
-		
+
 		switch (idPanel) {
 			case this.SUNBURST:
 				this.idPanelSelected = idPanel;
@@ -666,7 +654,7 @@ export class ProjectSunburstComponent extends BaseComponent implements OnInit, A
 					}
 				this.idPanelSelected = this.SUNBURST;
 			});
-	
+
 	}
 
 	dialogFilter() {
@@ -691,8 +679,8 @@ export class ProjectSunburstComponent extends BaseComponent implements OnInit, A
 			this.generateTitleSunburst();
 			this.projectService.loadDashboardData$(this.settings)
 				.subscribe(
-					response => this.myChart.data(response.sunburstData),
-					response => this.handleErrorData(response),
+					response => this.myChart.data(response),
+					error => this.handleErrorData(error),
 					() => {
 						this.hackSunburstStyle();
 						this.tooltipChart();

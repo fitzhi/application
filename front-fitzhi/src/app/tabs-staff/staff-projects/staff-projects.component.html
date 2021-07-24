@@ -1,7 +1,7 @@
 <div class="staff-projects-container project">
 	
 	<h4 *ngIf="(this.collaborator.lastName)" class="d-flex justify-content-between align-items-center">
-		<span class="text-muted">{{this.collaborator.firstName}} {{this.collaborator.lastName}} : Projects card</span> 
+		<span class="text-muted">{{this.collaborator.firstName}} {{this.collaborator.lastName}}</span> 
 		<span class="badge badge-secondary badge-pill">{{numberOfMissions$ | async}}</span>
 	</h4>
 	<h4 *ngIf="!(this.collaborator.lastName)" class="d-flex justify-content-between align-items-center">

@@ -74,7 +74,7 @@ describe('GitService', () => {
 					expect(branches[6]).toBe('release-1.5');
 					expect(branches[7]).toBe('Simple-starting-forms');
 				}
-			})
+			});
 	}));
 
 	it('Testing default behavior of branches(...) with the url is wrong.', async(() => {

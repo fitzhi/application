@@ -1,6 +1,6 @@
 import { HttpClient, HttpHeaders, HttpParams, HttpRequest } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { Observable, of, throwError } from 'rxjs';
+import { Observable } from 'rxjs';
 import { traceOn } from 'src/app/global';
 import { Token } from './token';
 
@@ -20,10 +20,10 @@ export class TokenService {
 	refreshToken$(): Observable<Token> {
 
 		//
-        //    The call that goes in here will use the existing refresh token to call
-        //    a method on the oAuth server (usually called refreshToken) to get a new
-        //    authorization token for the API calls.
-        //
+		//    The call that goes in here will use the existing refresh token to call
+		//    a method on the oAuth server (usually called refreshToken) to get a new
+		//    authorization token for the API calls.
+		//
 		if (traceOn()) {
 			if (this.token) {
 				console.log('Refresh the active token with token %s', this.token.refresh_token);
@@ -32,7 +32,7 @@ export class TokenService {
 			}
 		}
 
-		// Loading the token (if undefined) from the localStorage. 
+		// Loading the token (if undefined) from the localStorage.
 		if (!this.token) {
 			this.token = this.loadToken();
 		}
@@ -49,7 +49,7 @@ export class TokenService {
 	}
 
 	/**
-	 * @returns the URL to request the server for a new _temporary_ access token. 
+	 * @returns the URL to request the server for a new _temporary_ access token.
 	 */
 	urlRefreshToken() {
 		return localStorage.getItem('backendUrl') + '/oauth/token';
@@ -64,7 +64,7 @@ export class TokenService {
 		// We do not add an header if the request is an authentication request.
 		if (req.params.get('grant_type')) {
 			switch (req.params.get('grant_type')) {
-				case 'refresh_token': 
+				case 'refresh_token':
 				case 'password':
 					return req;
 			}

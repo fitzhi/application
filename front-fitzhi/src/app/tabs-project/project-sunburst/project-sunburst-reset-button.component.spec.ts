@@ -13,7 +13,7 @@ import { ListContributorsComponent } from './node-detail/list-contributors/list-
 import { TableGhostsComponent } from './project-ghosts/table-ghosts/table-ghosts.component';
 import { RouterTestingModule } from '@angular/router/testing';
 import { SSEWatcherComponent } from './ssewatcher/ssewatcher.component';
-import { ProjectService } from 'src/app/service/project.service';
+import { ProjectService } from 'src/app/service/project/project.service';
 import { Project } from 'src/app/data/project';
 import { MessageBoxComponent } from 'src/app/interaction/message-box/dialog/message-box.component';
 import { SunburstCinematicService } from './service/sunburst-cinematic.service';
@@ -70,16 +70,16 @@ describe('Testing the Reet button behavior in ProjectSunburstComponent with data
 	it('Click on reset : The end-user accepts the Re-generation', async () => {
 
 		expect(component).toBeTruthy();
-		
+
 		const spyQuestion = spyOn(messageBoxService, 'question').and.returnValue(new BehaviorSubject(true));
-		const spyResetDashboard = spyOn(projectService, 'resetDashboard').and.returnValue(of(""));
+		const spyResetDashboard = spyOn(projectService, 'resetDashboard').and.returnValue(of(''));
 		const spyClearResponse = spyOn(cacheService, 'clearReponse').and.returnValue();
 		const spyReloadDashboard = spyOn(projectService, 'reloadSunburst$');
 
 		const button = fixture.debugElement.nativeElement.querySelector('#reset');
 		expect(button).toBeDefined();
 		button.click();
-		fixture.detectChanges();			
+		fixture.detectChanges();
 
 		expect(spyReloadDashboard).not.toHaveBeenCalled();
 
@@ -88,7 +88,7 @@ describe('Testing the Reet button behavior in ProjectSunburstComponent with data
 	it('Click reset : The end-user refuses the Re-generation', async () => {
 
 		expect(component).toBeTruthy();
-		
+
 		const spyQuestion = spyOn(messageBoxService, 'question').and.returnValue(new BehaviorSubject(false));
 		const spyResetDashboard = spyOn(projectService, 'resetDashboard');
 		const spyClearResponse = spyOn(cacheService, 'clearReponse');
@@ -98,7 +98,7 @@ describe('Testing the Reet button behavior in ProjectSunburstComponent with data
 		const button = fixture.debugElement.nativeElement.querySelector('#reset');
 		expect(button).toBeDefined();
 		button.click();
-		fixture.detectChanges();			
+		fixture.detectChanges();
 
 		expect(spyResetDashboard).not.toHaveBeenCalled();
 		expect(spyClearResponse).not.toHaveBeenCalled();

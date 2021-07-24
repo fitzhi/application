@@ -1,15 +1,15 @@
-import { Component, OnInit, Input, Output, EventEmitter, OnDestroy } from '@angular/core';
-import { Observable, BehaviorSubject } from 'rxjs';
+import { Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angular/core';
+import { BehaviorSubject } from 'rxjs';
+import { BaseComponent } from 'src/app/base/base.component';
+import { AttachmentFile } from 'src/app/data/AttachmentFile';
+import { AuditDetail } from 'src/app/data/audit-detail';
+import { CinematicService } from 'src/app/service/cinematic.service';
+import { ProjectService } from 'src/app/service/project/project.service';
+import { ReferentialService } from 'src/app/service/referential.service';
+import { ProjectAuditService } from '../service/project-audit.service';
+import { AuditChosenDetail } from './audit-badge/audit-chosen-detail';
 import { TopicEvaluation } from './topic-evaluation';
 import { TopicWeight } from './topic-weight';
-import { Project } from 'src/app/data/project';
-import { BaseComponent } from 'src/app/base/base.component';
-import { AuditChosenDetail } from './audit-badge/audit-chosen-detail';
-import { AuditDetail } from 'src/app/data/audit-detail';
-import { ReferentialService } from 'src/app/service/referential.service';
-import { AttachmentFile } from 'src/app/data/AttachmentFile';
-import { ProjectService } from 'src/app/service/project.service';
-import { CinematicService } from 'src/app/service/cinematic.service';
 
 @Component({
 	selector: 'app-project-audit-badges',
@@ -19,30 +19,9 @@ import { CinematicService } from 'src/app/service/cinematic.service';
 export class ProjectAuditBadgesComponent extends BaseComponent implements OnInit, OnDestroy {
 
 	/**
-	 * The Topics involved for this audit.
-	 *
-	 * The HTML `project-audit-badges` file iterates on the topics array emitted by this observable,
-	 * and inserts an `app-audit-badge` component for each record.
-	 */
-	@Input() auditTopics$: BehaviorSubject<any[]>;
-
-	/**
-	 * The audit details panel displayed on the Audit container.
-	 *
-	 * The HTML `project-audit-badges` file iterates on the Audit details array emitted by this observable,
-	 * and inserts an `app-report-detail-form` component for each record.
-	 */
-	@Input() auditDetails$: BehaviorSubject<AuditChosenDetail[]>;
-
-	/**
 	 * This messenger propagates the signal to show/hide the audit form panel
 	 */
 	@Output() messengerShowHideAuditDetail = new EventEmitter<AuditChosenDetail>();
-
-	/**
-	 * This messenger propagates the signal than an evaluation has been given to an audit topic.
-	 */
-	@Output() messengerTopicEvaluation = new EventEmitter<TopicEvaluation>();
 
 	/**
 	 * This messenger propagates the signal than a weight has been given to an audit topic.
@@ -58,6 +37,7 @@ export class ProjectAuditBadgesComponent extends BaseComponent implements OnInit
 
 	constructor(
 		public projectService: ProjectService,
+		public projectAuditService: ProjectAuditService,
 		private cinematicService: CinematicService,
 		private referentialService: ReferentialService) { super(); }
 
@@ -80,7 +60,7 @@ export class ProjectAuditBadgesComponent extends BaseComponent implements OnInit
 	 * @param topicEvaluation the topic evaluation emitted
 	 */
 	onEvaluationChange(topicEvaluation: TopicEvaluation) {
-		this.messengerTopicEvaluation.next(topicEvaluation);
+		this.projectService.topicEvaluation$.next(topicEvaluation);
 	}
 
 	/**

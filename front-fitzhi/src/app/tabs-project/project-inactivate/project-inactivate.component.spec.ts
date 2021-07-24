@@ -1,7 +1,7 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { ProjectInactivateComponent } from './project-inactivate.component';
-import { ProjectService } from 'src/app/service/project.service';
+import { ProjectService } from 'src/app/service/project/project.service';
 import { ReferentialService } from 'src/app/service/referential.service';
 import { HttpClientTestingModule, HttpTestingController } from '@angular/common/http/testing';
 import { MatDialogModule } from '@angular/material/dialog';
@@ -84,7 +84,7 @@ describe('ProjectInactivateComponent', () => {
 		fixture.detectChanges();
 		expect(component).toBeTruthy();
 
-		const postInactivate = httpTestingController.expectOne('URL_OF_SERVER/api/project/rpc/inactivation/1066');
+		const postInactivate = httpTestingController.expectOne('URL_OF_SERVER/api/project/1066/rpc/inactivation');
 		expect(postInactivate.request.method).toEqual('POST');
 		postInactivate.flush(null);
 
@@ -104,11 +104,11 @@ describe('ProjectInactivateComponent', () => {
 		fixture.detectChanges();
 		expect(component).toBeTruthy();
 
-		const postInactivate = httpTestingController.expectOne('URL_OF_SERVER/api/project/rpc/reactivation/1066');
+		handleSkills();
+
+		const postInactivate = httpTestingController.expectOne('URL_OF_SERVER/api/project/1066/rpc/reactivation');
 		expect(postInactivate.request.method).toEqual('POST');
 		postInactivate.flush(null);
-
-		handleSkills();
 
 		expect(projectService.project.active).toEqual(true);
 

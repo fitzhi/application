@@ -1,0 +1,68 @@
+div.host {
+    display: inline-flex;
+}
+div.legend {
+    width: 50px;
+    background: transparent;
+    margin-bottom: 10px;
+    display: inline-flex;
+    height: 100%;
+}
+
+div.gradient {
+    background: -webkit-linear-gradient(var(--color-selected), var(--color-error));
+    margin-top: 78px;
+    margin-left: 5px;
+    width: 10px;
+    height: 470px;
+}
+
+p.sign {
+    margin-left: 5px;
+    font-size: xx-large;
+    font-weight: 700;
+}
+
+p.high {
+    margin-top: 70px;
+    color: var(--color-success);
+}
+
+p.low {
+    margin-top: 420px;
+    color: var(--color-error);
+}
+
+div.help {
+    background-color: var(--color-help);
+    border: 1px solid black;
+    height: 80px;
+    width: 1000px;
+    border-radius: 5px;
+    margin-top: -10px;
+}
+
+i.info {
+    margin-top: 3px;
+    margin-left: 98%;
+    position: static;
+    color: var(--color-success);
+    font-size: larger;
+}
+
+p.help {
+    position: static;
+    margin-top: -15px;
+    margin-left: 10px;
+    margin-right: 20px;
+}
+
+li.good {
+    color: var(--color-success);
+    margin-bottom: 5px;
+}
+
+li.bad {
+    color: var(--color-error);
+    margin-bottom: 5px;
+}

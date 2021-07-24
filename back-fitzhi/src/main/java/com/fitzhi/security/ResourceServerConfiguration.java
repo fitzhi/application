@@ -7,6 +7,8 @@ import org.springframework.security.oauth2.config.annotation.web.configuration.E
 import org.springframework.security.oauth2.config.annotation.web.configuration.ResourceServerConfigurerAdapter;
 import org.springframework.security.oauth2.config.annotation.web.configurers.ResourceServerSecurityConfigurer;
 import org.springframework.security.oauth2.provider.error.OAuth2AccessDeniedHandler;
+import org.springframework.web.multipart.MultipartResolver;
+import org.springframework.web.multipart.support.StandardServletMultipartResolver;
 
 @Configuration
 @EnableResourceServer
@@ -37,10 +39,14 @@ public class ResourceServerConfiguration extends ResourceServerConfigurerAdapter
 				"/v2/api-docs", "/configuration/**", "/swagger*/**", "/webjars/**",
 
 				// Server side event streaming is allowed
-				"/api/project/tasks/stream/**",
+				// We open this door to avoid to add an authorization header on the Front application
+				// Credible solution is behind this link https://github.com/Yaffle/EventSource
+				"/api/project/{\\d+}/tasks/stream/dashboardGeneration",
 
 				// DO NOT KNOW IF IT SHOULD STAY HERE...
-				"/api/project/tasks/**",
+				// "/api/project/tasks/**",
+
+				// "/api/upload/*", 
 
 				"/api/admin/isVeryFirstConnection", 
 				"/api/admin/saveVeryFirstConnection", 
@@ -61,4 +67,7 @@ public class ResourceServerConfiguration extends ResourceServerConfigurerAdapter
 		}
 	}
 	
+	public MultipartResolver multipartResolver() {
+		return new StandardServletMultipartResolver();
+	}	
 }

@@ -1,11 +1,10 @@
-import { Component, OnInit, EventEmitter, Output, Input } from '@angular/core';
-import { FormGroup, FormControl, Validators, FormBuilder } from '@angular/forms';
-import { AuthService } from '../service/auth/auth.service';
+import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
-import { Constants } from 'src/app/constants';
-import { ProjectService } from 'src/app/service/project.service';
-import { StaffListService } from 'src/app/service/staff-list-service/staff-list.service';
 import { traceOn } from 'src/app/global';
+import { ProjectService } from 'src/app/service/project/project.service';
+import { StaffListService } from 'src/app/service/staff-list-service/staff-list.service';
+import { AuthService } from '../service/auth/auth.service';
 
 @Component({
 	selector: 'app-connect-user',
@@ -68,15 +67,16 @@ export class ConnectUserComponent implements OnInit {
 	onSubmit() {
 		const username: string = this.connectionGroup.get('username').value;
 		const password: string = this.connectionGroup.get('password').value;
-		this.authService.connect(username, password).subscribe({
+		this.authService.connect$(username, password).subscribe({
 
 			next: connectionStatus => {
 				this.messengerUserConnected.emit(connectionStatus);
 				/**
-				 * If the connection has succeeded, we load the projects.
+				 * If the connection has succeeded, we load the projects and the staff members.
 				 */
 				if (connectionStatus) {
-					this.projectService.loadProjects();
+					// We load the projects and start the refresh process.
+					this.projectService.startLoadingProjects();
 					this.staffListService.loadStaff();
 				}
 

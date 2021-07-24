@@ -6,6 +6,7 @@ import { AuditDetail } from '../data/audit-detail';
 import { traceOn } from '../global';
 import { Injectable } from '@angular/core';
 import { Form } from './Form';
+import { formatCurrency } from '@angular/common';
 
 @Injectable()
 export class CinematicService {
@@ -13,20 +14,30 @@ export class CinematicService {
 	/**
 	 * Identifier of the select form on stage on the SPA.
 	 */
-	public currentActiveForm$ = new BehaviorSubject<Form>(new Form(Constants.WELCOME, 'Welcome'));
+	public currentActiveFormSubject$ = new BehaviorSubject<Form>(new Form(Constants.WELCOME, 'Welcome'));
+
+	/**
+	 * Observable associated with the selected form on stage on the SPA.
+	 */
+	public currentActiveForm$ = this.currentActiveFormSubject$.asObservable();
 
 	/**
 	  * Current collaborator's identifier previewed on the form.
 	  */
-	public emitActualCollaboratorDisplay = new Subject<number>();
+	public currentCollaboratorSubject$ = new Subject<number>();
 
 	/**
 	 * Observable associated with the current collaborator previewed.
 	 */
-	newCollaboratorDisplayEmitted$ = this.emitActualCollaboratorDisplay.asObservable();
+	currentCollaborator$ = this.currentCollaboratorSubject$.asObservable();
 
 	/**
 	 * This `BehaviorSubject` broadcasts the selection of an audit thumbnail by the end-user.
+	 */
+	public auditTopicSelectedSubject$ = new BehaviorSubject<number>(-1);
+
+	/**
+	 * Observable associated to the selection of an audit thumbnail by the end-user.
 	 */
 	public auditTopicSelected$ = new BehaviorSubject<number>(-1);
 
@@ -51,7 +62,24 @@ export class CinematicService {
 	 *  - `PROJECT_IDX_TAB_AUDIT` for the Audit dashboard
 	 *
 	 */
-	public tabProjectActivated$ = new BehaviorSubject<number>(Constants.PROJECT_IDX_TAB_FORM);
+	public tabProjectActivatedSubject$ = new BehaviorSubject<number>(Constants.PROJECT_IDX_TAB_FORM);
+
+	/**
+	 * This Observable represents the underlying subject **tabProjectActivatedSubject$**
+	 *
+	 * This observable broadcasts the selected tab in the projects Tab Group container.
+	 * Each-time the end-user clicks on a tab, this observable emits an identifier corresponding to the selected tab.
+	 *
+	 * This identifier can be :
+	 *
+	 *  - `PROJECT_IDX_TAB_FORM` for the project tab form
+	 *  - `PROJECT_IDX_TAB_STAFF` for the project staff list
+	 *  - `PROJECT_IDX_TAB_SUNBURST` for the Staff coverage graph
+	 *  - `PROJECT_IDX_TAB_SONAR` for the Sonar dashboard
+	 *  - `PROJECT_IDX_TAB_AUDIT` for the Audit dashboard
+	 *
+	 */
+	public tabProjectActivated$ = this.tabProjectActivatedSubject$.asObservable();
 
 	/**
 	 * Index of the current selected tab in the Project forms set.
@@ -67,6 +95,46 @@ export class CinematicService {
 	 * History of active detail panels (shown or hidden)
 	 */
 	public auditHistory: { [idTopic: number]: AuditDetailsHistory } = {};
+
+	/**
+	* Master/Detail mode ON. The goBack() and goFoward() buttons are visible
+	*/
+	public masterDetailSubject$ = new BehaviorSubject<boolean>(false);
+
+	/**
+	* Master/Detail mode ON. The goBack() and goFoward() buttons are visible
+	*/
+	public masterDetail$ = this.masterDetailSubject$.asObservable();
+
+	constructor() {
+		// This observable has to stay active all along the life of the application.
+		this.currentActiveForm$.subscribe({
+			next: (form: Form) => {
+				if (traceOn()) {
+					form.trace();
+				}
+				// If we leave the master/detail cinematic, we change the context
+				if (!this.isInMasterDetail(this.previousForm, form)) {
+					this.previousForm = form;
+				}
+			}
+		});
+	}
+
+	/**
+	 * Test if the end-user has switched the cinematic into the master/detail mode.
+	 * @param previousForm the previous form identifier
+	 * @param form the new form identifier
+	 * @returns **TRUE** if the application's in master/detail mode
+	 */
+	isInMasterDetail(previousForm: Form, form: Form): boolean {
+		switch (form.formIdentifier) {
+			case Constants.DEVELOPERS_CRUD:
+				return (previousForm.formIdentifier === Constants.TABS_STAFF_LIST)
+					|| (previousForm.formIdentifier === Constants.PROJECT_TAB_STAFF);
+		}
+		return false;
+	}
 
 	/**
 	 * Returns `true` if the detail panel is visible, `false` otherwise.
@@ -98,20 +166,14 @@ export class CinematicService {
 		/**
 		 * We do not change the active form.
 		 */
-		if (formIdentifier === this.currentActiveForm$.getValue().formIdentifier) {
+		if (formIdentifier === this.previousForm.formIdentifier) {
 			return;
-		}
-
-		this.previousForm = this.currentActiveForm$.getValue();
-
-		if (traceOn()) {
-			this.previousForm.trace();
 		}
 
 		/**
 		* Fire the event. Has to be at the end of the method.
 		*/
-		this.currentActiveForm$.next(new Form(formIdentifier, url));
+		this.currentActiveFormSubject$.next(new Form(formIdentifier, url));
 	}
 
 	/**
@@ -125,7 +187,7 @@ export class CinematicService {
 	 * Fire the event that the tab index has changed.
 	 */
 	setProjectTab(tab: number) {
-		this.tabProjectActivated$.next(tab);
+		this.tabProjectActivatedSubject$.next(tab);
 	}
 
 }

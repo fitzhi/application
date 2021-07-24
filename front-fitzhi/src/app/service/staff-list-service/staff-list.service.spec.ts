@@ -1,9 +1,8 @@
-import { TestBed, inject, TestModuleMetadata, async } from '@angular/core/testing';
-
-import { StaffListService } from './staff-list.service';
-import { InitTest } from '../../test/init-test';
+import { async, inject, TestBed, TestModuleMetadata } from '@angular/core/testing';
 import { Collaborator } from '../../data/collaborator';
-import { expressionType } from '@angular/compiler/src/output/output_ast';
+import { InitTest } from '../../test/init-test';
+import { StaffListService } from './staff-list.service';
+
 
 describe('ListStaffService', () => {
 

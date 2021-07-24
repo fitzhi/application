@@ -4,6 +4,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
+import javax.validation.constraints.NotNull;
+
+import com.fitzhi.ApplicationRuntimeException;
 import com.fitzhi.bean.impl.StringTransform;
 import com.fitzhi.controller.StaffController;
 import com.fitzhi.data.internal.Experience;
@@ -14,6 +17,7 @@ import com.fitzhi.data.internal.ResumeSkill;
 import com.fitzhi.data.internal.Staff;
 import com.fitzhi.data.source.Contributor;
 import com.fitzhi.exception.ApplicationException;
+import com.fitzhi.exception.NotFoundException;
 import com.fitzhi.data.internal.Author;
 
 /**
@@ -49,7 +53,7 @@ public interface StaffHandler extends DataSaverLifeCycle {
 	/**
 	 * Remove a staff member from the personal.
 	 * 
-	 * @param isStaff : identifier of the employee to be deleted.
+	 * @param ifStaff : identifier of the employee to be deleted.
 	 * @return the staff member just deleted, or {@code null} if none exists.
 	 */
 	Staff removeStaff(final int idStaff);
@@ -79,6 +83,7 @@ public interface StaffHandler extends DataSaverLifeCycle {
 	Staff addExperiences(int idStaff, ResumeSkill[] skills) throws ApplicationException;
 
 	/**
+	 * <p>
 	 * Lookup for staff members responding to a polymorphous criteria.<br/>
 	 * For this release, 2 scenarios are implemented regarding the content of this
 	 * criteria : <br/>
@@ -88,15 +93,41 @@ public interface StaffHandler extends DataSaverLifeCycle {
 	 * <li>The author name contains ONE word and therefore this name is
 	 * corresponding either to the connection login, or the last name, or the first
 	 * name <i>(in that order)</i>.</li>
-	 * <li>The author name contains MULTIPLE words and therefore, it's corresponding
-	 * to user full name (first + last) or (last + first).</li>
+	 * <li>
+	 * The author name has MULTIPLE words and therefore his name is assumed to be 
+	 * to user fullname (first + last), or (last + first).
+	 * </li>
 	 * </ul>
-	 * 
-	 * @param criteria polymorphous author used to lookup for a staff member
-	 * @return the <i>first</i> staff corresponding to the criteria, or NULL is
-	 *         none's found
+	 * </p>
+	 * <br/>
+	 * @param author polymorphous author used to search for a staff member
+	 * @return the <i>first</i> staff corresponding to the criteria, or {@code NULL} if none's found
 	 */
 	Staff lookup(Author author);
+
+ 	/**
+	 * <p>
+	 * Retrieve the staff member corresponding to the given identifier, if any.
+	 * </p>
+	 * 
+	 * @param idStaff the staff identifier.
+	 * @return the selected staff or {@code null} if none exists.
+	 */
+	Staff lookup(int idStaff);
+
+ 	/**
+	 * <p>
+	 * Retrieve the staff member corresponding to the given identifier, if any.
+	 * </p>
+	 * <p>
+	 * if this staff member does not exist (any more), then the exception {@ling NotFoundException} is thrown.
+	 * </p>
+	 * 
+	 * @param idStaff the staff identifier.
+	 * @return the selected staff
+	 * @throws NotFoundException thrown if the ID does not exist
+	 */
+	@NotNull Staff getStaff(int idStaff) throws NotFoundException;
 
 	/**
 	 * Search for a Staff member with the same email address, as the given one
@@ -260,10 +291,16 @@ public interface StaffHandler extends DataSaverLifeCycle {
 
 	/**
 	 * <p>
-	 * Update THE LEVEL ONLY of an experience.
+	 * Update ONLY THE LEVEL of an existing experience.
 	 * </p>
-	 * 
-	 * @param idStaff    the staff identifier
+	 * <p>
+	 * If there is no staff member for the given {@code idStaff}, this method will throw a {@link ApplicationRuntimeException}.
+	 * <b>The {@code idStaff} must be valid.</b>
+	 * </p>
+	 * <p>
+	 * If no corresponding experience has been found, this method will ignore this request.
+	 * </p>
+	 * @param idStaff the staff identifier
 	 * @param experience the experience whose level has to be updated.
 	 */
 	void updateExperience(int idStaff, Experience experience);
@@ -288,16 +325,6 @@ public interface StaffHandler extends DataSaverLifeCycle {
 	 * @param idProject the project identifier
 	 */
 	void delMission(int idStaff, int idProject);
-
-	/**
-	 * <p>
-	 * Get and return a staff member given his identifier.
-	 * </p>
-	 * 
-	 * @param idStaff the staff identifier.
-	 * @return the selected staff or {@code null} if none exists.
-	 */
-	Staff getStaff(int idStaff);
 
 	/**
 	 * <p>
@@ -413,4 +440,14 @@ public interface StaffHandler extends DataSaverLifeCycle {
 	 * @throws ApplicationException thrown if any problem occurs
 	 */
 	void removeMission(int idStaff, int idProject) throws ApplicationException;
+
+	/**
+	 * Update the  <b>SYSTEM</b> level of a skill for a staff member
+	 * @param idStaff the Staff identifier
+	 * @param idSkill the Skill identifier
+	 * @param level the System level calculated by Hal
+	 * @throws ApplicationException thrown if any problem occurs.
+	 */
+	void updateSkillSystemLevel(int idStaff, int idSkill, int level) throws ApplicationException;
+
 }

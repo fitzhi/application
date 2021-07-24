@@ -43,7 +43,7 @@ public class GitCrawlerLoadRepositoryFromCacheIfAnyTest {
 	
 	@Test
 	public void testLoadRepositoryFromExistingCacheIfAnyTest() throws IOException, ApplicationException {
-		Project project = projectHandler.get(1789);
+		Project project = projectHandler.lookup(1789);
 		Assert.assertNotNull(scanner.loadRepositoryFromCacheIfAny(project));
 	}
 	

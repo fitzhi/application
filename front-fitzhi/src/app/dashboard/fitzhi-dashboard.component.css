@@ -38,7 +38,7 @@ div.pie {
 	margin: 10px auto;
 	width: 100%;
 	height: 100%;
-	max-height: 800px;
+	max-height: 600px;
 }
 
 div.pie-projects {
@@ -69,7 +69,7 @@ div.styline-icon {
 }
 
 
-button.lastYearMinimized, button.lastMonthMinimized, button.currentMinimized, button.treeMap, div.styline-icon {
+button.lastYearMinimized, button.lastMonthMinimized, button.currentMinimized, button.treeMap-skills, button.treeMap-projects, div.styline-icon {
 	width: var(--sidebar-button-width);
 	height: var(--sidebar-button-height);
 	left: 5px;
@@ -101,12 +101,16 @@ button.currentMinimized {
 }
 
 div.skyline-icon {
-	bottom: 280px;
+	bottom: 350px;
 	position: absolute;
 	margin-left: 5px;
 }
 
-button.treeMap {
+button.treeMap-projects {
+	bottom: 280px;
+}
+
+button.treeMap-skills {
 	bottom: 210px;
 }
 
@@ -174,4 +178,34 @@ em.fas {
 
 em.large-fas {
   font-size: 80px;
+}
+
+#container-treemap-projects {
+	width: 100%;
+	text-align: center;
+}
+
+div.host-treemap-projects {
+	padding: 0;
+	transform: translate(-6px, -6px); 
+}
+
+img.logoSonar {
+	width: 28px;
+}
+
+table.evaluationDistributions {
+	margin-left: 100px;
+}
+tr.evaluationDistributions, tr.evaluationDistributions td {
+	text-align: center;
+}
+
+tr.evaluationDistributions td {
+	width: 70px;
+	font-weight: bold;
+}
+
+tr.evaluationDistributions td em {
+	color: var(--color-selected);
 }

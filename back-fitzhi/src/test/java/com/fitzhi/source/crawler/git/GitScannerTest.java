@@ -103,7 +103,7 @@ public class GitScannerTest {
 			logger.debug(String.format("GIT remote URL %s", settings.getUrl()));
 		}
 
-		projectHandler.get(2).setLocationRepository(null);		
+		projectHandler.lookup(2).setLocationRepository(null);		
 	}
 	
 	@Test
@@ -115,7 +115,7 @@ public class GitScannerTest {
 	// @Test
 	public void cloneAndParseRepo() throws IOException, ApplicationException, GitAPIException {
 
-		Project project = projectHandler.get(2);
+		Project project = projectHandler.lookup(2);
 		
 		scanner.clone(project, settings);
         assertThat(project.getLocationRepository()).isNotNull();
@@ -142,6 +142,6 @@ public class GitScannerTest {
 	
 	@After
 	public void after() throws ApplicationException {
-		projectHandler.get(2).setLocationRepository(null);		
+		projectHandler.lookup(2).setLocationRepository(null);		
 	}
 }

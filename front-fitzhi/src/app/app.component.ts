@@ -1,22 +1,21 @@
-import { Component, OnInit, OnDestroy, AfterViewInit } from '@angular/core';
-import { CinematicService } from './service/cinematic.service';
-import { Constants } from './constants';
-import { ListProjectsService } from './tabs-project/list-project/list-projects-service/list-projects.service';
-import { ReferentialService } from './service/referential.service';
-import { StaffService } from './tabs-staff/service/staff.service';
+import { AfterViewInit, Component, OnDestroy, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
-import { BaseComponent } from './base/base.component';
-import { TabsStaffListService } from './tabs-staff-list/service/tabs-staff-list.service';
-import { SkillService } from './skill/service/skill.service';
-import { AuthService } from './admin/service/auth/auth.service';
-import { ProjectService } from 'src/app/service/project.service';
-import { SonarService } from './service/sonar.service';
-import { traceOn } from './global';
-import { InstallService } from './admin/service/install/install.service';
-import { environment } from '../environments/environment';
-import { isNumeric } from 'rxjs/internal-compatibility';
 import { take } from 'rxjs/operators';
+import { ProjectService } from 'src/app/service/project/project.service';
+import { environment } from '../environments/environment';
+import { AuthService } from './admin/service/auth/auth.service';
+import { InstallService } from './admin/service/install/install.service';
+import { BaseComponent } from './base/base.component';
+import { Constants } from './constants';
 import { ListCriteria } from './data/listCriteria';
+import { traceOn } from './global';
+import { CinematicService } from './service/cinematic.service';
+import { ReferentialService } from './service/referential.service';
+import { SonarService } from './service/sonar.service';
+import { SkillService } from './skill/service/skill.service';
+import { ListProjectsService } from './tabs-project/list-project/list-projects-service/list-projects.service';
+import { TabsStaffListService } from './tabs-staff-list/service/tabs-staff-list.service';
+import { StaffService } from './tabs-staff/service/staff.service';
 
 declare var $: any;
 
@@ -31,7 +30,7 @@ declare var $: any;
 export class AppComponent extends BaseComponent implements OnInit, AfterViewInit, OnDestroy {
 
 	/**
-	 * The environment 
+	 * The environment
 	 */
 	public environment = environment;
 
@@ -86,34 +85,35 @@ export class AppComponent extends BaseComponent implements OnInit, AfterViewInit
 		this.sonarService.loadSonarMetrics();
 
 		// We display the current version
-		console.info('version %s build-time %s', this.environment.version, this.environment.buildTime);
+		console.log('version %s build-time %s', this.environment.version, this.environment.buildTime);
 	}
 
-	
 	/**
 	  * Search button has been clicked.
 	  */
 	search(): void {
-		function isNumber(value: string | number): boolean
-		{
-		   return ((value != null) &&
-				   (value !== '') &&
-				   !isNaN(Number(value.toString())) &&
-				   Number.isInteger(Number(value))); 
+
+		function isNumber(value: string | number): boolean {
+			return ((value != null) &&
+				(value !== '') &&
+				!isNaN(Number(value.toString())) &&
+				Number.isInteger(Number(value)));
 		}
-		
+
 		switch (this.activeContext) {
 			case Constants.TABS_STAFF_LIST:
 			case Constants.DEVELOPERS_SEARCH:
 				if (traceOn()) {
 					console.log(
-						'Searching %s staff members for the search criteria %s', 
-						(this.activeOnly ? 'only active' : 'all'), 
+						'Searching %s staff members for the search criteria %s',
+						(this.activeOnly ? 'only active' : 'all'),
 						this.criteria);
 				}
 				if (this.criteria) {
 					if ( isNumber(this.criteria) ) {
-						console.log ('Looking a developer with id %s', this.criteria);
+						if (traceOn()) {
+							console.log ('Looking a developer with id %s', this.criteria);
+						}
 						this.router.navigate(['/user/' + this.criteria]);
 					} else {
 						if (this.criteria.length > 0) {
@@ -133,14 +133,14 @@ export class AppComponent extends BaseComponent implements OnInit, AfterViewInit
 							this.staffService.countAll_groupBy_experience(this.activeOnly);
 						}
 					}
-				})
+				});
 				break;
 			}
 			case Constants.PROJECT_SEARCH: {
 				if (traceOn()) {
 					console.log('Reloading %s projects for search criteria %s', (this.activeOnly ? 'active' : ''), this.criteria);
 				}
-				this.listProjectsService.reloadProjects(this.criteria, this.activeOnly);
+				this.listProjectsService.search(this.criteria, this.activeOnly);
 				break;
 			}
 		}
@@ -227,6 +227,7 @@ export class AppComponent extends BaseComponent implements OnInit, AfterViewInit
 		if (traceOn()) {
 			console.log((this.activeOnly) ? 'Filter only active records' : 'Select all records');
 		}
+		this.search();
 	}
 
 	/**

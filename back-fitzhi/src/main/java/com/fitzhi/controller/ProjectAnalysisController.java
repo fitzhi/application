@@ -1,14 +1,5 @@
 package com.fitzhi.controller;
 
-import static com.fitzhi.Error.CODE_PROJECT_NOFOUND;
-import static com.fitzhi.Error.CODE_STAFF_NOFOUND;
-import static com.fitzhi.Error.MESSAGE_PROJECT_NOFOUND;
-import static com.fitzhi.Error.MESSAGE_STAFF_NOFOUND;
-import static com.fitzhi.Error.getStackTrace;
-import static com.fitzhi.Global.BACKEND_RETURN_CODE;
-import static com.fitzhi.Global.BACKEND_RETURN_MESSAGE;
-
-import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -20,7 +11,6 @@ import com.fitzhi.bean.ProjectHandler;
 import com.fitzhi.bean.SkylineProcessor;
 import com.fitzhi.bean.StaffHandler;
 import com.fitzhi.controller.util.ProjectLoader;
-import com.fitzhi.controller.util.ProjectLoader.MyReference;
 import com.fitzhi.data.internal.Library;
 import com.fitzhi.data.internal.Project;
 import com.fitzhi.data.internal.Staff;
@@ -36,8 +26,11 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
 
 /**
@@ -50,8 +43,12 @@ import lombok.extern.slf4j.Slf4j;
  */
 @Slf4j
 @RestController
-@RequestMapping("/api/project/analysis")
-public class ProjectAnalysisController {
+@RequestMapping("/api/project")
+@Api(
+	tags="Project Analysis controller API",
+	description = "API endpoints in charge of the interaction between the front-end and the analysis processed by the back-end."
+)
+public class ProjectAnalysisController  {
 
 	@Autowired
 	ProjectDashboardCustomizer dashboardCustomizer;
@@ -88,111 +85,89 @@ public class ProjectAnalysisController {
 	}
 
 	/**
+	 * <p>
 	 * Lookup all directories from the repository starting with a given criteria.
+	 * </p>
+	 * 
 	 * @param idProject the project identifier
 	 * @param criteria the given searched criteria
+	 * 
+	 * @return {@code true} if the operation success, {@code false} otherwise
 	 */
-	@GetMapping(value = "/lib-dir/lookup")
-	public ResponseEntity<List<String>> libDir(
-			final @RequestParam("idProject") int idProject,
-			final @RequestParam("criteria") String criteria) throws ApplicationException {
+	@ResponseBody
+	@ApiOperation(
+		value = "Lookup all directories from the repository starting with a given criteria."
+	)
+	@GetMapping(value = "/{idProject}/analysis/lib-dir")
+	public List<String> lookup(
+			final @PathVariable("idProject") int idProject,
+			final @RequestParam(name = "path") String criteria) throws ApplicationException {
 
-		MyReference<ResponseEntity<List<String>>> refResponse = projectLoader.new MyReference<>();
+		final Project project = projectHandler.getProject(idProject);
 
-		final Project project = projectLoader.getProject(idProject, new ArrayList<String>(), refResponse);
-		if (refResponse.getResponse() != null) {
-			if (log.isDebugEnabled()) {
-				log.debug (String.format("Project not found for id %d" , idProject));
-			} 
-			return refResponse.getResponse();
-		}
 		if (log.isDebugEnabled()) {
-			log.debug(String.format("scanning the directories from %s", project.getLocationRepository()));
+			log.debug(String.format("Scanning the directories from %s", project.getLocationRepository()));
 		}
 		
-		try {
-
-			List<String> paths = this.dashboardCustomizer.lookupPathRepository(project, criteria);
-			if (log.isDebugEnabled()) {
-				log.debug(String.format("Resulting paths starting with %s", criteria));
-				paths.stream().forEach(log::debug);
-			}
-
-			return new ResponseEntity<>(paths, new HttpHeaders(), HttpStatus.OK);
-
-		} catch (final ApplicationException e) {
-
-			log.error(getStackTrace(e));
-
-			final HttpHeaders headers = new HttpHeaders();
-			headers.set(BACKEND_RETURN_CODE, "O");
-			headers.set(BACKEND_RETURN_MESSAGE, e.getMessage());
-			return new ResponseEntity<>(new ArrayList<String>(), headers, HttpStatus.BAD_REQUEST);
-
+		List<String> paths = this.dashboardCustomizer.lookupPathRepository(project, criteria);
+		if (log.isDebugEnabled()) {
+			log.debug(String.format("Resulting paths starting with %s", criteria));
+			paths.stream().forEach(log::debug);
 		}
+
+		return paths;
 	}
 
 	/**
-	 * Add or change the name of skill required for a project.
-	 * @param param the body of the post containing an instance of ParamProjectSkill in JSON format
-	 * @see ProjectController.BodyParamProjectSkill
+	 * <p>
+	 * Save a library dependency for a project project.
+	 * </p>
+	 * @param idProject the project identifier
+	 * @see Library
 	 * @return
 	 */
-	@PostMapping("/lib-dir/save/{idProject}")
-	public ResponseEntity<Boolean> saveLibDir(@PathVariable int idProject, @RequestBody Library[] tabLib) {
+	@ResponseBody
+	@ApiOperation(
+		value = "Save the dependency libraries of the project."
+	)
+	@PostMapping("{idProject}/analysis/lib-dir")
+	public ResponseEntity<Boolean> saveLibDir(@PathVariable int idProject, @RequestBody Library[] tabLib) throws ApplicationException {
 		
 		if (log.isDebugEnabled()) {
-			log.debug(String.format(
-					"POST command on /project/analysis/save/libDir/save/%d ", 
-					idProject));
+			log.debug(String.format("POST command on /project/analysis/save/libDir/save/%d ", idProject));
 		}
 		
 		List<Library> libraries = new ArrayList<>(Arrays.asList(tabLib));
-		
-		MyReference<ResponseEntity<Boolean>> refResponse = projectLoader.new MyReference<>();
-		Project project = projectLoader.getProject(idProject, Boolean.FALSE, refResponse);
-		if (refResponse.getResponse() != null) {
-			return refResponse.getResponse();
-		}
-		
+		Project project = projectHandler.lookup(idProject);
 		if (log.isDebugEnabled()) {
 			log.debug(String.format("Saving the librairies of project %s", project.getName()));
 			libraries.stream().map(Library::getExclusionDirectory).forEach(log::debug);
 		}
 		
-		try {
 		 this.projectHandler.saveLibraries(idProject, libraries);
-		} catch (Exception e) {
-			log.error(getStackTrace(e));
-			return new ResponseEntity<> (
-					Boolean.FALSE, 
-					new HttpHeaders(), 
-					HttpStatus.BAD_REQUEST);
-		}
-		return new ResponseEntity<>(Boolean.TRUE, new HttpHeaders(), HttpStatus.OK);
+		 return new ResponseEntity<>(Boolean.TRUE, new HttpHeaders(), HttpStatus.OK);
 	}
 
 	
-	@GetMapping("/onboard/{idProject}/{idStaff}")
-	public ResponseEntity<Boolean> onBoardStaff(@PathVariable int idProject, @PathVariable int idStaff) throws ApplicationException {
+	@ResponseBody
+	@ApiOperation(
+		value = "Onboard a staff member in the project."
+	)
+	@PostMapping("{idProject}/analysis/onboard/{idStaff}")
+	public boolean onBoardStaff(
+		@PathVariable int idProject, 
+		@PathVariable int idStaff) throws ApplicationException {
 		
 		if (log.isDebugEnabled()) {
-			log.debug(String.format("GET command on /onboard/%d/%d ", idProject, idStaff));
+			log.debug(String.format("POST verb on /api/project/%d/analysis/onboard/%d", idProject, idStaff));
 		}
 		
-		Staff staff = staffHandler.getStaff(idStaff);		
-		if (staff == null) {
-			throw new ApplicationException(CODE_STAFF_NOFOUND, MessageFormat.format(MESSAGE_STAFF_NOFOUND, idStaff));
-		}
+		Staff staff = staffHandler.getStaff(idStaff);	
 
-		Project project = projectHandler.get(idProject);
-		if (project == null) {
-			throw new ApplicationException(CODE_PROJECT_NOFOUND, MessageFormat.format(MESSAGE_PROJECT_NOFOUND, idProject));
-		}
-		
+		Project project = projectHandler.getProject(idProject);		
 		this.projectDashboardCustomizer.takeInAccountNewStaff(project, staff);
 			 
-		return new ResponseEntity<>(Boolean.TRUE, new HttpHeaders(), HttpStatus.OK);
+		return true;
 	}
 
 }

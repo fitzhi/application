@@ -1,6 +1,3 @@
-/**
- * 
- */
 package com.fitzhi.exception;
 
 import java.text.MessageFormat;
@@ -17,7 +14,7 @@ public class ApplicationException extends Exception {
 	/**
 	 * serialVersionUID from serialization purpose.
 	 */
-	private static final long serialVersionUID = -3215035508614048457L;
+	private static final long serialVersionUID = -3115089903614398457L;
 
 	/**
 	 * Error code

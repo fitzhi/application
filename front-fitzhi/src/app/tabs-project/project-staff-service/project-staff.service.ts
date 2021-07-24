@@ -61,11 +61,13 @@ export class ProjectStaffService {
 	 * Search for a contributor with the same identifier as the given one
 	 * @param idStaff the searched staff identifier
 	 */
-	 findContributor(idStaff: number): Contributor {
+	findContributor(idStaff: number): Contributor {
 		const foundContributor = this.contributors
 			.find(contributor => contributor.idStaff === idStaff);
 		if (!foundContributor) {
-			console.log ('Conmmiter\'s id %d is not retrieved in the staff team.', idStaff );
+			if (traceOn()) {
+				console.log (`Conmmiter\'s id ${idStaff} is not retrieved in the staff team.`);
+			}
 			const unknown = new Contributor();
 			unknown.idStaff = idStaff;
 			const staff = this.staffListService.getCollaborator(idStaff);

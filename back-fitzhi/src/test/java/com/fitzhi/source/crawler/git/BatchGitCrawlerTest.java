@@ -56,11 +56,11 @@ public class BatchGitCrawlerTest {
 	@Test
 	public void testOneActiveProjectWithSettings() throws Exception {
 		// connectionSettings > 1 and project active, so we do not skip this project
-		Project p = projectHandler.get(1);
+		Project p = projectHandler.lookup(1);
 		p.setConnectionSettings(1);
 		p.setActive(true);
 		
-		p = projectHandler.get(2);
+		p = projectHandler.lookup(2);
 		p.setConnectionSettings(1);
 		p.setActive(false);
 
@@ -73,7 +73,7 @@ public class BatchGitCrawlerTest {
 	@After
 	public void after() throws ApplicationException {
 		// We reset the data to their initial state.
-		Project p = projectHandler.get(1);
+		Project p = projectHandler.lookup(1);
 		p.setConnectionSettings(0);
 		p.setActive(true);
 	}

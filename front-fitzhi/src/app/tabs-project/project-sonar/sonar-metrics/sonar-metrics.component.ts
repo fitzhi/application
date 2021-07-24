@@ -10,7 +10,7 @@ import { Observable, EMPTY, of, BehaviorSubject } from 'rxjs';
 import { BaseComponent } from 'src/app/base/base.component';
 import { Constants } from 'src/app/constants';
 import { ProjectSonarMetricValue } from 'src/app/data/project-sonar-metric-value';
-import { ProjectService } from 'src/app/service/project.service';
+import { ProjectService } from 'src/app/service/project/project.service';
 import { PanelSwitchEvent } from '../sonar-thumbnails/panel-switch-event';
 import { ElementSchemaRegistry } from '@angular/compiler';
 import { MessageGravity } from 'src/app/interaction/message/message-gravity';
@@ -140,7 +140,7 @@ export class SonarMetricsComponent extends BaseComponent implements OnInit, OnDe
 		if (traceOn()) {
 			console.log ('loadMetrics$() for %s', this.projectService.project.name);
 		}
-		
+
 		const sonarServer = this.sonarService.getSonarServer(this.projectService.project);
 		if (!sonarServer) {
 			return of(null);

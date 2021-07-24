@@ -5,6 +5,7 @@ import { FirstConnection } from 'src/app/data/first-connection';
 import { catchError, switchMap } from 'rxjs/operators';
 import { Constants } from 'src/app/constants';
 import { environment } from '../../../environments/environment';
+import { traceOn } from 'src/app/global';
 
 @Injectable({
 	providedIn: 'root'
@@ -15,7 +16,7 @@ export class BackendSetupService {
 
 	/**
      * Default URL of the API Rest server.
-	 * 
+	 *
 	 * This URL is provided at build time.
      */
 	public defaultUrl = environment.apiUrl;
@@ -52,23 +53,20 @@ export class BackendSetupService {
 
 	/**
 	 * Test the passed URL and check if it is the very first connection.
+	 *
 	 * @param urlCandidate the url candidate for hosting the backend.
+	 * @return an "boolean" observable which returns TRUE if this first connection, FALSE otherwise
 	 */
-	public isVeryFirstConnection(urlCandidate: string): Observable<FirstConnection> {
+	public isVeryFirstConnection$(urlCandidate: string): Observable<FirstConnection> {
 		return this.httpClient.get<string>(
-			urlCandidate + '/api/admin/isVeryFirstConnection', { responseType: 'text' as 'json' }).
+			`${urlCandidate}/api/admin/isVeryFirstConnection`, { responseType: 'text' as 'json' }).
 			pipe(
 				switchMap(result => {
-					return of(new FirstConnection(((result === 'true') ? true : false), null)); 
+					return of(new FirstConnection(((result === 'true') ? true : false), null));
 				}),
-				catchError(response => {
-					// Server is offline. No response
-					if (response === Constants.SERVER_DOWN) {
-						return of(new FirstConnection(false, null)); 
-					} else {
-						// Throw other kinds of error
-						return of(new FirstConnection(false, null)); 
-					}
+				catchError(error => {
+					// Either the Server is offline, or the given URL is wrong. No response
+					return of(new FirstConnection(false, null));
 				})
 			);
 	}

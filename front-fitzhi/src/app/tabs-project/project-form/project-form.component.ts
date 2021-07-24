@@ -2,10 +2,8 @@ import { Component, OnInit, Input, OnDestroy, AfterViewInit, EventEmitter, Outpu
 import { FormGroup, FormControl } from '@angular/forms';
 import { Router } from '@angular/router';
 import { take, map, catchError, switchMap, tap } from 'rxjs/operators';
-
-import { ProjectService } from '../../service/project.service';
+import { ProjectService } from '../../service/project/project.service';
 import { CinematicService } from '../../service/cinematic.service';
-
 import { Project } from '../../data/project';
 import { SonarProject } from '../../data/SonarProject';
 import { Constants } from '../../constants';
@@ -23,6 +21,8 @@ import { traceOn } from 'src/app/global';
 import { ProjectSkill } from '../../data/project-skill';
 import { GitService } from 'src/app/service/git/git.service';
 import { Repository } from 'src/app/data/git/repository';
+import { ListProjectsService } from '../list-project/list-projects-service/list-projects.service';
+import { ProjectFormSkillHandler } from './skill/project-form-skill-handler';
 
 /**
  * ProjectFormComponent
@@ -127,16 +127,26 @@ export class ProjectFormComponent extends BaseComponent implements OnInit, After
 	 */
 	urlCodeFactorIOUnreachable$ = new BehaviorSubject<Boolean>(false);
 
+	/**
+	 * This handler is in charge of the skills management inside this form.
+	 * This is not an Angular Global Service because its scope is limited to this component
+	 */
+	projectSkillHandler: ProjectFormSkillHandler;
+
 	constructor(
 		private cinematicService: CinematicService,
 		private messageService: MessageService,
 		public referentialService: ReferentialService,
 		public skillService: SkillService,
 		public projectService: ProjectService,
+		public listProjectService: ListProjectsService,
 		public gitService: GitService,
 		public sonarService: SonarService,
 		private router: Router) {
 		super();
+
+		this.projectSkillHandler = new ProjectFormSkillHandler(
+			projectService, skillService, messageService);
 
 		this.boundAddSkill = this.addSkill.bind(this);
 		this.boundRemoveSkill = this.removeSkill.bind(this);
@@ -144,6 +154,22 @@ export class ProjectFormComponent extends BaseComponent implements OnInit, After
 		this.boundAddSonarProject = this.addSonarProject.bind(this);
 		this.boundRemoveSonarProject = this.removeSonarProject.bind(this);
 
+	}
+
+	/**
+	 * Wrapper bound with this component.
+	 * @param event ADD event fired by the tagify component.
+	 */
+	addSkill(event: CustomEvent): void {
+		this.projectSkillHandler.addSkill(event);
+	}
+
+	/**
+	 * Wrapper bound with this component.
+	 * @param event REMOVE event fired by the tagify component.
+	 */
+	removeSkill(event: CustomEvent): void {
+		this.projectSkillHandler.removeSkill(event);
 	}
 
 	ngOnInit() {
@@ -199,12 +225,10 @@ export class ProjectFormComponent extends BaseComponent implements OnInit, After
 					if (loaded) {
 						this.ngAfterViewInitSonarProjectsDeclaredInProject();
 						this.ngAfterViewInitSkillsDeclaredInProject();
-					} 
+					}
 				}
 			}));
 	}
-
-
 
 	/**
 	 * This function create 2 JavasScript objects inside the form
@@ -316,21 +340,8 @@ export class ProjectFormComponent extends BaseComponent implements OnInit, After
 				catchError((error) => {
 					console.error('Internal error : Skills are not retrieved from back-end', error);
 					return this.sonarProjectsLoaded$();
-				}));
-				/*
-			.pipe(
-				take(1),
-				switchMap(doneAndOk => {
-					if (!doneAndOk && !this.creation) {
-						this.messageService.warning('Cannot retrieve the declared applications in Sonar');
-					}
-					// Asynchronous update to avoid ExpressionChangedAfterItHasBeenCheckedError
-					setTimeout(() => {
-						this.sonarProjectsLoaded = doneAndOk;
-					}, 0);
-					return of(doneAndOk);
-				}));
-				*/
+				})
+			);
 	}
 
 	/**
@@ -347,9 +358,7 @@ export class ProjectFormComponent extends BaseComponent implements OnInit, After
 		this.projectService
 			.testConnectionCodeFactorIO$()
 			.subscribe({
-				next: doneAndOk => {
-					this.urlCodeFactorIOUnreachable$.next(!doneAndOk);
-				}
+				next: doneAndOk => this.urlCodeFactorIOUnreachable$.next(!doneAndOk)
 			});
 	}
 
@@ -388,10 +397,9 @@ export class ProjectFormComponent extends BaseComponent implements OnInit, After
 	 * Return an observable emitting an array containing all skills declared inside the applicaton.
 	 */
 	private allSkills$(): Observable<Skill[]> {
-		return this.skillService.allSkillsLoaded$
-			.pipe(switchMap(doneAndOk => {
-				return doneAndOk ? of(this.skillService.allSkills) : EMPTY;
-			}));
+		return this.skillService.allSkillsLoaded$.pipe(
+			switchMap(doneAndOk => doneAndOk ? of(this.skillService.allSkills) : EMPTY)
+		);
 	}
 
 	/**
@@ -437,7 +445,7 @@ export class ProjectFormComponent extends BaseComponent implements OnInit, After
 			.pipe(
 				tap(sonarProjects => {
 					if (traceOn()) {
-						console.log('Receiving ' + sonarProjects.length + ' Sonar projects');
+						console.log(`Receiving ${sonarProjects.length} Sonar projects`);
 					}
 				}),
 				map(sonarProjects => {
@@ -485,12 +493,12 @@ export class ProjectFormComponent extends BaseComponent implements OnInit, After
 			this.projectService.saveSonarUrl$(this.projectService.project.id, urlSonarServer)
 				.subscribe(doneAndOk => {
 					if (doneAndOk) {
-						this.messageService.success('Saved the URL ' + urlSonarServer + ' for the project ' + this.projectService.project.name);
+						this.messageService.success(`Saved the URL ${urlSonarServer} for the project ${this.projectService.project.name}`);
 						this.projectService.project.urlSonarServer = urlSonarServer;
 						this.projectService.project.sonarProjects = [];
 						this.projectService.projectLoaded$.next(true);
 					} else {
-						this.messageService.error('Failed to save the URL ' + urlSonarServer + ' for the project ' + this.projectService.project.name);
+						this.messageService.error(`Failed to save the URL ${urlSonarServer} for the project ${this.projectService.project.name}`);
 					}
 				});
 		}
@@ -504,105 +512,6 @@ export class ProjectFormComponent extends BaseComponent implements OnInit, After
 			console.log('onQualitySolutionChange', $event);
 		}
 		this.code_quality_solution$.next(Number($event));
-	}
-
-	/**
-	 * Add a skill inside the project.
-	 * @param event ADD event fired by the tagify component.
-	 */
-	addSkill(event: CustomEvent) {
-
-		if ((!this.projectService.project.id) || (this.projectService.project.id === -1)) {
-			if (traceOn()) {
-				console.log ('Adding a skill is impossible for an unregistered project.');
-			}
-			this.messageService.error('Adding a skill is impossible for an unregistered project!');
-			return;
-		}
-
-		const idSkill = this.skillService.id(event.detail.data.value);
-		if (idSkill === -1) {
-			console.log('SEVERE ERROR : Unregistered skill', event.detail.data.value);
-		}
-
-		// This skills is already registered for this project.
-		if (this.projectService.project.mapSkills.has(idSkill)) {
-			return;
-		}
-
-		if (traceOn()) {
-			console.log('Adding the skill', event.detail.data.value);
-		}
-
-		this.projectService.project.mapSkills.set(idSkill, new ProjectSkill(idSkill, 0, 0));
-
-		// We have already loaded or saved the project, so we can add each new skill as they appear, one by one.
-		if (this.projectService.project.id)  {
-			this.updateSkill(this.projectService.project.id, idSkill, this.projectService.addSkill.bind(this.projectService));
-		}
-
-		// Log the resulting collection.
-		this.logProjectSkills();
-	}
-
-	/**
-	 * Remove a skill from the project.
-	 * @param event ADD event fired by the tagify component.
-	 */
-	removeSkill(event: CustomEvent) {
-
-		const idSkill = this.skillService.id(event.detail.data.value);
-		if (idSkill === -1) {
-			console.log('SEVERE ERROR : Unknown skill %s', event.detail.data.value);
-		}
-
-		// This skills is NOT already registered for this project.
-		if (!this.projectService.project.mapSkills.has(idSkill)) {
-			console.log('SEVERE ERROR : Unregistered skill %s for the project %s',
-				event.detail.data.value,
-				this.projectService.project.name);
-			return;
-		}
-
-		if (traceOn()) {
-			console.log('Removing the skill', event.detail.data.value);
-		}
-
-		this.projectService.project.mapSkills.delete(idSkill);
-
-		// We have already loaded or saved the project, so we can remove each new skill one by one.
-		if (this.projectService.project.id) {
-			this.updateSkill(this.projectService.project.id, idSkill, this.projectService.delSkill.bind(this.projectService));
-		}
-
-		// Log the resulting collection.
-		this.logProjectSkills();
-	}
-
-	/**
-	 * Update a skill inside a project. This might be an addition or a removal.
-	 * @param idProject the project identifier
-	 * @param idSkill the skill identifier
-	 * @param callback the callback function, which might be **projectService.addSkill** or **projectService.delSkill**
-	 */
-	updateSkill(idProject: number, idSkill: number,
-		callback: (idProject: number, idSkill: number) => Observable<BooleanDTO>) {
-		callback(idProject, idSkill)
-			.subscribe({
-				next: result => {
-					if (!result) {
-						this.messageService.error(result.message);
-					} else {
-						this.projectService.actualizeProject(idProject);
-					}
-				},
-				error: responseInError => {
-					if (traceOn()) {
-						console.log('Error ' + responseInError.error.code + ' ' + responseInError.error.message);
-					}
-					this.messageService.error(responseInError.error.message);
-				}
-			});
 	}
 
 	/**
@@ -630,19 +539,6 @@ export class ProjectFormComponent extends BaseComponent implements OnInit, After
 						console.log('Error ' + response_in_error);
 					}
 				});
-	}
-
-	/**
-	 * Log the skills of the current project in DEBUG mode.
-	 */
-	logProjectSkills() {
-		if (traceOn()) {
-			console.groupCollapsed('list of skills for project ' + this.projectService.project.name);
-			for (const [idSkill, profilSkill] of this.projectService.project.mapSkills) {
-				console.log(idSkill, this.skillService.title(idSkill));
-			}
-			console.groupEnd();
-		}
 	}
 
 	/**
@@ -681,7 +577,7 @@ export class ProjectFormComponent extends BaseComponent implements OnInit, After
 		// so we can add each new Sonar project as they appear, one by one.
 		if (this.projectService.project.id) {
 			this.updateSonarProject(this.projectService.project.id, sonarProject,
-				this.projectService.addSonarProject.bind(this.projectService),
+				this.projectService.addSonarProject$.bind(this.projectService),
 				this.reloadSonarProjectMetrics.bind(this));
 		}
 
@@ -691,7 +587,7 @@ export class ProjectFormComponent extends BaseComponent implements OnInit, After
 
 	reloadSonarProjectMetrics(idProject: number, sonarProject: SonarProject) {
 		this.projectService
-			.loadSonarProject(this.projectService.project, sonarProject.key)
+			.loadSonarProject$(this.projectService.project, sonarProject.key)
 			.pipe(take(1))
 			.subscribe((sp: SonarProject) => {
 				sonarProject.projectSonarMetricValues = sp.projectSonarMetricValues;
@@ -749,7 +645,7 @@ export class ProjectFormComponent extends BaseComponent implements OnInit, After
 
 		// We have already loaded or saved the project, so we can add each new Sonar project as they appear, one by one.
 		if (this.projectService.project.id) {
-			this.updateSonarProject(this.projectService.project.id, sonarProject, this.projectService.delSonarProject.bind(this.projectService));
+			this.updateSonarProject(this.projectService.project.id, sonarProject, this.projectService.removeSonarProject$.bind(this.projectService));
 		}
 
 		// Log the resulting collection.
@@ -805,36 +701,41 @@ export class ProjectFormComponent extends BaseComponent implements OnInit, After
 		}
 
 		if ((this.projectService.project.id) && (this.projectService.project.id !== Constants.UNKNOWN)) {
-			this.projectService.updateCurrentProject();
+			this.projectService.updateCurrentProject$().pipe(take(1)).subscribe({
+				next: doneAndOk => {
+					if (doneAndOk) {
+						// We reload the list of projects filtered by the search criteria, if necessary.
+						this.listProjectService.reload();
+					}
+				}
+			});
 		}
+
 		if ((!this.projectService.project.id) || (this.projectService.project.id === Constants.UNKNOWN)) {
-			this.projectService.createNewProject()
+			this.projectService.createNewProject$()
 				.pipe(take(1))
 				.subscribe(project => {
-					this.projectService.project = project;
-					if (!project.mapSkills) {
-						project.mapSkills = new Map<number, ProjectSkill>();
-					}
-					//
 					// If we were in creation (i.e. url = ".../project/"), we leave this mode.
-					//
 					this.creation = false;
 
-					//
-					// We update the array containing the collection of all projects.
-					//
+					// We reload the list of projects filtered by the search criteria, if necessary.
+					this.listProjectService.reload();
+
+					// We update the project from a server call.
 					this.projectService.actualizeProject(project.id);
 
-					//
 					// We broadcast the fact that a project has been found.
-					//
 					this.projectService.projectLoaded$.next(true);
 
-					this.messageService.success('Project ' + this.projectService.project.name + '  saved !');
-
+					// We check the GIT connection settings
 					this.testConnectionSettings();
 
+					// We load the GIT branches from the backend.
 					this.loadBranchesOnBackend();
+
+					// We inform the end-user.
+					this.messageService.success('Project ' + this.projectService.project.name + '  saved !');
+
 				});
 		}
 
@@ -897,7 +798,7 @@ export class ProjectFormComponent extends BaseComponent implements OnInit, After
 				})
 			).subscribe({
 				next: (branches: string[]) => {
-					if (branches) {
+					if ((branches) && (branches.length > 0)) {
 						this.projectService.branches$.next(branches);
 					} else {
 						// If we cannot retrieve the array of branches,
@@ -937,7 +838,7 @@ export class ProjectFormComponent extends BaseComponent implements OnInit, After
 	 */
 	private testConnectionSettings() {
 		this.projectService
-			.testConnection(this.projectService.project.id)
+			.testConnection$(this.projectService.project.id)
 			.pipe(take(1))
 			.subscribe((doneAndOk: boolean) => {
 				if (!doneAndOk) {

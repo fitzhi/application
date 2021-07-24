@@ -1,6 +1,3 @@
-/**
- * 
- */
 package com.fitzhi.source.crawler;
 
 import java.io.IOException;
@@ -8,6 +5,8 @@ import java.nio.file.Path;
 import java.util.Collection;
 import java.util.List;
 import java.util.Set;
+
+import javax.validation.constraints.NotNull;
 
 import com.fitzhi.controller.in.SettingsGeneration;
 import com.fitzhi.data.internal.Project;
@@ -66,7 +65,6 @@ public interface RepoScanner {
 	 * @return {@code true} if the connection has succeeded, {@code false} otherwise
 	 */
 	boolean testConnection(Project project);
-	
 
 	/**
 	 * Load the collection of reference of <b>branches</b> available on the SCM declared for the given project.
@@ -236,7 +234,6 @@ public interface RepoScanner {
 	void processDiffEntries(RepositoryAnalysis analysis, RevCommit commit, String finalFilePathname,
 			DiffEntry de, DiffFormatter diffFormatter, ParserVelocity parserVelocity) throws ApplicationException;
 
-
 	/**
 	 * <p>Aggregate the history of the repository into the risks dashboard.</p>
 	 * <p>
@@ -294,13 +291,15 @@ public interface RepoScanner {
 	CommitRepository personalizeRepo(CommitRepository globalRepo, SettingsGeneration settings);
 	
 	/**
-	 * Test if the staff risks dashboard generation has been already executed.
+	 * Test if the Project-Staff coverage dashboard has already been generated.
+	 * 
 	 * @param project the selected project
-	 * @return 	<ul><li>{@code true} if the intermediate data are available to complete the dashboard,</li>
-	 * 			<li>{@code false} if the full operation is required <i><b>(Therefore, this operation will be asynchronous)</b></i>.</li></ul>  
-	 * @throws IOException As we look for the existence of a working file on the file system, this function might return an IOException.
+	 * 
+	 * @return 	{@code true} if the intermediate data are available to complete the dashboard, 
+	 * {@code false} if the full operation is required <em><b>(Therefore, this operation will be asynchronous)</b></em>
+	 * @throws ApplicationException As we look for the existence of a working file on the file system, this function might return an ApplicationException with an underlying {@link IOException}.
 	 */
-	boolean hasAvailableGeneration(Project project) throws IOException;
+	boolean hasAvailableGeneration(@NotNull Project project) throws ApplicationException;
 	
 	/**
 	 * <p>

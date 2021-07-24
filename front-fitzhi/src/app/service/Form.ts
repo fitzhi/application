@@ -23,7 +23,7 @@ export class Form {
 
 	public trace() {
 		if (traceOn()) {
-			console.log('Form Identifier ' + Constants.CONTEXT[this.formIdentifier] + ' for url ' + this.url);
+			console.log(`Form Identifier ${Constants.CONTEXT[this.formIdentifier]} for url ${this.url}`);
 		}
 	}
 }

@@ -1,7 +1,12 @@
 package com.fitzhi.source.crawler.impl;
 
-import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
+
+import com.fitzhi.data.internal.Ecosystem;
+import com.fitzhi.exception.ApplicationException;
+import com.fitzhi.source.crawler.EcosystemAnalyzer;
 
 import org.junit.Assert;
 import org.junit.Test;
@@ -9,10 +14,6 @@ import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
-
-import com.fitzhi.data.internal.Ecosystem;
-import com.fitzhi.exception.ApplicationException;
-import com.fitzhi.source.crawler.EcosystemAnalyzer;
 
 /**
  * <p>
@@ -30,7 +31,7 @@ public class EcosystemAnalyzerDetectEcosystemsTest {
 	
 	@Test
 	public void test() throws ApplicationException {
-		List<String> pathnames = new ArrayList<>();
+		Set<String> pathnames = new HashSet<>();
 		pathnames.add("One.ts");
 		pathnames.add("Two.ts");
 		pathnames.add("One.java");
@@ -39,12 +40,12 @@ public class EcosystemAnalyzerDetectEcosystemsTest {
 		List<Ecosystem> ecosystems = ecosystemAnalyzer.detectEcosystems(pathnames);
 		Assert.assertEquals(2, ecosystems.size());
 		Assert.assertEquals("TypeScript detected", 2, ecosystems.get(0).getId());
-		Assert.assertEquals("Java detected",0, ecosystems.get(1).getId());		
+		Assert.assertEquals("Java detected", 0, ecosystems.get(1).getId());		
 	}
 
 	@Test
 	public void testPHP() throws ApplicationException {
-		List<String> pathnames = new ArrayList<>();
+		Set<String> pathnames = new HashSet<>();
 		pathnames.add("/application/Classes/AbstractException.php");
 		pathnames.add("/application/Classes/GroupGile.php");
 		pathnames.add("unused.json");

@@ -15,12 +15,20 @@ getTestBed().initTestEnvironment(
 	platformBrowserDynamicTesting()
 );
 // Then we find all the tests
+
 const context = require.context('./', true, /\.spec\.ts$/);
-// const context = require.context('./', true,  /ssewatcher\.service\.spec\.ts$/);
+// const context = require.context('./', true,  /treemap-projects-container\.component\.spec\.ts$/);
+// const context = require.context('./', true,  /treemap-skills-chart\.component\.spec\.ts$/);
+// const context = require.context('./', true,  /treemap-skills.component\.spec\.ts$/);
+// const context = require.context('./', true,  /project-sunburst-with-data\.component\.spec\.ts$/);
+// const context = require.context('./', true,  /project-audit-badges\.component\.detailPanel\.spec\.ts$/);
 // const context = require.context('./', true,  /http-refresh-token-error-interceptor\.spec\.ts$/);
-// const context = require.context('./', true,  /list-10-contributors\.component\.spec\.ts$/);
-// const context = require.context('./', true,  /list-filenames\.component\.spec\.ts$/);
-// const context = require.context('./', true,  /node-detail\.component\.spec\.ts$/);
-// const context = require.context('./', true,  /list-projects\.service\.spec\.ts$/);
+// const context = require.context('./', true,  /project-appropriateDistribution\.service\.spec\.ts$/);
+// const context = require.context('./', true,  /project-globalEvaluation\.service\.spec\.ts$/);
+// const context = require.context('./', true,  /project-calculateSonarEvaluation\.service\.spec\.ts$/);
+// const context = require.context('./', true,  /table-categories\.component\.spec\.ts$/);
+// const context = require.context('./', true,  /app\.component\.search\.spec\.ts$/);
+// const context = require.context('./', true,  /staff\.service\.spec\.ts$/);
+// const context = require.context('./', true,  /staff-remove\.component\.spec\.ts$/);
 // And load the modules.
 context.keys().map(context);

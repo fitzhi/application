@@ -1,7 +1,7 @@
 import { Component, OnInit, Inject } from '@angular/core';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { BehaviorSubject } from 'rxjs';
-import { ProjectService } from '../../../../service/project.service';
+import { ProjectService } from '../../../../service/project/project.service';
 
 @Component({
 	selector: 'app-in-line-edit-dialog',
@@ -36,7 +36,7 @@ export class InLineEditDialogComponent implements OnInit {
 		this.paths = this.paths.filter(s => s.toLowerCase().startsWith($event));
 		this.pathSearched = $event;
 		this.searchPath$.next($event);
-		return this.projectService.libDirLookup(this.idProject, $event)
+		return this.projectService.libDirLookup$(this.idProject, $event)
 			.subscribe(res => this.paths = res);
 	}
 

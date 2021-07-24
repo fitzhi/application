@@ -1,0 +1,26 @@
+[
+	{
+		"idEDT": 0,
+		"idSkill": "5",
+		"typeCode": "Annotation",
+		"importPattern": "^org.springframework.stereotype.Service$|^org.springframework.stereotype.Component$",
+		"codePattern": "^Service$|^Component$",
+		"filePattern": ".java$"
+	},
+	{
+		"idEDT": 1,
+		"idSkill": "5",
+		"typeCode": "Annotation",
+		"importPattern": "^org.springframework.context.annotation.Bean$",
+		"codePattern": "^Bean$",
+		"filePattern": ".java$"
+	},
+	{
+		"idEDT": 2,
+		"idSkill": "6",
+		"typeCode": "Annotation",
+		"importPattern": "^org.springframework.boot.autoconfigure.SpringBootApplication$",
+		"codePattern": "^SpringBootApplication$",
+		"filePattern": ".java$"
+	}
+]

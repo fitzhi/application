@@ -1,17 +1,13 @@
-import { Component, OnInit, Output, Input, EventEmitter, OnDestroy, ViewChild } from '@angular/core';
-import { SonarService } from 'src/app/service/sonar.service';
-import { Subject, BehaviorSubject } from 'rxjs';
+import { Component, EventEmitter, OnDestroy, OnInit, Output, ViewChild } from '@angular/core';
+import { Subject } from 'rxjs';
 import { BaseComponent } from 'src/app/base/base.component';
 import { Constants } from 'src/app/constants';
-import { PanelSwitchEvent } from './sonar-thumbnails/panel-switch-event';
-import { CinematicService } from 'src/app/service/cinematic.service';
-import { SonarThumbnailsComponent } from './sonar-thumbnails/sonar-thumbnails.component';
-import { Project } from 'src/app/data/project';
-import { MessageGravity } from 'src/app/interaction/message/message-gravity';
-import { Message } from 'src/app/interaction/message/message';
-import { MessageService } from 'src/app/interaction/message/message.service';
-import { ProjectService } from 'src/app/service/project.service';
 import { traceOn } from 'src/app/global';
+import { MessageGravity } from 'src/app/interaction/message/message-gravity';
+import { CinematicService } from 'src/app/service/cinematic.service';
+import { ProjectService } from 'src/app/service/project/project.service';
+import { PanelSwitchEvent } from './sonar-thumbnails/panel-switch-event';
+import { SonarThumbnailsComponent } from './sonar-thumbnails/sonar-thumbnails.component';
 
 @Component({
 	selector: 'app-project-sonar',

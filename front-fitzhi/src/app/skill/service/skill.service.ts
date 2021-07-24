@@ -1,16 +1,15 @@
-import { Injectable } from '@angular/core';
-import { Skill } from '../../data/skill';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
-import { Observable, BehaviorSubject, Subject, of, EMPTY } from 'rxjs';
-import { InternalService } from '../../internal-service';
-
-import { Constants } from '../../constants';
-import { BackendSetupService } from '../../service/backend-setup/backend-setup.service';
-import { take, tap, map, switchMap } from 'rxjs/operators';
-import { HttpCodes, traceOn } from '../../global';
-import { DetectionTemplate } from '../../data/detection-template';
+import { Injectable } from '@angular/core';
 import { FormGroup } from '@angular/forms';
+import { NO_CONTENT } from 'http-status-codes';
+import { BehaviorSubject, EMPTY, Observable, of } from 'rxjs';
+import { switchMap, take, tap } from 'rxjs/operators';
 import { ListCriteria } from 'src/app/data/listCriteria';
+import { DetectionTemplate } from '../../data/detection-template';
+import { Skill } from '../../data/skill';
+import { traceOn } from '../../global';
+import { InternalService } from '../../internal-service';
+import { BackendSetupService } from '../../service/backend-setup/backend-setup.service';
 
 const httpOptions = {
 	headers: new HttpHeaders({ 'Content-Type': 'application/json' })
@@ -71,7 +70,7 @@ export class SkillService extends InternalService {
 	loadSkills() {
 
 		if (traceOn()) {
-			this.log('Fetching all skills on URL ' + this.backendSetupService.url() + '/skill' + '/all');
+			this.log(`Fetching all skills on URL ${this.backendSetupService.url()}/skill/all`);
 		}
 		this.httpClient
 			.get<Skill[]>(this.backendSetupService.url() + '/skill')
@@ -101,7 +100,7 @@ export class SkillService extends InternalService {
 
 	/**
 	* Update or create the given skill depending on the **skill.id** value.
-	* This function emits an observable with the skill value 
+	* This function emits an observable with the skill value
 	* @param skill the skill to be saved
 	*/
 	public save$(skill: Skill): Observable<Skill> {
@@ -143,10 +142,10 @@ export class SkillService extends InternalService {
 				take(1),
 				switchMap(
 					response => {
-						if (response.status === HttpCodes.noContent) {
+						if (response.status === NO_CONTENT) {
 							return of(skill);
 						} else {
-							throw 'The Skill ' + skill.title + ' has not been updated for an unknown reason.';
+							throw new Error(`The Skill ${skill.title} has not been updated for an unknown reason.`);
 						}
 					}
 			));
@@ -268,7 +267,7 @@ export class SkillService extends InternalService {
 	 * @param formGroupSkill the SKILL formGroup
 	 */
 	fillSkill(skill: Skill, formGroupSkill: FormGroup) {
-		
+
 		skill.title = formGroupSkill.get('title').value;
 
 		let detectionTemplate: DetectionTemplate;

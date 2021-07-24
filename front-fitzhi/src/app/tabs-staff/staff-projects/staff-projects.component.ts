@@ -1,21 +1,17 @@
-import { Constants } from '../../constants';
-import { Collaborator } from '../../data/collaborator';
-import { StaffDTO } from '../../data/external/staffDTO';
-import { MessageService } from '../../interaction/message/message.service';
-import { ProjectService } from '../../service/project.service';
-import { StaffService } from '../service/staff.service';
-import { StaffDataExchangeService } from '../service/staff-data-exchange.service';
-import { Component, OnInit, OnDestroy, Input, AfterViewInit, ViewChild } from '@angular/core';
-
-import { BaseComponent } from '../../base/base.component';
-import Tagify from '@yaireo/tagify';
-import { Mission } from 'src/app/data/mission';
-import { BooleanDTO } from 'src/app/data/external/booleanDTO';
-import { Observable, Subject, BehaviorSubject } from 'rxjs';
-import { TableGhostsComponent } from 'src/app/tabs-project/project-sunburst/project-ghosts/table-ghosts/table-ghosts.component';
-import { MatTableDataSource } from '@angular/material/table';
+import { AfterViewInit, Component, Input, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { MatSort } from '@angular/material/sort';
+import { MatTableDataSource } from '@angular/material/table';
+import Tagify from '@yaireo/tagify';
+import { BehaviorSubject, Observable } from 'rxjs';
+import { BooleanDTO } from 'src/app/data/external/booleanDTO';
+import { Mission } from 'src/app/data/mission';
 import { traceOn } from 'src/app/global';
+import { BaseComponent } from '../../base/base.component';
+import { Collaborator } from '../../data/collaborator';
+import { MessageService } from '../../interaction/message/message.service';
+import { ProjectService } from '../../service/project/project.service';
+import { StaffService } from '../service/staff.service';
+
 
 @Component({
 	selector: 'app-staff-projects',
@@ -82,8 +78,7 @@ export class StaffProjectsComponent extends BaseComponent implements OnInit, OnD
 	constructor(
 		private messageService: MessageService,
 		private staffService: StaffService,
-		private projectService: ProjectService,
-		private staffDataExchangeService: StaffDataExchangeService) {
+		private projectService: ProjectService) {
 		super();
 
 		this.boundAddProject = this.addProject.bind(this);
@@ -96,10 +91,10 @@ export class StaffProjectsComponent extends BaseComponent implements OnInit, OnD
 		// We listen the parent component (StaffComponent) in charge of retrieving data from the back-end.
 		//
 		this.subscriptions.add(
-			this.staffDataExchangeService.collaboratorLoaded$.subscribe({
+			this.staffService.collaboratorLoaded$.subscribe({
 				next: doneAndOk => {
 					if (doneAndOk) {
-						this.collaborator = this.staffDataExchangeService.collaborator;
+						this.collaborator = this.staffService.collaborator;
 						this.loadMissions(this.collaborator.missions);
 					}
 				}
@@ -147,7 +142,7 @@ export class StaffProjectsComponent extends BaseComponent implements OnInit, OnD
 
 		// We add the already attached project into the tagify-textarea component.
 		this.subscriptions.add(
-			this.staffDataExchangeService.collaboratorLoaded$.subscribe({
+			this.staffService.collaboratorLoaded$.subscribe({
 				next: doneAndOk => {
 					if (doneAndOk) {
 						this.takeInAccountCollaborator();
@@ -162,7 +157,7 @@ export class StaffProjectsComponent extends BaseComponent implements OnInit, OnD
 	}
 
 	takeInAccountCollaborator() {
-		this.collaborator = this.staffDataExchangeService.collaborator;
+		this.collaborator = this.staffService.collaborator;
 		this.removeValues();
 		// We add this test to avoid an empty-warning inside the component
 		if (this.collaborator.missions.length > 0) {
@@ -210,7 +205,7 @@ export class StaffProjectsComponent extends BaseComponent implements OnInit, OnD
 		if (this.collaborator.idStaff) {
 			this.updateProject(this.collaborator.idStaff,
 			new Mission(project.id, project.name),
-			this.staffService.addProject.bind(this.staffService));
+			this.staffService.addProject$.bind(this.staffService));
 		}
 	}
 
@@ -272,7 +267,7 @@ export class StaffProjectsComponent extends BaseComponent implements OnInit, OnD
 
 		// We have already loaded or saved the collaborator, so we can add each new project as they appear, one by one.
 		if (this.collaborator.idStaff) {
-			this.updateProject(this.collaborator.idStaff, mission, this.staffService.removeProject.bind(this.staffService));
+			this.updateProject(this.collaborator.idStaff, mission, this.staffService.removeProject$.bind(this.staffService));
 		}
 
 	}

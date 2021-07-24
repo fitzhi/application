@@ -1,12 +1,12 @@
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Building } from 'rising-skyline';
-import { BehaviorSubject, Observable, of } from 'rxjs';
+import { BehaviorSubject, Observable } from 'rxjs';
 import { switchMap, take } from 'rxjs/operators';
 import { ProjectFloor } from 'src/app/data/project-floor';
 import { SkylineAnimation } from 'src/app/data/skyline-animation';
 import { traceOn } from 'src/app/global';
-import { ProjectService } from 'src/app/service/project.service';
+import { ProjectService } from 'src/app/service/project/project.service';
 
 const httpOptions = {
 	headers: new HttpHeaders({ 'Content-Type': 'application/json' })
@@ -38,7 +38,7 @@ export class SkylineService {
 
 	/**
 	 * Load the skyline from the Fitzhì backend.
-	 * @param width the width of the skyline. _this parameter is not actually used_ 
+	 * @param width the width of the skyline. _this parameter is not actually used_
 	 * @param height the height of the skyline
 	 * @returns an observable of buildings
 	 */
@@ -78,7 +78,6 @@ export class SkylineService {
 			console.log ('The height of the skykine container is', height);
 			console.log ('The height of one line is', heightOneLine);
 		}
-		let i = 0;
 		const skylineToDraw = [];
 
 		skyline.floors.forEach(element => {
@@ -93,7 +92,7 @@ export class SkylineService {
 					100 - Math.floor(100 * element.linesActiveDevelopers / (element.linesActiveDevelopers + element.linesInactiveDevelopers)),
 					(project) ? project.name : 'undefined'
 				)
-			)
+			);
 		});
 		return skylineToDraw;
 	}
@@ -115,6 +114,6 @@ export class SkylineService {
 	}
 
 	public evaluateHeightOfLine() {
-		const maxLine = this
+		const maxLine = this;
 	}
 }

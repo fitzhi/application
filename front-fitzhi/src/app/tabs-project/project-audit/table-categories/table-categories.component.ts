@@ -1,16 +1,11 @@
-import { Component, OnInit, Output, EventEmitter, Input, OnDestroy } from '@angular/core';
-import { Constants } from 'src/app/constants';
-import { ProjectService } from 'src/app/service/project.service';
-import { BaseComponent } from 'src/app/base/base.component';
-import { Project } from 'src/app/data/project';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { take } from 'rxjs/operators';
+import { BaseComponent } from 'src/app/base/base.component';
 import { MessageService } from 'src/app/interaction/message/message.service';
-import { Topic } from './topic';
-import { AuditTopic } from 'src/app/data/AuditTopic';
-import { BehaviorSubject } from 'rxjs';
-import { CinematicService } from 'src/app/service/cinematic.service';
+import { ProjectService } from 'src/app/service/project/project.service';
 import { ReferentialService } from 'src/app/service/referential.service';
-import { traceOn } from 'src/app/global';
+import { ProjectAuditService } from '../service/project-audit.service';
+import { Topic } from './topic';
 
 @Component({
 	selector: 'app-table-categories',
@@ -18,11 +13,6 @@ import { traceOn } from 'src/app/global';
 	styleUrls: ['./table-categories.component.css']
 })
 export class TableCategoriesComponent extends BaseComponent implements OnInit, OnDestroy {
-
-	/**
-	 * We inform the parent component that a category has been selectect or deselected.
-	 */
-	@Output() messengerCategoryUpdated = new EventEmitter<Topic>();
 
 	public categoryColumns: string[] = ['select', 'title'];
 
@@ -35,16 +25,15 @@ export class TableCategoriesComponent extends BaseComponent implements OnInit, O
 
 	constructor(
 		private projectService: ProjectService,
-		private referentialRervice: ReferentialService,
+		public projectAuditService: ProjectAuditService,
+		private referentialService: ReferentialService,
 		private messageService: MessageService) { super(); }
 
 	ngOnInit() {
 
-		this.subscriptions.add(
-			this.referentialRervice.topics$.subscribe(topics =>
-			this.auditTopics = topics
-		));
-
+		this.referentialService.topics$.pipe(take(1)).subscribe({
+			next: topics => this.auditTopics = topics
+		});
 
 		this.subscriptions.add(
 			this.projectService.projectLoaded$.subscribe({
@@ -60,46 +49,14 @@ export class TableCategoriesComponent extends BaseComponent implements OnInit, O
 	}
 
 	/**
-	 * __Selection__ or __Deselection__ of a topic.
-	 * @param topic the given topic
-	 */
-	updateTopic(topic: Topic) {
-		if (traceOn()) {
-			console.log (topic.title, (topic.select) ? 'is selected' : 'is deselected');
-		}
-		if (topic.select) {
-			this.projectService
-				.addAuditTopic(topic.id)
-				.pipe(take(1))
-				.subscribe(doneAndOk => {
-					if (doneAndOk) {
-						this.projectService.project.audit[topic.id] = new AuditTopic(topic.id, 0, 5);
-						this.messageService.info('The topic \'' + topic.title + '\' is added to the audit');
-						this.messengerCategoryUpdated.emit(topic);
-					}});
-		} else {
-			this.projectService
-				.removeAuditTopic(topic.id)
-				.pipe(take(1))
-				.subscribe(doneAndOk => {
-					if (doneAndOk) {
-						delete this.projectService.project.audit[topic.id];
-						this.messageService.info('The topic \'' + topic.title + '\' is removed from audit');
-						this.messengerCategoryUpdated.emit(topic);
-					}});
-		}
-	}
-
-	/**
 	 * This function is called when the user click on the topic title to reverse the selection status
 	 * of the topic (involved, or not).
 	 * After the reversal, the `updateTopic` is invoked to complete the treatment.
 	 * @param topic the topic which title has been clicked
 	 */
 	reverseTopicSelection(topic: Topic) {
-		console.log ('reverseTopisSelection');
 		topic.select = !topic.select;
-		this.updateTopic(topic);
+		this.projectAuditService.updateTopic(topic);
 	}
 
 	/**

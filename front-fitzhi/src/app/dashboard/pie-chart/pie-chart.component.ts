@@ -1,11 +1,10 @@
-import { Component, AfterViewInit, Input, ViewEncapsulation, OnInit, AfterContentInit, OnDestroy } from '@angular/core';
-import {Slice} from 'dynamic-pie-chart';
-import { BehaviorSubject, of, Observable } from 'rxjs';
+import { AfterViewInit, Component, Input, OnDestroy, OnInit, ViewEncapsulation } from '@angular/core';
+import { Slice, TypeSlice } from 'dynamic-pie-chart';
+import { BehaviorSubject } from 'rxjs';
 import { tap } from 'rxjs/operators';
 import { BaseComponent } from 'src/app/base/base.component';
-import { PieDashboardService } from '../service/pie-dashboard.service';
 import { traceOn } from 'src/app/global';
-import { TypeSlice } from 'dynamic-pie-chart';
+import { PieDashboardService } from '../service/pie-dashboard.service';
 
 
 @Component({

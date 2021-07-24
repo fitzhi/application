@@ -1,5 +1,5 @@
 import { Component, OnInit, Input, AfterViewInit, Output, EventEmitter, OnDestroy } from '@angular/core';
-import { ProjectService } from 'src/app/service/project.service';
+import { ProjectService } from 'src/app/service/project/project.service';
 import { TopicEvaluation } from '../../topic-evaluation';
 import { Project } from 'src/app/data/project';
 import { BaseComponent } from 'src/app/base/base.component';
@@ -83,8 +83,11 @@ export class AuditGraphicBadgeComponent extends BaseComponent implements OnInit,
 				.subscribe ({
 					next: doneAndOk => {
 						if (doneAndOk) {
-							this.drawAuditArc();
-							this.drawAuditText();
+							// We colorize the Arc and Text after the UI event loop to avoid a transparent arc ('for an unknwon reason' (shame on me)).
+							setTimeout(() => {
+								this.drawAuditArc();
+								this.drawAuditText();
+							}, 0);
 						}
 					}
 				});
@@ -115,7 +118,7 @@ export class AuditGraphicBadgeComponent extends BaseComponent implements OnInit,
 	 */
 	drawBadge(project: Project) {
 		//
-		// We postpone the update to avoir an ExpressionChangedAfterItHasBeenCheckedError Warning
+		// We postpone the update to avoid an ExpressionChangedAfterItHasBeenCheckedError Warning
 		//
 		setTimeout(() => {
 			this.evaluation = project.auditEvaluation;
@@ -161,7 +164,7 @@ export class AuditGraphicBadgeComponent extends BaseComponent implements OnInit,
 		}
 		const htmlElement = document.getElementById('topic-arc-' + this.id);
 		if (!htmlElement) {
-			console.error('Cannot reach %s', 'topic-arc-' + this.id);
+			console.error(`Cannot reach topic-arc-${this.id}`);
 		}
 		if (htmlElement) {
 			htmlElement.setAttribute('d', arc(60, 60, 50, -180, endAngleEvaluation));
@@ -173,7 +176,8 @@ export class AuditGraphicBadgeComponent extends BaseComponent implements OnInit,
 	drawAuditText() {
 		const htmlElement = document.getElementById('topic-note-' + this.id);
 		if (!htmlElement) {
-			console.error('Cannot reach %s', 'topic-note-' + this.id);
+			console.error(`Cannot reach topic-note-${this.id}`);
+			return;
 		}
 
 		if (!this.editable) {
@@ -186,6 +190,9 @@ export class AuditGraphicBadgeComponent extends BaseComponent implements OnInit,
 		}
 	}
 
+	/**
+	 * Each key stroke in the **"evaluation input field"** invokes this method.
+	 */
 	onInput() {
 		if (!isNaN(this.evaluation)) {
 			if (this.evaluation > 100) {
@@ -196,6 +203,9 @@ export class AuditGraphicBadgeComponent extends BaseComponent implements OnInit,
 		}
 	}
 
+	/**
+	 * Each time the content of the **"evaluation input field"** changes, this method is invoked.
+	 */
 	onChange() {
 		if (!isNaN(this.evaluation)) {
 			this.messengerEvaluationChange.emit(new TopicEvaluation(this.id, this.evaluation, 2));

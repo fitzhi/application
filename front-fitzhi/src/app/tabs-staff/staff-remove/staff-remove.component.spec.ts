@@ -1,20 +1,17 @@
-import { async, ComponentFixture, TestBed, ɵTestingCompiler } from '@angular/core/testing';
-
-import { StaffRemoveComponent } from './staff-remove.component';
-import { MatDialogModule } from '@angular/material/dialog';
 import { HttpClientTestingModule, HttpTestingController } from '@angular/common/http/testing';
-import { StaffService } from 'src/app/tabs-staff/service/staff.service';
-import { ReferentialService } from 'src/app/service/referential.service';
-import { CinematicService } from 'src/app/service/cinematic.service';
-import { StaffDataExchangeService } from '../service/staff-data-exchange.service';
+import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { MatDialogModule } from '@angular/material/dialog';
 import { BackendSetupService } from 'src/app/service/backend-setup/backend-setup.service';
+import { CinematicService } from 'src/app/service/cinematic.service';
+import { ReferentialService } from 'src/app/service/referential.service';
 import { StaffListService } from 'src/app/service/staff-list-service/staff-list.service';
-import { Collaborator } from 'src/app/data/collaborator';
+import { StaffService } from 'src/app/tabs-staff/service/staff.service';
+import { StaffRemoveComponent } from './staff-remove.component';
+
 
 describe('StaffRemoveComponent', () => {
 	let component: StaffRemoveComponent;
 	let fixture: ComponentFixture<StaffRemoveComponent>;
-	let staffDataExchangeService: StaffDataExchangeService;
 	let staffService: StaffService;
 	let httpTestingController: HttpTestingController;
 	let backendSetupService: BackendSetupService;
@@ -23,7 +20,7 @@ describe('StaffRemoveComponent', () => {
 	beforeEach(async(() => {
 		TestBed.configureTestingModule({
 			declarations: [ StaffRemoveComponent ],
-			providers: [StaffService, ReferentialService, CinematicService, StaffDataExchangeService, StaffListService],
+			providers: [StaffService, ReferentialService, CinematicService, StaffService, StaffListService],
 			imports: [ HttpClientTestingModule, MatDialogModule ]
 		})
 		.compileComponents();
@@ -34,11 +31,10 @@ describe('StaffRemoveComponent', () => {
 		component = fixture.componentInstance;
 
 		staffService = TestBed.inject(StaffService);
-		staffDataExchangeService = TestBed.inject(StaffDataExchangeService);
-		staffDataExchangeService.collaborator = staffService.emptyStaff();
-		staffDataExchangeService.collaborator.firstName = 'Frédéric';
-		staffDataExchangeService.collaborator.lastName = 'VIDAL';
-		staffDataExchangeService.collaborator.idStaff = 1964;
+		staffService.collaborator = staffService.emptyStaff();
+		staffService.collaborator.firstName = 'Frédéric';
+		staffService.collaborator.lastName = 'VIDAL';
+		staffService.collaborator.idStaff = 1964;
 
 		httpTestingController = TestBed.inject(HttpTestingController);
 		backendSetupService = TestBed.inject(BackendSetupService);
@@ -47,7 +43,7 @@ describe('StaffRemoveComponent', () => {
 		staffListService = TestBed.inject(StaffListService);
 		staffListService.allStaff = [];
 		staffListService.allStaff.push(createCollaborator(1));
-		staffListService.allStaff.push(staffDataExchangeService.collaborator);
+		staffListService.allStaff.push(staffService.collaborator);
 		staffListService.allStaff.push(createCollaborator(2));
 		fixture.detectChanges();
 	});

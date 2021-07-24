@@ -25,40 +25,39 @@ describe('skillService', () => {
 
 		const skill = new Skill(null, 'A revolutionary skill');
 
-		// We mock the Skill creation 
+		// We mock the Skill creation
 		const spyCreateSkill = spyOn(service, 'createSkill$')
 			.and.callThrough()
 			.and.returnValue(of(new Skill(1789, skill.title)));
 
-		// We mock the Skill update 
+		// We mock the Skill update
 		const spyUpdateSkill = spyOn(service, 'updateSkill$');
 
 		service.save$(skill).pipe(take(1)).subscribe({
-			next: skill => {
-				expect(skill.id).toBe(1789);
+			next: sk => {
+				expect(sk.id).toBe(1789);
 				expect(spyUpdateSkill).not.toHaveBeenCalled();
 				done();
 			}
 		});
-		
 	});
 
 	it('should UPDATE a skill if skill.id is NOT null', done => {
 
 		const skill = new Skill(1789, 'An empty title');
 
-		// We mock the Skill creation 
+		// We mock the Skill creation
 		const spyCreateSkill = spyOn(service, 'createSkill$');
 
-		// We mock the Skill update 
+		// We mock the Skill update
 		const spyUpdateSkill = spyOn(service, 'updateSkill$')
 			.and.callThrough()
 			.and.returnValue(of(new Skill(1789, 'A revolutionaly skill')));
 
 		service.save$(skill).pipe(take(1)).subscribe({
-			next: skill => {
-				expect(skill.id).toBe(1789);
-				expect(skill.title).toBe('A revolutionaly skill');
+			next: sk => {
+				expect(sk.id).toBe(1789);
+				expect(sk.title).toBe('A revolutionaly skill');
 				expect(spyCreateSkill).not.toHaveBeenCalled();
 				done();
 			}

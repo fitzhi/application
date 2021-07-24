@@ -22,13 +22,10 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 import javax.annotation.PostConstruct;
+import javax.validation.constraints.NotNull;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.stereotype.Component;
-
-import com.fitzhi.Error;
 import com.fitzhi.ApplicationRuntimeException;
+import com.fitzhi.Error;
 import com.fitzhi.bean.DataHandler;
 import com.fitzhi.bean.StaffHandler;
 import com.fitzhi.data.internal.Author;
@@ -44,6 +41,10 @@ import com.fitzhi.exception.ApplicationException;
 import com.fitzhi.exception.NotFoundException;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Component;
 
 import lombok.extern.slf4j.Slf4j;
 
@@ -133,7 +134,7 @@ public class StaffHandlerImpl extends AbstractDataSaverLifeCycleImpl implements 
 		
 		
 		Map<String, Long> result = completeExperiences.stream()
-			      .collect(Collectors.groupingBy(Experience::key, Collectors.counting()));
+				  .collect(Collectors.groupingBy(Experience::key, Collectors.counting()));
 
 		if (log.isDebugEnabled()) {
 			log.debug(String.format("'/countGroupBySkills' number of agregators %d",result.keySet().size()));
@@ -208,6 +209,19 @@ public class StaffHandlerImpl extends AbstractDataSaverLifeCycleImpl implements 
 		return staff;
 	}
 	
+	@Override
+	public Staff lookup(int idStaff) {
+		return getStaff().get(idStaff);
+	}
+
+	@Override
+	public @NotNull Staff getStaff(int idStaff) throws NotFoundException {
+		Staff staff = getStaff().get(idStaff);
+		if (staff == null) {
+			throw new NotFoundException(CODE_STAFF_NOFOUND, MessageFormat.format(MESSAGE_STAFF_NOFOUND, idStaff));
+		}
+		return staff;
+	}
 
 	@Override
 	public boolean isEligible(Staff staff, String criteria) {
@@ -417,10 +431,9 @@ public class StaffHandlerImpl extends AbstractDataSaverLifeCycleImpl implements 
 	@Override
 	public void involve(Project project, List<Contributor> contributors) throws ApplicationException {
 		
-		
 		for (Contributor contributor : contributors) {
 			if (contributor.getIdStaff() != UNKNOWN) {
-				Staff staff = getStaff().get(contributor.getIdStaff());
+				Staff staff = lookup(contributor.getIdStaff());
 				if (staff == null) {
 					throw new ApplicationRuntimeException("SEVERE ERROR : No staff member corresponding to the id " + contributor.getIdStaff());
 				}
@@ -470,12 +483,12 @@ public class StaffHandlerImpl extends AbstractDataSaverLifeCycleImpl implements 
 
 		Staff staff = getStaff().get(contributor.getIdStaff());
 		if (staff == null) {
-			throw new ApplicationException(CODE_STAFF_NOFOUND, MessageFormat.format(MESSAGE_STAFF_NOFOUND, contributor.getIdStaff()));
 		}
 		
-		Optional<Mission> oMission = staff.getMissions().stream()
-				.filter(mission -> mission.getIdProject() == project.getId())
-				.findFirst();
+		Optional<Mission> oMission = staff.getMissions()
+			.stream()
+			.filter(mission -> mission.getIdProject() == project.getId())
+			.findFirst();
 		
 		Mission mission = (oMission.isPresent()) ? oMission.get() : new Mission();
 		mission.setIdProject(project.getId());
@@ -617,7 +630,7 @@ public class StaffHandlerImpl extends AbstractDataSaverLifeCycleImpl implements 
 
 		controlWorkforceMember(input);
 
-		Staff updStaff = getStaff(input.getIdStaff());
+		Staff updStaff = lookup(input.getIdStaff());
 		if (updStaff == null) {
 			throw new ApplicationRuntimeException(String.format("WTF : A staff with id %d should exist.", input.getIdStaff()));
 		}
@@ -724,6 +737,7 @@ public class StaffHandlerImpl extends AbstractDataSaverLifeCycleImpl implements 
 		
 		synchronized (lockDataUpdated) {
 			exp.setLevel(experience.getLevel());
+			exp.setForced(true);
 			this.dataUpdated = true;
 		}
 	}
@@ -766,12 +780,6 @@ public class StaffHandlerImpl extends AbstractDataSaverLifeCycleImpl implements 
 			this.dataUpdated = true;
 		}
 	}
-
-	@Override
-	public Staff getStaff(int idStaff) {
-		return getStaff().get(idStaff);
-	}
-
 	
 	@Override
 	public boolean hasStaff(int idStaff) {
@@ -813,7 +821,7 @@ public class StaffHandlerImpl extends AbstractDataSaverLifeCycleImpl implements 
 		}
 		
 		Map<Integer, Integer> skills = activity.stream().collect(
-                Collectors.groupingBy(StaffActivitySkill::getIdSkill, Collectors.summingInt(StaffActivitySkill::getNumberOfChanges)));
+				Collectors.groupingBy(StaffActivitySkill::getIdSkill, Collectors.summingInt(StaffActivitySkill::getNumberOfChanges)));
 
 		for (int idSkill : skills.keySet()) {
 			if (staff.getExperience(idSkill) == null) {
@@ -863,6 +871,7 @@ public class StaffHandlerImpl extends AbstractDataSaverLifeCycleImpl implements 
 				staff.setActive(true);
 				staff.setDateInactive(null);				
 			}
+			this.dataUpdated = true;
 		}
 	}
 
@@ -876,6 +885,7 @@ public class StaffHandlerImpl extends AbstractDataSaverLifeCycleImpl implements 
 				staff.setActive(true);
 				staff.setDateInactive(null);
 			}
+			this.dataUpdated = true;
 		}
 	}
 
@@ -896,7 +906,7 @@ public class StaffHandlerImpl extends AbstractDataSaverLifeCycleImpl implements 
 				.mapToInt(v->v)
 				.max()
 				.orElseThrow(NoSuchElementException::new);
-				return max+1;
+			return max+1;
 		} catch (final NoSuchElementException e) {
 			return 1;
 		}
@@ -905,12 +915,32 @@ public class StaffHandlerImpl extends AbstractDataSaverLifeCycleImpl implements 
 	@Override
 	public void removeMission(final int idStaff, final int idProject) throws ApplicationException {
 		synchronized (lockDataUpdated) {
-			Staff staff = getStaff(idStaff);
+			Staff staff = lookup(idStaff);
 			Optional<Mission> oMission = staff.getMissions().stream().filter(pr -> (pr.getIdProject() == idProject)).findFirst();
 			if (oMission.isPresent()) {
 				staff.getMissions().remove(oMission.get());
 			}
+			this.dataUpdated = true;
 		}
 	}
 	
+	@Override
+	public void updateSkillSystemLevel(int idStaff, int idSkill, int level) throws ApplicationException {
+		synchronized (lockDataUpdated) {
+			Staff staff = getStaff(idStaff);
+			Experience experience = staff.getExperience(idSkill);
+			if (experience != null) {
+				experience.setSystemLevel(level);
+				// If the level in the skill has been explicitely assigned by the user, we do not change the level. 
+				if (!experience.isForced()) {
+					experience.setLevel(level);
+				}
+			} else {
+				// The level cannot be forced for an experience created by the system. 
+				staff.getExperiences().add(new Experience(idSkill, level, level));
+			}
+			this.dataUpdated = true;
+		}
+	}
+
 }

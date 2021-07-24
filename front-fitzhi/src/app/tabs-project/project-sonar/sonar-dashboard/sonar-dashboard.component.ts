@@ -4,7 +4,7 @@ import { BaseComponent } from 'src/app/base/base.component';
 import { SonarService } from 'src/app/service/sonar.service';
 import { Constants } from 'src/app/constants';
 import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
-import { ProjectService } from 'src/app/service/project.service';
+import { ProjectService } from 'src/app/service/project/project.service';
 import { ProjectSonarMetricValue } from 'src/app/data/project-sonar-metric-value';
 import { Subject, BehaviorSubject } from 'rxjs';
 import { PanelSwitchEvent } from '../sonar-thumbnails/panel-switch-event';
@@ -102,7 +102,7 @@ export class SonarDashboardComponent extends BaseComponent implements OnInit, On
 
 	/**
 	 * _**This method is recurcive !!**_
-	 * 
+	 *
 	 * Load the Sonar badge corresponding to the numero of badge.
 	 * @param badgeNumero the numero of badge
 	 */

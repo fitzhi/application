@@ -53,7 +53,7 @@ public class ProjectAuditHandlerImpl extends AbstractDataSaverLifeCycleImpl impl
 	
 	@Override
 	public void addTopic(int idProject, int idTopic) throws ApplicationException {
-		final Project project = projectHandler.get(idProject);
+		final Project project = projectHandler.lookup(idProject);
 		if (project == null) {
 			throw new ApplicationException(CODE_PROJECT_NOFOUND, MessageFormat.format(MESSAGE_PROJECT_NOFOUND, idProject));
 		}
@@ -91,7 +91,7 @@ public class ProjectAuditHandlerImpl extends AbstractDataSaverLifeCycleImpl impl
 		if (flagForce) {
 			throw new ApplicationRuntimeException("The flagForce behavior is not implemented yet!");
 		}
-		final Project project = projectHandler.get(idProject);
+		final Project project = projectHandler.lookup(idProject);
 		if (project == null) {
 			throw new ApplicationException(CODE_PROJECT_NOFOUND, MessageFormat.format(MESSAGE_PROJECT_NOFOUND, idProject));
 		}
@@ -118,7 +118,7 @@ public class ProjectAuditHandlerImpl extends AbstractDataSaverLifeCycleImpl impl
 	@Override
 	public AuditTopic getTopic(int idProject, int idTopic) throws ApplicationException {
 
-		final Project project = projectHandler.get(idProject);
+		final Project project = projectHandler.lookup(idProject);
 		if (project == null) {
 			throw new ApplicationException(CODE_PROJECT_NOFOUND, MessageFormat.format(MESSAGE_PROJECT_NOFOUND, idProject));
 		}
@@ -178,7 +178,7 @@ public class ProjectAuditHandlerImpl extends AbstractDataSaverLifeCycleImpl impl
 	@Override
 	public void processAndSaveGlobalAuditEvaluation(int idProject) throws ApplicationException {
 		
-		final Project project = projectHandler.get(idProject);
+		final Project project = projectHandler.lookup(idProject);
 		if (project == null) {
 			throw new ApplicationException(CODE_PROJECT_NOFOUND, MessageFormat.format(MESSAGE_PROJECT_NOFOUND, idProject));
 		}

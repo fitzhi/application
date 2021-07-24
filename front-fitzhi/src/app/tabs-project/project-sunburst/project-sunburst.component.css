@@ -151,3 +151,7 @@ div.taskReportError {
   font-weight: bolder;
   font-size: larger;
 }
+
+div.sunburst-viz {
+  height: 1px;
+}

@@ -1,12 +1,10 @@
-/**
- * 
- */
 package com.fitzhi;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.support.PropertySourcesPlaceholderConfigurer;
+import org.springframework.web.multipart.commons.CommonsMultipartResolver;
 import org.springframework.web.servlet.config.annotation.CorsRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
@@ -45,7 +43,18 @@ public class FitzhiWebMvcConfigurer implements WebMvcConfigurer {
 	public static PropertySourcesPlaceholderConfigurer propertiesResolver() {
 	    return new PropertySourcesPlaceholderConfigurer();
 	}
-	
+
+	//
+	// This bean has been added for tge download process.
+	// https://github.com/spring-projects/spring-boot/issues/16025
+	//
+	@Bean
+	public CommonsMultipartResolver multipartResolver() {
+		CommonsMultipartResolver commonsMultipartResolver = new CommonsMultipartResolver();
+		commonsMultipartResolver.setDefaultEncoding("UTF-8");
+		return commonsMultipartResolver;
+	}
+
 	@Override
 	public void addCorsMappings(CorsRegistry registry) {
 		if (log.isInfoEnabled()) {

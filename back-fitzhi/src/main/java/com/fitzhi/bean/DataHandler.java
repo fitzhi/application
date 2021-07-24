@@ -8,6 +8,8 @@ import java.util.List;
 import java.util.Map;
 
 import com.fitzhi.bean.impl.FileDataHandlerImpl.PathsType;
+import com.fitzhi.data.internal.DetectedExperience;
+import com.fitzhi.data.internal.ProjectDetectedExperiences;
 import com.fitzhi.data.internal.Project;
 import com.fitzhi.data.internal.ProjectBuilding;
 import com.fitzhi.data.internal.ProjectLayers;
@@ -90,7 +92,36 @@ public interface DataHandler {
 	 * @throws ApplicationException thrown if an exception occurs during the saving process
 	 */
 	void saveChanges(Project project, SourceControlChanges changes) throws ApplicationException;
-;
+
+	/**
+	 * <p>
+	 * Load the changes stored in a CSV file.
+	 * </p>
+	 * @param project the current active project
+	 * @return the container of all commits changes, or {@code null} if the changes file does not exist
+	 * @throws ApplicationException thrown if an exception occurs during the loading process, most probably an {@link java.io.IOException}
+	 */
+	SourceControlChanges loadChanges(Project project) throws ApplicationException;
+
+	/**
+	 * <p>
+	 * Save the detected experiences.
+	 * </p>
+	 * @param project project whose {@link DetectedExperience experiences} have to be saved.
+	 * @param experiences the container of the {@link DetectedExperience detected experiences}
+	 * @throws ApplicationException thrown if an exception occurs during the saving process, most probably an {@link IOException}
+	 */
+	void saveDetectedExperiences(Project project, ProjectDetectedExperiences experiences) throws ApplicationException;
+
+	/**
+	 * <p>
+	 * Load the detected experiences.
+	 * </p>
+	 * @param project project whose {@link DetectedExperience experiences} have to be loaded.
+	 * @return a container of {@link DetectedExperience detected experiences}, or {@code null} if the backup file does not exist.
+	 * @throws ApplicationException thrown if an exception occurs during the saving process, most probably an {@link IOException}
+	 */
+	ProjectDetectedExperiences loadDetectedExperiences(Project project) throws ApplicationException;
 
 	/**
 	 * <p>
@@ -118,17 +149,6 @@ public interface DataHandler {
 	 * @throws ApplicationException thrown if any problem occurs, most probably an {@link IOException}
 	 */
 	List<String> loadPaths(Project project, PathsType pathsType) throws ApplicationException;
-
-
-	/**
-	 * <p>
-	 * Load the changes stored in a CSV file.
-	 * </p>
-	 * @param project the current active project
-	 * @return the container of all commits changes, or {@code null} if the changes file does not exist
-	 * @throws ApplicationException thrown if an exception occurs during the loading process, most probably an {@link java.io.IOException}
-	 */
-	SourceControlChanges loadChanges(Project project) throws ApplicationException;
 
 	/**
 	 * <p>

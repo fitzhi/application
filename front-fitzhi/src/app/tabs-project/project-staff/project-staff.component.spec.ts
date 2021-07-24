@@ -5,7 +5,7 @@ import { Component, ViewChild } from '@angular/core';
 import { Project } from 'src/app/data/project';
 import { CinematicService } from 'src/app/service/cinematic.service';
 import { InitTest } from 'src/app/test/init-test';
-import { ProjectService } from 'src/app/service/project.service';
+import { ProjectService } from 'src/app/service/project/project.service';
 import { Constants } from 'src/app/constants';
 import { HttpTestingController, HttpClientTestingModule } from '@angular/common/http/testing';
 import { MatTableModule } from '@angular/material/table';
@@ -92,14 +92,14 @@ describe('ProjectStaffComponent', () => {
 
 	it('We do not create the dataSource as long as the application did not load a project', () => {
 		const cinematicService = TestBed.inject(CinematicService);
-		cinematicService.tabProjectActivated$.next(Constants.PROJECT_IDX_TAB_STAFF);
+		cinematicService.tabProjectActivatedSubject$.next(Constants.PROJECT_IDX_TAB_STAFF);
 		fixture.detectChanges();
 		expect(component.projectStaffComponent.dataSource).toBeUndefined();
 	});
 
 	it('We do not create the dataSource as long as the application did not load a project', () => {
 		const cinematicService = TestBed.inject(CinematicService);
-		cinematicService.tabProjectActivated$.next(Constants.PROJECT_IDX_TAB_STAFF);
+		cinematicService.tabProjectActivatedSubject$.next(Constants.PROJECT_IDX_TAB_STAFF);
 
 		fixture.detectChanges();
 		expect(component.projectStaffComponent.dataSource).toBeUndefined();
@@ -107,7 +107,7 @@ describe('ProjectStaffComponent', () => {
 
 	it('We create the dataSource when the project has been loaded, and when the dedicated tab has been clicked', () => {
 		const cinematicService = TestBed.inject(CinematicService);
-		cinematicService.tabProjectActivated$.next(Constants.PROJECT_IDX_TAB_STAFF);
+		cinematicService.tabProjectActivatedSubject$.next(Constants.PROJECT_IDX_TAB_STAFF);
 
 		const projectService = TestBed.inject(ProjectService);
 		projectService.project = new Project(1789, 'the revolutionary project');

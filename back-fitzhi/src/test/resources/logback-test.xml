@@ -8,16 +8,31 @@
 		</layout>
 	</appender>
 
-	<root level="INFO">
+	<root level="ERROR">
 		<appender-ref ref="STDOUT" />
 	</root>
+
+ 	<root level="INFO">
+		<appender-ref ref="STDOUT" />
+	</root>
+
+<!-- Parking for my logging. 
+
+	<logger name="com.fitzhi.bean.impl.ProjectHandlerImpl" additivity="false">
+		<level value="DEBUG" />
+		<appender-ref ref="STDOUT" />
+	</logger>
+
+	<logger name="com.fitzhi.source.crawler.javaparser.MarkAnnotationExpParser" additivity="false">
+		<level value="DEBUG" />
+		<appender-ref ref="STDOUT" />
+	</logger>
 
 	<logger name="com.fitzhi.controller" additivity="false">
 		<level value="DEBUG" />
 		<appender-ref ref="STDOUT" />
 	</logger>
 
-<!-- Parking for my logging. 
 
 	<logger name="com.fitzhi.source.crawler.git.BatchGitCrawlerTest" additivity="false">
 		<level value="DEBUG" />

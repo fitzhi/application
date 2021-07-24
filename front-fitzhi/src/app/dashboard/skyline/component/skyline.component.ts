@@ -1,6 +1,5 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
-import { ControlledRisingSkylineService } from 'controlled-rising-skyline';
 import { Building, BuildingSelected } from 'rising-skyline';
 import { BehaviorSubject } from 'rxjs';
 import { traceOn } from 'src/app/global';
@@ -17,7 +16,7 @@ export class SkylineComponent implements OnInit {
 	 * The **width** of the skyline component.
 	 */
 	@Input() width;
-	
+
 	/**
 	 * The **height** of the skyline component.
 	 */

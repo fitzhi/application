@@ -1,40 +1,35 @@
-import { TestBed, async, tick, fakeAsync, ComponentFixture } from '@angular/core/testing';
-import { AppComponent } from './app.component';
-import { ToolbarComponent } from './interaction/toolbar/toolbar.component';
-
-import { RouterTestingModule } from '@angular/router/testing';
-import { HttpClientTestingModule } from '@angular/common/http/testing';
-import { ReferentialService } from './service/referential.service';
-import { CinematicService } from './service/cinematic.service';
-import { MatCheckboxModule } from '@angular/material/checkbox';
-import { MatTableModule } from '@angular/material/table';
-import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { MatPaginatorModule } from '@angular/material/paginator';
-import { MatGridListModule } from '@angular/material/grid-list';
 import { HttpClientModule } from '@angular/common/http';
-import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { MatFormFieldModule } from '@angular/material/form-field';
-import { MatSliderModule } from '@angular/material/slider';
-import { MatInputModule } from '@angular/material/input';
+import { HttpClientTestingModule } from '@angular/common/http/testing';
+import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatDialogModule } from '@angular/material/dialog';
-import { MessageComponent } from './interaction/message/message.component';
-import { InstallService } from './admin/service/install/install.service';
-import { AuthService } from './admin/service/auth/auth.service';
-import { Component } from '@angular/core';
-import { Constants } from './constants';
-import { TabsStaffListComponent } from './tabs-staff-list/tabs-staff-list.component';
-import { StaffFormComponent } from './tabs-staff/staff-form/staff-form.component';
-import { DatePipe } from '@angular/common';
-import { TabsStaffListService } from './tabs-staff-list/service/tabs-staff-list.service';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatGridListModule } from '@angular/material/grid-list';
+import { MatInputModule } from '@angular/material/input';
+import { MatPaginatorModule } from '@angular/material/paginator';
+import { MatSliderModule } from '@angular/material/slider';
+import { MatTableModule } from '@angular/material/table';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { Router } from '@angular/router';
-import { ListProjectsService } from './tabs-project/list-project/list-projects-service/list-projects.service';
-import { SkillService } from './skill/service/skill.service';
+import { RouterTestingModule } from '@angular/router/testing';
 import { of } from 'rxjs';
-import { ListProjectComponent } from './tabs-project/list-project/list-project.component';
-import { ListSkillComponent } from './skill/list-skill/list-skill.component';
+import { AppComponent } from './app.component';
+import { Constants } from './constants';
 import { ListCriteria } from './data/listCriteria';
+import { MessageComponent } from './interaction/message/message.component';
+import { ToolbarComponent } from './interaction/toolbar/toolbar.component';
+import { CinematicService } from './service/cinematic.service';
+import { ReferentialService } from './service/referential.service';
+import { ListSkillComponent } from './skill/list-skill/list-skill.component';
+import { SkillService } from './skill/service/skill.service';
+import { ListProjectComponent } from './tabs-project/list-project/list-project.component';
+import { ListProjectsService } from './tabs-project/list-project/list-projects-service/list-projects.service';
+import { TabsStaffListService } from './tabs-staff-list/service/tabs-staff-list.service';
+import { TabsStaffListComponent } from './tabs-staff-list/tabs-staff-list.component';
 import { StaffService } from './tabs-staff/service/staff.service';
-import { MatTooltipModule } from '@angular/material/tooltip';
+import { StaffFormComponent } from './tabs-staff/staff-form/staff-form.component';
+
 
 describe('AppComponent', () => {
 
@@ -50,7 +45,7 @@ describe('AppComponent', () => {
 			imports: [MatCheckboxModule, MatTableModule, FormsModule, MatPaginatorModule, MatGridListModule,
 				HttpClientTestingModule, HttpClientModule, BrowserAnimationsModule, MatFormFieldModule,
 				ReactiveFormsModule, MatSliderModule, MatInputModule, MatDialogModule,
-				RouterTestingModule.withRoutes([		
+				RouterTestingModule.withRoutes([
 					{ path: 'user', component: StaffFormComponent },
 					{ path: 'searchUser', component: TabsStaffListComponent },
 					{ path: 'searchSkill', component: ListSkillComponent },
@@ -66,16 +61,16 @@ describe('AppComponent', () => {
 		router = TestBed.inject(Router);
 
 	}));
-	
+
 	it('Searching staff members on a \'string\' criteria', async(() => {
 		const tabsStaffListService = TestBed.inject(TabsStaffListService);
 		const spyTabsStaffListService = spyOn(tabsStaffListService, 'addTabResult');
-		
+
 		const navigateSpy = spyOn(router, 'navigate');
 
 		component.onChangeForm(Constants.TABS_STAFF_LIST);
 		component.onRequestQuery('nope');
-		
+
 		expect(spyTabsStaffListService).toHaveBeenCalledWith('nope', true);
 		expect(navigateSpy).not.toHaveBeenCalled();
 
@@ -86,10 +81,10 @@ describe('AppComponent', () => {
 		const spyTabsStaffListService = spyOn(tabsStaffListService, 'addTabResult');
 
 		const navigateSpy = spyOn(router, 'navigate');
-		
+
 		component.onChangeForm(Constants.TABS_STAFF_LIST);
 		component.onRequestQuery('1789');
-		
+
 		expect(spyTabsStaffListService).not.toHaveBeenCalled();
 		expect(navigateSpy).toHaveBeenCalledWith(['/user/1789']);
 	}));
@@ -100,21 +95,21 @@ describe('AppComponent', () => {
 		const spyTabsStaffListService = spyOn(tabsStaffListService, 'addTabResult');
 
 		const navigateSpy = spyOn(router, 'navigate');
-		
+
 		component.onChangeForm(Constants.TABS_STAFF_LIST);
 		component.onRequestQuery('17.89');
-		
+
 		expect(spyTabsStaffListService).toHaveBeenCalled();
 		expect(navigateSpy).not.toHaveBeenCalledWith(['/user/17.89']);
 	}));
 
 	it('Searching the projects corresponding to a criteria', async(() => {
 		const listProjectsService = TestBed.inject(ListProjectsService);
-		const spyReloadProjects = spyOn(listProjectsService, 'reloadProjects').and.returnValue();
+		const spyReloadProjects = spyOn(listProjectsService, 'search').and.returnValue();
 
 		component.onChangeForm(Constants.PROJECT_SEARCH);
 		component.onRequestQuery('*');
-		
+
 		expect(spyReloadProjects).toHaveBeenCalled();
 	}));
 
@@ -129,7 +124,7 @@ describe('AppComponent', () => {
 
 		component.onChangeForm(Constants.SKILLS_SEARCH);
 		component.onRequestQuery('test');
-		
+
 		expect(spyFilterSkills).toHaveBeenCalledWith(new ListCriteria('test', true));
 		expect(spyStaffService).toHaveBeenCalledWith(true);
 	}));

@@ -1,13 +1,13 @@
 import { Injectable } from '@angular/core';
 import { EMPTY, Observable, of, Subject } from 'rxjs';
+import { catchError, finalize, switchMap, take } from 'rxjs/operators';
+import { traceOn } from 'src/app/global';
+import { SkillService } from 'src/app/skill/service/skill.service';
 import { Collaborator } from '../../data/collaborator';
-import { StaffService } from '../../tabs-staff/service/staff.service';
+import { ListCriteria } from '../../data/listCriteria';
 import { StaffListContext } from '../../data/staff-list-context';
 import { MessageService } from '../../interaction/message/message.service';
-import { ListCriteria } from '../../data/listCriteria';
-import { traceOn } from 'src/app/global';
-import { catchError, finalize, switchMap, take, tap } from 'rxjs/operators';
-import { SkillService } from 'src/app/skill/service/skill.service';
+import { StaffService } from '../../tabs-staff/service/staff.service';
 
 @Injectable({
 	providedIn: 'root'
@@ -30,11 +30,6 @@ export class TabsStaffListService {
 	public activeKey: string;
 
 	/**
-     * The tab content is used in master/detail way. The prev and the next button are visible.
-     */
-	public inMasterDetail = false;
-
-	/**
      * New search is made by the developer.
      */
 	public criterias$ = new Subject<ListCriteria>();
@@ -42,7 +37,7 @@ export class TabsStaffListService {
 	constructor(
 		private staffService: StaffService,
 		// SkillService is declared here to pass some tests. Some déclaration are mad in the SkillService construction
-		private skillService: SkillService, 
+		private skillService: SkillService,
 		private messageService: MessageService) {
 
 		this.criterias$.subscribe(criterias => {
@@ -279,7 +274,7 @@ export class TabsStaffListService {
 			);
 		}
 
-		return this.staffService.getAll().pipe(
+		return this.staffService.getAll$().pipe(
 			take(1),
 			switchMap((staffs: Collaborator[]) => {
 					collaborator.push(...staffs.filter(staff => testCriteria(staff)));
@@ -292,18 +287,18 @@ export class TabsStaffListService {
 					}
 					return of(collaborator);
 				}),
-			catchError(error => { 
+			catchError(error => {
 				this.messageService.error(error);
 				return EMPTY;
 			}),
 			finalize(() => {
 				if (traceOn()) {
-					console.log('The staff collection is containing now ' + collaborator.length + ' records');
+					console.log(`The staff collection is containing now ${collaborator.length} records`);
 					console.groupCollapsed('Staff members found : ');
 					collaborator.forEach(collab => console.log(collab.firstName + ' ' + collab.lastName));
 					console.groupEnd();
 				}
-			})			
+			})
 		);
 	}
 
@@ -328,6 +323,11 @@ export class TabsStaffListService {
 
 		const context = this.staffListContexts.get(this.activeKey);
 
+		// No context defined. Most probably, the end-user type directly a staff identifier in the search zone
+		if (!context) {
+			return undefined;
+		}
+
 		const index = context.staffSelected.findIndex(collab => collab.idStaff === id);
 		if (traceOn()) {
 			console.log('Current index : ' + index + ' for ' + this.activeKey);
@@ -348,6 +348,11 @@ export class TabsStaffListService {
 
 		const context = this.staffListContexts.get(this.activeKey);
 
+		// No context defined. Most probably, the end-user type directly a staff identifier in the search zone
+		if (!context) {
+			return undefined;
+		}
+
 		const index = context.staffSelected.findIndex(collab => collab.idStaff === id);
 		if (index > 0) {
 			return context.staffSelected[index - 1].idStaff;
@@ -359,7 +364,7 @@ export class TabsStaffListService {
 	/**
      * Actualize the information of a collaborator.
      * This method is call (for instance) after any update on the staff form.
-	 * 
+	 *
 	 * @param collaborator the collaborator to be actualized
      */
 	public actualizeCollaborator(collaborator: Collaborator) {
@@ -388,7 +393,7 @@ export class TabsStaffListService {
 
 	/**
      * Retrieve the context associated to the key.
-	 * 
+	 *
      * @param key searched key
      * @returns the context associated to this list or null if none exists (which is suspected to be an internal error)
      */

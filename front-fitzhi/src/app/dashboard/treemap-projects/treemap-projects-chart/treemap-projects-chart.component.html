@@ -1,0 +1,11 @@
+<div class="treemap-projects-chart" *ngIf="projectService.allProjectsIsLoaded$|async">
+	<ngx-charts-tree-map
+		[scheme]="colorScheme"
+		[results]="distribution"
+		[gradient]="gradient"
+		[tooltipDisabled]="!active"
+		[animations]="animations"
+		[labelFormatting]="labelFormatting"
+		(select)="onSelect($event)">
+	</ngx-charts-tree-map>
+</div>

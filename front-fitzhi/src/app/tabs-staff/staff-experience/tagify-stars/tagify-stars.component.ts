@@ -307,7 +307,10 @@ export class TagifyStarsComponent implements AfterViewInit, OnDestroy {
 	 * @param color  the color to be set
 	 */
 	setColor(tag: string, star: number, color: string) {
-		document.getElementById(this.idStar(tag, star)).style.color = color;
+		const element = document.getElementById(this.idStar(tag, star));
+		if (element) {
+			element.style.color = color;
+		}
 	}
 
 	/**

@@ -67,6 +67,5 @@ public class GitScannerPersonalizeRepoTest  {
 		personalRepo = scanner.personalizeRepo(repo, new SettingsGeneration(-1, 1));
 		Assert.assertEquals( 3 ,personalRepo.getRepository().get("A").operations.size());
 		Assert.assertEquals( 1 ,personalRepo.getRepository().get("B").operations.size());
-		
 	}
 }

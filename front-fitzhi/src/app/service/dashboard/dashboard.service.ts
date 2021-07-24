@@ -1,9 +1,9 @@
 import { Injectable } from '@angular/core';
 import { SkillService } from '../../skill/service/skill.service';
-import { ProjectService } from '../project.service';
+import { ProjectService } from '../project/project.service';
 import { SkillProjectsAggregation } from './skill-projects-aggregration';
 import { Project } from 'src/app/data/project';
-import {StaffListService} from '../staff-list-service/staff-list.service';
+import { StaffListService } from '../staff-list-service/staff-list.service';
 import { Collaborator } from 'src/app/data/collaborator';
 import { Experience } from 'src/app/data/experience';
 import { StatTypes } from './stat-types';
@@ -22,17 +22,17 @@ export class DashboardService {
 
 	static OPTIMAL_NUMBER_OF_STAFF_PER_1000_K_OF_CODE = 2;
 
-	static red (index: number): string {
+	static red(index: number): string {
 		const s = Math.round(28 + ((139 - 28) * index) / 10).toString(16).toUpperCase();
 		return (s.length === 1) ? '0' + s : s;
 	}
 
-	static green (index: number) {
+	static green(index: number) {
 		const s = Math.round((183 - (183 * index) / 10)).toString(16).toUpperCase();
 		return (s.length === 1) ? '0' + s : s;
 	}
 
-	static blue (index: number) {
+	static blue(index: number) {
 		const s = Math.round((69 - (69 * index) / 10)).toString(16).toUpperCase();
 		return (s.length === 1) ? '0' + s : s;
 	}
@@ -103,7 +103,7 @@ export class DashboardService {
 		if (traceOn()) {
 			console.groupCollapsed('count all staff group by skill');
 			Object.keys(aggregation).forEach(key => {
-				console.log (this.skillService.title(Number(key)), aggregation[key]);
+				console.log(this.skillService.title(Number(key)), aggregation[key]);
 			});
 			console.groupEnd();
 		}
@@ -151,7 +151,7 @@ export class DashboardService {
 		// We limit the number of areas to MAX_NUMBER_SKILLS_IN_DIAGRAM.
 		// Therefore, we aggregate all the smallest 'sumNumberOfFiles' to this tenth record
 		//
-		for (let ind = DashboardService.MAX_NUMBER_SKILLS_IN_DIAGRAM;  ind < entries.length; ind++) {
+		for (let ind = DashboardService.MAX_NUMBER_SKILLS_IN_DIAGRAM; ind < entries.length; ind++) {
 			entries[cumulIndex].sumNumberOfFiles += entries[ind].sumNumberOfFiles;
 			entries[cumulIndex].sumTotalFilesSize += entries[ind].sumTotalFilesSize;
 		}
@@ -163,14 +163,14 @@ export class DashboardService {
 
 		const sumAllTotalFilesSize = _.sumBy(aggregationProjects, 'sumTotalFilesSize');
 		if (traceOn()) {
-			console.log ('sumAllTotalFilesSize', sumAllTotalFilesSize);
+			console.log('sumAllTotalFilesSize', sumAllTotalFilesSize);
 		}
-		const sortedRepo = _.sortBy(aggregationProjects, [ function(o) { return -o.sumTotalFilesSize; }]);
+		const sortedRepo = _.sortBy(aggregationProjects, [function (o) { return -o.sumTotalFilesSize; }]);
 		const aggregateData = this.aggregateRestOfData(sortedRepo);
 
-		const tiles  = [];
+		const tiles = [];
 
-		aggregateData.forEach (projectAggregation => {
+		aggregateData.forEach(projectAggregation => {
 			const title = this.skillService.title(Number(projectAggregation.idSkill));
 			const size = Math.round((projectAggregation.sumTotalFilesSize * 100 / sumAllTotalFilesSize));
 			//
@@ -179,13 +179,13 @@ export class DashboardService {
 			const staffCount = (aggregationStaff[projectAggregation.idSkill]) ? aggregationStaff[projectAggregation.idSkill] : 0;
 			if (size > 0) {
 				const color = this.colorTile(projectAggregation.sumTotalFilesSize, staffCount);
-				tiles.push({name: title, value: size, color: color});
+				tiles.push({ name: title, value: size, color: color });
 			}
 		});
 
 		if (traceOn()) {
 			console.groupCollapsed('%d staff tiles', tiles.length);
-			tiles.forEach(tile => console.log (tile.name, 'size : ' + tile.value + ' & color : ' + tile.color));
+			tiles.forEach(tile => console.log(tile.name, 'size : ' + tile.value + ' & color : ' + tile.color));
 			console.groupEnd();
 		}
 
@@ -196,10 +196,10 @@ export class DashboardService {
 		const sortedRepo = _.sortBy(aggregationProjects, 'sumNumberOfFiles');
 		const aggregateData = this.aggregateRestOfData(sortedRepo);
 
-		const tiles  = [];
+		const tiles = [];
 		aggregateData.forEach(projectAggregation => {
 			const title = this.skillService.title(Number(projectAggregation.idSkill));
-			tiles.push({name: title, value: projectAggregation.sumTotalFilesSize});
+			tiles.push({ name: title, value: projectAggregation.sumTotalFilesSize });
 		});
 		return tiles;
 	}
@@ -218,12 +218,56 @@ export class DashboardService {
 		const indexColor = Math.round(rate * 10);
 		const color = '#' + DashboardService.red(indexColor) + DashboardService.green(indexColor) + DashboardService.blue(indexColor);
 
-//
-// These lines are commented, too chatty...
-// 		if (traceOn()) {
-// 			console.log('Calculated rate for %d %d : %d producing the index %d', sumTotalFilesSize, countStaff, rate, indexColor);
-// 		}
+		//
+		// These lines are commented, too chatty...
+		// 		if (traceOn()) {
+		// 			console.log('Calculated rate for %d %d : %d producing the index %d', sumTotalFilesSize, countStaff, rate, indexColor);
+		// 		}
 		return color;
+	}
+
+	/**
+	 * Calculate the distribution of projects with their level of risk.
+	 *
+	 * @returns the distribution array
+	 */
+	public processProjectsDistribution(): any[] {
+
+		const distribution = [];
+
+		function sizeOfProject(project: Project) {
+			if (project.mapSkills.size === 0) {
+				return 0;
+			}
+
+			return Array.from(project.mapSkills.values())
+				.map(pj => pj.totalFilesSize)
+				.reduce(function (a, b) {
+					return a + b;
+				});
+		}
+
+		if (traceOn()) {
+			console.groupCollapsed('Global evaluation for each project :');
+			this.projectService.allProjects
+				.filter((project: Project) => project.active)
+				.forEach(project => {
+					console.log(project.name, this.projectService.globalEvaluation(project));
+				});
+			console.groupEnd();
+		}
+		this.projectService.allProjects
+			.filter((project: Project) => project.active)
+			.forEach(project => {
+				distribution.push({
+					id: project.id,
+					name: project.name,
+					value: sizeOfProject(project),
+					color: this.projectService.getRiskColor(this.projectService.globalEvaluation(project))
+				});
+			});
+
+		return distribution;
 	}
 
 }

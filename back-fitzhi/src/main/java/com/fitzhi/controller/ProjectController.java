@@ -1,13 +1,17 @@
 package com.fitzhi.controller;
 
+import static com.fitzhi.Error.CODE_DASHBOARD_START;
+import static com.fitzhi.Error.CODE_GIT_ERROR;
+import static com.fitzhi.Error.CODE_IO_EXCEPTION;
 import static com.fitzhi.Error.CODE_MULTIPLE_TASK;
 import static com.fitzhi.Error.CODE_PROJECT_IS_NOT_EMPTY;
 import static com.fitzhi.Error.CODE_PROJECT_NOFOUND;
-import static com.fitzhi.Error.CODE_UNDEFINED;
+import static com.fitzhi.Error.MESSAGE_DASHBOARD_START;
+import static com.fitzhi.Error.MESSAGE_GIT_ERROR;
+import static com.fitzhi.Error.MESSAGE_MULTIPLE_TASK_WITH_PARAM;
 import static com.fitzhi.Error.MESSAGE_PROJECT_IS_NOT_EMPTY;
 import static com.fitzhi.Error.MESSAGE_PROJECT_NOFOUND;
 import static com.fitzhi.Error.UNKNOWN_PROJECT;
-import static com.fitzhi.Error.getStackTrace;
 import static com.fitzhi.Global.DASHBOARD_GENERATION;
 import static com.fitzhi.Global.PROJECT;
 import static com.fitzhi.Global.deepClone;
@@ -33,14 +37,10 @@ import com.fitzhi.bean.ProjectHandler;
 import com.fitzhi.bean.ShuffleService;
 import com.fitzhi.bean.SkillHandler;
 import com.fitzhi.bean.StaffHandler;
-import com.fitzhi.controller.in.BodyParamProjectSkill;
 import com.fitzhi.controller.in.SettingsGeneration;
 import com.fitzhi.controller.util.ProjectLoader;
-import com.fitzhi.controller.util.ProjectLoader.MyReference;
-import com.fitzhi.data.external.BooleanDTO;
-import com.fitzhi.data.external.ProjectContributorDTO;
-import com.fitzhi.data.external.ProjectDTO;
-import com.fitzhi.data.external.SunburstDTO;
+import com.fitzhi.data.external.ProjectContributors;
+import com.fitzhi.data.external.Sunburst;
 import com.fitzhi.data.internal.Project;
 import com.fitzhi.data.internal.ProjectSkill;
 import com.fitzhi.data.internal.RiskDashboard;
@@ -48,39 +48,57 @@ import com.fitzhi.data.internal.Skill;
 import com.fitzhi.data.internal.Staff;
 import com.fitzhi.data.source.Contributor;
 import com.fitzhi.exception.ApplicationException;
+import com.fitzhi.exception.InformationException;
 import com.fitzhi.exception.NotFoundException;
 import com.fitzhi.source.crawler.RepoScanner;
 
+import org.eclipse.jgit.api.errors.GitAPIException;
 import org.eclipse.jgit.lib.Ref;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.util.UriComponents;
 import org.springframework.web.util.UriComponentsBuilder;
 
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 @RestController
 @RequestMapping("/api/project")
-public class ProjectController extends BaseRestController {
+@Api(
+	tags="Project controller API",
+	description = "API endpoints to manage the projects declared in the application."
+)
+public class ProjectController  {
 
+	/**
+	 * The Project management service
+	 */
 	@Autowired
 	ProjectHandler projectHandler;
 
+	/**
+	 * The Skill management service
+	 */
 	@Autowired
 	SkillHandler skillHandler;
 
+	/**
+	 * The Staff management service
+	 */
 	@Autowired
 	StaffHandler staffHandler;
 
@@ -101,8 +119,6 @@ public class ProjectController extends BaseRestController {
 	 */
 	@Autowired
 	ShuffleService shuffleService;
-
-
 
 	/**
 	 * Source control parser.
@@ -139,12 +155,13 @@ public class ProjectController extends BaseRestController {
 	 * @return a ResponseEntity with just the location containing the URI of the newly
 	 *         created project
 	 */
+	@ApiOperation("Create a new project.")
 	@PostMapping("")
 	public ResponseEntity<Void> create(UriComponentsBuilder builder, @RequestBody Project project)
 			throws ApplicationException {
 
 		if (projectHandler.containsProject(project.getId())) {
-			return new ResponseEntity<Void>(null, headers(), HttpStatus.CONFLICT);
+			return ResponseEntity.status(HttpStatus.CONFLICT).build();
 		}
 		
 		project.setId(UNKNOWN_PROJECT);
@@ -159,10 +176,12 @@ public class ProjectController extends BaseRestController {
 	 * <p>
 	 * Update the project identified by the given {@link Project#getId() idProject}
 	 * </p>
+	 * 
 	 * @param idProject the project identifier. The projet identifier is hosted in the URL in accordance with the Rest naming conventions
 	 * @param project the project to update. This project is hosted inside the body of the {@code PUT} Medhod.
 	 * @return an empty content for an update request
 	 */
+	@ApiOperation(value = "Update the given project.")
 	@PutMapping("/{idProject}")
 	public ResponseEntity<Void> updateProject(@PathVariable("idProject") int idProject, @RequestBody Project project)
 			throws NotFoundException, ApplicationException {
@@ -186,31 +205,32 @@ public class ProjectController extends BaseRestController {
 
 	}
 
+	/**
+	 * <p>
+	 * This entry-point search a project on its name.
+	 * </p>
+	 * @param projectName the given name
+	 * @return the retrieved project
+	 * @throws ApplicationException thrown if an error occurs during the treatment
+	 * @throws NotFoundException thrown if the search failed to find a project
+	 */
+	@ResponseBody
+	@ApiOperation(
+		value = "Search a project by its name."
+	)
 	@GetMapping(path = "/name/{projectName}")
-	public ResponseEntity<ProjectDTO> read(@PathVariable("projectName") String projectName) {
+	public Project read(@PathVariable("projectName") String projectName) throws ApplicationException, NotFoundException {
 
-		final ResponseEntity<ProjectDTO> responseEntity;
-		try {
-			Optional<Project> result = projectHandler.lookup(projectName);
-			if (result.isPresent()) {
-				Project project = (Project) deepClone(result.get());
-				project.setPassword(null);
-				responseEntity = new ResponseEntity<>(new ProjectDTO(buildProjectWithoutPassword(result.get())),
-						headers(), HttpStatus.OK);
-			} else {
-				responseEntity = new ResponseEntity<>(
-						new ProjectDTO(new Project(), 404, "There is no project with the name " + projectName),
-						headers(), HttpStatus.NOT_FOUND);
-				if (log.isDebugEnabled()) {
-					log.debug(String.format("Cannot find a Project with the name %s", projectName));
-				}
-			}
-			return responseEntity;
-		} catch (final ApplicationException e) {
-			log.error(getStackTrace(e));
-			return new ResponseEntity<>(new ProjectDTO(new Project(), e.errorCode, e.getMessage()), headers(),
-					HttpStatus.BAD_REQUEST);
+		Optional<Project> result = projectHandler.lookup(projectName);
+		if (!result.isPresent()) {
+			throw new NotFoundException(
+				CODE_PROJECT_NOFOUND, 
+				String.format("Cannot find a Project with the name %s", projectName));
 		}
+
+		// We deep clone the project because we will change the password and we do not want to save this modification.
+		return new Project(buildProjectWithoutPassword(result.get()));
+
 	}
 
 	/**
@@ -219,14 +239,17 @@ public class ProjectController extends BaseRestController {
 	 * @param idProject the searched project identifier
 	 * @return the HTTP Response with the retrieved project, or an empty one if the
 	 *         query failed.
+	 * 
+	 * @throws ApplicationException thrown if an error occurs during the treatment, (most probably due to an {@link IOException})
+	 * @throws NotFoundException thrown if the project to delete does not exist (any more)
 	 */
+	@ResponseBody
+	@ApiOperation("Remove the given project.")
 	@DeleteMapping(value = "/{idProject}")
-	public ResponseEntity<Object> removeProject(@PathVariable("idProject") int idProject)
+	public void removeProject(@PathVariable("idProject") int idProject)
 			throws NotFoundException, ApplicationException {
-		Project project = projectHandler.get(idProject);
-		if (project == null) {
-			throw new NotFoundException(CODE_PROJECT_NOFOUND, MessageFormat.format(MESSAGE_PROJECT_NOFOUND, idProject));
-		}
+
+		Project project = projectHandler.getProject(idProject);
 
 		if (!project.isEmpty()) {
 			throw new ApplicationException(CODE_PROJECT_IS_NOT_EMPTY,
@@ -239,27 +262,26 @@ public class ProjectController extends BaseRestController {
 		}
 
 		projectHandler.removeProject(project.getId());
-
-		return new ResponseEntity<>(null, headers(), HttpStatus.OK);
 	}
 
 	/**
-	 * <strong>Inactivation</strong> the project corresponding to the identifier id
+	 * <strong>Inactivate</strong> the project corresponding to the identifier id
 	 * 
 	 * @param idProject the given project identifier
 	 * @return an <strong>empty</strong> {@code HTTP} response.
+	 * 
+	 * @throws ApplicationException thrown if an error occurs during the treatment, (most probably due to an {@link IOException})
+	 * @throws NotFoundException thrown if the project to inactivate does not exist (any more?)
 	 */
-	@PostMapping(value = "/rpc/inactivation/{idProject}")
-	public ResponseEntity<Object> inactivateProject(@PathVariable("idProject") int idProject)
+	@ResponseBody
+	@ApiOperation(value = "Inactivate the project corresponding to the given identifier.")
+	@PostMapping(value = "/{idProject}/rpc/inactivation")
+	public void inactivateProject(@PathVariable("idProject") int idProject)
 			throws NotFoundException, ApplicationException {
-		Project project = projectHandler.get(idProject);
-		if (project == null) {
-			throw new NotFoundException(CODE_PROJECT_NOFOUND, MessageFormat.format(MESSAGE_PROJECT_NOFOUND, idProject));
-		}
 
+		Project project = projectHandler.getProject(idProject);
+		
 		projectHandler.inactivateProject(project);
-
-		return new ResponseEntity<>(null, headers(), HttpStatus.OK);
 	}
 
 	/**
@@ -267,18 +289,18 @@ public class ProjectController extends BaseRestController {
 	 * 
 	 * @param idProject the given project identifier
 	 * @return an <strong>empty</strong> {@code HTTP} response.
+	 * 
+	 * @throws ApplicationException thrown if an error occurs during the treatment, (most probably due to an {@link IOException})
+	 * @throws NotFoundException thrown if the project to reactivate does not exist (any more?)
 	 */
-	@PostMapping(value = "/rpc/reactivation/{idProject}")
-	public ResponseEntity<Object> reactivateProject(@PathVariable("idProject") int idProject)
+	@ApiOperation(value = "Reactivate the project corresponding to the given identifier.")
+	@PostMapping(value = "/{idProject}/rpc/reactivation")
+	public void reactivateProject(@PathVariable("idProject") int idProject)
 			throws NotFoundException, ApplicationException {
-		Project project = projectHandler.get(idProject);
-		if (project == null) {
-			throw new NotFoundException(CODE_PROJECT_NOFOUND, MessageFormat.format(MESSAGE_PROJECT_NOFOUND, idProject));
-		}
+		
+		Project project = projectHandler.getProject(idProject);
 
 		projectHandler.reactivateProject(project);
-
-		return new ResponseEntity<>(null, headers(), HttpStatus.OK);
 	}
 
 	/**
@@ -286,35 +308,33 @@ public class ProjectController extends BaseRestController {
 	 * 
 	 * @return the HTTP Response with the retrieved project, or an empty one if the
 	 *         query failed.
+	 * 
 	 */
+	@ApiOperation("This method is not allowed.")
 	@DeleteMapping()
-	public ResponseEntity<Object> removeAllProjects() throws ApplicationException {
+	public ResponseEntity<Object> removeAllProjects() {
 		return new ResponseEntity<>(HttpStatus.METHOD_NOT_ALLOWED);
 	}
 
 	/**
-	 * Read and return a project corresponding to the passed identifier
+	 * Read and return a project corresponding to the passed identifier.
 	 * 
 	 * @param idProject the searched project identifier
 	 * @return the HTTP Response with the retrieved project, or an empty one if the
 	 *         query failed.
+	 * 
+	 * @throws ApplicationException thrown if an error occurs during the treatment, (most probably due to an {@link IOException})
+	 * @throws NotFoundException thrown if the project does not exist (any more?)
 	 */
+	@ResponseBody
+	@ApiOperation(value = "Load and return the project corresponding to the passed identifier.")
 	@GetMapping(value = "/{idProject}")
-	public ResponseEntity<Project> read(@PathVariable("idProject") int idProject) {
+	public Project read(@PathVariable("idProject") int idProject) throws ApplicationException, NotFoundException {
 
-		MyReference<ResponseEntity<Project>> refResponse = projectLoader.new MyReference<>();
-		final Project searchProject = projectLoader.getProject(idProject, new Project(), refResponse);
-		if (refResponse.getResponse() != null) {
-			return refResponse.getResponse();
-		}
+		Project project = projectHandler.getProject(idProject);
 
-		ResponseEntity<Project> response = new ResponseEntity<>(buildProjectWithoutPassword(searchProject), headers(),
-				HttpStatus.OK);
-		if (log.isDebugEnabled()) {
-			log.debug(
-					String.format("Project corresponding to the id %d has returned %s", idProject, response.getBody()));
-		}
-		return response;
+		// We hide the password because we do not want to transport the GIT password on the network.
+		return buildProjectWithoutPassword(project);
 	}
 
 	/**
@@ -324,16 +344,15 @@ public class ProjectController extends BaseRestController {
 	 *                          probably if the project does not exist for the given
 	 *                          identifier.
 	 */
-	@GetMapping(value = "/skills/{idProject}")
-	public ResponseEntity<Collection<ProjectSkill>> get(final @PathVariable("idProject") int idProject)
+	@ResponseBody
+	@ApiOperation("Load and return the skills registered for the given project.")
+	@GetMapping(value = "/{idProject}/skills")
+	public Collection<ProjectSkill> loadSkills(final @PathVariable("idProject") int idProject)
 			throws ApplicationException {
 
-		Project project = projectHandler.get(idProject);
-		if (project == null) {
-			throw new NotFoundException(CODE_PROJECT_NOFOUND, MessageFormat.format(MESSAGE_PROJECT_NOFOUND, idProject));
-		}
+		Project project = projectHandler.getProject(idProject);
 
-		return new ResponseEntity<>(project.getSkills().values(), headers(), HttpStatus.OK);
+		return project.getSkills().values();
 	}
 
 	/**
@@ -343,13 +362,12 @@ public class ProjectController extends BaseRestController {
 	 * @param idProject the project identifier
 	 * @return the HTTP Response with an array of branches, or an empty one if the query failed.
 	 */
-	@GetMapping(value = "/branches/{idProject}")
-	public ResponseEntity<String[]> branches(@PathVariable("idProject") int idProject) throws ApplicationException {
+	@ResponseBody
+	@ApiOperation(value = "Retrieve and return the branches detected on the GIT repository of the given project (identified by its ID).")
+	@GetMapping(value = "/{idProject}/branches")
+	public String[] branches(@PathVariable("idProject") int idProject) throws ApplicationException {
 
-		Project project = projectHandler.get(idProject);
-		if (project == null) {
-			throw new NotFoundException(CODE_PROJECT_NOFOUND, MessageFormat.format(MESSAGE_PROJECT_NOFOUND, idProject));
-		}
+		Project project = projectHandler.getProject(idProject);
 
 		final String REF_HEADS = "refs/heads/";
 
@@ -382,45 +400,47 @@ public class ProjectController extends BaseRestController {
 			Arrays.stream(branches).forEach(branch -> log.debug(branch));
 		}			
 						
-		return new ResponseEntity<>(branches, headers(), HttpStatus.OK);
+		return branches;
 	}
 
+	/**
+	 * <p>
+	 * This procedure reads and returns all projects declared in Fitzhi.
+	 * </p>
+	 * @return a collection of projects
+	 * @throws ApplicationException throw if any problem occurs
+	 */
+	@ResponseBody
+	@ApiOperation(value = "Load and return all projects declared in the application")
 	@GetMapping("")
-	public Collection<Project> readAll() {
-		try {
-			Collection<Project> projects = projectHandler.getProjects().values();
+	public Collection<Project> readAll() throws ApplicationException {
 
-			// Returning project
-			final Collection<Project> responseProjects;
+		Collection<Project> projects = projectHandler.getProjects().values();
 
-			if (shuffleService.isShuffleMode()) {
-				responseProjects = new ArrayList<>();
-				if (log.isInfoEnabled()) {
-					log.info("The projects collection is beeing shuffled for confidentiality purpose");
-				}
-				projects.stream().forEach(project -> {
-					final Project clone = buildProjectWithoutPassword(project);
-					clone.setName(shuffleService.shuffle(clone.getName()));
-					clone.setUsername(shuffleService.shuffle(clone.getUsername()));
-					clone.setUrlRepository(shuffleService.shuffle(clone.getName()));
-					responseProjects.add(clone);
-				});
-			} else {
-				responseProjects = new ArrayList<>();
-				for (Project project : projects) {
-					responseProjects.add(buildProjectWithoutPassword(project));
-				}
+		// Returning project
+		final Collection<Project> responseProjects = new ArrayList<>();
+		
+		if (shuffleService.isShuffleMode()) {
+			if (log.isInfoEnabled()) {
+				log.info("The projects collection is beeing shuffled for confidentiality purpose");
 			}
-
-			if (log.isDebugEnabled()) {
-				log.debug(String.format("'/Project' is returning %d projects", responseProjects.size()));
+			projects.stream().forEach(project -> {
+				final Project clone = buildProjectWithoutPassword(project);
+				clone.setName(shuffleService.shuffle(clone.getName()));
+				clone.setUsername(shuffleService.shuffle(clone.getUsername()));
+				clone.setUrlRepository(shuffleService.shuffle(clone.getName()));
+				responseProjects.add(clone);
+			});
+		} else {
+			for (Project project : projects) {
+				responseProjects.add(buildProjectWithoutPassword(project));
 			}
-			return responseProjects;
-
-		} catch (final ApplicationException e) {
-			log.error(getStackTrace(e));
-			return new ArrayList<Project>();
 		}
+
+		if (log.isDebugEnabled()) {
+			log.debug(String.format("'/Project' is returning %d projects", responseProjects.size()));
+		}
+		return responseProjects;
 
 	}
 
@@ -429,56 +449,48 @@ public class ProjectController extends BaseRestController {
 	 * Test the connection settings for a given project.
 	 * 
 	 * @param idProject the project identifier
-	 * @return {@code true} if the
+	 * @return {@code true} if the connection did success, {@code false} otherwise
 	 */
-	@GetMapping(value = "/test/{idProject}")
-	public ResponseEntity<Boolean> test(@PathVariable("idProject") int idProject) throws NotFoundException, ApplicationException {
-		Project project = projectHandler.get(idProject);
-		if (project == null) {
-			throw new NotFoundException(CODE_PROJECT_NOFOUND, MessageFormat.format(MESSAGE_PROJECT_NOFOUND, idProject));
-		}
+	@ResponseBody
+	@ApiOperation(value = "Test the connection settings for a given project.")
+	@GetMapping(value = "/{idProject}/test")
+	public boolean scmConnect(@PathVariable("idProject") int idProject) throws NotFoundException, ApplicationException {
+		Project project = projectHandler.getProject(idProject);
 		boolean connected = this.scanner.testConnection(project);
-		return new ResponseEntity<>(connected, headers(), HttpStatus.OK);
+		return connected;
 	}
 
 	/**
 	 * <p>
-	 * Add a new skill required for a project.
+	 * Add a new skill detected in a project.
 	 * </p>
 	 * 
-	 * @param projectSkill the body of the post containing an instance of
-	 *                     ParamProjectSkill in JSON format
-	 * @see ProjectController.BodyParamProjectSkill
-	 * @return
+	 * @param idProject the project identifier
+	 * @param idSkill the skill identifier
+	 * 
+	 * @return {@code true} if the operation was successful, {@code false} otherwise.
+	 * @throws ApplicationException thrown if any problem occurs.
 	 */
-	@PostMapping("/skill/add")
-	public ResponseEntity<BooleanDTO> saveSkill(@RequestBody BodyParamProjectSkill projectSkill) {
+	@ResponseBody
+	@ApiOperation(value = "Add a new skill to a project.")
+	@PutMapping("{idProject}/skill/{idSkill}")
+	public boolean saveSkill(
+		@PathVariable("idProject") int idProject,
+		@PathVariable("idSkill") int idSkill) throws ApplicationException {
 
 		if (log.isDebugEnabled()) {
-			log.debug(String.format("POST command on /project/skill/add with params idProject: %d, idSkill: %d",
-					projectSkill.getIdProject(), projectSkill.getIdSkill()));
+			log.debug(String.format(
+				"POST command on /api/project/%d/skill/%d", idProject, idSkill));
 		}
 
-		MyReference<ResponseEntity<BooleanDTO>> refResponse = projectLoader.new MyReference<>();
-		Project project = projectLoader.getProject(projectSkill.getIdProject(), new BooleanDTO(), refResponse);
-		if (refResponse.getResponse() != null) {
-			return refResponse.getResponse();
-		}
+		Project project = projectHandler.lookup(idProject);
 
-		try {
-			Skill skill = this.skillHandler.getSkill(projectSkill.getIdSkill());
-			this.projectHandler.addSkill(project, new ProjectSkill(skill.getId()));
-			return new ResponseEntity<BooleanDTO>(new BooleanDTO(), headers(), HttpStatus.OK);
-		} catch (final ApplicationException ske) {
-			if (log.isDebugEnabled()) {
-				log.debug(String.format("Cannot save the skill %d inside the project %s", projectSkill.getIdSkill(),
-						project.getName()));
-				log.debug(ske.errorMessage);
-			}
-			return new ResponseEntity<BooleanDTO>(
-					new BooleanDTO(-1, String.format("There is no skill with id " + projectSkill.getIdSkill())),
-					headers(), HttpStatus.BAD_REQUEST);
-		}
+		// Just to test if this skill exists.
+		Skill skill = this.skillHandler.getSkill(idSkill);
+		
+		this.projectHandler.addSkill(project, new ProjectSkill(skill.getId()));
+
+		return true;
 	}
 
 	/**
@@ -486,26 +498,25 @@ public class ProjectController extends BaseRestController {
 	 * Unregister a skill within a project.
 	 * </p>
 	 * 
-	 * @param param an instance of {@link BodyParamProjectSkill} containing the
-	 *              project identifier and the skill identifier
+	 * @param idProject the project identifier
+	 * @param idSkill the skill identifier
+	 * 
+	 * @throws ApplicationException thrown if any problem occurs.
 	 */
-	@PostMapping("/skill/del")
-	public ResponseEntity<BooleanDTO> revokeSkill(@RequestBody BodyParamProjectSkill projectSkill) {
+	@ResponseBody
+	@ApiOperation (value = "Remove a skill from a project.")
+	@DeleteMapping("{idProject}/skill/{idSkill}")
+	public boolean revokeSkill(
+		@PathVariable("idProject") int idProject,
+		@PathVariable("idSkill") int idSkill) throws ApplicationException {
 
 		if (log.isDebugEnabled()) {
-			log.debug(String.format("POST command on /staff/skills/del with params (idProject: %d, idSkill: %d)",
-					projectSkill.getIdProject(), projectSkill.getIdSkill()));
+			log.debug(String.format("DELETE verb on %d/staff/%d", idProject, idSkill));
 		}
 
-		MyReference<ResponseEntity<BooleanDTO>> refResponse = projectLoader.new MyReference<>();
-		Project project = projectLoader.getProject(projectSkill.getIdProject(), new BooleanDTO(), refResponse);
-		if (refResponse.getResponse() != null) {
-			return refResponse.getResponse();
-		}
-
-		projectHandler.removeSkill(project, projectSkill.getIdSkill());
-
-		return new ResponseEntity<>(new BooleanDTO(), headers(), HttpStatus.OK);
+		Project project = projectHandler.lookup(idProject);
+		projectHandler.removeSkill(project, idSkill);
+		return true;
 	}
 
 	/**
@@ -518,102 +529,60 @@ public class ProjectController extends BaseRestController {
 	 *                 date, or a staff member)
 	 * @return the Sunburst chart.
 	 */
-	@PostMapping("/sunburst")
-	public ResponseEntity<SunburstDTO> generateChartSunburst(@RequestBody SettingsGeneration settings) throws ApplicationException {
+	@ResponseBody
+	@ApiOperation(
+		value = "Collect the activities of a project into a data container ready made to be injected in the Sunburst chart component.",
+		notes = "This API is very coupled with an Angular component."
+	)
+	@PutMapping("/{idProject}/sunburst")
+	public Sunburst generateChartSunburst(
+		@PathVariable("idProject") int idProject,
+		@RequestBody SettingsGeneration settings) throws ApplicationException, InformationException  {
 
 		if (log.isDebugEnabled()) {
 			log.debug(MessageFormat.format(
-					"POST command on /sunburst with params idProject : {0}, starting from {1}, for the staff member {2}",
-					settings.getIdProject(),
-					(settings.getStartingDate() == 0) ? "EPOC" : new Date(settings.getStartingDate()),
-					settings.getIdStaffSelected()));
+				"PUT verb on /api/project/{0}/sunburst,  starting from {1}, for the staff member {2}",
+				idProject,
+				(settings.getStartingDate() == 0) ? "EPOC" : new Date(settings.getStartingDate()),
+				settings.getIdStaffSelected()));
 		}
 
-		Project project = projectHandler.get(settings.getIdProject());
+		Project project = projectHandler.getProject(idProject);
 
-		try {
-			if (scanner.hasAvailableGeneration(project)) {
-				return generate(project, settings);
-			}
+		if (scanner.hasAvailableGeneration(project)) {
+			return generate(project, settings);
+		}
 
+		if (log.isDebugEnabled()) {
+			log.debug("Tasks already present in the tasks collection");
+			log.debug(tasks.trace());
+		}
+
+		if (tasks.hasActiveTask(DASHBOARD_GENERATION, PROJECT, idProject)) {
 			if (log.isDebugEnabled()) {
-				log.debug("Tasks present in the tasks collection");
-				log.debug(tasks.trace());
+				log.debug(MessageFormat.format(MESSAGE_MULTIPLE_TASK_WITH_PARAM, project.getName()));
 			}
-
-			if (tasks.hasActiveTask(DASHBOARD_GENERATION, PROJECT, project.getId())) {
-				if (log.isDebugEnabled()) {
-					log.debug("The generation has already been called for the project " + project.getName()
-							+ ". Please wait !");
-				}
-				return new ResponseEntity<>(
-						new SunburstDTO(project.getId(), project.getStaffEvaluation(), CODE_MULTIPLE_TASK,
-								"A dashboard generation has already been launched for " + project.getName()),
-						headers(), HttpStatus.OK);
-			}
-
-			if (log.isDebugEnabled()) {
-				log.debug("The generation will be processed asynchronously !");
-			}
-			scanner.generateAsync(project, settings);
-			return new ResponseEntity<>(new SunburstDTO(project.getId(), project.getStaffEvaluation(), null,
-					HttpStatus.CREATED.value(),
-					"The dashboard generation has been launched. Operation might last a while. Please try later !"),
-					headers(),
-					HttpStatus.OK);
-		} catch (Exception e) {
-			log.error(getStackTrace(e));
-			return new ResponseEntity<>(
-					new SunburstDTO(project.getId(), project.getStaffEvaluation(), null, -1, e.getMessage()), headers(),
-					HttpStatus.BAD_REQUEST);
+			throw new InformationException (CODE_MULTIPLE_TASK, MESSAGE_MULTIPLE_TASK_WITH_PARAM, project.getName());
 		}
-	}
 
-	/**
-	 * Generate the dashboard.
-	 * 
-	 * @param project  the passed project
-	 * @param settings parameters sent to the dashboard generation such as the
-	 *                 starting date, or the filtered staff member.
-	 * @return the generated risks dashboard.
-	 */
-	private ResponseEntity<SunburstDTO> generate(final Project project, final SettingsGeneration settings) {
-		try {
-			tasks.addTask(DASHBOARD_GENERATION, PROJECT, project.getId());
-		} catch (final Exception e) {
-			return new ResponseEntity<>(
-					new SunburstDTO(project.getId(), project.getStaffEvaluation(), CODE_MULTIPLE_TASK,
-							"A dashboard generation has already been launched for " + project.getName()),
-					headers(), HttpStatus.OK);
+		if (log.isDebugEnabled()) {
+			log.debug("The generation will be processed asynchronously !");
 		}
-		try {
-			RiskDashboard data = scanner.generate(project, settings);
-			if (shuffleService.isShuffleMode()) {
-				if (log.isInfoEnabled()) {
-					log.info("Shuffling the sunburst data");
-				}
-			}
-			return new ResponseEntity<>(new SunburstDTO(project.getId(), project.getStaffEvaluation(), data),
-					new HttpHeaders(), HttpStatus.OK);
-		} catch (final Exception e) {
-			log.error(getStackTrace(e));
-			return new ResponseEntity<>(new SunburstDTO(UNKNOWN_PROJECT, -1, null, CODE_UNDEFINED, e.getMessage()),
-					new HttpHeaders(), HttpStatus.BAD_REQUEST);
-		} finally {
-			try {
-				tasks.completeTask(DASHBOARD_GENERATION, PROJECT, project.getId());
-			} catch (ApplicationException e) {
-				log.error("Internal error", e);
-			}
-		}
+		scanner.generateAsync(project, settings);
+
+		throw new InformationException (CODE_DASHBOARD_START, MESSAGE_DASHBOARD_START);
 	}
 
 	/**
 	 * @param idProject the project identifier
 	 * @return the contributors who have been involved in the project
 	 */
+	@ResponseBody
+	@ApiOperation(
+		value = "Retrieve the contributors of a project."
+	)
 	@GetMapping(value = "/{idProject}/contributors")
-	public ResponseEntity<ProjectContributorDTO> projectContributors(final @PathVariable("idProject") int idProject) {
+	public ProjectContributors projectContributors(final @PathVariable("idProject") int idProject) {
 
 		final List<Contributor> contributors = projectHandler.contributors(idProject);
 		if (log.isDebugEnabled()) {
@@ -621,37 +590,27 @@ public class ProjectController extends BaseRestController {
 					.toString());
 		}
 
-		ProjectContributorDTO projectContributorDTO = new ProjectContributorDTO(idProject);
-
+		ProjectContributors projectContributors = new ProjectContributors(idProject);
 		contributors.stream().forEach(contributor -> {
 			final Staff staff = staffHandler.getStaff().get(contributor.getIdStaff());
 			if (staff == null) {
 				throw new ApplicationRuntimeException(
 						String.format("No staff member retrieved for the id %d", contributor.getIdStaff()));
 			}
-			projectContributorDTO.addContributor(contributor.getIdStaff(),
+			projectContributors.addContributor(
+					contributor.getIdStaff(),
 					shuffleService.isShuffleMode()
-							? shuffleService.shuffle(staff.getFirstName() + " " + staff.getLastName())
-							: (staff.getFirstName() + " " + staff.getLastName()),
-					staff.isActive(), staff.isExternal(), contributor.getFirstCommit(), contributor.getLastCommit(),
-					contributor.getNumberOfCommitsSubmitted(), contributor.getNumberOfFiles());
-
+						? shuffleService.shuffle(staff.getFirstName() + " " + staff.getLastName())
+						: (staff.getFirstName() + " " + staff.getLastName()),
+					staff.isActive(), 
+					staff.isExternal(), 
+					contributor.getFirstCommit(), 
+					contributor.getLastCommit(),
+					contributor.getNumberOfCommitsSubmitted(), 
+					contributor.getNumberOfFiles());
 		});
 
-		return new ResponseEntity<>(projectContributorDTO, new HttpHeaders(), HttpStatus.OK);
-	}
-
-	/**
-	 * Remove the password of the project.<br/>
-	 * <i>The project has to be clone to avoid the deletion</i>
-	 * 
-	 * @param project the given project
-	 * @return a cloned project without password
-	 */
-	private Project buildProjectWithoutPassword(Project project) {
-		Project clone = (Project) deepClone(project);
-		clone.setPassword(null);
-		return clone;
+		return projectContributors;
 	}
 
 	/**
@@ -670,18 +629,20 @@ public class ProjectController extends BaseRestController {
 	 * @throws NotFoundException if the project does not exist. 
 	 * @throws ApplicationException if the any problem occurs, most probably an {@link IOException}
 	 */
+	@ApiOperation(
+		value = "Delete the current Sunburst data container, and start the generation of a new chart in an asynchronous mode",
+		code = 202,
+		notes = "This endpoint requests for the deletion of the sunburst data, and triggers the generation of a new one."
+	)
 	@DeleteMapping(value = "/{idProject}/sunburst")
 	public ResponseEntity<Void> resetSunburstChart(
-		final @PathVariable("idProject") int idProject) throws NotFoundException, ApplicationException {
+		final @PathVariable("idProject") int idProject) throws ApplicationException {
 		
 		if (log.isDebugEnabled()) {
 			log.debug(String.format("Removing project with %d", idProject));
 		}
 
-		Project project = projectHandler.get(idProject);
-		if (project == null) {
-			throw new NotFoundException(CODE_PROJECT_NOFOUND, MessageFormat.format(MESSAGE_PROJECT_NOFOUND, idProject));
-		}
+		Project project = projectHandler.getProject(idProject);
 
 		// We renitialize the local repository if the user asks for a RESET, comparing to a REFRESH 
 		projectHandler.saveLocationRepository(idProject, null);
@@ -693,7 +654,7 @@ public class ProjectController extends BaseRestController {
 		dataHandler.removeCrawlerFiles(project);
 
 		// Launching the asynchronous generation
-		scanner.generateAsync(project, new SettingsGeneration(project.getId()));
+		scanner.generateAsync(project, new SettingsGeneration(idProject));
 		
 		return ResponseEntity.accepted().build();
 	}
@@ -703,11 +664,13 @@ public class ProjectController extends BaseRestController {
 	 * Generate the sunburst chart. 
 	 * </p>
 	 * <p>
+	 * 
 	 * <ul>
 	 * <li>This method can be invoked many times with the same result. This method is <b>idempotent</b></i></li>
 	 * <li>This method updates the level of risk for the given project and the missions of the developers involved in its.</li>
 	 * </ul>
-	 * Therefore the REST verb is a <b>POST</b> with an empty BODY. Only the project ID is necessary.
+	 * 
+	 * The chosen REST verb is a <b>PATCH</b> with an empty BODY. Only the project ID is necessary.
 	 * </p>
 	 * <p>
 	 * This API entry returns immediatly with an empty response with a {@link HttpStatus#ACCEPTED ACCEPTED 202} status. 
@@ -719,35 +682,77 @@ public class ProjectController extends BaseRestController {
 	 * @throws NotFoundException if the project does not exist. 
 	 * @throws ApplicationException if the any problem occurs, most probably an {@link IOException}
 	 */
-	@PostMapping(value = "/{idProject}/sunburst")
+	@PatchMapping(value = "/{idProject}/sunburst")
+	@ApiOperation(
+		value = "Request to re-generate the project-staff risks data.",
+		code = 202,
+		notes = "The verb is 'PATCH' to isolate this request from the initial request with a 'PUT' method."
+	)
 	public ResponseEntity<String> reloadSunburstChart(final @PathVariable("idProject") int idProject) throws NotFoundException, ApplicationException {
 		
 		if (log.isDebugEnabled()) {
 			log.debug(String.format("Request for the generation of the Sunburst chart for project %d", idProject));
 		}
 
-		Project project = projectHandler.get(idProject);
-		if (project == null) {
-			throw new NotFoundException(CODE_PROJECT_NOFOUND, MessageFormat.format(MESSAGE_PROJECT_NOFOUND, idProject));
-		}
+		Project project = projectHandler.getProject(idProject);
 
 		cacheDataHandler.removeRepository(project);
 
 		// Launching the asynchronous generation
-		scanner.generateAsync(project, new SettingsGeneration(project.getId()));
+		scanner.generateAsync(project, new SettingsGeneration(idProject));
 		
 		return ResponseEntity.accepted().build();
 	}
 
 	/**
-	 * @param code    the error code
-	 * @param message the error message
-	 * @param project the project, if any, concerned by the error, or an empty
-	 *                project if none exist
-	 * @return a response entity
+	 * <p>
+	 * Initialize the password of the project.
+	 * </p>
+	 * 
+	 * <i>The project has to be clone to avoid to be saved with a {@code null} value</i>
+	 * z
+	 * @param project the given project
+	 * @return a cloned project without password
 	 */
-	public ResponseEntity<ProjectDTO> postErrorReturnBodyMessage(int code, String message, Project project) {
-		return new ResponseEntity<>(new ProjectDTO(project, code, message), headers(), HttpStatus.BAD_REQUEST);
+	private Project buildProjectWithoutPassword(Project project) {
+		Project clone = (Project) deepClone(project);
+		clone.setPassword(null);
+		return clone;
+	}
+
+	/**
+	 * Generate the dashboard.
+	 * 
+	 * @param project  the passed project
+	 * @param settings parameters sent to the dashboard generation such as the
+	 *                 starting date, or the filtered staff member.
+	 * @return the generated risks dashboard.
+	 */
+	private Sunburst generate(final Project project, final SettingsGeneration settings) 
+		throws ApplicationException, InformationException {
+		
+		try {
+			tasks.addTask(DASHBOARD_GENERATION, PROJECT, project.getId());
+		} catch (final ApplicationException e) {
+			throw new InformationException(CODE_MULTIPLE_TASK,
+				String.format(MESSAGE_MULTIPLE_TASK_WITH_PARAM, project.getName()), e);
+		}
+
+		try {
+			RiskDashboard data = scanner.generate(project, settings);
+			return new Sunburst(project.getId(), project.getStaffEvaluation(), data);
+		} catch (GitAPIException gae) {
+			throw new ApplicationException(CODE_GIT_ERROR, MESSAGE_GIT_ERROR, project.getId(), project.getName());
+		} catch (IOException ioe) {
+			throw new ApplicationException(CODE_IO_EXCEPTION, ioe.getMessage());
+		} finally {
+			try {
+				tasks.completeTask(DASHBOARD_GENERATION, PROJECT, project.getId());
+			} catch (ApplicationException e) {
+				// We choke this exception. There is no alternative to a failure in completion.
+				log.error("Internal error", e);
+			}
+		}
 	}
 
 }

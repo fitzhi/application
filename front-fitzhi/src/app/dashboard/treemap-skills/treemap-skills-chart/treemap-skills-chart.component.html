@@ -1,0 +1,11 @@
+<div class="host-chart">
+	<ngx-charts-tree-map
+		[scheme]="colorScheme"
+		[results]="distribution"
+		[gradient]="gradient"
+		[animations]="animations"
+		[labelFormatting]="labelFormatting"
+		[valueFormatting]="valueFormatting"
+		(select)="onSelect($event)">
+	</ngx-charts-tree-map>
+</div>

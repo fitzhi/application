@@ -1,0 +1,63 @@
+[plantuml, Experience Detection diagram]
+....
+@startuml
+
+skinparam titleBorderRoundCorner 15
+skinparam titleBorderThickness 1
+skinparam titleBorderColor grey
+skinparam titleBackgroundColor lightYellow
+
+title the Experience detection settings
+
+note right of DetectedExperience : An experience detected for an author\nwith the number of occurences\nper project
+
+class DetectedExperience {
++ {field} Author : author
+..
++ {field} number : count
+}
+
+class ExperienceDetectionTemplate {
++ {field} number : idEDT
+..
++ {field} number : level
++ {field} String : filePattern
++ {field} String : codePattern
++ {field} String : count
+}
+
+class Skill {
++ {field} number : idSkill
+..
++ {field} string : title
+}
+
+enum TypeCode {
++ {field} number : typeCode
+..
++ {field} string : name
+}
+
+class Staff {
++ {field} number : idStaff
+..
++ {field} string : firstName
++ {field} string : lastName
++ {field} any : ... (all staff properties)
+}
+
+class Project {
++ {field} number : idProject
+..
++ {field} string : name
++ {field} any : ... (all project properties)
+}
+
+DetectedExperience "1" <|-- "many" ExperienceDetectionTemplate : concerns <
+ExperienceDetectionTemplate "1" <|-- "1" Skill : involves <
+ExperienceDetectionTemplate "1" <|-- "1" TypeCode : involves <
+DetectedExperience "0" <|-- "many" Staff : is recognized as <
+DetectedExperience "1" <|-- "many" Project : is detected in <
+
+@enduml
+....

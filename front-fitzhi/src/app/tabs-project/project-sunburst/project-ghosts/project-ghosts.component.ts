@@ -1,7 +1,7 @@
 import { Component, OnInit, Inject, OnDestroy, Input } from '@angular/core';
 import { MatDialogRef, MAT_DIALOG_DATA, MatDialogConfig, MatDialog } from '@angular/material/dialog';
 import { ProjectGhostsDataSource } from './project-ghosts-data-source';
-import { ProjectService } from '../../../service/project.service';
+import { ProjectService } from '../../../service/project/project.service';
 import { PseudoList } from '../../../data/PseudoList';
 import { Constants } from '../../../constants';
 import { MessageService } from '../../../interaction/message/message.service';

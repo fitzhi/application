@@ -5,7 +5,7 @@ import { PanelSwitchEvent } from '../../sonar-thumbnails/panel-switch-event';
 import { Constants } from 'src/app/constants';
 import { SonarService } from 'src/app/service/sonar.service';
 import { Project } from 'src/app/data/project';
-import { ProjectService } from 'src/app/service/project.service';
+import { ProjectService } from 'src/app/service/project/project.service';
 import { BadgeQuotation } from './badge-quotation';
 import { BaseComponent } from 'src/app/base/base.component';
 import { SonarProject } from 'src/app/data/SonarProject';

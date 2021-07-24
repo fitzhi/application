@@ -54,13 +54,15 @@ public interface ProjectAuditHandler extends DataSaverLifeCycle {
 	void saveEvaluation(int idProject, int idTopic, int evaluation) throws ApplicationException;
 	
 	/**
-	 * Save the executive summary given to this audit topic 
+	 * <p>
+	 * Save the executive summary given to this audit topic.
+	 * </p>
 	 * @param idProject the project identifier
 	 * @param idTopic the given topic identifier
 	 * @param summaryReport the executive summary given to this audit topic
 	 * @throws ApplicationException thrown if any problem occurs such as <i>'topic identifier unknown'</i>
 	 */
-	void saveReport(int idProject, int idTopic, String executiveSummary) throws ApplicationException;
+	void saveReport(int idProject, int idTopic, String summaryReport) throws ApplicationException;
 	
 	/**
 	 * Set the weights for all topics in the project.<br/>

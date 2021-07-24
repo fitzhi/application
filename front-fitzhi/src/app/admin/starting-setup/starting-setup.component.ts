@@ -1,18 +1,15 @@
 import { Component, OnInit, ViewChild, OnDestroy } from '@angular/core';
 import { MatStepper } from '@angular/material/stepper';
-import { Constants } from 'src/app/constants';
 import { Collaborator } from 'src/app/data/collaborator';
 import { BaseComponent } from 'src/app/base/base.component';
 import { BackendSetupService } from 'src/app/service/backend-setup/backend-setup.service';
-import { BooleanDTO } from 'src/app/data/external/booleanDTO';
 import { HttpClient } from '@angular/common/http';
 import { ReferentialService } from 'src/app/service/referential.service';
 import { SkillService } from 'src/app/skill/service/skill.service';
 import { Router } from '@angular/router';
-import { Observable, Subject } from 'rxjs';
-import { take } from 'rxjs/operators';
 import { traceOn } from 'src/app/global';
 import { InstallService } from '../service/install/install.service';
+import { Subject } from 'rxjs';
 
 @Component({
 	selector: 'app-starting-setup',
@@ -22,34 +19,45 @@ import { InstallService } from '../service/install/install.service';
 export class StartingSetupComponent extends BaseComponent implements OnDestroy {
 
 	/**
-     * The main stepper is passed in order to procede a programmatly step.next().
-     */
+	 * The main stepper is passed in order to procede a programmatly step.next().
+	 */
 	@ViewChild('stepper', { static: true }) stepper: MatStepper;
 
 	/**
-     * Are we in the very first connection ?
-     */
-	public veryFirstConnection = new Subject<boolean>();
+	 * This status will be setup to TRUE, FALSE otherwise.
+	 */
+	public veryFirstConnection = true;
 
 	/**
-     * Array representing the fact that each step has been completed.
-     */
+	 * Are we in the very first connection ?
+	 */
+	private _veryFirstConnection$ = new Subject<boolean>();
+
+	/**
+	 * Are we in the very first connection ?
+	 */
+	public veryFirstConnection$ = this._veryFirstConnection$.asObservable();
+
+	/**
+	 * Array representing the fact that each step has been completed.
+	 */
 	completed: Array<boolean> = [false, false, false, false];
 
 	/**
-     * Current staff identifier.
-     */
+	 * Current staff identifier.
+	 */
 	idStaff: number;
 
 	/**
-     * Current staff.
-     */
+	 * Current staff.
+	 */
 	staff: Collaborator;
 
 	/**
 	 * Label of the second step.
 	 */
 	labelUser = 'User';
+
 
 	constructor(
 		private backendSetupService: BackendSetupService,
@@ -60,14 +68,15 @@ export class StartingSetupComponent extends BaseComponent implements OnDestroy {
 		private httpClient: HttpClient) { super(); }
 
 	/**
-     * Setup the fact that this is the very first connection.
-     */
+	 * Setup the fact that this is the very first connection.
+	 */
 	onChangeVeryFirstConnection($event: boolean) {
 		if (traceOn()) {
-			console.log('veryFirstConnecion :', $event);
+			console.log('veryFirstConnection :', $event);
 		}
 
-		this.veryFirstConnection.next($event);
+		this.veryFirstConnection = $event;
+		this._veryFirstConnection$.next(this.veryFirstConnection);
 
 		this.labelUser = ($event) ? 'First admin user' : 'First registration';
 
@@ -75,14 +84,12 @@ export class StartingSetupComponent extends BaseComponent implements OnDestroy {
 		this.referentialService.loadAllReferentials();
 		this.skillService.loadSkills();
 
-		setTimeout(() => {
-			this.stepper.next();
-		}, 0);
+		setTimeout(() => this.stepper.next(), 0);
 	}
 
 	/**
-     * Catch the staff identifier created the registerUserComponent.
-     */
+	 * Catch the staff identifier created the registerUserComponent.
+	 */
 	setRegisteredUser($event: number) {
 
 		if (traceOn()) {
@@ -98,9 +105,7 @@ export class StartingSetupComponent extends BaseComponent implements OnDestroy {
 		}
 		this.completed[1] = true;
 		this.idStaff = $event;
-		setTimeout(() => {
-			this.stepper.next();
-		}, 0);
+		setTimeout(() => this.stepper.next(), 0);
 	}
 
 	/**
@@ -116,8 +121,8 @@ export class StartingSetupComponent extends BaseComponent implements OnDestroy {
 	}
 
 	/**
-     * Catch the fact that the user is successfully connected, OR NOT...
-     */
+	 * Catch the fact that the user is successfully connected, OR NOT...
+	 */
 	setConnection($event: boolean) {
 		if ($event) {
 			this.completed[2] = true;
@@ -134,49 +139,52 @@ export class StartingSetupComponent extends BaseComponent implements OnDestroy {
 	}
 
 	/**
-     * Catch the complete staff entity, updated by the staff-form.
-     */
+	 * Catch the complete staff entity, updated by the staff-form.
+	 * @param $event the staff member created
+	 */
 	setStaffUpdatedForUser($event: Collaborator) {
 		if (traceOn()) {
 			console.log('staff updated for :', $event.lastName);
 		}
 
-		this.subscriptions
-			.add(this.httpClient.get<BooleanDTO>(this.backendSetupService.url() + '/admin/saveVeryFirstConnection')
-				.subscribe(
-					(data: BooleanDTO) => {
-						const veryFirstConnectionIsRegistered = data.result;
-						if (traceOn() && veryFirstConnectionIsRegistered) {
-							console.log('The very first connection is registered into fitzhì');
+		if (!this.veryFirstConnection) {
+			if (traceOn()) {
+				console.log('We are not in mode "very first connection".');
+			}
+			this.nextStepAfterStaffUpdate($event);
+		} else {
+			this.subscriptions.add(
+				this.httpClient.post<Boolean>(this.backendSetupService.url() + '/admin/saveVeryFirstConnection', '')
+					.subscribe({
+						next:  veryFirstConnectionIsRegistered => {
+							if (traceOn() && veryFirstConnectionIsRegistered) {
+								console.log('The very first connection is registered into Fitzhi.');
+							}
+							this.nextStepAfterStaffUpdate($event);
 						}
-						this.completed[3] = true;
-						
-						this.installService.installComplete();
-
-						this.staff = $event;
-						setTimeout(() => {
-							this.stepper.next();
-						}, 0);
-					},
-					(error: BooleanDTO) => {
-						if (traceOn()) {
-							console.log('Connection error ', error);
-						}
-					}));
+					}
+				)
+			);
+		}
 	}
 
+	private nextStepAfterStaffUpdate(staff: Collaborator): void {
+		this.completed[3] = true;
+		this.installService.installComplete();
+		this.staff = staff;
+		setTimeout(() => this.stepper.next(), 0);
+	}
 
 	/**
-     * @param $event we move from one step in the installation.
-     */
+	 * @param $event we move from one step in the installation.
+	 */
 	selectionChange($event) {
-		console.log ($event);
 		window.scroll(0, 0);
 	}
 
 	/**
-     * Calling the base class to unsubscribe all subscriptions.
-     */
+	 * Calling the base class to unsubscribe all subscriptions.
+	 */
 	ngOnDestroy() {
 		super.ngOnDestroy();
 	}

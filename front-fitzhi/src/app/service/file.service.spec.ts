@@ -1,6 +1,6 @@
 import { TestBed, TestModuleMetadata } from '@angular/core/testing';
 import { Project } from '../data/project';
-import { ProjectService } from './project.service';
+import { ProjectService } from './project/project.service';
 import { FileService } from './file.service';
 import { MatDialogModule } from '@angular/material/dialog';
 import { HttpClientTestingModule } from '@angular/common/http/testing';

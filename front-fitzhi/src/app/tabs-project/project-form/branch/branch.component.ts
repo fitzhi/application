@@ -1,5 +1,5 @@
 import { Component, OnInit, EventEmitter, Output, OnDestroy } from '@angular/core';
-import { ProjectService } from 'src/app/service/project.service';
+import { ProjectService } from 'src/app/service/project/project.service';
 import { traceOn } from 'src/app/global';
 import { BaseComponent } from 'src/app/base/base.component';
 
@@ -15,7 +15,7 @@ export class BranchComponent extends BaseComponent implements OnInit, OnDestroy 
 	 */
 	@Output() messengerOnBranchChange = new EventEmitter<string>();
 
-	constructor(public projectService: ProjectService) { 
+	constructor(public projectService: ProjectService) {
 		super();
 	}
 
@@ -24,10 +24,10 @@ export class BranchComponent extends BaseComponent implements OnInit, OnDestroy 
 			this.projectService.branches$.subscribe({
 				next: branches => {
 					if (traceOn()) {
-						console.groupCollapsed ("List of branches received by the BranchComponent");
+						console.groupCollapsed ('List of branches received by the BranchComponent');
 						branches.forEach(branch => console.log( branch));
 						console.groupEnd();
-					}		
+					}
 				}
 			})
 		);

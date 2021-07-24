@@ -7,7 +7,7 @@ import { SonarProject } from 'src/app/data/SonarProject';
 import { SonarService } from 'src/app/service/sonar.service';
 import { ILanguageCount } from 'src/app/service/ILanguageCount';
 import { FilesStats } from 'src/app/data/sonar/FilesStats';
-import { ProjectService } from 'src/app/service/project.service';
+import { ProjectService } from 'src/app/service/project/project.service';
 import { MessageService } from 'src/app/interaction/message/message.service';
 import { ThumbnailQuotationBadge } from './thumbnail-quotation-badge';
 import { SonarEvaluation } from 'src/app/data/sonar-evaluation';
@@ -77,7 +77,7 @@ export class SonarThumbnailsComponent extends BaseComponent implements OnInit, O
 
 		this.subscriptions.add(
 			this.panelSwitchTransmitter$.subscribe( (panelSwitchEvent: PanelSwitchEvent) => {
-				// I comment the line below because the method updateDisplayConsolidationBadge() is already invoked above	
+				// I comment the line below because the method updateDisplayConsolidationBadge() is already invoked above
 				// this.updateDisplayConsolidationBadge();
 				if (!panelSwitchEvent.keySonar) {
 					if (traceOn()) {
@@ -162,7 +162,7 @@ export class SonarThumbnailsComponent extends BaseComponent implements OnInit, O
 			this.languageFilesNumber.set(componentSonar.key, componentSonar.projectFilesStats);
 			this.subscriptions.add(
 				this.projectService
-					.saveFilesStats(this.projectService.project.id, componentSonar.key, componentSonar.projectFilesStats)
+					.saveFilesStats$(this.projectService.project.id, componentSonar.key, componentSonar.projectFilesStats)
 					.subscribe(doneAndOk => {
 						if (doneAndOk) {
 							this.messageService.info('Saving Files source statistics for the key ' + componentSonar.key);

@@ -3,7 +3,7 @@ import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
 import { Library } from '../../../data/library';
 import { DependenciesDataSource } from './DependenciesDataSource';
 import { InLineEditDialogComponent } from './in-line-edit-dialog/in-line-edit-dialog.component';
-import { ProjectService } from '../../../service/project.service';
+import { ProjectService } from '../../../service/project/project.service';
 import { take } from 'rxjs/operators';
 import { Observable, BehaviorSubject } from 'rxjs';
 import { Project } from 'src/app/data/project';

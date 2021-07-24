@@ -5,7 +5,7 @@ import { Project } from 'src/app/data/project';
 import { PanelSwitchEvent } from '../../sonar-thumbnails/panel-switch-event';
 import { SonarQuotationComponent } from './sonar-quotation.component';
 import { Constants } from 'src/app/constants';
-import { ProjectService } from 'src/app/service/project.service';
+import { ProjectService } from 'src/app/service/project/project.service';
 import { QuotationBadgeComponent } from './quotation-badge/quotation-badge.component';
 import { ReferentialService } from 'src/app/service/referential.service';
 import { CinematicService } from 'src/app/service/cinematic.service';

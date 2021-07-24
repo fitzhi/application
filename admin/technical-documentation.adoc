@@ -1,22 +1,55 @@
 
-= Install a new branch 
+== Install a new branch 
 
-== Working on GitHub
+=== Working on GitHub
 
 - Merging the actual branch release-1.m to master
 - Create the new branch release-1.n (where n = m+1)
 
-== Working on Master
+=== Working on Master
+
+.cloning the master branch
+[source, shell]
+----
 git clone --branch master https://github.com/fitzhi/application.git
-- Update the building script to this new branch. Files concerned
--- Back-end build and test.java.yml	
--- codeQL-analysis-java.yml
--- Front-end build and test.js.yml		
--- codeQL-analysis-typescript.yml 
+----
+
+- Update the building script to this new branch. 
+
+**Files concerned** +
+Back-end build and test.java.yml +
+codeQL-analysis-java.yml +
+Front-end build and test.js.yml + 
+codeQL-analysis-typescript.yml 
+
 - Update the Typescript test "git.service.spec.ts" to take in account the branch release-1.n
 
+=== Merging Master into the branch release-1.n
 
-== Marging Master into the branch release-1.n
+[source, shell]
+----
 git clone https://github.com/fitzhi/application.git
 git checkout release-1.n
 git merge master
+----
+
+- Update the version of the release in the POM.xml to 1.n-SNAPSHOT
+
+=== Special configuration for the MacOS Siline
+
+A fix has to be added to allow the execution of tests
+
+.webpack-dev-middleware/lib/util.js line 131
+[source, shell]
+----
+//
+// 30/04/2021
+// On MacOS Silicon, to avoid the error
+/*
+ TypeError: Cannot read property 'range' of undefined
+   at handleRangeHeaders (/Users/frvidal/work/projects/application/front-fitzhi/node_modules/webpack-dev-middleware/lib/util.js:131:21)
+   at processRequest (/Users/frvidal/work/projects/application/front-fitzhi/node_modules/webpack-dev-middleware/lib/middleware.js:98:19)
+*/
+if ((req.headers) && (req.headers.range)) {
+ const ranges = parseRange(content.length, req.headers.range);
+----

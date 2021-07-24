@@ -5,7 +5,7 @@ import { HttpClientTestingModule, HttpTestingController } from '@angular/common/
 import { BehaviorSubject, of } from 'rxjs';
 import { CinematicService } from 'src/app/service/cinematic.service';
 import { Project } from 'src/app/data/project';
-import { ProjectService } from 'src/app/service/project.service';
+import { ProjectService } from 'src/app/service/project/project.service';
 import { ProjectFormComponent } from './project-form.component';
 import { TechxhiMedalComponent } from './techxhi-medal/techxhi-medal.component';
 import { MatButtonToggleModule } from '@angular/material/button-toggle';
@@ -21,6 +21,7 @@ import { GitService } from 'src/app/service/git/git.service';
 import { Repository } from 'src/app/data/git/repository';
 import { BranchComponent } from './branch/branch.component';
 import { By } from '@angular/platform-browser';
+import { ListProjectsService } from '../list-project/list-projects-service/list-projects.service';
 
 describe('ProjectFormComponent', () => {
 	let component: TestHostComponent;
@@ -46,7 +47,7 @@ describe('ProjectFormComponent', () => {
 		TestBed.configureTestingModule({
 			declarations: [ProjectFormComponent, TechxhiMedalComponent, QuotationBadgeComponent, AuditGraphicBadgeComponent,
 				TestHostComponent, BranchComponent],
-			providers: [ReferentialService, CinematicService, GitService, ProjectService],
+			providers: [ReferentialService, CinematicService, GitService, ProjectService, ListProjectsService],
 			imports: [
 					MatButtonToggleModule, MatCheckboxModule, HttpClientTestingModule, FormsModule, ReactiveFormsModule,
 					MatDialogModule, RouterTestingModule
@@ -129,7 +130,7 @@ describe('ProjectFormComponent', () => {
 		urlRepositoryInput.triggerEventHandler('blur', {target: {value: 'https://github.com/fitzhi/application'}});
 		fixture.detectChanges();
 
-		const reqBackend = httpTestingController.expectOne('URL_OF_SERVER/api/project/branches/1789');
+		const reqBackend = httpTestingController.expectOne('URL_OF_SERVER/api/project/1789/branches');
 		reqBackend.flush(['backend/master']);
 
 		expect(component).toBeTruthy();

@@ -1,7 +1,6 @@
 import { Component, OnInit } from '@angular/core';
-import { Constants } from '../../constants';
-import { traceOn } from '../../global';
 import { environment } from 'src/environments/environment';
+import { traceOn } from '../../global';
 
 @Component({
 	selector: 'app-dev-on-off',

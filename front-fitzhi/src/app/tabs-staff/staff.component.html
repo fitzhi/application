@@ -1,29 +1,29 @@
 <mat-tab-group [selectedIndex]="selectedTab$|async" (selectedIndexChange)="selectedIndexChange($event)">
-  <mat-tab label="Info">
-    <div>
-      <app-staff-form [idStaff]="idStaff" [selectedTab$]="selectedTab$">
-      </app-staff-form>
-    </div>
-  </mat-tab>
-  <mat-tab label="Projects">
-    <ng-template matTabContent>
-      <div>
-        <app-staff-projects [selectedTab$]="selectedTab$"></app-staff-projects>
-      </div>
-    </ng-template>
-  </mat-tab>
-  <mat-tab label="Skills">
-    <ng-template matTabContent>
-      <div>
-        <app-staff-experience [selectedTab$]="selectedTab$"></app-staff-experience>
-      </div>
-    </ng-template>
-  </mat-tab>
-  <mat-tab label="Remove" *ngIf="staffDataExchangeService.hostExistingCollaborator()">
-    <ng-template matTabContent>
-      <div>
-        <app-staff-remove [selectedTab$]="selectedTab$"></app-staff-remove>
-      </div>
-    </ng-template>
-  </mat-tab>
+	<mat-tab label="Info">
+		<div>
+			<app-staff-form [selectedTab$]="selectedTab$">
+			</app-staff-form>
+		</div>
+	</mat-tab>
+	<mat-tab label="Projects">
+		<ng-template matTabContent>
+			<div>
+				<app-staff-projects [selectedTab$]="selectedTab$"></app-staff-projects>
+			</div>
+		</ng-template>
+	</mat-tab>
+	<mat-tab label="Skills">
+		<ng-template matTabContent>
+			<div>
+				<app-staff-experience [selectedTab$]="selectedTab$"></app-staff-experience>
+			</div>
+		</ng-template>
+	</mat-tab>
+	<mat-tab label="Remove" *ngIf="staffService.isStaffMemberLoaded()">
+		<ng-template matTabContent>
+			<div>
+				<app-staff-remove [selectedTab$]="selectedTab$"></app-staff-remove>
+			</div>
+		</ng-template>
+	</mat-tab>
 </mat-tab-group>

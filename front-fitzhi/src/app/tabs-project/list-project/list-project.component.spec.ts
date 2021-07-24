@@ -14,7 +14,7 @@ import { RiskLegend } from 'src/app/data/riskLegend';
 import { SonarEvaluation } from 'src/app/data/sonar-evaluation';
 import { SonarProject } from 'src/app/data/SonarProject';
 import { CinematicService } from 'src/app/service/cinematic.service';
-import { ProjectService } from 'src/app/service/project.service';
+import { ProjectService } from 'src/app/service/project/project.service';
 import { ReferentialService } from 'src/app/service/referential.service';
 import { StaffListService } from 'src/app/service/staff-list-service/staff-list.service';
 import { AuditGraphicBadgeComponent } from '../project-audit/project-audit-badges/audit-badge/audit-graphic-badge/audit-graphic-badge.component';
@@ -47,11 +47,11 @@ describe('ProjectAuditComponent', () => {
 
 	beforeEach(async(() => {
 		TestBed.configureTestingModule({
-			declarations: [ListProjectComponent, AuditGraphicBadgeComponent, 
+			declarations: [ListProjectComponent, AuditGraphicBadgeComponent,
 				TestHostComponent, QuotationBadgeComponent ],
-			providers: [ReferentialService, StaffListService, ProjectService, 
+			providers: [ReferentialService, StaffListService, ProjectService,
 				ListProjectsService, CinematicService],
-			imports: [HttpClientTestingModule, 
+			imports: [HttpClientTestingModule,
 				MatTableModule,  MatPaginatorModule, MatSortModule,
 				MatDialogModule, RouterTestingModule, BrowserAnimationsModule]
 		})
@@ -71,10 +71,9 @@ describe('ProjectAuditComponent', () => {
 		projectService = TestBed.inject(ProjectService);
 
 		listProjectsService = TestBed.inject(ListProjectsService);
-		
+
 		listProjectsService.filteredProjects$.next(projects);
 		fixture.detectChanges();
-
 
 	});
 

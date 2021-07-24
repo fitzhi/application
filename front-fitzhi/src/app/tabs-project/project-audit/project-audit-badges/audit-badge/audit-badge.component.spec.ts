@@ -14,36 +14,40 @@ import { RiskLegend } from 'src/app/data/riskLegend';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { MatDialogModule } from '@angular/material/dialog';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { Component } from '@angular/core';
+import { Component, ViewChild } from '@angular/core';
+import { ProjectService } from 'src/app/service/project/project.service';
+import { Project } from 'src/app/data/project';
+import { TopicEvaluation } from '../topic-evaluation';
+import { take } from 'rxjs/operators';
 
 describe('AuditBadgeComponent', () => {
 	let component: TestHostComponent;
 	let fixture: ComponentFixture<TestHostComponent>;
+	let projectService: ProjectService;
 
 	@Component({
 		selector: 'app-host-component',
-		template: `<div style="width: 400px; height: 400px; margin: 20px; background-color: lightYellow">
-						
+		template: `<div style="width: 400px; height: 400px; margin: 20px">
 						<app-audit-badge
-							[id]="id"				
-							[evaluation]="evaluation"	
+							[id]="id"
+							[evaluation]="evaluation"
 							[weight]="weight"
 							[title]="title">
 						</app-audit-badge>
-
 					</div>`
 	})
 	class TestHostComponent {
+		@ViewChild(AuditBadgeComponent) auditBadgeComponent: AuditBadgeComponent;
 		id = 1;
-		evaluation = 0;
+		evaluation = 50;
 		weight = 100;
 		title = 'the Title';
 	}
 
 	beforeEach(async(() => {
 		TestBed.configureTestingModule({
-			declarations: [AuditBadgeComponent, AuditGraphicBadgeComponent],
-			providers: [ReferentialService, CinematicService],
+			declarations: [AuditBadgeComponent, AuditGraphicBadgeComponent, TestHostComponent],
+			providers: [ReferentialService, CinematicService, ProjectService],
 			imports : [MatGridListModule, MatFormFieldModule, MatSliderModule,
 				MatInputModule, FormsModule, HttpClientTestingModule, MatDialogModule,
 				BrowserAnimationsModule ]
@@ -60,13 +64,40 @@ describe('AuditBadgeComponent', () => {
 		risk.color = 'blue';
 		referentialService.legends.push (risk);
 		referentialService.referentialLoaded$.next(true);
-		
+
+		projectService = TestBed.inject(ProjectService);
+		projectService.project = new Project(1789, 'The revolutionary project');
+		projectService.projectLoaded$.next(true);
+
 		fixture = TestBed.createComponent(TestHostComponent);
 		component = fixture.componentInstance;
-		fixture.detectChanges();
 	});
 
 	it('should create correctly the audit-badge Component', () => {
+		fixture.detectChanges();
 		expect(component).toBeTruthy();
 	});
+
+	it('should handle correctly the change of a topic evaluation.', done => {
+
+		projectService.topicEvaluation$.pipe(take(1)).subscribe({
+			next: (te: TopicEvaluation) => {
+				expect(te.value).toBe(20);
+				expect(te.idTopic).toBe(1);
+				expect(te.typeOfOperation).toBe(2);
+				done();
+			}
+		});
+
+		fixture.detectChanges();
+		const spyProjectService = spyOn(projectService, 'getEvaluationColor').and.returnValue('green');
+
+		expect(component).toBeTruthy();
+		component.auditBadgeComponent.onEvaluationChange(new TopicEvaluation(1, 20, 1));
+
+		fixture.detectChanges();
+		expect(spyProjectService).toHaveBeenCalledWith(20);
+	});
+
+
 });

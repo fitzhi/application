@@ -1,7 +1,7 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { TechxhiMedalComponent } from './techxhi-medal.component';
-import { ProjectService } from 'src/app/service/project.service';
+import { ProjectService } from 'src/app/service/project/project.service';
 import { Project } from 'src/app/data/project';
 import { BehaviorSubject } from 'rxjs';
 import { ReferentialService } from 'src/app/service/referential.service';

@@ -14,6 +14,7 @@ import { Collaborator } from 'src/app/data/collaborator';
 import { traceOn } from 'src/app/global';
 import { UserSetting } from 'src/app/base/user-setting';
 import { MatPaginator, PageEvent } from '@angular/material/paginator';
+import { CinematicService } from 'src/app/service/cinematic.service';
 
 @Component({
 	selector: 'app-staff-list',
@@ -31,12 +32,12 @@ export class StaffListComponent extends BaseComponent implements OnInit, OnDestr
 	/**
 	 * The paginator for the Staff list.
 	 */
-	 @ViewChild(MatPaginator, {static: true}) paginator: MatPaginator;
+	@ViewChild(MatPaginator, {static: true}) paginator: MatPaginator;
 
-	 /**
-	  * The sort component for the Staff list
-	  */
-	 @ViewChild(MatSort, { static: true }) sort: MatSort;
+	/**
+	* The sort component for the Staff list
+	*/
+	@ViewChild(MatSort, { static: true }) sort: MatSort;
 
 	/**
 	 * The columns of the table
@@ -51,10 +52,11 @@ export class StaffListComponent extends BaseComponent implements OnInit, OnDestr
 	/**
 	 * Key used to save the page size in the local storage.
 	 */
-	 public pageSize = new UserSetting('staff-list.pageSize', 10);
+	public pageSize = new UserSetting('staff-list.pageSize', 10);
 
 	constructor(
 		private tabsStaffListComponent: TabsStaffListService,
+		private cinematicService: CinematicService,
 		private referentialService: ReferentialService,
 		private skillService: SkillService,
 		private router: Router) {
@@ -90,7 +92,7 @@ export class StaffListComponent extends BaseComponent implements OnInit, OnDestr
 						}
 					};
 					this.dataSource.sort = this.sort;
-					this.dataSource.paginator = this.paginator; 
+					this.dataSource.paginator = this.paginator;
 				}));
 		const key = this.tabsStaffListComponent.key(new ListCriteria(this.criteria, this.activeOnly));
 		const context = this.tabsStaffListComponent.getContext(key);
@@ -113,8 +115,10 @@ export class StaffListComponent extends BaseComponent implements OnInit, OnDestr
 	}
 
 	public routeStaff(idStaff: number) {
-		this.tabsStaffListComponent.inMasterDetail = true;
 		this.router.navigate(['/user/' + idStaff], {});
+		setTimeout(() => {
+			this.cinematicService.masterDetailSubject$.next(true);
+		}, 0);
 	}
 
 	/**
@@ -142,9 +146,9 @@ export class StaffListComponent extends BaseComponent implements OnInit, OnDestr
 
 	/**
 	 * This method is invoked if the user change the page size.
-	 * @param $pageEvent event 
+	 * @param $pageEvent event
 	 */
-	 public page($pageEvent: PageEvent) {
+	public page($pageEvent: PageEvent) {
 		this.pageSize.saveSetting($pageEvent.pageSize);
 	}
 

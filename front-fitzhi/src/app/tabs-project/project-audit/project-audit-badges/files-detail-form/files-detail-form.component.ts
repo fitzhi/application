@@ -1,10 +1,6 @@
 import { Component, OnInit, Input, AfterViewInit, OnDestroy } from '@angular/core';
-import { Project } from 'src/app/data/project';
-import { ProjectService } from 'src/app/service/project.service';
+import { ProjectService } from 'src/app/service/project/project.service';
 import { AuditBaseComponent } from '../audit-base-component/audit-base-component.component';
-import { AttachmentFile } from 'src/app/data/AttachmentFile';
-import { ReferentialService } from 'src/app/service/referential.service';
-import { AuditAttachment } from './audit-attachment-upload/audit-attachment.component';
 import { AuditAttachmentService } from './service/audit-attachment.service';
 
 @Component({
@@ -33,11 +29,6 @@ export class FilesDetailFormComponent extends AuditBaseComponent implements OnIn
 
 	ngOnInit() {
 		this.setIdTopic(this.idTopic);
-		if (this.projectService.project.audit[this.idTopic]) {
-			this.auditAttachmentService.emitAttachmentFiles(this.projectService.project.audit[this.idTopic].attachmentList);
-		} else {
-			this.auditAttachmentService.emitAttachmentFiles([]);
-		}
 	}
 
 	/**

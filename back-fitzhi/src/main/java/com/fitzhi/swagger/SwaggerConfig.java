@@ -1,6 +1,3 @@
-/**
- * 
- */
 package com.fitzhi.swagger;
 
 import java.util.Arrays;
@@ -11,6 +8,7 @@ import java.util.Set;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
+import springfox.documentation.builders.RequestHandlerSelectors;
 import springfox.documentation.service.ApiInfo;
 import springfox.documentation.service.Contact;
 import springfox.documentation.spi.DocumentationType;
@@ -21,7 +19,7 @@ import springfox.documentation.swagger2.annotations.EnableSwagger2;
  * <p>
  * Springfox-swagger configuration.
  * </p>
- * @see http://localhost:8080/swagger-ui.html
+ * @see http://localhost:8080/swagger-ui/index.html
  * 
  * @author Fr&eacute;d&eacute;ric VIDAL
  */
@@ -41,7 +39,12 @@ public class SwaggerConfig {
 
 	@Bean
 	public Docket api() {
-		return new Docket(DocumentationType.SWAGGER_2).apiInfo(DEFAULT_API_INFO).produces(DEFAULT_PRODUCES_AND_CONSUMES)
+		return new Docket(DocumentationType.SWAGGER_2)
+				.select()
+				.apis(RequestHandlerSelectors.basePackage("com.fitzhi.controller"))
+				.build()
+				.apiInfo(DEFAULT_API_INFO)
+				.produces(DEFAULT_PRODUCES_AND_CONSUMES)
 				.consumes(DEFAULT_PRODUCES_AND_CONSUMES);
 	}
 }

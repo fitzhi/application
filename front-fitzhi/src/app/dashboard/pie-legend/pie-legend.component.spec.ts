@@ -5,7 +5,7 @@ import { PieDashboardService } from '../service/pie-dashboard.service';
 import { AnalysisTypeSlice } from '../analysis-type-slice';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { ReferentialService } from 'src/app/service/referential.service';
-import { ProjectService } from 'src/app/service/project.service';
+import { ProjectService } from 'src/app/service/project/project.service';
 import { CinematicService } from 'src/app/service/cinematic.service';
 import { MatDialogModule } from '@angular/material/dialog';
 import { LevelStaffRisk } from '../level-staff-risk';

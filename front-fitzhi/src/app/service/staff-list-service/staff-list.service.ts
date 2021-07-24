@@ -1,12 +1,11 @@
-import { Constants } from '../../constants';
-import { Collaborator } from '../../data/collaborator';
-import { StaffService } from '../../tabs-staff/service/staff.service';
 import { Injectable } from '@angular/core';
-
-import { Observable, of, Subject, BehaviorSubject } from 'rxjs';
-import { tap, take, delay } from 'rxjs/operators';
+import { BehaviorSubject, Observable, of } from 'rxjs';
+import { take, tap } from 'rxjs/operators';
+import { Collaborator } from '../../data/collaborator';
 import { Commit } from '../../data/commit';
 import { traceOn } from '../../global';
+import { StaffService } from '../../tabs-staff/service/staff.service';
+
 
 @Injectable({
 	providedIn: 'root'
@@ -35,7 +34,7 @@ export class StaffListService {
 	 * Load the staff members and store them in the array allStaff.
 	 */
 	loadStaff() {
-		this.staffService.getAll()
+		this.staffService.getAll$()
 			.pipe(
 				take(1),
 				tap(staff => {
@@ -69,7 +68,7 @@ export class StaffListService {
 			if (traceOn()) {
 				console.log('Direct access for : ' + id);
 			}
-			return this.staffService.get(id).pipe(tap(
+			return this.staffService.get$(id).pipe(tap(
 				(collab: Collaborator) => {
 					if (traceOn()) {
 						console.log('Direct access for : ' + id);

@@ -26,16 +26,16 @@ describe('NodeDetailComponent', () => {
 	@Component({
 		selector: 'app-host-component',
 		template: `<div style="width: 400px; height: 300px">
-						<app-node-detail 
-							[filenames]="filenames" 
-							[contributors]="contributors" 
+						<app-node-detail
+							[filenames]="filenames"
+							[contributors]="contributors"
 							[location]="location$">
 						</app-node-detail>
 					</div>`
 	})
 	class TestHostComponent {
-		public filenames = new MatTableDataSource<Filename>()
-		public contributors = new MatTableDataSource<Contributor>()
+		public filenames = new MatTableDataSource<Filename>();
+		public contributors = new MatTableDataSource<Contributor>();
 		public location$ = new BehaviorSubject<string[]>([]);
 
 		constructor() {
@@ -57,9 +57,9 @@ describe('NodeDetailComponent', () => {
 			e1.lastCommit = new Date();
 			e1.active = true;
 			e1.external = true;
-			
+
 			this.contributors.data.push(...[c1, c2, e1]);
-			this.location$.next(["filename"]);
+			this.location$.next(['filename']);
 		}
 
 	}

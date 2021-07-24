@@ -15,12 +15,3 @@ export function traceOn(): boolean {
 	return environment.debug;
 }
 
-export const HttpCodes = {
-	success : 200,
-	notFound : 404,
-	created: 201,
-	noContent: 204,
-	methodNotAllowed: 405
-};
-
-

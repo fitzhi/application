@@ -57,12 +57,12 @@ public class BatchGitCrawler implements BatchRepositoryCrawler {
 			if (project.isActive() && (project.getConnectionSettings() > 0)) {
 				// We invoke RepoScanner.generateAsync from inside this method 
 				if (log.isInfoEnabled()) {
-					log.info( String.format("Analyzing project %s.",project.getName()));
+					log.info( String.format("Analyzing project %s.", project.getName()));
 				}
 				crawler.generateAsync(project, new SettingsGeneration(project.getId()));
 			} else {
 				if (log.isInfoEnabled()) {
-					log.info( String.format("The project %s is skipped.",project.getName()));
+					log.info( String.format("The project %s is skipped.", project.getName()));
 				}
 			}
 		}

@@ -1,14 +1,15 @@
 package com.fitzhi.bean.impl;
 
-import static com.fitzhi.Error.CODE_IO_ERROR;
-import static com.fitzhi.Error.MESSAGE_IO_ERROR;
-import static com.fitzhi.Global.INTERNAL_FILE_SEPARATORCHAR;
-import static com.fitzhi.Error.CODE_FILE_DOES_NOT_EXIST;
-import static com.fitzhi.Error.MESSAGE_FILE_DOES_NOT_EXIST;
 import static com.fitzhi.Error.CODE_BRANCH_IS_MISSING_IN_PROJECT;
-import static com.fitzhi.Error.MESSAGE_BRANCH_IS_MISSING_IN_PROJECT;
 import static com.fitzhi.Error.CODE_CANNOT_DELETE_FILE;
+import static com.fitzhi.Error.CODE_FILE_DOES_NOT_EXIST;
+import static com.fitzhi.Error.CODE_IO_ERROR;
+import static com.fitzhi.Error.MESSAGE_BRANCH_IS_MISSING_IN_PROJECT;
 import static com.fitzhi.Error.MESSAGE_CANNOT_DELETE_FILE;
+import static com.fitzhi.Error.MESSAGE_FILE_DOES_NOT_EXIST;
+import static com.fitzhi.Error.MESSAGE_IO_ERROR;
+import static com.fitzhi.Error.getStackTrace;
+import static com.fitzhi.Global.INTERNAL_FILE_SEPARATORCHAR;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
@@ -39,6 +40,9 @@ import com.fitzhi.Global;
 import com.fitzhi.bean.DataHandler;
 import com.fitzhi.bean.ProjectHandler;
 import com.fitzhi.bean.ShuffleService;
+import com.fitzhi.data.internal.Author;
+import com.fitzhi.data.internal.DetectedExperience;
+import com.fitzhi.data.internal.ProjectDetectedExperiences;
 import com.fitzhi.data.internal.Project;
 import com.fitzhi.data.internal.ProjectBuilding;
 import com.fitzhi.data.internal.ProjectBuilding.YearWeek;
@@ -60,7 +64,6 @@ import com.opencsv.CSVParserBuilder;
 import com.opencsv.CSVReader;
 import com.opencsv.CSVReaderBuilder;
 import com.opencsv.CSVWriter;
-import static com.fitzhi.Error.getStackTrace;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -106,6 +109,11 @@ public class FileDataHandlerImpl implements DataHandler {
 	private static final String SAVING_FILE_S = "Saving file %s";
 
 	/**
+	 * Logging constant
+	 */
+	private static final String LOADING_FILE_S = "Loading file %s";
+
+	/**
 	 * Are we in shuffle-mode? In that scenario, the saving process will be
 	 * unplugged.
 	 */
@@ -132,6 +140,19 @@ public class FileDataHandlerImpl implements DataHandler {
 	 * Initialization of the Google JSON parser.
 	 */
 	private static Gson gson = new GsonBuilder().create();
+
+	private final static String skillsFilename = "skills.json";
+
+	/**
+	 * This internal class is used to deserialize the class {@link ProjectDetectedExperiences
+	 */
+	class ClazzDetectedExperiences {
+		public int idExperienceDetectionTemplate;
+		public int idProject;
+		public Author author;
+		public int count;
+		public int idStaff;
+	}
 
 	@Autowired
 	ProjectHandler projectHandler;
@@ -269,7 +290,7 @@ public class FileDataHandlerImpl implements DataHandler {
 			return;
 		}
 
-		final String filename = "skills.json";
+		final String filename = skillsFilename; 
 
 		if (log.isDebugEnabled()) {
 			log.debug(String.format("Saving %d skills into file %s.", skills.size(), filename));
@@ -311,7 +332,7 @@ public class FileDataHandlerImpl implements DataHandler {
 	}
 
 	/**
-	 * Generate the prohect-layers.json filename for loading and saving the
+	 * Generate the project-layers.json filename for loading and saving the
 	 * {@link ProjectLayer Project layers} list.
 	 * 
 	 * @param project the given project
@@ -319,6 +340,17 @@ public class FileDataHandlerImpl implements DataHandler {
 	 */
 	private String generateProjectLayersJsonFilename(Project project) {
 		return savedChanges + INTERNAL_FILE_SEPARATORCHAR + project.getId() + "-project-layers.json";
+	}
+
+	/**
+	 * Generate the project-detected-experiences.json filename for loading and saving the
+	 * {@link DetectedExperience detected experiences} list.
+	 * 
+	 * @param project the given project
+	 * @return the filename to be used.
+	 */
+	private String generateProjectDetectedExperiencesJsonFilename(Project project) {
+		return savedChanges + INTERNAL_FILE_SEPARATORCHAR + project.getId() + "-project-detected-experiences.json";
 	}
 
 	@Override
@@ -365,7 +397,7 @@ public class FileDataHandlerImpl implements DataHandler {
 
 		File file = rootLocation.resolve(filename).toFile();
 		if (log.isDebugEnabled()) {
-			log.debug(String.format("Loading file %s", file.getAbsolutePath()));
+			log.debug(String.format(LOADING_FILE_S, file.getAbsolutePath()));
 		}
 
 		if (!file.exists()) {
@@ -403,6 +435,65 @@ public class FileDataHandlerImpl implements DataHandler {
 
 		return result;
 	}
+
+	@Override
+	public void saveDetectedExperiences (Project project, ProjectDetectedExperiences experiences) throws ApplicationException {
+
+		final String filename = generateProjectDetectedExperiencesJsonFilename(project);
+
+		if (log.isDebugEnabled()) {
+			log.debug(String.format(SAVING_FILE_S, rootLocation.resolve(filename)));
+		}
+
+		try (FileWriter fw = new FileWriter(rootLocation.resolve(filename).toFile())) {
+			fw.write(gson.toJson(experiences.content()));
+		} catch (final Exception e) {
+			throw new ApplicationException(CODE_IO_ERROR, MessageFormat.format(MESSAGE_IO_ERROR, filename), e);
+		}
+		
+	}
+
+	@Override
+	public ProjectDetectedExperiences loadDetectedExperiences (Project project) throws ApplicationException {
+
+		final String filename = generateProjectDetectedExperiencesJsonFilename(project);
+
+		if (log.isDebugEnabled()) {
+			log.debug(String.format(LOADING_FILE_S, rootLocation.resolve(filename)));
+		}
+
+		File file = rootLocation.resolve(filename).toFile();
+		if (log.isDebugEnabled()) {
+			log.debug(String.format(LOADING_FILE_S, file.getAbsolutePath()));
+		}
+
+		if (!file.exists()) {
+			if (log.isDebugEnabled()) {
+				log.debug(String.format("But, the file %s does not exist", file.getAbsolutePath()));
+			}
+			return null;
+		}
+
+		try (FileReader fr = new FileReader(rootLocation.resolve(filename).toFile())) {
+
+			ProjectDetectedExperiences result = new ProjectDetectedExperiences();
+			Type typeListDetectedExperience = new TypeToken<List<ClazzDetectedExperiences>>() {
+			}.getType();
+			List<ClazzDetectedExperiences> list = gson.fromJson(fr, typeListDetectedExperience);
+			list.stream().forEach(entry -> result.add(
+				DetectedExperience.of(
+					entry.idExperienceDetectionTemplate, 
+					entry.idProject, 
+					entry.author, 
+					entry.count)
+			));
+			return result;
+		} catch (final Exception e) {
+			throw new ApplicationException(CODE_IO_ERROR, MessageFormat.format(MESSAGE_IO_ERROR, filename), e);
+		}
+		
+	}
+	
 
 	/**
 	 * Extract the directory path from the file path.
@@ -641,7 +732,7 @@ public class FileDataHandlerImpl implements DataHandler {
 		final String filename = generateProjectLayersJsonFilename(project);
 
 		if (log.isDebugEnabled()) {
-			log.debug(String.format("Loading file %s", rootLocation.resolve(filename)));
+			log.debug(String.format(LOADING_FILE_S, rootLocation.resolve(filename)));
 		}
 
 		try (FileReader fr = new FileReader(rootLocation.resolve(filename).toFile())) {
@@ -699,7 +790,7 @@ public class FileDataHandlerImpl implements DataHandler {
 		final String filename = generateProjectBuildingJsonFilename(project);
 
 		if (log.isDebugEnabled()) {
-			log.debug(String.format("Loading file %s", rootLocation.resolve(filename)));
+			log.debug(String.format(LOADING_FILE_S, rootLocation.resolve(filename)));
 		}
 
 		try (FileReader fr = new FileReader(rootLocation.resolve(filename).toFile())) {

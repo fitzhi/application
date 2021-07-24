@@ -5,11 +5,15 @@ package com.fitzhi.data.internal;
 
 import java.util.List;
 
+import lombok.Data;
+
 
 /**
+ * This object is the container of the project-staff risks
+ * 
  * @author Fr&eacute;d&eacute;ric VIDAL
  */
-public class RiskDashboard {
+public @Data class RiskDashboard {
 
 	/**
 	 * Global level of risk evaluated of the whole project.
@@ -37,18 +41,4 @@ public class RiskDashboard {
 		this.undefinedContributors = contributors;
 	}
 
-	/**
-	 * @return the projectRiskLevel
-	 */
-	public int getProjectRiskLevel() {
-		return projectRiskLevel;
-	}
-
-	/**
-	 * @param projectRiskLevel the projectRiskLevel to set
-	 */
-	public void setProjectRiskLevel(int projectRiskLevel) {
-		this.projectRiskLevel = projectRiskLevel;
-	}
-	
 }

@@ -17,7 +17,9 @@ import com.fitzhi.bean.StaffHandler;
 import lombok.Data;
 
 /**
+ * <p>
  * History of operations of a source element.
+ * </p>
  * @author Fr&eacute;d&eacute;ric VIDAL
  */
 @Data
@@ -82,11 +84,7 @@ public class CommitHistory {
 	 */
 	public LocalDate getDateCommit(final int idStaff) {
 		Optional<Operation> opt = operations.stream().filter(ope -> ope.getIdStaff() == idStaff).findFirst();
-		if (opt.isPresent()) {
-			return opt.get().getDateCommit();
-		} else {
-			return null;
-		}
+		return (opt.isPresent()) ? opt.get().getDateCommit() : null;
 	}
 	
 	/**
@@ -94,12 +92,11 @@ public class CommitHistory {
 	 * This date is evaluated by parsing the list of operations on this element.
 	 * @return the date of the latest commit
 	 */
-	//TODO Filter this date on the active staff members.
 	public LocalDate evaluateDateLastestCommit() {
 		return operations.stream()
-				.map(Operation::getDateCommit)
-				.max( Comparator.comparing( LocalDate::toEpochDay ))
-				.orElse(null);
+			.map(Operation::getDateCommit)
+			.max( Comparator.comparing( LocalDate::toEpochDay ))
+			.orElse(null);
 	}
 
 	/**
@@ -108,10 +105,10 @@ public class CommitHistory {
 	 */
 	public int[] committers() {
 		return operations.stream()
-				.map(operation->operation.getIdStaff())
-				.distinct()
-				.mapToInt(Number::intValue)
-			    .toArray();
+			.map(operation->operation.getIdStaff())
+			.distinct()
+			.mapToInt(Number::intValue)
+			.toArray();
 	}
 
 	/**
@@ -129,11 +126,11 @@ public class CommitHistory {
 	 */
 	public long countCommitsByActiveDevelopers(final StaffHandler staffHandler) {
 		return operations
-				.stream()
-				.filter(ope -> ope.getIdStaff() != UNKNOWN)
-				.mapToInt(ope->ope.getIdStaff())
-				.filter (staffHandler::isActive)
-				.count();
+			.stream()
+			.filter(ope -> ope.getIdStaff() != UNKNOWN)
+			.mapToInt(ope->ope.getIdStaff())
+			.filter (staffHandler::isActive)
+			.count();
 	}
 	
 	/**
@@ -170,10 +167,10 @@ public class CommitHistory {
 	 */
 	public int ultimateContributor() {
 		final Optional<Operation> lastOpe = operations.stream()
-		.sorted((ope1, ope2) -> ope2.getDateCommit().compareTo(ope1.getDateCommit()))
-		.findFirst();
-
+			.sorted((ope1, ope2) -> ope2.getDateCommit().compareTo(ope1.getDateCommit()))
+			.findFirst();
 		if (!lastOpe.isPresent()) {
+			// AWTF : a GIT repository without contributor.
 			throw new ApplicationRuntimeException("SEVERE INTERNAL ERROR : Should not pass here!");
 		}
 		return lastOpe.get().getIdStaff();

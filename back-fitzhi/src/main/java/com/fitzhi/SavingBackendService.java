@@ -1,16 +1,14 @@
-/**
- * 
- */
 package com.fitzhi;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.scheduling.annotation.Scheduled;
-
 import com.fitzhi.bean.DataHandler;
+import com.fitzhi.bean.ProjectAuditHandler;
 import com.fitzhi.bean.ProjectHandler;
 import com.fitzhi.bean.SkillHandler;
 import com.fitzhi.bean.StaffHandler;
 import com.fitzhi.exception.ApplicationException;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.scheduling.annotation.Scheduled;
 
 import lombok.extern.slf4j.Slf4j;
 
@@ -26,6 +24,12 @@ public class SavingBackendService {
 	 */
 	@Autowired
 	ProjectHandler projectHandler;
+	
+	/*
+	 * Project audit handler 
+	 */
+	@Autowired
+	ProjectAuditHandler projectAuditHandler;
 	
 	/*
 	 * Staff handler 
@@ -49,15 +53,19 @@ public class SavingBackendService {
     public void work() {
 		
 		// We do not launch asynchronous tasks if the class has not been fully filled by the Spring container.
-		if (projectHandler.getLocker() == null) {
+		if ((projectHandler.getLocker() == null) || (staffHandler.getLocker() == null) || (skillHandler.getLocker() == null)) {
 			if (log.isDebugEnabled()) {
-				log.debug("In development mode, to avoid a useless 'NullPointerException' because ProjectHandlerImpl might not been have been completly created");
+				log.debug(
+					"In development mode, to avoid a useless 'NullPointerException', " +
+					"because either ProjectHandlerImpl, or StaffHandlerImpl, or SkillHandlerImpl " +
+					"might not been have been completly created");
 			}
 			return;
 		}
+
 		synchronized (projectHandler.getLocker()) {
 			try {
-				if (projectHandler.isDataUpdated()) {
+				if (projectHandler.isDataUpdated() | projectAuditHandler.isDataUpdated() ) {
 					dataSaver.saveProjects(projectHandler.getProjects());
 					projectHandler.dataAreSaved();
 				}

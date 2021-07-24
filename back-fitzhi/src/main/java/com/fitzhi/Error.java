@@ -36,6 +36,7 @@ public class Error {
 	
 	public static final int CODE_MULTIPLE_TASK = -1008;
 	public static final String MESSAGE_MULTIPLE_TASK = "This asynchronous operation is already launched.";
+	public static final String MESSAGE_MULTIPLE_TASK_WITH_PARAM = "A dashboard generation has already been launched for {0}";
 
 	public static final int CODE_LOGIN_ALREADY_EXIST = -1009;
 	public static final String MESSAGE_LOGIN_ALREADY_EXIST = "Login must be unique. And the login {0} already exists for {1} {2}.";
@@ -113,6 +114,10 @@ public class Error {
 
 	public static final int CODE_GIT_ERROR = -1034;
 	public static final String MESSAGE_GIT_ERROR = "GIT error for project {0} {1}";
+
+	public static final int CODE_DASHBOARD_START = -1034;
+	public static final String MESSAGE_DASHBOARD_START = "The generation of the dashboard has been launched. Operation might last a while...";
+
 
 	private Error() {
 	}

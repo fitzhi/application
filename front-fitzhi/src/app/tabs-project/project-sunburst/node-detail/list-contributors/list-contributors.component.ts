@@ -56,9 +56,9 @@ export class ListContributorsComponent extends BaseComponent implements OnInit, 
 
 	/**
 	 * This method is invoked if the user change the page size.
-	 * @param $pageEvent event 
+	 * @param $pageEvent event
 	 */
-	 public page($pageEvent: PageEvent) {
+	public page($pageEvent: PageEvent) {
 		this.pageSize.saveSetting($pageEvent.pageSize);
 	}
 

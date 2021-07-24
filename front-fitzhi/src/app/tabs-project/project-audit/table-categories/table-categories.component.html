@@ -8,7 +8,8 @@
         <td mat-cell class="td-select {{class_select_deselect(row.select)}}"
             *matCellDef="let row; let i = index;">
             <mat-checkbox id="select-{{i}}" 
-                [(ngModel)]="row.select" (change)="updateTopic(row)">
+                [(ngModel)]="row.select" 
+                (change)="projectAuditService.updateTopic(row)">
             </mat-checkbox>
         </td>
     </ng-container>

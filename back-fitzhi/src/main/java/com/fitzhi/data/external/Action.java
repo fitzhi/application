@@ -10,17 +10,17 @@ public enum Action {
 	  U ("Updating existing ghost"),
 	  A ("adding a new ghost"),
 	  D ("Delete an existing gost");
-	   
+
 	  private String name = "";
 
 	  /**
 	   * @param name
 	   */
 	  Action(String name){
-	    this.name = name;
+		this.name = name;
 	  }
-	   
+
 	  public String toString(){
-	    return name;
+		return name;
 	  }
 }

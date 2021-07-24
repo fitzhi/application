@@ -38,7 +38,7 @@ describe('ToolbarComponent', () => {
 		component = fixture.componentInstance;
 
 		const cinematicService = TestBed.inject(CinematicService);
-		cinematicService.currentActiveForm$.next (new Form(Constants.TABS_STAFF_LIST, 'Staff list'));
+		cinematicService.currentActiveFormSubject$.next (new Form(Constants.TABS_STAFF_LIST, 'Staff list'));
 
 		fixture.detectChanges();
 	});

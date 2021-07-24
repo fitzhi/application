@@ -1,5 +1,5 @@
 import { Component, OnInit, Input, AfterViewInit, ViewEncapsulation } from '@angular/core';
-import { ProjectService } from 'src/app/service/project.service';
+import { ProjectService } from 'src/app/service/project/project.service';
 
 @Component({
 	selector: 'app-quotation-badge',

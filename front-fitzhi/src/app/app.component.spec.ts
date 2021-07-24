@@ -39,7 +39,7 @@ describe('AppComponent', () => {
 		authService = TestBed.inject(AuthService);
 		installService = TestBed.inject(InstallService);
 	}));
-	
+
 	it('The App component should be created without error', async(() => {
 		const fixture = TestBed.createComponent(AppComponent);
 		const app = fixture.debugElement.componentInstance;

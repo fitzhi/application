@@ -20,7 +20,7 @@
         <em [ngClass]="classFile()" style="font-size: 26px"></em>
     </button>
 
-    <input type="text" id="comment-{{id}}" class="fileLabel" 
+    <input type="text" id="comment-{{idTopic}}-{{id}}" class="fileLabel" 
         matInput placeholder="Type file label" 
         [(ngModel)]="label" (blur)="notifyLabelChange(id)"/>
 

@@ -5,7 +5,7 @@ import { HttpClientTestingModule, HttpTestingController } from '@angular/common/
 import { BehaviorSubject, of } from 'rxjs';
 import { CinematicService } from 'src/app/service/cinematic.service';
 import { Project } from 'src/app/data/project';
-import { ProjectService } from 'src/app/service/project.service';
+import { ProjectService } from 'src/app/service/project/project.service';
 import { ProjectFormComponent } from './project-form.component';
 import { TechxhiMedalComponent } from './techxhi-medal/techxhi-medal.component';
 import { MatButtonToggleModule } from '@angular/material/button-toggle';
@@ -18,11 +18,13 @@ import { Component } from '@angular/core';
 import { BackendSetupService } from 'src/app/service/backend-setup/backend-setup.service';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { BranchComponent } from './branch/branch.component';
+import { ListProjectsService } from '../list-project/list-projects-service/list-projects.service';
 
 describe('ProjectFormComponent', () => {
 	let component: TestHostComponent;
 	let fixture: ComponentFixture<TestHostComponent>;
 	let projectService: ProjectService;
+	let listProjectsService: ListProjectsService;
 	let backendSetupService: BackendSetupService;
 	let httpTestingController: HttpTestingController;
 
@@ -41,7 +43,7 @@ describe('ProjectFormComponent', () => {
 		TestBed.configureTestingModule({
 			declarations: [ ProjectFormComponent, TechxhiMedalComponent, QuotationBadgeComponent, AuditGraphicBadgeComponent,
 				TestHostComponent, BranchComponent],
-			providers: [ReferentialService, CinematicService, ProjectService],
+			providers: [ReferentialService, CinematicService, ProjectService, ListProjectsService],
 			imports: [
 					MatButtonToggleModule, MatCheckboxModule, HttpClientTestingModule, FormsModule, ReactiveFormsModule,
 					MatDialogModule, RouterTestingModule
@@ -56,6 +58,8 @@ describe('ProjectFormComponent', () => {
 		backendSetupService.saveUrl('URL_OF_SERVER');
 
 		httpTestingController = TestBed.inject(HttpTestingController);
+
+		listProjectsService = TestBed.inject(ListProjectsService);
 
 		fixture = TestBed.createComponent(TestHostComponent);
 		component = fixture.componentInstance;
@@ -76,16 +80,16 @@ describe('ProjectFormComponent', () => {
 			}
 		]);
 
-
 		fixture.detectChanges();
 	});
 
-	it('Should be created without error', () => {
+	it('Should be created without error.', () => {
 		expect(component).toBeTruthy();
 	});
 
-	it('Creation of a new project', () => {
-		const spy = spyOn(projectService, 'createNewProject').and.callThrough();
+	it('Clicking the button "buttonOk" execute a CREATE rest API call.', () => {
+
+		const spy = spyOn(projectService, 'createNewProject$').and.callThrough();
 
 		// We force to a new project.
 		projectService.project.id = -1;
@@ -95,24 +99,42 @@ describe('ProjectFormComponent', () => {
 		button.click();
 
 		const creationUrl = httpTestingController.expectOne('URL_OF_SERVER/api/project');
+		expect(creationUrl.request.method).toEqual('POST');
 		creationUrl.flush(null);
 
 		fixture.detectChanges();
 		expect(component).toBeTruthy();
+
 	});
 
-	it('Update of an existing project', () => {
-		const spy = spyOn(projectService, 'updateCurrentProject').and.callThrough();
+	it('Should be created without error.', () => {
+		expect(component).toBeTruthy();
+	});
+
+	it('Clicking the button "buttonOk" execute an UPDATE rest API call.', () => {
+
+		const spyUpdate = spyOn(projectService, 'updateCurrentProject$').and.callThrough();
 
 		fixture.detectChanges();
 		const button = fixture.debugElement.nativeElement.querySelector('#buttonOk');
 		button.click();
 
 		const creationUrl = httpTestingController.expectOne('URL_OF_SERVER/api/project/1789');
+		expect(creationUrl.request.method).toEqual('PUT');
 		creationUrl.flush(null);
 
+	});
+
+	it('Updating the project invokes a reload of the filtered projects list.', () => {
+
+		const spyUpdate = spyOn(projectService, 'updateCurrentProject$').and.returnValue(of(true));
+		const spyReload = spyOn(listProjectsService, 'reload').and.returnValue();
+
 		fixture.detectChanges();
-		expect(component).toBeTruthy();
+		const button = fixture.debugElement.nativeElement.querySelector('#buttonOk');
+		button.click();
+
+		expect(spyReload).toHaveBeenCalled();
 	});
 
 	afterEach(() => {

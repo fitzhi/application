@@ -1,42 +1,34 @@
-import { async, ComponentFixture, discardPeriodicTasks, fakeAsync, flush, flushMicrotasks, TestBed, tick } from '@angular/core/testing';
-
+import { DatePipe } from '@angular/common';
+import { HttpClientTestingModule } from '@angular/common/http/testing';
+import { async, ComponentFixture, fakeAsync, TestBed, tick } from '@angular/core/testing';
+import { MatCheckboxModule } from '@angular/material/checkbox';
+import { MatDialogModule } from '@angular/material/dialog';
+import { MatPaginatorModule } from '@angular/material/paginator';
+import { MatSortModule } from '@angular/material/sort';
+import { MatTableModule } from '@angular/material/table';
+import { By } from '@angular/platform-browser';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { NgxChartsModule } from '@swimlane/ngx-charts';
+import { DynamicPieChartModule } from 'dynamic-pie-chart';
+import { RisingSkylineModule, SkylineComponent } from 'rising-skyline';
+import { CinematicService } from 'src/app/service/cinematic.service';
+import { ReferentialService } from 'src/app/service/referential.service';
+import { TagifyStarsComponent } from '../tabs-staff/staff-experience/tagify-stars/tagify-stars.component';
 import { FitzhiDashboardComponent } from './fitzhi-dashboard.component';
 import { PieChartComponent } from './pie-chart/pie-chart.component';
 import { PieProjectsComponent } from './pie-projects/pie-projects.component';
-import { MatTableModule } from '@angular/material/table';
-import { MatSortModule } from '@angular/material/sort';
-import { MatPaginatorModule } from '@angular/material/paginator';
-import { HttpClientTestingModule } from '@angular/common/http/testing';
-import { ReferentialService } from 'src/app/service/referential.service';
-import { MatDialogModule } from '@angular/material/dialog';
-import { TreemapChartComponent } from './treemap/treemap-chart/treemap-chart.component';
-import { NgxChartsModule } from '@swimlane/ngx-charts';
-import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { TreemapHeaderComponent } from './treemap/treemap-header/treemap-header.component';
-import { MatCheckboxModule } from '@angular/material/checkbox';
-import { TagifyStarsComponent } from '../tabs-staff/staff-experience/tagify-stars/tagify-stars.component';
-import { TreemapComponent } from './treemap/treemap-container/treemap.component';
-import { CinematicService } from 'src/app/service/cinematic.service';
 import { selection } from './selection';
-import { By } from '@angular/platform-browser';
 import { SkylineService } from './skyline/service/skyline.service';
-import { ProjectService } from '../service/project.service';
-import { PieDashboardService } from './service/pie-dashboard.service';
-import { TreemapService } from './treemap/service/treemap.service';
-import { DashboardService } from '../service/dashboard/dashboard.service';
-import { DynamicPieChartModule } from 'dynamic-pie-chart';
-import { DatePipe } from '@angular/common';
 import { SkylineIconComponent } from './skyline/skyline-icon/skyline-icon.component';
-import { SkylineComponent } from 'rising-skyline';
+import { TreemapSkillsChartComponent } from './treemap-skills/treemap-skills-chart/treemap-skills-chart.component';
+import { TreemapSkillsComponent } from './treemap-skills/treemap-skills-container/treemap-skills.component';
+import { TreemapHeaderComponent } from './treemap-skills/treemap-skills-header/treemap-skills-header.component';
+
 
 describe('FitzhiDashboardComponent initialization', () => {
 	let component: FitzhiDashboardComponent;
 	let fixture: ComponentFixture<FitzhiDashboardComponent>;
 	let skylineService: SkylineService;
-	let projectService: ProjectService;
-	let pieDashboardService: PieDashboardService;
-	let dashboardService: DashboardService;
-	let treemapService: TreemapService;
 
 	const distribution =  [
 		{
@@ -55,13 +47,14 @@ describe('FitzhiDashboardComponent initialization', () => {
 
 	beforeEach(async(() => {
 		TestBed.configureTestingModule({
-			declarations: [ FitzhiDashboardComponent, PieChartComponent, PieProjectsComponent, 
-				TagifyStarsComponent, SkylineIconComponent, SkylineComponent, 
-				TreemapChartComponent, TreemapHeaderComponent, TreemapChartComponent, TreemapComponent ],
-			imports: [MatTableModule, MatSortModule, MatPaginatorModule, HttpClientTestingModule, MatDialogModule,
-				NgxChartsModule, BrowserAnimationsModule, MatCheckboxModule, DynamicPieChartModule],
+			declarations: [ FitzhiDashboardComponent, PieChartComponent, PieProjectsComponent,
+				TagifyStarsComponent, SkylineIconComponent, SkylineComponent,
+				TreemapSkillsChartComponent, TreemapHeaderComponent, TreemapSkillsChartComponent,
+				TreemapSkillsComponent, SkylineComponent],
+			imports: [MatTableModule, MatSortModule, MatPaginatorModule, HttpClientTestingModule,
+				MatDialogModule, NgxChartsModule, BrowserAnimationsModule, MatCheckboxModule,
+				DynamicPieChartModule, RisingSkylineModule],
 			providers: [ReferentialService, CinematicService, SkylineService, DatePipe]
-
 		})
 		.compileComponents();
 	}));
@@ -71,10 +64,6 @@ describe('FitzhiDashboardComponent initialization', () => {
 		component = fixture.componentInstance;
 		skylineService = TestBed.inject(SkylineService);
 		skylineService.skylineLoaded$.next(true);
-		projectService = TestBed.inject(ProjectService);
-		pieDashboardService = TestBed.inject(PieDashboardService);
-		dashboardService = TestBed.inject(DashboardService);
-		treemapService = TestBed.inject(TreemapService);
 		fixture.detectChanges();
 	});
 
@@ -84,7 +73,7 @@ describe('FitzhiDashboardComponent initialization', () => {
 		expect(component).toBeTruthy();
 		expect(document.getElementById('container-skyline')).toBeNull();
 		expect(document.getElementById('host-treemap')).toBeNull();
-		expect(document.getElementById('logo')).toBeDefined();		
+		expect(document.getElementById('logo')).toBeDefined();
 	});
 
 	it('Skyline is set to be the selected pane', () => {
@@ -92,11 +81,11 @@ describe('FitzhiDashboardComponent initialization', () => {
 		fixture.detectChanges();
 		expect(document.getElementById('container-skyline')).toBeDefined();
 		expect(document.getElementById('host-treemap')).toBeNull();
-		expect(document.getElementById('logo')).toBeNull();		
+		expect(document.getElementById('logo')).toBeNull();
 	});
 
 	it('The button for Skyline is clicked', fakeAsync(() => {
-		let skyline = fixture.debugElement.query(By.css('#iconSkyline'));
+		const skyline = fixture.debugElement.query(By.css('#iconSkyline'));
 		skyline.triggerEventHandler('click', null);
 		tick(); // simulates the passage of time until all pending asynchronous activities finish
 		fixture.detectChanges();
@@ -114,27 +103,27 @@ describe('FitzhiDashboardComponent initialization', () => {
 
 	it('The button for Skyline is clicked, BUT THE SKYLINE IS NOT YET LOADED', fakeAsync(() => {
 		skylineService.skylineLoaded$.next(false);
-		let btn = fixture.debugElement.query(By.css('#iconSkyline'));
+		const btn = fixture.debugElement.query(By.css('#iconSkyline'));
 		btn.triggerEventHandler('click', null);
-		tick(); 
+		tick();
 		fixture.detectChanges();
 		expect(document.getElementById('container-skyline')).toBeNull();
 		expect(document.getElementById('host-treemap')).toBeNull();
-		expect(document.getElementById('logo')).toBeDefined();		
+		expect(document.getElementById('logo')).toBeDefined();
 	}));
 
 	it('The method switchTo is invoked when the button for TreeMap is clicked', fakeAsync(() => {
 		const onClickMock = spyOn(component, 'switchTo');
-		fixture.debugElement.query(By.css('#treeMap')).triggerEventHandler('click', null);
+		fixture.debugElement.query(By.css('#treeMap-skills')).triggerEventHandler('click', null);
 		expect(onClickMock).toHaveBeenCalled();
 	}));
 
 	it('The button for Treemap is clicked, BUT ALL PROJECTS ARE NOT loaded', fakeAsync(() => {
-		component.selected = selection.treeMap;
+		component.selected = selection.treeMapSkills;
 		fixture.detectChanges();
 		expect(document.getElementById('container-skyline')).toBeNull();
-		expect(document.getElementById('container-treemap')).toBeNull();
-		expect(document.getElementById('logo')).toBeDefined();		
+		expect(document.getElementById('container-treemap-skills')).toBeNull();
+		expect(document.getElementById('logo')).toBeDefined();
 	}));
 
 /*
@@ -144,13 +133,13 @@ describe('FitzhiDashboardComponent initialization', () => {
 		const spy1 = spyOn(pieDashboardService, 'generatePieSlices').and.returnValue();
 		const spy2 = spyOn(dashboardService, 'processSkillDistribution').and.returnValue(distribution);
 
-		component.selected = selection.treeMap;
+		component.selected = selection.treeMapSkills;
 		fixture.detectChanges();
-		
+
 		setTimeout(() => {
 			expect(document.getElementById('container-skyline')).toBeNull();
-			expect(document.getElementById('container-treemap')).toBeTruthy();
-			expect(document.getElementById('logo')).toBeNull();				
+			expect(document.getElementById('container-treemap-skills')).toBeTruthy();
+			expect(document.getElementById('logo')).toBeNull();
 		}, 0);
 	}));
 */
