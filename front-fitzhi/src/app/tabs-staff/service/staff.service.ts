@@ -300,10 +300,9 @@ export class StaffService {
 		if (traceOn()) {
 			console.log('Setting ' + skills.length + ' experiences to the staff Id  ' + idStaff);
 		}
-		const body = { idStaff: idStaff, skills: skills };
 		return this.httpClient.put<Collaborator>(
 			this.backendSetupService.url() + '/staff/' + idStaff + '/resume',
-			body, httpOptions);
+			skills, httpOptions);
 	}
 
 	/**

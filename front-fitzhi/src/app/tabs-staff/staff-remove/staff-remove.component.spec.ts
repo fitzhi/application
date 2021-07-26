@@ -1,5 +1,5 @@
 import { HttpClientTestingModule, HttpTestingController } from '@angular/common/http/testing';
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { async, ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 import { MatDialogModule } from '@angular/material/dialog';
 import { BackendSetupService } from 'src/app/service/backend-setup/backend-setup.service';
 import { CinematicService } from 'src/app/service/cinematic.service';
@@ -17,7 +17,7 @@ describe('StaffRemoveComponent', () => {
 	let backendSetupService: BackendSetupService;
 	let staffListService: StaffListService;
 
-	beforeEach(async(() => {
+	beforeEach(waitForAsync(() => {
 		TestBed.configureTestingModule({
 			declarations: [ StaffRemoveComponent ],
 			providers: [StaffService, ReferentialService, CinematicService, StaffService, StaffListService],
