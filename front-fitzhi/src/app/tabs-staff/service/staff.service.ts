@@ -302,7 +302,7 @@ export class StaffService {
 		}
 		const body = { idStaff: idStaff, skills: skills };
 		return this.httpClient.put<Collaborator>(
-			this.backendSetupService.url() + '/staff' + idStaff + '/resume',
+			this.backendSetupService.url() + '/staff/' + idStaff + '/resume',
 			body, httpOptions);
 	}
 
