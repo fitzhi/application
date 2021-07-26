@@ -1,11 +1,9 @@
-import { OnDestroy, AfterViewInit } from '@angular/core';
+import { AfterViewInit, Directive, OnDestroy } from '@angular/core';
 import { BaseComponent } from 'src/app/base/base.component';
-import { BehaviorSubject } from 'rxjs';
-import { Project } from 'src/app/data/project';
 import { ProjectService } from 'src/app/service/project/project.service';
 import { TopicEvaluation } from '../topic-evaluation';
-import { ConnectUserComponent } from 'src/app/admin/connect-user/connect-user.component';
 
+@Directive()
 export class AuditBaseComponent extends BaseComponent implements OnDestroy, AfterViewInit {
 
 	/**

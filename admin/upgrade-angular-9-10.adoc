@@ -1,0 +1,19 @@
+ng update @angular/core@10 @angular/cli@10  --allow-dirty --force
+
+Migration :
+UPDATE src/app/tabs-project/project-audit/project-audit-badges/audit-base-component/audit-base-component.component.ts (1820 bytes)
+UPDATE src/app/base/base.component.ts (527 bytes)
+
+
+
+ng update @angular/material@10 --allow-dirty --force
+
+Package "@swimlane/ngx-charts" has an incompatible peer dependency to "@angular/cdk" (requires "^9.2.0", would install "10.2.7").
+Package "controlled-rising-skyline" has an incompatible peer dependency to "@angular/material" (requires "^9.2.4", would install "10.2.7")
+
+
+
+
+
+
+
