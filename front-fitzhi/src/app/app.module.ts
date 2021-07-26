@@ -196,13 +196,6 @@ import { TreemapProjectsChartComponent } from './dashboard/treemap-projects/tree
 		TreemapProjectsContainerComponent,
 		TreemapProjectsChartComponent
 	],
-	entryComponents: [
-		StaffUploadCvComponent,
-		AuditUploadAttachmentComponent,
-		MessageBoxComponent,
-		DialogFilterComponent,
-		InLineEditDialogComponent
-	],
 	imports: [
 		BsDropdownModule.forRoot(),
 		TooltipModule.forRoot(),
