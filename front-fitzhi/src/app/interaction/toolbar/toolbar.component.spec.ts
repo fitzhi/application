@@ -1,4 +1,4 @@
-import { async, ComponentFixture, TestBed, TestModuleMetadata } from '@angular/core/testing';
+import { ComponentFixture, TestBed, TestModuleMetadata, waitForAsync } from '@angular/core/testing';
 import { ToolbarComponent } from './toolbar.component';
 import { InitTest } from '../../test/init-test';
 import { RouterTestingModule } from '@angular/router/testing';
@@ -22,7 +22,7 @@ describe('ToolbarComponent', () => {
 		}
 	}
 
-	beforeEach(async(() => {
+	beforeEach(waitForAsync(() => {
 		const testConf: TestModuleMetadata =  {
 			declarations: [ToolbarComponent, TestHostComponent],
 			providers: [CinematicService],

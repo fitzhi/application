@@ -1,4 +1,4 @@
-import { async, ComponentFixture, TestBed, TestModuleMetadata } from '@angular/core/testing';
+import { ComponentFixture, TestBed, TestModuleMetadata, waitForAsync } from '@angular/core/testing';
 
 import { QuotationBadgeComponent } from './quotation-badge.component';
 import { ProjectService } from 'src/app/service/project/project.service';
@@ -12,7 +12,7 @@ describe(' QuotationBadgeComponent', () => {
 	let component: QuotationBadgeComponent;
 	let fixture: ComponentFixture<QuotationBadgeComponent>;
 
-	beforeEach(async(() => {
+	beforeEach(waitForAsync(() => {
 		const testConf: TestModuleMetadata =  {
 			declarations: [QuotationBadgeComponent],
 			providers: [],

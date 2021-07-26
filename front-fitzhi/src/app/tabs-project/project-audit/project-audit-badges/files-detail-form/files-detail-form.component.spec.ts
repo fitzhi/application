@@ -1,4 +1,4 @@
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 
 import { FilesDetailFormComponent } from './files-detail-form.component';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
@@ -33,7 +33,7 @@ describe('FilesDetailFormComponent', () => {
 		constructor() {}
 	}
 
-	beforeEach(async(() => {
+	beforeEach(waitForAsync(() => {
 		TestBed.configureTestingModule({
 			declarations: [ TestHostComponent, FilesDetailFormComponent, AuditAttachmentComponent ],
 			imports: [FormsModule, HttpClientTestingModule, MatDialogModule],

@@ -1,5 +1,5 @@
 import { Component, ViewChild } from '@angular/core';
-import { async, ComponentFixture, TestBed, TestModuleMetadata } from '@angular/core/testing';
+import { ComponentFixture, TestBed, TestModuleMetadata, waitForAsync } from '@angular/core/testing';
 import { BehaviorSubject, of, throwError } from 'rxjs';
 import { Collaborator } from 'src/app/data/collaborator';
 import { DeclaredExperience } from 'src/app/data/declared-experience';
@@ -33,7 +33,7 @@ describe('StaffExperienceComponent', () => {
 	}
 
 
-	beforeEach(async(() => {
+	beforeEach(waitForAsync(() => {
 		const testConf: TestModuleMetadata =  {
 			declarations: [TestHostComponent, StaffExperienceComponent, TagifyStarsComponent],
 			providers: [SkillService, StaffService],

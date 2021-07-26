@@ -1,5 +1,5 @@
 import { HttpClientTestingModule } from '@angular/common/http/testing';
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatDialogModule } from '@angular/material/dialog';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
@@ -38,7 +38,7 @@ describe('TreemapSkillsComponent container', () => {
 		}
 	];
 
-	beforeEach(async(() => {
+	beforeEach(waitForAsync(() => {
 		TestBed.configureTestingModule({
 			declarations: [ TreemapSkillsComponent, TreemapSkillsChartComponent, TreemapHeaderComponent, TagifyStarsComponent ],
 			providers: [ReferentialService, DashboardService, TreemapProjectsService, ProjectService, CinematicService],

@@ -1,4 +1,4 @@
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import { ReferentialService } from 'src/app/service/referential.service';
 import { HttpClientTestingModule, HttpTestingController } from '@angular/common/http/testing';
@@ -43,7 +43,7 @@ describe('ProjectFormComponent', () => {
 		public risk$ = new BehaviorSubject<number>(1);
 	}
 
-	beforeEach(async(() => {
+	beforeEach(waitForAsync(() => {
 		TestBed.configureTestingModule({
 			declarations: [ProjectFormComponent, TechxhiMedalComponent, QuotationBadgeComponent, AuditGraphicBadgeComponent,
 				TestHostComponent, BranchComponent],

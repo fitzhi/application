@@ -1,4 +1,4 @@
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 
 import { ReportDetailFormComponent } from './report-detail-form.component';
 import { MatFormFieldModule } from '@angular/material/form-field';
@@ -32,7 +32,7 @@ describe('ReportDetailFormComponent', () => {
 	class TestHostComponent {
 	}
 
-	beforeEach(async(() => {
+	beforeEach(waitForAsync(() => {
 		TestBed.configureTestingModule({
 			declarations: [ ReportDetailFormComponent, TestHostComponent ],
 			providers: [ReferentialService, CinematicService],

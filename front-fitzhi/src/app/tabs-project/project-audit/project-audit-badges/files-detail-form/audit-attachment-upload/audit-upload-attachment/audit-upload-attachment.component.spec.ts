@@ -1,4 +1,4 @@
-import { async, ComponentFixture, TestBed, TestModuleMetadata } from '@angular/core/testing';
+import { ComponentFixture, TestBed, TestModuleMetadata, waitForAsync } from '@angular/core/testing';
 
 import { AuditUploadAttachmentComponent } from './audit-upload-attachment.component';
 import { CinematicService } from 'src/app/service/cinematic.service';
@@ -23,7 +23,7 @@ describe('AuditUploadAttachmentComponent', () => {
 	let component: AuditUploadAttachmentComponent;
 	let fixture: ComponentFixture<AuditUploadAttachmentComponent>;
 
-	beforeEach(async(() => {
+	beforeEach(waitForAsync(() => {
 		const testConf: TestModuleMetadata =  {
 			declarations: [AuditUploadAttachmentComponent],
 			providers: [

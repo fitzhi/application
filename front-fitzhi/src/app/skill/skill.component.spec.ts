@@ -1,4 +1,4 @@
-import { async, ComponentFixture, TestBed, TestModuleMetadata, tick, fakeAsync } from '@angular/core/testing';
+import { ComponentFixture, TestBed, TestModuleMetadata, tick, fakeAsync, waitForAsync } from '@angular/core/testing';
 
 import { SkillComponent } from './skill.component';
 import { InitTest } from '../test/init-test';
@@ -17,7 +17,7 @@ describe('SkillComponent', () => {
 	let fixture: ComponentFixture<SkillComponent>;
 	let debugElement: DebugElement;
 
-	beforeEach(async(() => {
+	beforeEach(waitForAsync(() => {
 		const testConf: TestModuleMetadata =  {
 			declarations: [SkillComponent],
 			providers: [],

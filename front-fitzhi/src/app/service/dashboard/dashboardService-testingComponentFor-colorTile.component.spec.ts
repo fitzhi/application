@@ -1,4 +1,4 @@
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 import { Component, Input } from '@angular/core';
 import {DashboardService} from './dashboard.service';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
@@ -40,7 +40,7 @@ describe('DashboardService.colorTile testing', () => {
 		public color = 'blue';
 	}
 
-	beforeEach(async(() => {
+	beforeEach(waitForAsync(() => {
 		TestBed.configureTestingModule({
 			declarations: [TestHostComponent],
 			imports: [HttpClientTestingModule, MatDialogModule],

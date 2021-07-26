@@ -1,4 +1,4 @@
-import { TestBed, TestModuleMetadata, async } from '@angular/core/testing';
+import { TestBed, TestModuleMetadata, waitForAsync } from '@angular/core/testing';
 
 import { GitService } from './git.service';
 import { HttpClientModule } from '@angular/common/http';
@@ -23,7 +23,7 @@ describe('GitService', () => {
 		service = TestBed.inject(GitService);
 	});
 
-	it('should connect without error with the repository of Fitzhi.', async(() => {
+	it('should connect without error with the repository of Fitzhi.', waitForAsync(() => {
 		expect(service).toBeTruthy();
 		service.connect$('https://api.github.com/repos/fitzhi/application')
 			.subscribe({
@@ -34,7 +34,7 @@ describe('GitService', () => {
 			});
 	}));
 
-	it('should connect handle a wrong repository url.', async(() => {
+	it('should connect handle a wrong repository url.', waitForAsync(() => {
 		expect(service).toBeTruthy();
 		service.connect$('https://api.github.com/repos/fitzhi/wrong')
 			.subscribe({
@@ -59,7 +59,7 @@ describe('GitService', () => {
 		expect(service.generateUrlApiGithub('htpps://www.github.com/fitzhi/application')).toBe('https://api.github.com/repos/fitzhi/application');
 	});
 
-	it('Testing branches(...) with the Fitzhi GITHUB url.', async(() => {
+	it('Testing branches(...) with the Fitzhi GITHUB url.', waitForAsync(() => {
 		expect(service).toBeTruthy();
 		service.branches$('https://api.github.com/repos/fitzhi/application/branches', 'master')
 			.subscribe({
@@ -77,7 +77,7 @@ describe('GitService', () => {
 			});
 	}));
 
-	it('Testing default behavior of branches(...) with the url is wrong.', async(() => {
+	it('Testing default behavior of branches(...) with the url is wrong.', waitForAsync(() => {
 		expect(service).toBeTruthy();
 		service.branches$('https://api.github.com/repos/fitzhi/application/wrong', 'master')
 			.subscribe({

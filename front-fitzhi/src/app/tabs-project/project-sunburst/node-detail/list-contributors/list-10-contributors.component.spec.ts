@@ -1,4 +1,4 @@
-import { async, ComponentFixture, TestBed, TestModuleMetadata } from '@angular/core/testing';
+import { ComponentFixture, TestBed, TestModuleMetadata, waitForAsync } from '@angular/core/testing';
 import { ListContributorsComponent } from './list-contributors.component';
 import { InitTest } from 'src/app/test/init-test';
 import { Component } from '@angular/core';
@@ -33,7 +33,7 @@ describe('ListContributorsComponent (10 elements)', () => {
 		}
 	}
 
-	beforeEach(async(() => {
+	beforeEach(waitForAsync(() => {
 		const testConf: TestModuleMetadata =  {
 			declarations: [ListContributorsComponent, TestHostComponent],
 			imports: [MatTableModule, MatPaginatorModule, BrowserAnimationsModule]

@@ -1,4 +1,4 @@
-import { async, inject, TestBed, TestModuleMetadata } from '@angular/core/testing';
+import { inject, TestBed, TestModuleMetadata, waitForAsync } from '@angular/core/testing';
 import { Collaborator } from '../../data/collaborator';
 import { InitTest } from '../../test/init-test';
 import { StaffListService } from './staff-list.service';
@@ -6,7 +6,7 @@ import { StaffListService } from './staff-list.service';
 
 describe('ListStaffService', () => {
 
-	beforeEach(async(() => {
+	beforeEach(waitForAsync(() => {
 		const testConf: TestModuleMetadata =  {
 			declarations: [],
 			providers: [],

@@ -1,4 +1,4 @@
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 import { ListSkillComponent } from './list-skill.component';
 import { ReferentialService } from '../../service/referential.service';
 import { CinematicService } from '../../service/cinematic.service';
@@ -20,7 +20,7 @@ describe('ListSkillComponent', () => {
 	let component: ListSkillComponent;
 	let fixture: ComponentFixture<ListSkillComponent>;
 
-	beforeEach(async(() => {
+	beforeEach(waitForAsync(() => {
 		TestBed.configureTestingModule({
 			declarations: [ ListSkillComponent],
 			providers: [ReferentialService, CinematicService],

@@ -1,4 +1,4 @@
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 
 import { DialogLegendSunburstComponent } from './legend-sunburst.component';
 import { FormsModule } from '@angular/forms';
@@ -11,7 +11,7 @@ describe('DialogLegendSunburstComponent', () => {
 	let component: DialogLegendSunburstComponent;
 	let fixture: ComponentFixture<DialogLegendSunburstComponent>;
 
-	beforeEach(async(() => {
+	beforeEach(waitForAsync(() => {
 		TestBed.configureTestingModule({
 			declarations: [DialogLegendSunburstComponent],
 			providers: [ReferentialService, CinematicService],

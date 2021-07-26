@@ -1,4 +1,4 @@
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 
 import { BackendSetupComponent } from './backend-setup.component';
 import { BackendSetupService } from '../../service/backend-setup/backend-setup.service';
@@ -26,7 +26,7 @@ describe('BackendSetupComponent', () => {
 	let debugElement: DebugElement;
 	let fixture: ComponentFixture<BackendSetupComponent>;
 
-	beforeEach(async(() => {
+	beforeEach(waitForAsync(() => {
 		TestBed.configureTestingModule({
 			declarations: [BackendSetupComponent],
 			providers: [ReferentialService, CinematicService],

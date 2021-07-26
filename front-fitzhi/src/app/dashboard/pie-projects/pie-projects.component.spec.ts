@@ -1,4 +1,4 @@
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 
 import { PieProjectsComponent } from './pie-projects.component';
 import { MatTableModule } from '@angular/material/table';
@@ -43,7 +43,7 @@ describe('PieProjectsComponent', () => {
 	}
 
 
-	beforeEach(async(() => {
+	beforeEach(waitForAsync(() => {
 		TestBed.configureTestingModule({
 			declarations: [ TestHostComponent, PieProjectsComponent, ProjectFormComponent ],
 			imports: [MatTableModule, HttpClientTestingModule,

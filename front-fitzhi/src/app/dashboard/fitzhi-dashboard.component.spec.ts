@@ -1,4 +1,4 @@
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 
 import { FitzhiDashboardComponent } from './fitzhi-dashboard.component';
 import { PieChartComponent } from './pie-chart/pie-chart.component';
@@ -23,7 +23,7 @@ describe('FitzhiDashboardComponent', () => {
 	let component: FitzhiDashboardComponent;
 	let fixture: ComponentFixture<FitzhiDashboardComponent>;
 
-	beforeEach(async(() => {
+	beforeEach(waitForAsync(() => {
 		TestBed.configureTestingModule({
 			declarations: [ FitzhiDashboardComponent, PieChartComponent, PieProjectsComponent, TagifyStarsComponent,
 				TreemapSkillsChartComponent, TreemapHeaderComponent, TreemapSkillsChartComponent, TreemapSkillsComponent ],

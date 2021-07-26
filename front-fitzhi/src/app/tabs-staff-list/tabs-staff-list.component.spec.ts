@@ -1,4 +1,4 @@
-import { async, ComponentFixture, TestBed, TestModuleMetadata } from '@angular/core/testing';
+import { ComponentFixture, TestBed, TestModuleMetadata, waitForAsync } from '@angular/core/testing';
 import { TabsStaffListComponent } from './tabs-staff-list.component';
 import { InitTest } from '../test/init-test';
 import { StaffListComponent } from './staff-list/staff-list.component';
@@ -12,7 +12,7 @@ describe('TabsStaffListComponent', () => {
 	let component: TabsStaffListComponent;
 	let fixture: ComponentFixture<TabsStaffListComponent>;
 
-	beforeEach(async(() => {
+	beforeEach(waitForAsync(() => {
 		const testConf: TestModuleMetadata =  {
 			declarations: [TabsStaffListComponent, StaffListComponent],
 			providers: [],

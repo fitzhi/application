@@ -1,4 +1,4 @@
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 
 import { SSEWatcherComponent } from './ssewatcher.component';
 import { ReferentialService } from 'src/app/service/referential.service';
@@ -10,7 +10,7 @@ describe('SSEWatcherComponent', () => {
 	let component: SSEWatcherComponent;
 	let fixture: ComponentFixture<SSEWatcherComponent>;
 
-	beforeEach(async(() => {
+	beforeEach(waitForAsync(() => {
 		TestBed.configureTestingModule({
 			declarations: [ SSEWatcherComponent ],
 			imports: [HttpClientTestingModule, MatDialogModule],

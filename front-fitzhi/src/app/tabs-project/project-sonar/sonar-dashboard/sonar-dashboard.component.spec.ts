@@ -1,6 +1,6 @@
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { Component } from '@angular/core';
-import { async, ComponentFixture, TestBed, TestModuleMetadata } from '@angular/core/testing';
+import { ComponentFixture, TestBed, TestModuleMetadata, waitForAsync } from '@angular/core/testing';
 import { MatDialogModule } from '@angular/material/dialog';
 import { BehaviorSubject, of } from 'rxjs';
 import { SonarEvaluation } from 'src/app/data/sonar-evaluation';
@@ -36,7 +36,7 @@ describe('SonarDashboardComponent', () => {
 		panelSwitchTransmitter$ =  new BehaviorSubject<PanelSwitchEvent>(new PanelSwitchEvent(1, 'Sonar project'));
 	}
 
-	beforeEach(async(() => {
+	beforeEach(waitForAsync(() => {
 		const testConf: TestModuleMetadata =  {
 			declarations: [TestHostComponent, SonarDashboardComponent],
 			providers: [ProjectService, ReferentialService, CinematicService, MessageBoxService],

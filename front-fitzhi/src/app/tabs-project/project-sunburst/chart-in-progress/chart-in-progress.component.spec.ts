@@ -1,6 +1,6 @@
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { Component } from '@angular/core';
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 import { MatCardModule } from '@angular/material/card';
 import { MatDialogModule } from '@angular/material/dialog';
 import { MatProgressBarModule } from '@angular/material/progress-bar';
@@ -37,7 +37,7 @@ describe('ChartInProgressComponent', () => {
 	class TestHostComponent {
 	}
 
-	beforeEach(async(() => {
+	beforeEach(waitForAsync(() => {
 		TestBed.configureTestingModule({
 			declarations: [ ChartInProgressComponent, TestHostComponent, SSEWatcherComponent ],
 			providers: [ReferentialService, ProjectService, CinematicService, MessageBoxService, FileService,
@@ -61,7 +61,7 @@ describe('ChartInProgressComponent', () => {
 		fixture.detectChanges();
 	});
 
-	it('Should create correctly the chart in progress component', async(() => {
+	it('Should create correctly the chart in progress component', waitForAsync(() => {
 		expect(component).toBeTruthy();
 
 		const eventSource = <EventSource>{};

@@ -1,4 +1,4 @@
-import { async, ComponentFixture, TestBed, TestModuleMetadata } from '@angular/core/testing';
+import { ComponentFixture, TestBed, TestModuleMetadata, waitForAsync } from '@angular/core/testing';
 import { ProjectSunburstComponent } from './project-sunburst.component';
 import { InitTest } from 'src/app/test/init-test';
 import { MatSidenavModule } from '@angular/material/sidenav';
@@ -20,7 +20,7 @@ describe('ProjectSunburstComponent', () => {
 	let component: ProjectSunburstComponent;
 	let fixture: ComponentFixture<ProjectSunburstComponent>;
 
-	beforeEach(async(() => {
+	beforeEach(waitForAsync(() => {
 		const testConf: TestModuleMetadata =  {
 			declarations: [ProjectSunburstComponent, NodeDetailComponent,
 				ProjectGhostsComponent, TableDependenciesComponent, DialogLegendSunburstComponent,

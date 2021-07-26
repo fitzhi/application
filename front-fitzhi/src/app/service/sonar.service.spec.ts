@@ -1,4 +1,4 @@
-import { TestBed, async, TestModuleMetadata } from '@angular/core/testing';
+import { TestBed, TestModuleMetadata, waitForAsync } from '@angular/core/testing';
 import { SonarService } from './sonar.service';
 import { Project } from '../data/project';
 import { SonarProject } from '../data/SonarProject';

@@ -1,6 +1,6 @@
 import { HttpHeaders } from '@angular/common/http';
 import { HttpClientTestingModule, HttpTestingController } from '@angular/common/http/testing';
-import { async, TestBed } from '@angular/core/testing';
+import { TestBed, waitForAsync } from '@angular/core/testing';
 import { BackendSetupService } from './backend-setup.service';
 
 
@@ -8,7 +8,7 @@ describe('BackendSetupService', () => {
 	let service: BackendSetupService;
 	let httpMock: HttpTestingController;
 
-	beforeEach(async(() => {
+	beforeEach(waitForAsync(() => {
 		TestBed.configureTestingModule({
 			providers: [BackendSetupService],
 			imports: [HttpClientTestingModule]

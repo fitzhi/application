@@ -1,4 +1,4 @@
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 
 import { ProjectInactivateComponent } from './project-inactivate.component';
 import { ProjectService } from 'src/app/service/project/project.service';
@@ -17,7 +17,7 @@ describe('ProjectInactivateComponent', () => {
 	let httpTestingController: HttpTestingController;
 	let backendSetupService: BackendSetupService;
 
-	beforeEach(async(() => {
+	beforeEach(waitForAsync(() => {
 		TestBed.configureTestingModule({
 			declarations: [ ProjectInactivateComponent ],
 			providers: [ProjectService, ReferentialService, BackendSetupService, CinematicService],

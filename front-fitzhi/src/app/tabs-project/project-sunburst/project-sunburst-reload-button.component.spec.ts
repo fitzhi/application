@@ -1,5 +1,5 @@
 
-import { async, ComponentFixture, TestBed, TestModuleMetadata } from '@angular/core/testing';
+import { ComponentFixture, TestBed, TestModuleMetadata, waitForAsync } from '@angular/core/testing';
 import { ProjectSunburstComponent, PreviewContext } from './project-sunburst.component';
 import { InitTest } from 'src/app/test/init-test';
 import { MatSidenavModule } from '@angular/material/sidenav';
@@ -30,7 +30,7 @@ describe('Testing the Reload button behavior in ProjectSunburstComponent with da
 	let projectService: ProjectService;
 	let cacheService: SunburstCacheService;
 
-	beforeEach(async(() => {
+	beforeEach(waitForAsync(() => {
 		const testConf: TestModuleMetadata =  {
 			declarations: [ProjectSunburstComponent, NodeDetailComponent,
 				ProjectGhostsComponent, TableDependenciesComponent, DialogLegendSunburstComponent,

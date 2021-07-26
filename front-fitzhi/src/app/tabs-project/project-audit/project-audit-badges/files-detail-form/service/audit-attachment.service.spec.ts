@@ -1,5 +1,5 @@
 import { HttpClientTestingModule } from '@angular/common/http/testing';
-import { async, TestBed } from '@angular/core/testing';
+import { TestBed, waitForAsync } from '@angular/core/testing';
 import { MatDialogModule } from '@angular/material/dialog';
 import { doesNotReject } from 'assert';
 import { take } from 'rxjs/operators';
@@ -19,7 +19,7 @@ describe('AuditAttachmentService', () => {
 	let projectService: ProjectService;
 	let auditAttachmentService: AuditAttachmentService;
 
-	beforeEach(async(() => {
+	beforeEach(waitForAsync(() => {
 		TestBed.configureTestingModule({
 			imports: [HttpClientTestingModule, MatDialogModule],
 			providers: [ProjectService, ReferentialService, CinematicService]

@@ -1,6 +1,6 @@
 import { HttpClientModule } from '@angular/common/http';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatDialogModule } from '@angular/material/dialog';
@@ -36,7 +36,7 @@ describe('ProjectAuditComponent', () => {
 	let projectService: ProjectService;
 	let referentialService: ReferentialService;
 
-	beforeEach(async(() => {
+	beforeEach(waitForAsync(() => {
 		TestBed.configureTestingModule({
 			declarations: [ ProjectAuditComponent, ProjectAuditBadgesComponent,
 				TableCategoriesComponent, AuditBadgeComponent, ReportDetailFormComponent,

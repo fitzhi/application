@@ -1,4 +1,4 @@
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 
 import { AuditBadgeComponent } from './audit-badge.component';
 import { MatGridListModule } from '@angular/material/grid-list';
@@ -44,7 +44,7 @@ describe('AuditBadgeComponent', () => {
 		title = 'the Title';
 	}
 
-	beforeEach(async(() => {
+	beforeEach(waitForAsync(() => {
 		TestBed.configureTestingModule({
 			declarations: [AuditBadgeComponent, AuditGraphicBadgeComponent, TestHostComponent],
 			providers: [ReferentialService, CinematicService, ProjectService],

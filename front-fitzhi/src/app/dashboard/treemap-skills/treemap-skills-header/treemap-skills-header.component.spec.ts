@@ -1,4 +1,4 @@
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 
 import { TreemapHeaderComponent } from './treemap-skills-header.component';
 import { MatCheckboxModule } from '@angular/material/checkbox';
@@ -8,7 +8,7 @@ describe('TreemapHeaderComponent', () => {
 	let component: TreemapHeaderComponent;
 	let fixture: ComponentFixture<TreemapHeaderComponent>;
 
-	beforeEach(async(() => {
+	beforeEach(waitForAsync(() => {
 		TestBed.configureTestingModule({
 			declarations: [ TreemapHeaderComponent, TagifyStarsComponent ],
 			imports: [MatCheckboxModule]

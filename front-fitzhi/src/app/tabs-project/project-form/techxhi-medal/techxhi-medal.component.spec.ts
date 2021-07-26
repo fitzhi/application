@@ -1,4 +1,4 @@
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 
 import { TechxhiMedalComponent } from './techxhi-medal.component';
 import { ProjectService } from 'src/app/service/project/project.service';
@@ -37,7 +37,7 @@ describe('TechxhiMedalComponent', () => {
 		@ViewChild(TechxhiMedalComponent) techxhiMedalComponent: TechxhiMedalComponent;
 	}
 
-	beforeEach(async(() => {
+	beforeEach(waitForAsync(() => {
 		TestBed.configureTestingModule({
 			declarations: [TechxhiMedalComponent, QuotationBadgeComponent, AuditGraphicBadgeComponent],
 			providers: [ReferentialService, CinematicService],

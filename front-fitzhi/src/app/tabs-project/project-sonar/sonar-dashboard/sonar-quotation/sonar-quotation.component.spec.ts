@@ -1,4 +1,4 @@
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 
 import { BehaviorSubject, Subject } from 'rxjs';
 import { Project } from 'src/app/data/project';
@@ -19,7 +19,7 @@ describe('SonarQuotationComponent', () => {
 	let fixture: ComponentFixture<SonarQuotationComponent>;
 	let projectService: ProjectService;
 
-	beforeEach(async(() => {
+	beforeEach(waitForAsync(() => {
 		TestBed.configureTestingModule({
 			declarations: [SonarQuotationComponent, QuotationBadgeComponent],
 			providers: [ReferentialService, CinematicService],

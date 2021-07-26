@@ -1,4 +1,4 @@
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 import { RegisterUserComponent } from './register-user.component';
 import { HttpClientTestingModule, HttpTestingController } from '@angular/common/http/testing';
 import { HttpClient, HttpClientModule } from '@angular/common/http';
@@ -30,7 +30,7 @@ describe('RegisterUserComponent', () => {
 
 	let installService: InstallService;
 
-	beforeEach(async(() => {
+	beforeEach(waitForAsync(() => {
 		TestBed.configureTestingModule({
 			declarations: [RegisterUserComponent],
 			providers: [ReferentialService, CinematicService, InstallService],

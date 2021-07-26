@@ -1,4 +1,4 @@
-import { async, ComponentFixture, TestBed, TestModuleMetadata } from '@angular/core/testing';
+import { ComponentFixture, TestBed, TestModuleMetadata, waitForAsync } from '@angular/core/testing';
 
 import { ProjectStaffComponent } from './project-staff.component';
 import { Component, ViewChild } from '@angular/core';
@@ -60,7 +60,7 @@ describe('ProjectStaffComponent', () => {
 		@ViewChild(ProjectStaffComponent) projectStaffComponent: ProjectStaffComponent;
 	}
 
-	beforeEach(async(() => {
+	beforeEach(waitForAsync(() => {
 		const testConf: TestModuleMetadata  =  {
 			declarations: [TestHostComponent, ProjectStaffComponent ],
 			providers: [CinematicService, ProjectService, BackendSetupService, ProjectStaffService],

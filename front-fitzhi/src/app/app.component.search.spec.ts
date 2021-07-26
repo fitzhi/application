@@ -1,6 +1,6 @@
 import { HttpClientModule } from '@angular/common/http';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatDialogModule } from '@angular/material/dialog';
@@ -38,7 +38,7 @@ describe('AppComponent', () => {
 
 	let router: Router;
 
-	beforeEach(async(() => {
+	beforeEach(waitForAsync(() => {
 		TestBed.configureTestingModule({
 			declarations: [AppComponent, ToolbarComponent, MessageComponent],
 			providers: [ReferentialService, CinematicService],
@@ -62,7 +62,7 @@ describe('AppComponent', () => {
 
 	}));
 
-	it('Searching staff members on a \'string\' criteria', async(() => {
+	it('Searching staff members on a \'string\' criteria', waitForAsync(() => {
 		const tabsStaffListService = TestBed.inject(TabsStaffListService);
 		const spyTabsStaffListService = spyOn(tabsStaffListService, 'addTabResult');
 
@@ -76,7 +76,7 @@ describe('AppComponent', () => {
 
 	}));
 
-	it('Searching staff members with an integer considered as an identifier', async(() => {
+	it('Searching staff members with an integer considered as an identifier', waitForAsync(() => {
 		const tabsStaffListService = TestBed.inject(TabsStaffListService);
 		const spyTabsStaffListService = spyOn(tabsStaffListService, 'addTabResult');
 
@@ -90,7 +90,7 @@ describe('AppComponent', () => {
 	}));
 
 	// If the end-user type a number in the search field wich is not an integer, and therefore cannot be a staff identifier
-	it('Searching staff members with an number WHICH IS NOT AN INTEGER', async(() => {
+	it('Searching staff members with an number WHICH IS NOT AN INTEGER', waitForAsync(() => {
 		const tabsStaffListService = TestBed.inject(TabsStaffListService);
 		const spyTabsStaffListService = spyOn(tabsStaffListService, 'addTabResult');
 
@@ -103,7 +103,7 @@ describe('AppComponent', () => {
 		expect(navigateSpy).not.toHaveBeenCalledWith(['/user/17.89']);
 	}));
 
-	it('Searching the projects corresponding to a criteria', async(() => {
+	it('Searching the projects corresponding to a criteria', waitForAsync(() => {
 		const listProjectsService = TestBed.inject(ListProjectsService);
 		const spyReloadProjects = spyOn(listProjectsService, 'search').and.returnValue();
 
@@ -113,7 +113,7 @@ describe('AppComponent', () => {
 		expect(spyReloadProjects).toHaveBeenCalled();
 	}));
 
-	it('Searching the skills corresponding to a criteria', async(() => {
+	it('Searching the skills corresponding to a criteria', waitForAsync(() => {
 		const skillService = TestBed.inject(SkillService);
 		skillService.allSkillsLoaded$ = of(true);
 

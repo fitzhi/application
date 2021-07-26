@@ -1,4 +1,4 @@
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 
 import { PieLegendComponent } from './pie-legend.component';
 import { PieDashboardService } from '../service/pie-dashboard.service';
@@ -15,7 +15,7 @@ describe('PieLegendComponent', () => {
 	let fixture: ComponentFixture<PieLegendComponent>;
 	let pieDashboardService: PieDashboardService;
 
-	beforeEach(async(() => {
+	beforeEach(waitForAsync(() => {
 		TestBed.configureTestingModule({
 			declarations: [ PieLegendComponent ],
 			imports: [HttpClientTestingModule, MatDialogModule],

@@ -1,4 +1,4 @@
-import { async, ComponentFixture, TestBed, TestModuleMetadata } from '@angular/core/testing';
+import { ComponentFixture, TestBed, TestModuleMetadata, waitForAsync } from '@angular/core/testing';
 
 import { TableGhostsComponent } from './table-ghosts.component';
 import { MatTableModule } from '@angular/material/table';
@@ -164,7 +164,7 @@ describe('TableGhostsComponent', () => {
 		}
 	}
 
-	beforeEach(async(() => {
+	beforeEach(waitForAsync(() => {
 		const testConf: TestModuleMetadata =  {
 			declarations: [TestHostComponent, TableGhostsComponent],
 			providers: [StaffService, ProjectService],

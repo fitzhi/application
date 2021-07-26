@@ -1,4 +1,4 @@
-import { async, ComponentFixture, TestBed, TestModuleMetadata } from '@angular/core/testing';
+import { ComponentFixture, TestBed, TestModuleMetadata, waitForAsync } from '@angular/core/testing';
 import { RouterTestingModule } from '@angular/router/testing';
 import { of } from 'rxjs';
 import { Collaborator } from 'src/app/data/collaborator';
@@ -18,7 +18,7 @@ describe('StaffFormComponent', () => {
 	let staffService: StaffService;
 	let messageBoxService: MessageBoxService;
 
-	beforeEach(async(() => {
+	beforeEach(waitForAsync(() => {
 		const testConf: TestModuleMetadata =  {
 			declarations: [StaffFormComponent],
 			providers: [],

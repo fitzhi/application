@@ -1,4 +1,4 @@
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 
 import { AuditAttachmentComponent } from './audit-attachment.component';
 import { Component } from '@angular/core';
@@ -21,7 +21,7 @@ describe('AuditAttachmentComponent', () => {
 	class TestHostComponent {
 	}
 
-	beforeEach(async(() => {
+	beforeEach(waitForAsync(() => {
 		TestBed.configureTestingModule({
 			declarations: [ AuditAttachmentComponent, TestHostComponent ],
 			imports: [FormsModule, MatDialogModule, HttpClientTestingModule, MatDialogModule],

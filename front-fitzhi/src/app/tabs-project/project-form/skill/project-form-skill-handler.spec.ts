@@ -1,5 +1,5 @@
 import { HttpClientTestingModule } from '@angular/common/http/testing';
-import { async, TestBed } from '@angular/core/testing';
+import { TestBed, waitForAsync } from '@angular/core/testing';
 import { MatDialogModule } from '@angular/material/dialog';
 import { of } from 'rxjs';
 import { Project } from 'src/app/data/project';
@@ -18,7 +18,7 @@ describe('ProjectFormSkillHandler', () => {
 	let skillService: SkillService;
 	let messageService: MessageService;
 
-	beforeEach(async(() => {
+	beforeEach(waitForAsync(() => {
 		TestBed.configureTestingModule({
 			declarations: [],
 			providers: [SkillService, MessageService, ProjectService, ReferentialService, CinematicService],

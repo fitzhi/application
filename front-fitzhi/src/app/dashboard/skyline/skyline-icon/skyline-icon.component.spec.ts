@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 import { BehaviorSubject } from 'rxjs';
 import { SkylineIconComponent } from './skyline-icon.component';
 
@@ -8,7 +8,7 @@ describe('SkylineIconComponent', () => {
 	let component: SkylineIconComponent;
 	let fixture: ComponentFixture<SkylineIconComponent>;
 
-	beforeEach(async(() => {
+	beforeEach(waitForAsync(() => {
 		TestBed.configureTestingModule({
 			declarations: [ SkylineIconComponent ]
 		})
@@ -21,7 +21,7 @@ describe('SkylineIconComponent', () => {
 		fixture.detectChanges();
 	});
 
-	it('should create the Skyline icon', async(() => {
+	it('should create the Skyline icon', waitForAsync(() => {
 		expect(component).toBeTruthy();
 	}));
 });

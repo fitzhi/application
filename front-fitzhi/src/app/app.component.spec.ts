@@ -1,4 +1,4 @@
-import { TestBed, async, tick, fakeAsync } from '@angular/core/testing';
+import { TestBed, tick, fakeAsync, waitForAsync } from '@angular/core/testing';
 import { AppComponent } from './app.component';
 import { ToolbarComponent } from './interaction/toolbar/toolbar.component';
 
@@ -26,7 +26,7 @@ describe('AppComponent', () => {
 	let authService: AuthService;
 	let installService: InstallService;
 
-	beforeEach(async(() => {
+	beforeEach(waitForAsync(() => {
 		TestBed.configureTestingModule({
 			declarations: [AppComponent, ToolbarComponent, MessageComponent],
 			providers: [ReferentialService, CinematicService, InstallService, AuthService],
@@ -40,13 +40,13 @@ describe('AppComponent', () => {
 		installService = TestBed.inject(InstallService);
 	}));
 
-	it('The App component should be created without error', async(() => {
+	it('The App component should be created without error', waitForAsync(() => {
 		const fixture = TestBed.createComponent(AppComponent);
 		const app = fixture.debugElement.componentInstance;
 		expect(app).toBeTruthy();
 	}));
 
-	it('The toolbar should NOT exist until user is connected', async(() => {
+	it('The toolbar should NOT exist until user is connected', waitForAsync(() => {
 		const spy = spyOn(authService, 'isConnected').and.returnValue(false);
 		const fixture = TestBed.createComponent(AppComponent);
 		fixture.detectChanges();
@@ -62,7 +62,7 @@ describe('AppComponent', () => {
 		expect(document.getElementById('toolbar')).toBeNull();
 	}));
 
-	it('The toolbar should exist if user is connected AND the installation is complete and successful.', async(() => {
+	it('The toolbar should exist if user is connected AND the installation is complete and successful.', waitForAsync(() => {
 		const spy = spyOn(authService, 'isConnected').and.returnValue(true);
 		installService.installComplete$.next(true);
 		const fixture = TestBed.createComponent(AppComponent);
