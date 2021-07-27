@@ -77,17 +77,18 @@ public class PluggedProjectControllerBranchesTest {
 			.andReturn();
 
 		String[] branches = gson.fromJson(result.getResponse().getContentAsString(), String[].class);
-		Assert.assertEquals("8 active branches are expected", 8, branches.length);
 		Assert.assertTrue("The master branch is expected to be here", Arrays.stream(branches).anyMatch(b -> b.equals("master")));
 		Assert.assertTrue("The release 1-1 is expected to be here", Arrays.stream(branches).anyMatch(b -> b.equals("release-1-1")));
+		Assert.assertTrue("The release 1-2 is expected to be here", Arrays.stream(branches).anyMatch(b -> b.equals("release-1.2")));
 		Assert.assertTrue("The release 1-3 is expected to be here", Arrays.stream(branches).anyMatch(b -> b.equals("release-1.3")));
 		Assert.assertTrue("The release 1-4 is expected to be here", Arrays.stream(branches).anyMatch(b -> b.equals("release-1.4")));
 		Assert.assertTrue("The release 1-5 is expected to be here", Arrays.stream(branches).anyMatch(b -> b.equals("release-1.5")));
+		Assert.assertTrue("The release 1-6 is expected to be here", Arrays.stream(branches).anyMatch(b -> b.equals("release-1.6")));
 	}
 	
 	@After
 	public void after() throws Exception {
-		projectHandler.getProjects().remove(1789);
+		projectHandler.removeProject(1789);
 	}
 	
 }
