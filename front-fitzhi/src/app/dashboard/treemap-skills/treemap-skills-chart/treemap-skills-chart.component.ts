@@ -33,7 +33,7 @@ export class TreemapSkillsChartComponent extends BaseComponent implements OnInit
 
 	gradient = false;
 
-	animations = true;
+	animations = false;
 
 	colorScheme = {
 		domain: []
@@ -100,12 +100,13 @@ export class TreemapSkillsChartComponent extends BaseComponent implements OnInit
 	}
 
 	labelFormatting(tile) {
-		return `${(tile.label)}`;
+		return `${tile.data.name}`;
 	}
 
-	valueFormatting(tile) {
-		return `${(tile.value)}%`;
+	valueFormatting(value) {
+		return `${value}%`;
 	}
+
 	ngOnDestroy() {
 		super.ngOnDestroy();
 	}

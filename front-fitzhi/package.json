@@ -27,7 +27,7 @@
     "@angular/router": "~11.2.14",
     "@fortawesome/fontawesome-free": "^5.13.1",
     "@ng-bootstrap/ng-bootstrap": "^6.2.0",
-    "@swimlane/ngx-charts": "^14.0.0",
+    "@swimlane/ngx-charts": "^18.0.1",
     "@yaireo/tagify": "^2.23.1",
     "angular-popper": "^2.0.1",
     "bootstrap": "^4.5.0",
