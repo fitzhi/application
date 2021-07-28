@@ -13,7 +13,7 @@ import { PieDashboardService } from '../service/pie-dashboard.service';
 	encapsulation: ViewEncapsulation.Emulated,
 	styleUrls: ['./pie-chart.component.css']
 })
-export class PieChartComponent extends BaseDirective implements OnInit, OnDestroy, AfterViewInit {
+export class PieChartComponent extends BaseDirective implements OnDestroy, AfterViewInit {
 
 	/**
 	 * Radius of the Pie.
@@ -66,9 +66,6 @@ export class PieChartComponent extends BaseDirective implements OnInit, OnDestro
 		typeSlices.push(new TypeSlice(2, 'Audit'));
 		typeSlices.push(new TypeSlice(3, 'None'));
 		this.typeSlices$.next(typeSlices);
-	}
-
-	ngOnInit() {
 	}
 
 	ngAfterViewInit() {
