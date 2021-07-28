@@ -1,7 +1,7 @@
 import { Component, OnInit, Input, OnDestroy, ViewChild } from '@angular/core';
 import { Router } from '@angular/router';
 import { TabsStaffListService } from '../service/tabs-staff-list.service';
-import { BaseComponent } from '../../base/base.component';
+import { BaseDirective } from '../../base/base-directive.directive';
 import { MatSort, Sort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
 import { Constants } from '../../constants';
@@ -21,7 +21,7 @@ import { CinematicService } from 'src/app/service/cinematic.service';
 	templateUrl: './staff-list.component.html',
 	styleUrls: ['./staff-list.component.css']
 })
-export class StaffListComponent extends BaseComponent implements OnInit, OnDestroy {
+export class StaffListComponent extends BaseDirective implements OnInit, OnDestroy {
 
 	@Input() criteria: string;
 

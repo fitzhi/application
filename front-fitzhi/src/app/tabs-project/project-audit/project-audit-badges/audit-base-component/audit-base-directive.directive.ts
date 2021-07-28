@@ -1,10 +1,10 @@
 import { AfterViewInit, Directive, OnDestroy } from '@angular/core';
-import { BaseComponent } from 'src/app/base/base.component';
+import { BaseDirective } from 'src/app/base/base-directive.directive';
 import { ProjectService } from 'src/app/service/project/project.service';
 import { TopicEvaluation } from '../topic-evaluation';
 
 @Directive()
-export class AuditBaseComponent extends BaseComponent implements OnDestroy, AfterViewInit {
+export class AuditBaseDirective extends BaseDirective implements OnDestroy, AfterViewInit {
 
 	/**
 	 * Topic identifier.

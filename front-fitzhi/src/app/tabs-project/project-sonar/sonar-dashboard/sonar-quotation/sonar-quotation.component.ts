@@ -7,7 +7,7 @@ import { SonarService } from 'src/app/service/sonar.service';
 import { Project } from 'src/app/data/project';
 import { ProjectService } from 'src/app/service/project/project.service';
 import { BadgeQuotation } from './badge-quotation';
-import { BaseComponent } from 'src/app/base/base.component';
+import { BaseDirective } from 'src/app/base/base-directive.directive';
 import { SonarProject } from 'src/app/data/SonarProject';
 
 @Component({
@@ -15,7 +15,7 @@ import { SonarProject } from 'src/app/data/SonarProject';
 	templateUrl: './sonar-quotation.component.html',
 	styleUrls: ['./sonar-quotation.component.css']
 })
-export class SonarQuotationComponent extends BaseComponent implements OnInit, OnDestroy {
+export class SonarQuotationComponent extends BaseDirective implements OnInit, OnDestroy {
 
 	/**
 	* Observable emitting a PanelSwitchEvent when

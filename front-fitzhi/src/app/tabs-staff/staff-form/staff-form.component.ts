@@ -7,7 +7,7 @@ import { traceOn } from 'src/app/global';
 import { MessageBoxService } from 'src/app/interaction/message-box/service/message-box.service';
 import { StaffListService } from 'src/app/service/staff-list-service/staff-list.service';
 import { TabsStaffListService } from 'src/app/tabs-staff-list/service/tabs-staff-list.service';
-import { BaseComponent } from '../../base/base.component';
+import { BaseDirective } from '../../base/base-directive.directive';
 import { Constants } from '../../constants';
 import { Collaborator } from '../../data/collaborator';
 import { Profile } from '../../data/profile';
@@ -21,7 +21,7 @@ import { StaffService } from '../service/staff.service';
 	templateUrl: './staff-form.component.html',
 	styleUrls: ['./staff-form.component.css']
 })
-export class StaffFormComponent extends BaseComponent implements OnInit, OnDestroy {
+export class StaffFormComponent extends BaseDirective implements OnInit, OnDestroy {
 
 	/**
 	 * Selected TAB.

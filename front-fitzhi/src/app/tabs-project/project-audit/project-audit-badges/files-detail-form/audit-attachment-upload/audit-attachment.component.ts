@@ -1,5 +1,5 @@
 import { Component, OnInit, Input, OnDestroy } from '@angular/core';
-import { BaseComponent } from 'src/app/base/base.component';
+import { BaseDirective } from 'src/app/base/base-directive.directive';
 import { AttachmentFile } from 'src/app/data/AttachmentFile';
 import { MatDialogConfig, MatDialog } from '@angular/material/dialog';
 import { AuditUploadAttachmentComponent } from './audit-upload-attachment/audit-upload-attachment.component';
@@ -27,7 +27,7 @@ export class AuditAttachment  {
 	templateUrl: './audit-attachment.component.html',
 	styleUrls: ['./audit-attachment.component.css']
 })
-export class AuditAttachmentComponent extends BaseComponent implements OnInit, OnDestroy {
+export class AuditAttachmentComponent extends BaseDirective implements OnInit, OnDestroy {
 
 	/**
 	 * The TOPIC identifier (General conception, Build process, documentation...)

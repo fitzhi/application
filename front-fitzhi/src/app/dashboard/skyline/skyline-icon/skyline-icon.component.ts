@@ -1,6 +1,6 @@
 import { Component, EventEmitter, HostBinding, Input, OnDestroy, OnInit, Output } from '@angular/core';
 import { BehaviorSubject } from 'rxjs';
-import { BaseComponent } from 'src/app/base/base.component';
+import { BaseDirective } from 'src/app/base/base-directive.directive';
 import { traceOn } from 'src/app/global';
 
 @Component({
@@ -8,7 +8,7 @@ import { traceOn } from 'src/app/global';
 	templateUrl: './skyline-icon.component.html',
 	styleUrls: ['./skyline-icon.component.css']
 })
-export class SkylineIconComponent extends BaseComponent implements OnInit, OnDestroy {
+export class SkylineIconComponent extends BaseDirective implements OnInit, OnDestroy {
 
 	/**
 	 * Width of the skyline icon

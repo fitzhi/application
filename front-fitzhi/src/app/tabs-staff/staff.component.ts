@@ -1,7 +1,7 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Subject } from 'rxjs';
-import { BaseComponent } from '../base/base.component';
+import { BaseDirective } from '../base/base-directive.directive';
 import { Constants } from '../constants';
 import { Collaborator } from '../data/collaborator';
 import { traceOn } from '../global';
@@ -16,7 +16,7 @@ import { StaffService } from './service/staff.service';
 	templateUrl: './staff.component.html',
 	styleUrls: ['./staff.component.css']
 })
-export class StaffComponent extends BaseComponent implements OnInit, OnDestroy {
+export class StaffComponent extends BaseDirective implements OnInit, OnDestroy {
 
 	/**
 	 * Staff member identifier shared with the child components (staffTabs, StaffForm)

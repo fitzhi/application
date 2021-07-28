@@ -1,7 +1,7 @@
 import { AfterViewInit, Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angular/core';
 import { MatSliderChange } from '@angular/material/slider';
 import { take } from 'rxjs/operators';
-import { BaseComponent } from 'src/app/base/base.component';
+import { BaseDirective } from 'src/app/base/base-directive.directive';
 import { AuditDetail } from 'src/app/data/audit-detail';
 import { traceOn } from 'src/app/global';
 import { CinematicService } from 'src/app/service/cinematic.service';
@@ -16,7 +16,7 @@ import { AuditChosenDetail } from './audit-chosen-detail';
 	templateUrl: './audit-badge.component.html',
 	styleUrls: ['./audit-badge.component.css']
 })
-export class AuditBadgeComponent extends BaseComponent implements OnInit, AfterViewInit, OnDestroy {
+export class AuditBadgeComponent extends BaseDirective implements OnInit, AfterViewInit, OnDestroy {
 
 	/**
 	 * Topic identifier.

@@ -2,7 +2,7 @@ import { AfterViewInit, Component, Input, OnDestroy, OnInit, ViewEncapsulation }
 import { Slice, TypeSlice } from 'dynamic-pie-chart';
 import { BehaviorSubject } from 'rxjs';
 import { tap } from 'rxjs/operators';
-import { BaseComponent } from 'src/app/base/base.component';
+import { BaseDirective } from 'src/app/base/base-directive.directive';
 import { traceOn } from 'src/app/global';
 import { PieDashboardService } from '../service/pie-dashboard.service';
 
@@ -13,7 +13,7 @@ import { PieDashboardService } from '../service/pie-dashboard.service';
 	encapsulation: ViewEncapsulation.Emulated,
 	styleUrls: ['./pie-chart.component.css']
 })
-export class PieChartComponent extends BaseComponent implements OnInit, OnDestroy, AfterViewInit {
+export class PieChartComponent extends BaseDirective implements OnInit, OnDestroy, AfterViewInit {
 
 	/**
 	 * Radius of the Pie.

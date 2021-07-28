@@ -8,7 +8,7 @@ import { MessageService } from '../interaction/message/message.service';
 import { CinematicService } from '../service/cinematic.service';
 import { ListSkillService } from './list-skill-service/list-skill.service';
 import { SkillService } from './service/skill.service';
-import { BaseComponent } from '../base/base.component';
+import { BaseDirective } from '../base/base-directive.directive';
 import { traceOn } from '../global';
 import { DetectionTemplate } from '../data/detection-template';
 import { isNumber } from 'util';
@@ -21,7 +21,7 @@ import { take } from 'rxjs/operators';
 	templateUrl: './skill.component.html',
 	styleUrls: ['./skill.component.css']
 })
-export class SkillComponent extends BaseComponent implements OnInit, OnDestroy {
+export class SkillComponent extends BaseDirective implements OnInit, OnDestroy {
 
 	skill: Skill;
 

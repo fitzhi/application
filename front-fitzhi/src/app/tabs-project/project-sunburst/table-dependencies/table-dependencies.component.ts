@@ -7,14 +7,14 @@ import { ProjectService } from '../../../service/project/project.service';
 import { take } from 'rxjs/operators';
 import { Observable, BehaviorSubject } from 'rxjs';
 import { Project } from 'src/app/data/project';
-import { BaseComponent } from 'src/app/base/base.component';
+import { BaseDirective } from 'src/app/base/base-directive.directive';
 
 @Component({
 	selector: 'app-table-dependencies',
 	templateUrl: './table-dependencies.component.html',
 	styleUrls: ['./table-dependencies.component.css']
 })
-export class TableDependenciesComponent extends BaseComponent implements OnInit, AfterViewInit, OnDestroy {
+export class TableDependenciesComponent extends BaseDirective implements OnInit, AfterViewInit, OnDestroy {
 
 	private idProject: number;
 

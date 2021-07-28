@@ -5,7 +5,7 @@ import { ProjectService } from '../../../service/project/project.service';
 import { PseudoList } from '../../../data/PseudoList';
 import { Constants } from '../../../constants';
 import { MessageService } from '../../../interaction/message/message.service';
-import { BaseComponent } from '../../../base/base.component';
+import { BaseDirective } from '../../../base/base-directive.directive';
 import { Project } from 'src/app/data/project';
 
 @Component({
@@ -13,7 +13,7 @@ import { Project } from 'src/app/data/project';
 	templateUrl: './project-ghosts.component.html',
 	styleUrls: ['./project-ghosts.component.css']
 })
-export class ProjectGhostsComponent extends BaseComponent implements OnDestroy {
+export class ProjectGhostsComponent extends BaseDirective implements OnDestroy {
 
 	/**
 	 * Observable to the active project.

@@ -1,7 +1,7 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { ReferentialService } from '../../../service/referential.service';
 import { RiskLegend } from '../../../data/riskLegend';
-import { BaseComponent } from '../../../base/base.component';
+import { BaseDirective } from '../../../base/base-directive.directive';
 import { take } from 'rxjs/operators';
 
 @Component({
@@ -9,7 +9,7 @@ import { take } from 'rxjs/operators';
 	templateUrl: './legend-sunburst.component.html',
 	styleUrls: ['./legend-sunburst.component.css']
 })
-export class DialogLegendSunburstComponent extends BaseComponent implements OnInit, OnDestroy {
+export class DialogLegendSunburstComponent extends BaseDirective implements OnInit, OnDestroy {
 
 	public riskColumns: string[] = ['color', 'description'];
 

@@ -2,14 +2,14 @@ import { AfterViewInit, Component, Input, OnDestroy, OnInit } from '@angular/cor
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { MessageService } from 'src/app/interaction/message/message.service';
 import { ProjectService } from 'src/app/service/project/project.service';
-import { AuditBaseComponent } from '../audit-base-component/audit-base-component.component';
+import { AuditBaseDirective } from '../audit-base-component/audit-base-directive.directive';
 
 @Component({
 	selector: 'app-report-detail-form',
 	templateUrl: './report-detail-form.component.html',
 	styleUrls: ['./report-detail-form.component.css']
 })
-export class ReportDetailFormComponent extends AuditBaseComponent implements OnInit, OnDestroy, AfterViewInit {
+export class ReportDetailFormComponent extends AuditBaseDirective implements OnInit, OnDestroy, AfterViewInit {
 
 	/**
 	 * The topic identifier.

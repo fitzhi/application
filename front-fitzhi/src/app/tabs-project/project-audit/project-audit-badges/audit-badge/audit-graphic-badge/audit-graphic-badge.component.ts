@@ -2,7 +2,7 @@ import { Component, OnInit, Input, AfterViewInit, Output, EventEmitter, OnDestro
 import { ProjectService } from 'src/app/service/project/project.service';
 import { TopicEvaluation } from '../../topic-evaluation';
 import { Project } from 'src/app/data/project';
-import { BaseComponent } from 'src/app/base/base.component';
+import { BaseDirective } from 'src/app/base/base-directive.directive';
 import { BehaviorSubject } from 'rxjs';
 import { CinematicService } from 'src/app/service/cinematic.service';
 import { Constants } from 'src/app/constants';
@@ -15,7 +15,7 @@ import { traceOn } from 'src/app/global';
 	templateUrl: './audit-graphic-badge.component.html',
 	styleUrls: ['./audit-graphic-badge.component.css']
 })
-export class AuditGraphicBadgeComponent extends BaseComponent implements OnInit, OnDestroy, AfterViewInit {
+export class AuditGraphicBadgeComponent extends BaseDirective implements OnInit, OnDestroy, AfterViewInit {
 
 	/**
 	 * Topic identifier.

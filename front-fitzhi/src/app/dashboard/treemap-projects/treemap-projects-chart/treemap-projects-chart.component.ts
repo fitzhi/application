@@ -1,6 +1,6 @@
 import { Component, Input, OnDestroy, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
-import { BaseComponent } from 'src/app/base/base.component';
+import { BaseDirective } from 'src/app/base/base-directive.directive';
 import { Constants } from 'src/app/constants';
 import { traceOn } from 'src/app/global';
 import { CinematicService } from 'src/app/service/cinematic.service';
@@ -14,7 +14,7 @@ import { TreemapProjectsService } from '../treemap-projects-service/treemap-proj
 	templateUrl: './treemap-projects-chart.component.html',
 	styleUrls: ['./treemap-projects-chart.component.css']
 })
-export class TreemapProjectsChartComponent extends BaseComponent implements OnInit, OnDestroy {
+export class TreemapProjectsChartComponent extends BaseDirective implements OnInit, OnDestroy {
 
 	/**
 	 * The treemap chart is clickable, or not...

@@ -1,6 +1,6 @@
 import { Component, OnInit, Input, AfterViewInit, OnDestroy } from '@angular/core';
 import { ProjectService } from 'src/app/service/project/project.service';
-import { AuditBaseComponent } from '../audit-base-component/audit-base-component.component';
+import { AuditBaseDirective } from '../audit-base-component/audit-base-directive.directive';
 import { AuditAttachmentService } from './service/audit-attachment.service';
 
 @Component({
@@ -8,7 +8,7 @@ import { AuditAttachmentService } from './service/audit-attachment.service';
 	templateUrl: './files-detail-form.component.html',
 	styleUrls: ['./files-detail-form.component.css']
 })
-export class FilesDetailFormComponent extends AuditBaseComponent implements OnInit, OnDestroy, AfterViewInit {
+export class FilesDetailFormComponent extends AuditBaseDirective implements OnInit, OnDestroy, AfterViewInit {
 
 	/**
 	 * The topic identifier.

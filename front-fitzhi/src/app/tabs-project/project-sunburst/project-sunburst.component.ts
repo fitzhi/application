@@ -10,7 +10,7 @@ import { traceOn } from 'src/app/global';
 import { StaffListService } from 'src/app/service/staff-list-service/staff-list.service';
 import { StaffService } from 'src/app/tabs-staff/service/staff.service';
 import Sunburst from 'sunburst-chart';
-import { BaseComponent } from '../../base/base.component';
+import { BaseDirective } from '../../base/base-directive.directive';
 import { Constants } from '../../constants';
 import { Contributor } from '../../data/contributor';
 import { Filename } from '../../data/filename';
@@ -46,7 +46,7 @@ export enum PreviewContext {
 	templateUrl: './project-sunburst.component.html',
 	styleUrls: ['./project-sunburst.component.css']
 })
-export class ProjectSunburstComponent extends BaseComponent implements OnInit, AfterViewInit, OnDestroy {
+export class ProjectSunburstComponent extends BaseDirective implements OnInit, AfterViewInit, OnDestroy {
 
 	/**
 	 * This event is fired if the sunburst is processed to inform the form component that the project might have changed.

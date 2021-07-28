@@ -1,7 +1,7 @@
 import { AfterViewInit, Component, OnDestroy, OnInit } from '@angular/core';
 import { EMPTY, Subject } from 'rxjs';
 import { switchMap } from 'rxjs/operators';
-import { BaseComponent } from 'src/app/base/base.component';
+import { BaseDirective } from 'src/app/base/base-directive.directive';
 import { Constants } from 'src/app/constants';
 import { AuditTopic } from 'src/app/data/AuditTopic';
 import { traceOn } from 'src/app/global';
@@ -19,7 +19,7 @@ import { ProjectAuditService } from './service/project-audit.service';
 	templateUrl: './project-audit.component.html',
 	styleUrls: ['./project-audit.component.css']
 })
-export class ProjectAuditComponent extends BaseComponent implements OnInit, AfterViewInit, OnDestroy {
+export class ProjectAuditComponent extends BaseDirective implements OnInit, AfterViewInit, OnDestroy {
 
 	/**
 	 * This `boolean` control the `[hidden]` property of the div `auditTask`.

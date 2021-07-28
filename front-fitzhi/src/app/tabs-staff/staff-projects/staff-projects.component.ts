@@ -6,7 +6,7 @@ import { BehaviorSubject, Observable } from 'rxjs';
 import { BooleanDTO } from 'src/app/data/external/booleanDTO';
 import { Mission } from 'src/app/data/mission';
 import { traceOn } from 'src/app/global';
-import { BaseComponent } from '../../base/base.component';
+import { BaseDirective } from '../../base/base-directive.directive';
 import { Collaborator } from '../../data/collaborator';
 import { MessageService } from '../../interaction/message/message.service';
 import { ProjectService } from '../../service/project/project.service';
@@ -18,7 +18,7 @@ import { StaffService } from '../service/staff.service';
 	templateUrl: './staff-projects.component.html',
 	styleUrls: ['./staff-projects.component.css']
 })
-export class StaffProjectsComponent extends BaseComponent implements OnInit, OnDestroy, AfterViewInit {
+export class StaffProjectsComponent extends BaseDirective implements OnInit, OnDestroy, AfterViewInit {
 
 	/* tslint:disable: no-trailing-whitespace */
 	/**

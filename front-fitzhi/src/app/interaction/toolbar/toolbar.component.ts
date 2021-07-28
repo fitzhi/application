@@ -1,5 +1,5 @@
 import { Component, EventEmitter, OnDestroy, OnInit, Output } from '@angular/core';
-import { BaseComponent } from '../../base/base.component';
+import { BaseDirective } from '../../base/base-directive.directive';
 import { Constants } from '../../constants';
 import { ProjectStaffService } from '../../tabs-project/project-staff-service/project-staff.service';
 import { CinematicService } from '../../service/cinematic.service';
@@ -14,7 +14,7 @@ import { traceOn } from '../../global';
 	templateUrl: './toolbar.component.html',
 	styleUrls: ['./toolbar.component.css']
 })
-export class ToolbarComponent extends BaseComponent implements OnInit, OnDestroy {
+export class ToolbarComponent extends BaseDirective implements OnInit, OnDestroy {
 
 	/**
 	 * We'll send to the parent component (AppComponent) the selected form to be displayed

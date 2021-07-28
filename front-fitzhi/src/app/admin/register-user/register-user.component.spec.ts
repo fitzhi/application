@@ -30,6 +30,28 @@ describe('RegisterUserComponent', () => {
 
 	let installService: InstallService;
 
+	function setUser(value: string) {
+		const user = fixture.debugElement.query(By.css('#user'));
+		user.nativeElement.value = value;
+		user.nativeElement.dispatchEvent(new Event('input'));
+		fixture.detectChanges();
+	}
+
+	function setPassword(value: string) {
+		const password = fixture.debugElement.query(By.css('#password'));
+		password.nativeElement.value = value; // This is not a credential. //NOSONAR
+		password.nativeElement.dispatchEvent(new Event('input'));
+		fixture.detectChanges();
+	}
+
+	function setConfirmedPassword(value: string) {
+		const passwordConfirmation = fixture.debugElement.query(By.css('#passwordConfirmation'));
+		passwordConfirmation.nativeElement.value = value; // This is not a credential. //NOSONAR
+		passwordConfirmation.nativeElement.dispatchEvent(new Event('input'));
+		fixture.detectChanges();
+	}
+
+
 	beforeEach(waitForAsync(() => {
 		TestBed.configureTestingModule({
 			declarations: [RegisterUserComponent],
@@ -72,7 +94,7 @@ describe('RegisterUserComponent', () => {
 		fixture.detectChanges();
 	});
 
-	it('Should complete installation if the end-user clicks on skip.', () => {
+	it('should complete installation if the end-user clicks on skip.', () => {
 
 		const spy = spyOn(installService, 'installComplete').and.callThrough();
 
@@ -84,24 +106,33 @@ describe('RegisterUserComponent', () => {
 		expect(localStorage.getItem('installation')).toBe('1');
 	});
 
-	it('Should activate the button Ok, if the user & password fields are correctly entered.', () => {
+	it('should NOT activate the button Ok if the password length is lower than 8 characters.', () => {
 
-		const spy = spyOn(installService, 'installComplete').and.callThrough();
+		setUser('frvidal');
+		setPassword('pass123');
+		setConfirmedPassword('pass123');
 
-		const user = fixture.debugElement.query(By.css('#user'));
-		user.nativeElement.value = 'frvidal';
-		user.nativeElement.dispatchEvent(new Event('input'));
-		fixture.detectChanges();
+		const btnOk = fixture.debugElement.query(By.css('#okButton'));
+		expect(btnOk).toBeDefined();
+		expect(btnOk.nativeElement.disabled).toBeTruthy();
+	});
 
-		const password = fixture.debugElement.query(By.css('#password'));
-		password.nativeElement.value = 'pass123word'; // This is not a credential. //NOSONAR
-		password.nativeElement.dispatchEvent(new Event('input'));
-		fixture.detectChanges();
+	it('should NOT activate the button Ok if the password is not correctly confirmed.', () => {
 
-		const passwordConfirmation = fixture.debugElement.query(By.css('#passwordConfirmation'));
-		passwordConfirmation.nativeElement.value = 'pass123word'; // This is not a credential. //NOSONAR
-		passwordConfirmation.nativeElement.dispatchEvent(new Event('input'));
-		fixture.detectChanges();
+		setUser('frvidal');
+		setPassword('pass123word');
+		setConfirmedPassword('pass123weird');
+
+		const btnOk = fixture.debugElement.query(By.css('#okButton'));
+		expect(btnOk).toBeDefined();
+		expect(btnOk.nativeElement.disabled).toBeTruthy();
+	});
+
+	it('should activate the button Ok, if the user & password fields are correctly entered.', () => {
+
+		setUser('frvidal');
+		setPassword('pass123word');
+		setConfirmedPassword('pass123word');
 
 		const btnOk = fixture.debugElement.query(By.css('#okButton'));
 		expect(btnOk).toBeDefined();

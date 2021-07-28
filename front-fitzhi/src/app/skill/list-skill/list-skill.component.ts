@@ -1,7 +1,7 @@
 import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { Router } from '@angular/router';
 import { BehaviorSubject } from 'rxjs';
-import { BaseComponent } from '../../base/base.component';
+import { BaseDirective } from '../../base/base-directive.directive';
 import { Constants } from '../../constants';
 import { CinematicService } from '../../service/cinematic.service';
 import { SkillService } from '../service/skill.service';
@@ -19,7 +19,7 @@ import { ListCriteria } from 'src/app/data/listCriteria';
 	templateUrl: './list-skill.component.html',
 	styleUrls: ['./list-skill.component.css']
 })
-export class ListSkillComponent extends BaseComponent implements OnInit, OnDestroy {
+export class ListSkillComponent extends BaseDirective implements OnInit, OnDestroy {
 
 	private experiences: SkillCountExperiences[];
 

@@ -1,7 +1,7 @@
 import { Component, Input, OnDestroy, OnInit } from '@angular/core';
 import { EMPTY } from 'rxjs';
 import { switchMap } from 'rxjs/operators';
-import { BaseComponent } from 'src/app/base/base.component';
+import { BaseDirective } from 'src/app/base/base-directive.directive';
 import { traceOn } from 'src/app/global';
 import { DashboardService } from 'src/app/service/dashboard/dashboard.service';
 import { StatTypes } from 'src/app/service/dashboard/stat-types';
@@ -20,7 +20,7 @@ import { TabsStaffListService } from 'src/app/tabs-staff-list/service/tabs-staff
 	templateUrl: './treemap-skills-chart.component.html',
 	styleUrls: ['./treemap-skills-chart.component.css']
 })
-export class TreemapSkillsChartComponent extends BaseComponent implements OnInit, OnDestroy {
+export class TreemapSkillsChartComponent extends BaseDirective implements OnInit, OnDestroy {
 
 	/**
 	 * The treemap chart is clickable, or not...

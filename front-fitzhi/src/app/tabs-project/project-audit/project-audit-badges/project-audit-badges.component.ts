@@ -1,6 +1,6 @@
 import { Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angular/core';
 import { BehaviorSubject } from 'rxjs';
-import { BaseComponent } from 'src/app/base/base.component';
+import { BaseDirective } from 'src/app/base/base-directive.directive';
 import { AttachmentFile } from 'src/app/data/AttachmentFile';
 import { AuditDetail } from 'src/app/data/audit-detail';
 import { CinematicService } from 'src/app/service/cinematic.service';
@@ -16,7 +16,7 @@ import { TopicWeight } from './topic-weight';
 	templateUrl: './project-audit-badges.component.html',
 	styleUrls: ['./project-audit-badges.component.css']
 })
-export class ProjectAuditBadgesComponent extends BaseComponent implements OnInit, OnDestroy {
+export class ProjectAuditBadgesComponent extends BaseDirective implements OnInit, OnDestroy {
 
 	/**
 	 * This messenger propagates the signal to show/hide the audit form panel

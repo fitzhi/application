@@ -3,7 +3,7 @@ import { MatPaginator, PageEvent } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { MatTable } from '@angular/material/table';
 import { Router } from '@angular/router';
-import { BaseComponent } from 'src/app/base/base.component';
+import { BaseDirective } from 'src/app/base/base-directive.directive';
 import { UserSetting } from 'src/app/base/user-setting';
 import { CinematicService } from 'src/app/service/cinematic.service';
 import { Commit } from '../../data/commit';
@@ -19,7 +19,7 @@ import { ProjectsDataSource } from './projects-data-source';
 	templateUrl: './list-project.component.html',
 	styleUrls: ['./list-project.component.css']
 })
-export class ListProjectComponent extends BaseComponent implements OnInit, AfterViewInit, OnDestroy {
+export class ListProjectComponent extends BaseDirective implements OnInit, AfterViewInit, OnDestroy {
 
 	/**
 	 * The datasource that contains the filtered projects

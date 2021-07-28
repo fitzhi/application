@@ -9,7 +9,7 @@ import { SonarProject } from '../../data/SonarProject';
 import { Constants } from '../../constants';
 import { SkillService } from '../../skill/service/skill.service';
 import { MessageService } from '../../interaction/message/message.service';
-import { BaseComponent } from '../../base/base.component';
+import { BaseDirective } from '../../base/base-directive.directive';
 import { Observable, of, BehaviorSubject, EMPTY, pipe } from 'rxjs';
 import { BooleanDTO } from 'src/app/data/external/booleanDTO';
 import { SonarService } from 'src/app/service/sonar.service';
@@ -32,7 +32,7 @@ import { ProjectFormSkillHandler } from './skill/project-form-skill-handler';
 	templateUrl: './project-form.component.html',
 	styleUrls: ['./project-form.component.css']
 })
-export class ProjectFormComponent extends BaseComponent implements OnInit, AfterViewInit, OnDestroy {
+export class ProjectFormComponent extends BaseDirective implements OnInit, AfterViewInit, OnDestroy {
 
 	/**
 	 * The risk might have changed due to the last dashboard calculation.

@@ -1,14 +1,14 @@
 import { Component, OnInit, EventEmitter, Output, OnDestroy } from '@angular/core';
 import { ProjectService } from 'src/app/service/project/project.service';
 import { traceOn } from 'src/app/global';
-import { BaseComponent } from 'src/app/base/base.component';
+import { BaseDirective } from 'src/app/base/base-directive.directive';
 
 @Component({
 	selector: 'app-branch-selector',
 	templateUrl: './branch.component.html',
 	styleUrls: ['./branch.component.css']
 })
-export class BranchComponent extends BaseComponent implements OnInit, OnDestroy {
+export class BranchComponent extends BaseDirective implements OnInit, OnDestroy {
 
 	/**
 	 * We'll send to the parent component that the selected branch has been changed.

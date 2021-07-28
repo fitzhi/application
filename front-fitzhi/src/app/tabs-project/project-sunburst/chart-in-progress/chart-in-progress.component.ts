@@ -1,5 +1,5 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { BaseComponent } from 'src/app/base/base.component';
+import { BaseDirective } from 'src/app/base/base-directive.directive';
 import { traceOn } from 'src/app/global';
 import { SsewatcherService } from '../ssewatcher/service/ssewatcher.service';
 
@@ -8,7 +8,7 @@ import { SsewatcherService } from '../ssewatcher/service/ssewatcher.service';
 	templateUrl: './chart-in-progress.component.html',
 	styleUrls: ['./chart-in-progress.component.css']
 })
-export class ChartInProgressComponent extends BaseComponent implements OnInit, OnDestroy {
+export class ChartInProgressComponent extends BaseDirective implements OnInit, OnDestroy {
 
 	public progressionPercentage = 0;
 

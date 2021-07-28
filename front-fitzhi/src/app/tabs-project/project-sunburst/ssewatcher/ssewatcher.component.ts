@@ -1,5 +1,5 @@
 import { Component, Input, OnDestroy, OnInit } from '@angular/core';
-import { BaseComponent } from 'src/app/base/base.component';
+import { BaseDirective } from 'src/app/base/base-directive.directive';
 import { ActivityLog } from 'src/app/data/activity-log';
 import { ProjectService } from 'src/app/service/project/project.service';
 import { SunburstCinematicService } from '../service/sunburst-cinematic.service';
@@ -13,7 +13,7 @@ import { SsewatcherService } from './service/ssewatcher.service';
 	templateUrl: './ssewatcher.component.html',
 	styleUrls: ['./ssewatcher.component.css']
 })
-export class SSEWatcherComponent extends BaseComponent implements OnInit, OnDestroy {
+export class SSEWatcherComponent extends BaseDirective implements OnInit, OnDestroy {
 
 	constructor(
 		private projectService: ProjectService,

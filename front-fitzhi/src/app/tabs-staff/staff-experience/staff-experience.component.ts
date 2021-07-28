@@ -7,7 +7,7 @@ import { Component, OnInit, OnDestroy, Input } from '@angular/core';
 
 import { StaffUploadCvComponent } from './staff-upload-cv/staff-upload-cv.component';
 import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
-import { BaseComponent } from '../../base/base.component';
+import { BaseDirective } from '../../base/base-directive.directive';
 import { TabsStaffListService } from 'src/app/tabs-staff-list/service/tabs-staff-list.service';
 import { TagStar } from '../staff-form/tag-star';
 import { INTERNAL_SERVER_ERROR} from 'http-status-codes';
@@ -23,7 +23,7 @@ import { TagifyEditableState } from './tagify-stars/tagify-editable-state';
 	templateUrl: './staff-experience.component.html',
 	styleUrls: ['./staff-experience.component.css']
 })
-export class StaffExperienceComponent extends BaseComponent implements OnInit, OnDestroy {
+export class StaffExperienceComponent extends BaseDirective implements OnInit, OnDestroy {
 
 	/**
 	 * Selected TAB.

@@ -3,7 +3,7 @@ import { Component, OnDestroy, OnInit } from '@angular/core';
 import { ControlledRisingSkylineService } from 'controlled-rising-skyline';
 import { BehaviorSubject } from 'rxjs';
 import { take } from 'rxjs/operators';
-import { BaseComponent } from 'src/app/base/base.component';
+import { BaseDirective } from 'src/app/base/base-directive.directive';
 import { Constants } from 'src/app/constants';
 import { ProjectService } from 'src/app/service/project/project.service';
 import { FitzhiSettings } from '../data/FitzhiSettings';
@@ -17,7 +17,7 @@ import { SkylineService } from './skyline/service/skyline.service';
 	templateUrl: './fitzhi-dashboard.component.html',
 	styleUrls: ['./fitzhi-dashboard.component.css']
 })
-export class FitzhiDashboardComponent extends BaseComponent implements OnInit, OnDestroy {
+export class FitzhiDashboardComponent extends BaseDirective implements OnInit, OnDestroy {
 
 	public selection = selection;
 

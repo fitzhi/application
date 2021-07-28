@@ -4,7 +4,7 @@ import { take } from 'rxjs/operators';
 import { traceOn } from 'src/app/global';
 import { MessageService } from 'src/app/interaction/message/message.service';
 import { environment } from '../../../environments/environment';
-import { BaseComponent } from '../../base/base.component';
+import { BaseDirective } from '../../base/base-directive.directive';
 import { BackendSetupService } from '../../service/backend-setup/backend-setup.service';
 
 @Component({
@@ -12,7 +12,7 @@ import { BackendSetupService } from '../../service/backend-setup/backend-setup.s
 	templateUrl: './backend-setup.component.html',
 	styleUrls: ['./backend-setup.component.css']
 })
-export class BackendSetupComponent extends BaseComponent implements OnInit, OnDestroy {
+export class BackendSetupComponent extends BaseDirective implements OnInit, OnDestroy {
 
 	/**
      * We'll send to the parent component (startingSetup) the fact that this is the very first connection.
