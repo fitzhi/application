@@ -42,7 +42,6 @@
     "popper.js": "^1.16.1",
     "rising-skyline": "~1.0.24",
     "rxjs": "~6.5.4",
-    "rxjs-compat": "^6.6.0",
     "sunburst-chart": "^1.11.1",
     "tslib": "^2.0.0",
     "utf-8-validate": "^5.0.2",
