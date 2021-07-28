@@ -1,12 +1,10 @@
+import { Injectable } from '@angular/core';
+import { BehaviorSubject, Subject } from 'rxjs';
 import { Constants } from '../constants';
-import { BehaviorSubject } from 'rxjs';
-import { Subject } from 'rxjs/Subject';
-import { AuditDetailsHistory } from './cinematic/audit-details-history';
 import { AuditDetail } from '../data/audit-detail';
 import { traceOn } from '../global';
-import { Injectable } from '@angular/core';
+import { AuditDetailsHistory } from './cinematic/audit-details-history';
 import { Form } from './Form';
-import { formatCurrency } from '@angular/common';
 
 @Injectable()
 export class CinematicService {
