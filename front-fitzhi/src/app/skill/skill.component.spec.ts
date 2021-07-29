@@ -1,16 +1,11 @@
-import { ComponentFixture, TestBed, TestModuleMetadata, tick, fakeAsync, waitForAsync } from '@angular/core/testing';
-
-import { SkillComponent } from './skill.component';
-import { InitTest } from '../test/init-test';
-import { of } from 'rxjs';
-import { SkillService } from './service/skill.service';
-import { ListSkillService } from './list-skill-service/list-skill.service';
-import { Skill } from '../data/skill';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { DebugElement } from '@angular/core';
+import { ComponentFixture, fakeAsync, TestBed, TestModuleMetadata, tick, waitForAsync } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
-import { ActivatedRoute } from '@angular/router';
-import { DetectionTemplate } from '../data/detection-template';
+import { InitTest } from '../test/init-test';
+import { SkillService } from './service/skill.service';
+import { SkillComponent } from './skill.component';
+
 
 describe('SkillComponent', () => {
 	let component: SkillComponent;

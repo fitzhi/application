@@ -2,7 +2,6 @@ import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { take } from 'rxjs/operators';
-import { isNumeric } from 'rxjs/util/isNumeric';
 import { SkillPatternValidator } from '../admin/register-user/skill-pattern-validator';
 import { BaseDirective } from '../base/base-directive.directive';
 import { Constants } from '../constants';
@@ -153,7 +152,7 @@ export class SkillComponent extends BaseDirective implements OnInit, OnDestroy {
 			return;
 		}
 		const type = this.profileSkill.get('detectionType').value;
-		if (!isNumeric(type) || (type !== this.skill.detectionTemplate.detectionType)) {
+		if (isNaN(+type) || (type !== this.skill.detectionTemplate.detectionType)) {
 			this.profileSkill.get('pattern').setValue('');
 		}
 	}
@@ -170,7 +169,7 @@ export class SkillComponent extends BaseDirective implements OnInit, OnDestroy {
 
 		const detectionType: string = this.profileSkill.get('detectionType').value;
 		const pattern: string = this.profileSkill.get('pattern').value;
-		if (isNumeric(detectionType) && (!pattern)) {
+		if (!isNaN(+detectionType) && (!pattern)) {
 			return { 'patternRequired': true};
 		}
 

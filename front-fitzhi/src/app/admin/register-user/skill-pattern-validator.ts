@@ -1,6 +1,5 @@
 import { Injectable } from '@angular/core';
 import { FormGroup, ValidatorFn } from '@angular/forms';
-import { isNumeric } from 'rxjs/internal-compatibility';
 
 @Injectable({ providedIn: 'root' })
 export class SkillPatternValidator {
@@ -11,7 +10,7 @@ export class SkillPatternValidator {
 		return (formGroup: FormGroup) => {
 			const detectionType: string = formGroup.get('detectionType').value;
 			const pattern: string = formGroup.get('pattern').value;
-			if (isNumeric(detectionType) && (!pattern)) {
+			if ((pattern) && !(isNaN(+detectionType))) {
 				return { 'patternRequired': true };
 			}
 			return null;

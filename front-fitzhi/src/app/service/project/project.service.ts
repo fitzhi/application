@@ -129,6 +129,7 @@ export class ProjectService extends InternalService {
 			.pipe(
 				take(1),
 				catchError(error => {
+					console.log (error);
 					// We might fall in error, before the subscription on 'intervalLoadProjects$' has been started.
 					if (this.sub) {
 						this.sub.unsubscribe();

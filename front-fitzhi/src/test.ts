@@ -27,7 +27,7 @@ const context = require.context('./', true, /\.spec\.ts$/);
 // const context = require.context('./', true,  /project-globalEvaluation\.service\.spec\.ts$/);
 // const context = require.context('./', true,  /project-calculateSonarEvaluation\.service\.spec\.ts$/);
 // const context = require.context('./', true,  /register-user\.component\.spec\.ts$/);
-// const context = require.context('./', true,  /app\.component\.search\.spec\.ts$/);
+// const context = require.context('./', true,  /skill\.component\.spec\.ts$/);
 // const context = require.context('./', true,  /git\.service\.spec\.ts$/);
 // const context = require.context('./', true,  /staff-remove\.component\.spec\.ts$/);
 // And load the modules.
