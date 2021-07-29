@@ -1,20 +1,18 @@
-import { Component, OnInit, OnDestroy } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
+import { FormControl, FormGroup, Validators } from '@angular/forms';
+import { ActivatedRoute, Router } from '@angular/router';
+import { take } from 'rxjs/operators';
+import { isNumeric } from 'rxjs/util/isNumeric';
+import { SkillPatternValidator } from '../admin/register-user/skill-pattern-validator';
+import { BaseDirective } from '../base/base-directive.directive';
 import { Constants } from '../constants';
 import { Skill } from '../data/skill';
-import { ActivatedRoute, Router } from '@angular/router';
-import { FormGroup, FormControl, Validators } from '@angular/forms';
-
+import { traceOn } from '../global';
 import { MessageService } from '../interaction/message/message.service';
 import { CinematicService } from '../service/cinematic.service';
 import { ListSkillService } from './list-skill-service/list-skill.service';
 import { SkillService } from './service/skill.service';
-import { BaseDirective } from '../base/base-directive.directive';
-import { traceOn } from '../global';
-import { DetectionTemplate } from '../data/detection-template';
-import { isNumber } from 'util';
-import { isNumeric } from 'rxjs/util/isNumeric';
-import { Observable, of, BehaviorSubject } from 'rxjs';
-import { take } from 'rxjs/operators';
+
 
 @Component({
 	selector: 'app-skill',
@@ -41,22 +39,28 @@ export class SkillComponent extends BaseDirective implements OnInit, OnDestroy {
 		public skillService: SkillService,
 		private listSkillService: ListSkillService,
 		private messageService: MessageService,
+		private skillPatternValidator: SkillPatternValidator,
 		private router: Router) {
 		super();
+	}
 
-		this.profileSkill = new FormGroup({
-			title: new FormControl('', [Validators.required]),
-			detectionType: new FormControl(''),
-			pattern: new FormControl('')
-		}, { validators: this.patternValidator.bind(this) });
+	ngOnInit() {
+
+		this.profileSkill = new FormGroup(
+			{
+				title: new FormControl('', [Validators.required]),
+				detectionType: new FormControl(''),
+				pattern: new FormControl('')
+			},
+			{
+				validators: this.skillPatternValidator.check()
+			}
+		);
 
 		this.skillService.detectionTemplates$().subscribe ({
 			next: rep => this.skillService.detectionTemplatesLoaded$.next(true)
 		});
 
-	}
-
-	ngOnInit() {
 		this.subscriptions.add(
 			this.route.params.subscribe(params => {
 				if (traceOn()) {
@@ -159,6 +163,7 @@ export class SkillComponent extends BaseDirective implements OnInit, OnDestroy {
 	 * @param control the control `pattern`
 	 */
 	public patternValidator(control: FormControl) {
+
 		if (!this.profileSkill) {
 			return null;
 		}
@@ -173,8 +178,8 @@ export class SkillComponent extends BaseDirective implements OnInit, OnDestroy {
 	}
 
 	/**
-     * Class of the button corresponding to the 3 possible states of the "Ok" button.
-     */
+	 * Class of the button corresponding to the 3 possible states of the "Ok" button.
+	 */
 	classOkButton() {
 		return (this.profileSkill.invalid) ?
 			'okButton okButtonInvalid' : 'okButton okButtonValid';
