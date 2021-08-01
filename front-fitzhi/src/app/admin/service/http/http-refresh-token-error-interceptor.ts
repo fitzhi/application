@@ -68,7 +68,6 @@ export class HttpRefreshTokenErrorInterceptor implements HttpInterceptor {
 
 			return next.handle(req).pipe(
 				catchError( (response: HttpErrorResponse) => {
-					console.log (response);
 					switch (response.status) {
 						case UNAUTHORIZED:
 							const wwwAuthenticate = this.extractWwwAuthenticate(response);
