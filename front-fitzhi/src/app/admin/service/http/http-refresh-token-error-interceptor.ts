@@ -77,7 +77,7 @@ export class HttpRefreshTokenErrorInterceptor implements HttpInterceptor {
 								if (	wwwAuthenticate.includes(this.WWW_AUTHENTICATE_INVALID_REFRESH_TOKEN)
 									|| 	wwwAuthenticate.includes(this.WWW_AUTHENTICATE_FULL_INVALID_ACCESS_TOKEN)
 									|| 	wwwAuthenticate.includes(this.WWW_AUTHENTICATE_FULL_AUTHENTICATION) ) {
-									
+
 									// We interrupt the projects listener until connection has succeed.
 									this.projectsListenerService.interruptProjectsListener();
 

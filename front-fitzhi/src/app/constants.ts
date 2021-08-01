@@ -28,7 +28,7 @@ export class Constants {
 		Constants.LEVEL_Junior,
 		Constants.LEVEL_Beginner];
 
-	/** 
+	/**
 	 * This constant is used to save in the session storage, the transferred Etag sent by the '/api/projects' endpoint.
 	 */
 	public static ETAG_PROJECTS = 'etag-api/project';

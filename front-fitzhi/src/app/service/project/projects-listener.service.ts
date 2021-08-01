@@ -1,7 +1,6 @@
-import { Injectable } from "@angular/core";
-import { interval, Subscription } from "rxjs";
-import { traceOn } from "src/app/global";
-import { SonarThumbnailsComponent } from "src/app/tabs-project/project-sonar/sonar-thumbnails/sonar-thumbnails.component";
+import { Injectable } from '@angular/core';
+import { interval, Subscription } from 'rxjs';
+import { traceOn } from 'src/app/global';
 
 @Injectable({
 	providedIn: 'root'
@@ -28,9 +27,8 @@ export class ProjectsListenerService {
 		// We might fall in error, before the subscription on 'intervalLoadProjects$' has been started.
 		if (this.sub) {
 			this.sub.unsubscribe();
-			// and we initialize the subscriber. 
+			// and we initialize the subscriber.
 			this.sub = null;
 		}
 	}
-
 }

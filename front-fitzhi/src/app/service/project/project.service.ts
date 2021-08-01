@@ -121,11 +121,11 @@ export class ProjectService extends InternalService {
 			headers = headers.append ('If-None-Match', this.getEtag());
 		}
 		this.httpClient
-			.get<Project[]>(`${this.backendSetupService.url()}/project`, 
-				{ 
-					headers: headers, 
-					responseType: 'json', 
-					observe: 'response' 
+			.get<Project[]>(`${this.backendSetupService.url()}/project`,
+				{
+					headers: headers,
+					responseType: 'json',
+					observe: 'response'
 				})
 			.pipe(
 				take(1),
@@ -155,18 +155,18 @@ export class ProjectService extends InternalService {
 		if (traceOn()) {
 			console.log ('Etag saved', response.headers.get('Etag'));
 		}
-   }
+	}
 
 	/**
 	 * Get the `Etag` header from the session storage.
 	 * @returns the Etag saved in the session storage
 	 */
-	 private getEtag(): string {
-		 const etag = sessionStorage.getItem('etag-api/project');
-		 if (traceOn()) {
-			 console.log ('Etag retrieved', etag);
-		 }
-		 return etag;
+	private getEtag(): string {
+		const etag = sessionStorage.getItem('etag-api/project');
+		if (traceOn()) {
+			console.log ('Etag retrieved', etag);
+		}
+		return etag;
 	}
 
 	/**
