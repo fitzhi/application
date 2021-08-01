@@ -1,12 +1,12 @@
-import { retry, catchError, tap } from 'rxjs/operators';
-import { HttpHandler, HttpEvent, HttpErrorResponse, HttpRequest, HttpInterceptor, HttpResponse, HttpEventType } from '@angular/common/http';
-import { Observable, throwError } from 'rxjs';
+import { HttpErrorResponse, HttpEvent, HttpHandler, HttpInterceptor, HttpRequest, HttpResponse } from '@angular/common/http';
 import { Injectable, Injector } from '@angular/core';
-import { MessageService } from '../../../interaction/message/message.service';
 import { Router } from '@angular/router';
-import { traceOn } from 'src/app/global';
+import { BAD_REQUEST, INTERNAL_SERVER_ERROR, METHOD_NOT_ALLOWED, NOT_FOUND, NOT_MODIFIED, OK, UNAUTHORIZED } from 'http-status-codes';
+import { Observable, throwError } from 'rxjs';
+import { catchError, retry, tap } from 'rxjs/operators';
 import { Constants } from 'src/app/constants';
-import { BAD_REQUEST, INTERNAL_SERVER_ERROR, METHOD_NOT_ALLOWED, NOT_FOUND, OK, UNAUTHORIZED } from 'http-status-codes';
+import { traceOn } from 'src/app/global';
+import { MessageService } from '../../../interaction/message/message.service';
 
 @Injectable({ providedIn: 'root' })
 export class HttpErrorInterceptorService implements HttpInterceptor {
@@ -88,6 +88,9 @@ export class HttpErrorInterceptorService implements HttpInterceptor {
 							}
 							return throwError(response);
 						case METHOD_NOT_ALLOWED:
+							return throwError(response);
+						case NOT_MODIFIED:
+							// status code returned by etag filter.
 							return throwError(response);
 						case BAD_REQUEST:
 						case INTERNAL_SERVER_ERROR:

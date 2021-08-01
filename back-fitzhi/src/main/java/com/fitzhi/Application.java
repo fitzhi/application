@@ -18,6 +18,7 @@ import org.springframework.boot.context.properties.EnableConfigurationProperties
 import org.springframework.context.annotation.Bean;
 import org.springframework.scheduling.annotation.EnableAsync;
 import org.springframework.scheduling.annotation.EnableScheduling;
+import org.springframework.web.filter.ShallowEtagHeaderFilter;
 
 /**
  * @author Fr&eacute;d&eacute;ric VIDAL Starting class for the application
@@ -106,5 +107,15 @@ public class Application {
         return new SavingBackendService();
     }
 
-   
+	/**
+	 * Create and return a filter in charge of the generation for etags.
+	 * <code>
+	 * https://www.baeldung.com/etags-for-rest-with-spring
+	 * </code>
+	 * @return the entity tag filter.
+	 */
+	@Bean
+	public ShallowEtagHeaderFilter shallowEtagHeaderFilter() {
+		return new ShallowEtagHeaderFilter();
+	} 
 }

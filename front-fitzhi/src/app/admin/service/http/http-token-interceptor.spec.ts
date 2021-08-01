@@ -1,14 +1,14 @@
-import { TestBed } from '@angular/core/testing';
+import { HTTP_INTERCEPTORS } from '@angular/common/http';
 import {
 	HttpClientTestingModule,
-	HttpTestingController,
+	HttpTestingController
 } from '@angular/common/http/testing';
-import { HTTP_INTERCEPTORS } from '@angular/common/http';
-import { HttpTokenInterceptor } from './http-token-interceptor';
-import { DataService } from '../data.service';
-import { TokenService } from '../token/token.service';
-import { Token } from '../token/token';
+import { TestBed } from '@angular/core/testing';
 import { of } from 'rxjs';
+import { DataService } from '../data.service';
+import { Token } from '../token/token';
+import { TokenService } from '../token/token.service';
+import { HttpTokenInterceptor } from './http-token-interceptor';
 
 describe(`AuthHttpInterceptor`, () => {
 	let httpMock: HttpTestingController;

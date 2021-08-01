@@ -1,6 +1,6 @@
-import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { HttpClient, HttpHeaders, HttpResponse } from '@angular/common/http';
 import { EventEmitter, Injectable } from '@angular/core';
-import { METHOD_NOT_ALLOWED, NOT_FOUND, NO_CONTENT } from 'http-status-codes';
+import { METHOD_NOT_ALLOWED, NOT_FOUND, NOT_MODIFIED, NO_CONTENT } from 'http-status-codes';
 import { BehaviorSubject, EMPTY, interval, Observable, of, Subject, Subscription } from 'rxjs';
 import { catchError, switchMap, take, tap } from 'rxjs/operators';
 import { EvaluationDistribution } from 'src/app/data/EvalutionDistribution';
@@ -32,6 +32,7 @@ import { FileService } from '../file.service';
 import { GitService } from '../git/git.service';
 import { ReferentialService } from '../referential.service';
 import { SonarService } from '../sonar.service';
+import { ProjectsListenerService } from './projects-listener.service';
 
 const httpOptions = {
 	headers: new HttpHeaders({ 'Content-Type': 'application/json' })
@@ -90,27 +91,18 @@ export class ProjectService extends InternalService {
 		private fileService: FileService,
 		private messageService: MessageService,
 		private gitService: GitService,
+		private projectsListenerService: ProjectsListenerService,
 		private sunburstCinematicService: SunburstCinematicService,
 		private backendSetupService: BackendSetupService) {
 		super();
 	}
 
 	/**
-	 * Interval to reload the projects from the backend.
-	 */
-	private intervalLoadProjects$ = interval(60000);
-
-	/**
-	 * The subscription reading the interval.
-	 */
-	private sub: Subscription = null;
-
-	/**
 	 * Start the projects loading process.
 	 */
 	startLoadingProjects(): void {
 		this.reloadProjects();
-		this.sub = this.intervalLoadProjects$.subscribe({
+		this.projectsListenerService.sub = this.projectsListenerService.intervalLoadProjects$.subscribe({
 			next: val => {
 				this.reloadProjects();
 			}
@@ -122,24 +114,59 @@ export class ProjectService extends InternalService {
 	 */
 	reloadProjects() {
 		if (traceOn()) {
-			this.log(`Fetching the projects on URL ${this.backendSetupService.url()}/api/project`);
+			this.log(`Fetching the projects on URL ${this.backendSetupService.url()}/api/project.`);
+		}
+		let headers = new HttpHeaders();
+		if (this.getEtag()) {
+			headers = headers.append ('If-None-Match', this.getEtag());
 		}
 		this.httpClient
-			.get<Project[]>(`${this.backendSetupService.url()}/project`)
+			.get<Project[]>(`${this.backendSetupService.url()}/project`, 
+				{ 
+					headers: headers, 
+					responseType: 'json', 
+					observe: 'response' 
+				})
 			.pipe(
 				take(1),
 				catchError(error => {
-					console.log (error);
-					// We might fall in error, before the subscription on 'intervalLoadProjects$' has been started.
-					if (this.sub) {
-						this.sub.unsubscribe();
+					// This is not an error, if the projects collection has not been mofified.
+					// This is is the nominal behavior.
+					if  (error.status !== NOT_MODIFIED) {
+						this.projectsListenerService.interruptProjectsListener();
 					}
 					return EMPTY;
 				})
 			)
 			.subscribe({
-				next: projects => this.takeInAccountProjects(projects)
+				next: response => {
+					this.saveEtag(response);
+					this.takeInAccountProjects(response.body);
+				}
 			});
+	}
+
+	/**
+	 * Save the `Etag` header in the session storage.
+	 * @param response the response which contains the Etag header to be saved.
+	 */
+	private saveEtag(response: HttpResponse<Project[]>) {
+		sessionStorage.setItem(Constants.ETAG_PROJECTS, response.headers.get('Etag'));
+		if (traceOn()) {
+			console.log ('Etag saved', response.headers.get('Etag'));
+		}
+   }
+
+	/**
+	 * Get the `Etag` header from the session storage.
+	 * @returns the Etag saved in the session storage
+	 */
+	 private getEtag(): string {
+		 const etag = sessionStorage.getItem('etag-api/project');
+		 if (traceOn()) {
+			 console.log ('Etag retrieved', etag);
+		 }
+		 return etag;
 	}
 
 	/**

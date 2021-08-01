@@ -41,6 +41,7 @@ export class ConnectUserComponent implements OnInit {
 	}
 
 	ngOnInit() {
+		sessionStorage.clear();
 	}
 
 	/**

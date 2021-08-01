@@ -29,6 +29,7 @@ const context = require.context('./', true, /\.spec\.ts$/);
 // const context = require.context('./', true,  /register-user\.component\.spec\.ts$/);
 // const context = require.context('./', true,  /skill\.component\.spec\.ts$/);
 // const context = require.context('./', true,  /git\.service\.spec\.ts$/);
+// const context = require.context('./', true,  /project-reloadProjects\.service\.spec\.ts$/);
 // const context = require.context('./', true,  /staff-remove\.component\.spec\.ts$/);
 // And load the modules.
 context.keys().map(context);

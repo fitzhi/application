@@ -1,18 +1,14 @@
-import { TestBed } from '@angular/core/testing';
+import { HttpHeaders, HTTP_INTERCEPTORS } from '@angular/common/http';
 import {
 	HttpClientTestingModule,
-	HttpTestingController,
+	HttpTestingController
 } from '@angular/common/http/testing';
-import { HttpHeaders, HTTP_INTERCEPTORS } from '@angular/common/http';
-import { DataService } from '../data.service';
-import { TokenService } from '../token/token.service';
-import { HttpRefreshTokenErrorInterceptor } from './http-refresh-token-error-interceptor';
-import { Token } from '../token/token';
-import { of } from 'rxjs';
-import { MessageService } from 'src/app/interaction/message/message.service';
-import { RouterTestingModule } from '@angular/router/testing';
+import { TestBed } from '@angular/core/testing';
 import { Router } from '@angular/router';
-import { callbackify } from 'util';
+import { RouterTestingModule } from '@angular/router/testing';
+import { MessageService } from 'src/app/interaction/message/message.service';
+import { DataService } from '../data.service';
+import { HttpRefreshTokenErrorInterceptor } from './http-refresh-token-error-interceptor';
 
 describe(`HttpRefreshTokenErrorInterceptor`, () => {
 	let httpMock: HttpTestingController;
