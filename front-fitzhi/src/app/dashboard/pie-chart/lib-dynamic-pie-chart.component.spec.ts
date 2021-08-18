@@ -1,19 +1,11 @@
-import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
-
-import { PieChartComponent } from './pie-chart.component';
-import { MatTableModule } from '@angular/material/table';
-import { HttpClientTestingModule } from '@angular/common/http/testing';
-import { ReferentialService } from 'src/app/service/referential.service';
-import { RouterTestingModule } from '@angular/router/testing';
-import { MatDialogModule } from '@angular/material/dialog';
-import { CinematicService } from 'src/app/service/cinematic.service';
 import { Component } from '@angular/core';
-import { PieDashboardService } from '../service/pie-dashboard.service';
-import { AnalysisTypeSlice } from '../analysis-type-slice';
-import { LevelStaffRisk } from '../level-staff-risk';
+import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
+import { By } from '@angular/platform-browser';
 import { DynamicPieChartModule, Slice } from 'dynamic-pie-chart';
 import { BehaviorSubject } from 'rxjs';
-import { By } from '@angular/platform-browser';
+import { AnalysisTypeSlice } from '../analysis-type-slice';
+import { LevelStaffRisk } from '../level-staff-risk';
+
 
 describe('lib-dynamic-pie-chart (import)', () => {
 	let component: TestHostComponent;
@@ -31,60 +23,6 @@ describe('lib-dynamic-pie-chart (import)', () => {
 	class TestHostComponent {
 		public slices$ = new BehaviorSubject<Slice[]>([]);
 		constructor() {
-			this.slices$.next([
-				{
-					id: 0,
-					type: AnalysisTypeSlice.Sonar,
-					angle: 45,
-					backgroundColor: 'green',
-					textColor: 'black',
-					textFontSize: '16px',
-					offset: 0,
-					activated: false,
-					selected: false,
-					children: [],
-					data: LevelStaffRisk.low,
-				},
-				{
-					id: 1,
-					type: AnalysisTypeSlice.Sonar,
-					angle: 20,
-					backgroundColor: 'orange',
-					textColor: 'black',
-					textFontSize: '16px',
-					offset: 45,
-					activated: false,
-					selected: false,
-					children: [],
-					data: LevelStaffRisk.medium,
-				},
-				{
-					id: 2,
-					type: AnalysisTypeSlice.Sonar,
-					angle: 10,
-					backgroundColor: 'red',
-					textColor: 'black',
-					textFontSize: '16px',
-					offset: 65,
-					activated: false,
-					selected: false,
-					children: [],
-					data: LevelStaffRisk.high,
-				},
-				{
-					id: 3,
-					type: AnalysisTypeSlice.Sonar,
-					angle: 99,
-					backgroundColor: 'blue',
-					textColor: 'black',
-					textFontSize: '16px',
-					offset: 75,
-					activated: false,
-					selected: false,
-					children: [],
-					data: LevelStaffRisk.undefined,
-				}			
-			]);
 		}
 	}
 
@@ -101,10 +39,66 @@ describe('lib-dynamic-pie-chart (import)', () => {
 	beforeEach(() => {
 		fixture = TestBed.createComponent(TestHostComponent);
 		component = fixture.componentInstance;
+
+		component.slices$.next([
+			{
+				id: 0,
+				type: AnalysisTypeSlice.Sonar,
+				angle: 45,
+				backgroundColor: 'green',
+				textColor: 'black',
+				textFontSize: '16px',
+				offset: 0,
+				activated: false,
+				selected: false,
+				children: [],
+				data: LevelStaffRisk.low,
+			},
+			{
+				id: 1,
+				type: AnalysisTypeSlice.Sonar,
+				angle: 20,
+				backgroundColor: 'orange',
+				textColor: 'black',
+				textFontSize: '16px',
+				offset: 45,
+				activated: false,
+				selected: false,
+				children: [],
+				data: LevelStaffRisk.medium,
+			},
+			{
+				id: 2,
+				type: AnalysisTypeSlice.Sonar,
+				angle: 10,
+				backgroundColor: 'red',
+				textColor: 'black',
+				textFontSize: '16px',
+				offset: 65,
+				activated: false,
+				selected: false,
+				children: [],
+				data: LevelStaffRisk.high,
+			},
+			{
+				id: 3,
+				type: AnalysisTypeSlice.Sonar,
+				angle: 99,
+				backgroundColor: 'blue',
+				textColor: 'black',
+				textFontSize: '16px',
+				offset: 75,
+				activated: false,
+				selected: false,
+				children: [],
+				data: LevelStaffRisk.undefined,
+			}			
+		]);
+
 		fixture.detectChanges();
 	});
 
-	it('should the imported dynamic pie chart', done => {
+	it('should the imported dynamic pie chart.', done => {
 		expect(component).toBeTruthy();
 		expect(fixture.debugElement.query(By.css('#pieSlice-1-0'))).toBeDefined();
 		expect(fixture.debugElement.query(By.css('#pieSlice-1-1'))).toBeDefined();
