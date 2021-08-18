@@ -3,7 +3,9 @@ import { Component } from '@angular/core';
 import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 import { MatDialogModule } from '@angular/material/dialog';
 import { MatTableModule } from '@angular/material/table';
+import { By } from '@angular/platform-browser';
 import { RouterTestingModule } from '@angular/router/testing';
+import { doesNotReject } from 'assert';
 import { DynamicPieChartModule } from 'dynamic-pie-chart';
 import { take } from 'rxjs/operators';
 import { CinematicService } from 'src/app/service/cinematic.service';
@@ -22,7 +24,7 @@ describe('PieChartComponent', () => {
 
 	@Component({
 		selector: 'app-host-component',
-		template: `<div style="width: 300px; height:300px; backgroundColor: whiteSmoke">
+		template: `<div style="width: 300px; height:300px; backgroundColor: transparent">
 						<app-pie-chart
 							[debug]=true
 							[radius]=150
@@ -35,6 +37,42 @@ describe('PieChartComponent', () => {
 	class TestHostComponent {
 
 		constructor(pieDashboardService: PieDashboardService) {
+			pieDashboardService.slices$.next(
+				[
+					{
+						id: 0,
+						type: AnalysisTypeSlice.Sonar,
+						angle: 45,
+						backgroundColor: 'green',
+						textColor: 'black',
+						textFontSize: '16px',
+						offset: 0,
+						activated: false,
+						selected: false,
+						children: [],
+						data: LevelStaffRisk.low
+					}
+				]
+			);
+		}
+	}
+
+	beforeEach(waitForAsync(() => {
+		TestBed.configureTestingModule({
+			declarations: [ PieChartComponent, TestHostComponent ],
+			imports:  [DynamicPieChartModule, MatDialogModule, HttpClientTestingModule],
+			providers: [ProjectService, ReferentialService, CinematicService, PieDashboardService]
+		})
+		.compileComponents();
+
+	}));
+
+	beforeEach(() => {
+		fixture = TestBed.createComponent(TestHostComponent);
+		component = fixture.componentInstance;
+		fixture.detectChanges();
+		const pieDashboardService = TestBed.inject(PieDashboardService);
+		setTimeout(() => {
 			pieDashboardService.slices$.next(
 				[
 					{
@@ -89,34 +127,14 @@ describe('PieChartComponent', () => {
 						children: [],
 						data: LevelStaffRisk.low
 					}
-				]);	
-		}
-	}
-
-	beforeEach(waitForAsync(() => {
-		TestBed.configureTestingModule({
-			declarations: [ PieChartComponent, TestHostComponent ],
-			imports:  [DynamicPieChartModule, MatDialogModule, HttpClientTestingModule],
-			providers: [ProjectService, ReferentialService, CinematicService, PieDashboardService]
-		})
-		.compileComponents();
-
-	}));
-
-	beforeEach(() => {
-		fixture = TestBed.createComponent(TestHostComponent);
-		component = fixture.componentInstance;
-		fixture.detectChanges();
+				]
+			);
+			fixture.detectChanges();				
+		}, 100);
 	});
 
 	it('should create & display the component pie chart.',done => {
 		expect(component).toBeTruthy();
-		setTimeout(() => {			
-			const pieDashboardService = TestBed.inject(PieDashboardService);
-			pieDashboardService.slices$.pipe(take(1)).subscribe({
-				next: slices => console.log ('Receiving %d slices', slices.length),
-				complete: () => done()
-			})
-		}, 1000);
+		done();
 	});
 });
