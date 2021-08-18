@@ -69,7 +69,6 @@ describe('ProjectService.createNewProject$(...) behavior', () => {
 			next: project => {
 				expect(project.id).toEqual(6);
 				expect(project.name).toEqual('The sixth project');
-
 				done();
 			}
 		});

@@ -1,10 +1,11 @@
 <div id="host-pie-chart">
     <lib-dynamic-pie-chart
+        [debug]=debug
         [pie]=pie
         [radius]=radius
         [active]=active
         [legend]=legend
-        [slices$]=slices$
+        [slices$]=pieDashboardService.slices$
         [typeSlices$]=typeSlices$
         [filteredIds$]=filteredIds$
         (selected)="sliceSelection($event)" 

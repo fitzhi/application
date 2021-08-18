@@ -11,6 +11,7 @@ import { Component } from '@angular/core';
 import { PieDashboardService } from '../service/pie-dashboard.service';
 import { AnalysisTypeSlice } from '../analysis-type-slice';
 import { LevelStaffRisk } from '../level-staff-risk';
+import { DynamicPieChartModule } from 'dynamic-pie-chart';
 
 describe('PieChartComponent with only One Slice', () => {
 	let component: TestHostComponent;
@@ -19,28 +20,28 @@ describe('PieChartComponent with only One Slice', () => {
 	@Component({
 		selector: 'app-host-component',
 		template: `<table>
-									<tr>
-										<td>
-											<div style="width:400px;height:400px;background-color:whiteSmoke">
-													<app-pie-chart
-														[radius]=150
-														[pie]=7
-														[filteredSlice]=3
-														[active]=false>
-													</app-pie-chart>
-											</div>
-										</td>
-										<td>
-											<div style="width:300px;height:300px;background-color:transparent">
-												<app-pie-chart
-													[radius]=100
-													[pie]=3
-													[active]=false>
-												</app-pie-chart>
-											</div>
-										</td>
-									</tr>
-								</table>`
+						<tr>
+							<td>
+								<div style="width:400px;height:400px;background-color:whiteSmoke">
+										<app-pie-chart
+											[radius]=150
+											[pie]=7
+											[filteredId]=3
+											[active]=true>
+										</app-pie-chart>
+								</div>
+							</td>
+							<td>
+								<div style="width:300px;height:300px;background-color:transparent">
+									<app-pie-chart
+										[radius]=100
+										[pie]=3
+										[active]=true>
+									</app-pie-chart>
+								</div>
+							</td>
+						</tr>
+					</table>`
 	})
 	class TestHostComponent {
 	}
@@ -48,7 +49,7 @@ describe('PieChartComponent with only One Slice', () => {
 	beforeEach(waitForAsync(() => {
 		TestBed.configureTestingModule({
 			declarations: [ PieChartComponent, TestHostComponent ],
-			imports: [MatTableModule, HttpClientTestingModule, RouterTestingModule, MatDialogModule],
+			imports: [MatTableModule, HttpClientTestingModule, RouterTestingModule, MatDialogModule, DynamicPieChartModule],
 			providers: [ReferentialService, CinematicService, PieDashboardService]
 		})
 		.compileComponents();
@@ -117,8 +118,8 @@ describe('PieChartComponent with only One Slice', () => {
 		fixture.detectChanges();
 	});
 
-	it('should create & display the Pie chart', () => {
-
+	it('should create & display the Pie chart', done => {
 		expect(component).toBeTruthy();
+		done();
 	});
 });
