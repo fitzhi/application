@@ -29,11 +29,16 @@ export class Constants {
 		Constants.LEVEL_Beginner];
 
 	/**
-	 * This constant is used to save in the session storage, the transferred Etag sent by the '/api/projects' endpoint.
+	 * This constant is used to save in the session storage, the transferred Etag sent by the '/api/project' endpoint.
 	 */
-	public static ETAG_PROJECTS = 'etag-api/project';
+	public static ETAG_PROJECT = 'etag-api/project';
 
 	/**
+	 * This constant is used to save in the session storage, the transferred Etag sent by the '/api/staff' endpoint.
+	 */
+	 public static ETAG_STAFF = 'etag-api/staff';
+
+	 /**
 	 * Form identifiers active
 	 */
 	public static WELCOME = 0;

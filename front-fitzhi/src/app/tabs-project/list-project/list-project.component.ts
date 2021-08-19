@@ -70,7 +70,7 @@ export class ListProjectComponent extends BaseDirective implements OnInit, After
 	ngOnInit() {
 
 		if (localStorage.getItem('dev') === '1') {
-			this.staffListService.loadStaff();
+			this.staffListService.reloadStaff();
 		}
 
 		this.subscriptions.add(

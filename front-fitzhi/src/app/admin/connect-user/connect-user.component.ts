@@ -78,7 +78,8 @@ export class ConnectUserComponent implements OnInit {
 				if (connectionStatus) {
 					// We load the projects and start the refresh process.
 					this.projectService.startLoadingProjects();
-					this.staffListService.loadStaff();
+					// We load the staff and start the refresh process.
+					this.staffListService.startLoadingStaff();
 				}
 
 				if (this.directLogin) {

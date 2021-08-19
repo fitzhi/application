@@ -82,7 +82,7 @@ describe('ProjectService.reloadProjects()', () => {
 			}
 		);
 
-		expect(sessionStorage.getItem(Constants.ETAG_PROJECTS)).toBe('a_testing_Etag');
+		expect(sessionStorage.getItem(Constants.ETAG_PROJECT)).toBe('a_testing_Etag');
 		done();
 	});
 

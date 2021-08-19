@@ -114,7 +114,7 @@ export class ProjectService extends InternalService {
 	 */
 	reloadProjects() {
 		if (traceOn()) {
-			this.log(`Fetching the projects on URL ${this.backendSetupService.url()}/api/project.`);
+			console.log(`Fetching the projects on URL ${this.backendSetupService.url()}/api/project.`);
 		}
 		let headers = new HttpHeaders();
 		if (this.getEtag()) {
@@ -151,7 +151,7 @@ export class ProjectService extends InternalService {
 	 * @param response the response which contains the Etag header to be saved.
 	 */
 	private saveEtag(response: HttpResponse<Project[]>) {
-		sessionStorage.setItem(Constants.ETAG_PROJECTS, response.headers.get('Etag'));
+		sessionStorage.setItem(Constants.ETAG_PROJECT, response.headers.get('Etag'));
 		if (traceOn()) {
 			console.log ('Etag saved', response.headers.get('Etag'));
 		}
@@ -162,7 +162,7 @@ export class ProjectService extends InternalService {
 	 * @returns the Etag saved in the session storage
 	 */
 	private getEtag(): string {
-		const etag = sessionStorage.getItem('etag-api/project');
+		const etag = sessionStorage.getItem(Constants.ETAG_PROJECT);
 		if (traceOn()) {
 			console.log ('Etag retrieved', etag);
 		}
