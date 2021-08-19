@@ -386,7 +386,7 @@ public class ProjectController  {
 		}			
 		
 		String[] branches = unfiltered_branches
-								.stream()
+								.parallelStream()
 								.map(Ref::getLeaf)
 								.map(Ref::getName)
 								.filter(s -> s.contains(REF_HEADS))
@@ -424,7 +424,7 @@ public class ProjectController  {
 			if (log.isInfoEnabled()) {
 				log.info("The projects collection is beeing shuffled for confidentiality purpose");
 			}
-			projects.stream().forEach(project -> {
+			projects.parallelStream().forEach(project -> {
 				final Project clone = buildProjectWithoutPassword(project);
 				clone.setName(shuffleService.shuffle(clone.getName()));
 				clone.setUsername(shuffleService.shuffle(clone.getUsername()));
