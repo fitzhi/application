@@ -92,7 +92,7 @@ describe('lib-dynamic-pie-chart (import)', () => {
 				selected: false,
 				children: [],
 				data: LevelStaffRisk.undefined,
-			}			
+			}
 		]);
 
 		fixture.detectChanges();

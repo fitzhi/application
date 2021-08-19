@@ -129,11 +129,11 @@ describe('PieChartComponent', () => {
 					}
 				]
 			);
-			fixture.detectChanges();				
+			fixture.detectChanges();
 		}, 100);
 	});
 
-	it('should create & display the component pie chart.',done => {
+	it('should create & display the component pie chart.', done => {
 		expect(component).toBeTruthy();
 		done();
 	});

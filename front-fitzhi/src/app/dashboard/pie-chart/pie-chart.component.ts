@@ -20,9 +20,9 @@ export class PieChartComponent extends BaseDirective implements OnDestroy, After
 	/**
 	 * Debug mode for the dynamic pie chart dependency.
 	 */
-	 @Input() debug = false;
+	@Input() debug = false;
 
-	 /**
+	/**
 	 * Radius of the Pie.
 	 */
 	@Input() radius: number;

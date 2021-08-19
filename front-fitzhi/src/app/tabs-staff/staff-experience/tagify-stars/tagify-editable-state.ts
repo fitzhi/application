@@ -1,4 +1,5 @@
 export enum TagifyEditableState {
+
 	/**
 	 * The complete component is READ ONLY.
 	 * You cannot :

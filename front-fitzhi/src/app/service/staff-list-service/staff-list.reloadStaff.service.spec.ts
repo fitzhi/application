@@ -26,11 +26,11 @@ describe('ListStaffService', () => {
 		InitTest.addImports(testConf.imports);
 		InitTest.addProviders(testConf.providers);
 		TestBed.configureTestingModule(testConf).compileComponents();
-		
+
 		service = TestBed.inject(StaffListService);
-		
+
 		httpTestingController = TestBed.inject(HttpTestingController);
-		
+
 		backendSetupService = TestBed.inject(BackendSetupService);
 		backendSetupService.saveUrl('URL_OF_SERVER');
 
@@ -124,7 +124,7 @@ describe('ListStaffService', () => {
 		);
 
 		service.allStaff$.pipe(take(2)).subscribe({
-			next: staff => {
+			next: () => {
 				expect(service.allStaff.length).toBe(1);
 				done();
 			}

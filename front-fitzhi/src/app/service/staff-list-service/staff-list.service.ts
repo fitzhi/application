@@ -41,7 +41,7 @@ export class StaffListService {
 	/**
 	 * Start the **Staff** loading process.
 	 */
-	 startLoadingStaff(): void {
+	startLoadingStaff(): void {
 		this.reloadStaff();
 		this.staffListListenerService.sub = this.staffListListenerService.intervalLoadStaff$.subscribe({
 			next: val => {
@@ -59,7 +59,7 @@ export class StaffListService {
 		}
 		let headers = new HttpHeaders();
 		if (this.getEtag()) {
-			headers = headers.append ('If-None-Match', this.getEtag());
+			headers = headers.append('If-None-Match', this.getEtag());
 		}
 
 		this.httpClient
@@ -74,7 +74,7 @@ export class StaffListService {
 				catchError(error => {
 					// This is not an error, if the projects collection has not been mofified.
 					// This is is the nominal behavior.
-					if  (error.status !== NOT_MODIFIED) {
+					if (error.status !== NOT_MODIFIED) {
 						this.staffListListenerService.interruptStaffListener();
 					}
 					return EMPTY;
@@ -92,10 +92,10 @@ export class StaffListService {
 	 * Take in account the staff list declared in the application.
 	 * @param projects the retrieved staff members
 	 */
-	 takeInAccountStaff(staff: Collaborator[]) {
+	takeInAccountStaff(staff: Collaborator[]) {
 		if (traceOn()) {
 			console.groupCollapsed('Staff retrieved');
-			staff.forEach(st => console.log (`${st.idStaff} ${st.firstName} ${st.lastName}`))
+			staff.forEach(st => console.log(`${st.idStaff} ${st.firstName} ${st.lastName}`));
 			console.table(staff);
 			console.groupEnd();
 		}
@@ -107,10 +107,10 @@ export class StaffListService {
 	 * Save the `Etag` header in the session storage.
 	 * @param response the response which contains the Etag header to be saved.
 	 */
-	 saveEtag(response: HttpResponse<Collaborator[]>) {
+	saveEtag(response: HttpResponse<Collaborator[]>) {
 		sessionStorage.setItem(Constants.ETAG_STAFF, response.headers.get('Etag'));
 		if (traceOn()) {
-			console.log ('Etag saved', response.headers.get('Etag'));
+			console.log('Etag saved', response.headers.get('Etag'));
 		}
 	}
 
@@ -121,7 +121,7 @@ export class StaffListService {
 	private getEtag(): string {
 		const etag = sessionStorage.getItem(Constants.ETAG_STAFF);
 		if (traceOn()) {
-			console.log ('Etag retrieved', etag);
+			console.log('Etag retrieved', etag);
 		}
 		return etag;
 	}
@@ -165,7 +165,7 @@ export class StaffListService {
 		const staff = this.allStaff.find(collab => collab.idStaff === id);
 		if (!staff) {
 			if (traceOn()) {
-				console.log ('Cannot retrieve the staff member with the identifier %d', id);
+				console.log('Cannot retrieve the staff member with the identifier %d', id);
 			}
 			return null;
 		} else {
@@ -219,8 +219,9 @@ export class StaffListService {
 							latest.dateCommit = mission.lastCommit.toString();
 						}
 					}
-				}});
+				}
 			});
+		});
 		return latest;
 	}
 
@@ -237,7 +238,6 @@ export class StaffListService {
 			.find(collab =>
 				(collab.firstName.replace('-', ' ').toLowerCase() === staff.firstName.toLowerCase()) &&
 				(collab.lastName.replace('-', ' ').toLowerCase() === staff.lastName.toLowerCase()));
-
 	}
 
 	/**

@@ -36,9 +36,9 @@ export class Constants {
 	/**
 	 * This constant is used to save in the session storage, the transferred Etag sent by the '/api/staff' endpoint.
 	 */
-	 public static ETAG_STAFF = 'etag-api/staff';
+	public static ETAG_STAFF = 'etag-api/staff';
 
-	 /**
+	/**
 	 * Form identifiers active
 	 */
 	public static WELCOME = 0;
