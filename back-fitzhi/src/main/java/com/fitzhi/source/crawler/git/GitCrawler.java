@@ -813,7 +813,7 @@ public class GitCrawler extends AbstractScannerDataGenerator {
 
 				RevCommit[] tabCommits = chronoCommits.toArray(new RevCommit[0]);
 
-				for (int i=0; i < tabCommits.length;  i++) {
+				for (int i = 0; i < tabCommits.length;  i++) {
 					
 					RevCommit previousCommit = (i == tabCommits.length - 1) ? firstCommit :  tabCommits[i+1];
 					try (ObjectReader reader = repository.newObjectReader()) {
@@ -1091,7 +1091,7 @@ public class GitCrawler extends AbstractScannerDataGenerator {
 	public void filterEligible(RepositoryAnalysis analysis) {
 
 		analysis.setChanges(new SourceControlChanges(
-				analysis.getChanges().entrySet().stream().filter(map -> isEligible(map.getKey()))
+				analysis.getChanges().entrySet().parallelStream().filter(map -> isEligible(map.getKey()))
 						.collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue))));
 
 		// Entries non filtered
