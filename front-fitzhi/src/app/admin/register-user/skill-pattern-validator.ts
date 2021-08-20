@@ -10,8 +10,12 @@ export class SkillPatternValidator {
 		return (formGroup: FormGroup) => {
 			const detectionType: string = formGroup.get('detectionType').value;
 			const pattern: string = formGroup.get('pattern').value;
-			if ((pattern) && !(isNaN(+detectionType))) {
-				return { 'patternRequired': true };
+			if ((detectionType.length === 0) && (pattern.length === 0)) {
+				return null;
+			} else {
+				if ((+detectionType >= 0) && (pattern.length === 0)) {
+					return { 'patternRequired': true };
+				}
 			}
 			return null;
 		};
