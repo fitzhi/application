@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
 
+import com.fitzhi.Global;
 import com.fitzhi.bean.AsyncTask;
 import com.fitzhi.data.internal.Task;
 import com.fitzhi.exception.ApplicationException;
@@ -93,7 +94,12 @@ public class AsyncTaskTest {
 		Assert.assertFalse(asyncTask.hasActiveTask(OPERATION_OF_TEST, PROJECT, 1));
 	}
 	
-	
+	@Test
+	public void testSimpleTrace() {
+		String trace = asyncTask.trace();
+		Assert.assertEquals("operation of test project 1 0%" + Global.LN, trace);
+	}
+
 	@After
 	public void after() {
 		asyncTask.removeTask(OPERATION_OF_TEST, PROJECT, 1);		
