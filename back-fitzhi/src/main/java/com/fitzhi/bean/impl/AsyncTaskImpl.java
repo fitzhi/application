@@ -82,7 +82,7 @@ public class AsyncTaskImpl implements AsyncTask {
 			.filter(t -> !t.isComplete())
 			.sorted(Comparator.comparingInt(Task::getId))
 			.forEach(task -> {
-				sb.append(String.format("%s %s %d %d%%	", 
+				sb.append(String.format("%s %s %d %d%%", 
 					task.getOperation(), 
 					task.getTitle(), 
 					task.getId(), 
