@@ -7,16 +7,16 @@ import static com.fitzhi.Global.LN;
 import static com.fitzhi.Global.NO_PROGRESSION;
 
 import java.text.MessageFormat;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.Map;
-
-import org.springframework.context.annotation.Scope;
-import org.springframework.stereotype.Service;
 
 import com.fitzhi.bean.AsyncTask;
 import com.fitzhi.data.internal.Task;
 import com.fitzhi.data.internal.TaskLog;
 import com.fitzhi.exception.ApplicationException;
+
+import org.springframework.stereotype.Service;
 
 import lombok.extern.slf4j.Slf4j;
 
@@ -28,7 +28,6 @@ import lombok.extern.slf4j.Slf4j;
  */
 @Slf4j
 @Service
-@Scope("singleton")
 public class AsyncTaskImpl implements AsyncTask {
 
 	private final Map<String, Task> tasks = new HashMap<>();
@@ -78,8 +77,17 @@ public class AsyncTaskImpl implements AsyncTask {
 	
 	@Override
 	public String trace() {
-		StringBuilder sb = new StringBuilder(LN);
-		tasks.values().stream().forEach(task -> sb.append(task.toString()).append(LN));
+		StringBuilder sb = new StringBuilder();
+		tasks.values().stream()
+			.filter(t -> !t.isComplete())
+			.sorted(Comparator.comparingInt(Task::getId))
+			.forEach(task -> {
+				sb.append(String.format("%s %s %d %d%%	", 
+					task.getOperation(), 
+					task.getTitle(), 
+					task.getId(), 
+					task.getCurrentProgressionPercentage()) ).append(LN);
+			});
 		return sb.toString();
 	}
 	
