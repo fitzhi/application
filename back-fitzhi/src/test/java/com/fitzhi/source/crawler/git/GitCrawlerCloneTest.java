@@ -8,6 +8,7 @@ import com.fitzhi.data.source.ConnectionSettings;
 import com.fitzhi.exception.ApplicationException;
 import com.fitzhi.source.crawler.RepoScanner;
 
+import org.eclipse.jgit.api.errors.GitAPIException;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -65,7 +66,7 @@ public class GitCrawlerCloneTest {
 	 * Handling the exception when the branch does not exist (anymore?)
 	 * @throws Exception
 	 */
-	@Test(expected = ApplicationException.class)
+	@Test(expected = GitAPIException.class)
 	public void invalidBranchName() throws Exception {
 		Project project = projectHandler.lookup(1214);
 
