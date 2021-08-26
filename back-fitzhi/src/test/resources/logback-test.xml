@@ -16,13 +16,14 @@
 		<appender-ref ref="STDOUT" />
 	</root>
 
-<!-- Parking for my logging. 
-
-	<logger name="com.fitzhi.bean.impl.ProjectHandlerImpl" additivity="false">
-		<level value="DEBUG" />
+ 	<logger name="com.fitzhi.source" additivity="false">
+		<level value="WARN" />
 		<appender-ref ref="STDOUT" />
 	</logger>
 
+<!-- Parking for my logging. 
+
+ 
 	<logger name="com.fitzhi.source.crawler.javaparser.MarkAnnotationExpParser" additivity="false">
 		<level value="DEBUG" />
 		<appender-ref ref="STDOUT" />
