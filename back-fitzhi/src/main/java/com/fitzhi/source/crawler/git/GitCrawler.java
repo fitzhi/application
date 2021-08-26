@@ -97,6 +97,7 @@ import com.google.gson.Gson;
 
 import org.eclipse.jgit.api.Git;
 import org.eclipse.jgit.api.errors.GitAPIException;
+import org.eclipse.jgit.api.errors.JGitInternalException;
 import org.eclipse.jgit.diff.DiffConfig;
 import org.eclipse.jgit.diff.DiffEntry;
 import org.eclipse.jgit.diff.DiffEntry.ChangeType;
@@ -104,6 +105,7 @@ import org.eclipse.jgit.diff.DiffFormatter;
 import org.eclipse.jgit.diff.Edit;
 import org.eclipse.jgit.diff.RawTextComparator;
 import org.eclipse.jgit.errors.CorruptObjectException;
+import org.eclipse.jgit.errors.MissingObjectException;
 import org.eclipse.jgit.lib.Config;
 import org.eclipse.jgit.lib.Constants;
 import org.eclipse.jgit.lib.ObjectReader;
@@ -327,6 +329,11 @@ public class GitCrawler extends AbstractScannerDataGenerator {
 	 * Initialization of the Google JSON parser.
 	 */
 	Gson gson = new Gson();
+
+	/**
+	 * To avoid any conflict during the GIT operations.
+	 */
+	public final Object locker = new Object();
 
 	/**
 	 * GitScanner constructor.
@@ -624,7 +631,7 @@ public class GitCrawler extends AbstractScannerDataGenerator {
 	}
 
 	@Override
-	public List<RevCommit> fileGitHistory(Project project, Repository repository, String filePath)
+	public synchronized List<RevCommit> fileGitHistory(Project project, Repository repository, String filePath)
 			throws ApplicationException {
 
 		if (log.isDebugEnabled()) {
@@ -637,18 +644,24 @@ public class GitCrawler extends AbstractScannerDataGenerator {
 
 			rw.setTreeFilter(getFollowFilter(repository, filePath));
 
-			try {
-				rw.markStart(rw.parseCommit(repository.resolve(Constants.HEAD)));
-			} catch (final Exception e) {
-				String stackTrace = Stream.of(e.getStackTrace()).map(StackTraceElement::toString)
-						.collect(Collectors.joining("\n"));
-				log.error(stackTrace);
-				throw new ApplicationException(CODE_PARSING_SOURCE_CODE, MESSAGE_PARSING_SOURCE_CODE, e);
-			}
+			rw.markStart(rw.parseCommit(repository.resolve(Constants.HEAD)));
 
 			for (RevCommit c : rw) {
 				commits.add(c);
 			}
+
+		} catch (MissingObjectException moe) {
+			// We skip this file, and we DO NOT ABORT the process.
+			if (log.isWarnEnabled()) {
+				log.warn(String.format("Skipping file %s.", filePath));
+				String stackTrace = getStackTrace(moe);
+				log.warn(stackTrace);
+			}
+			return commits;
+		} catch (final Exception e) {
+			String stackTrace = getStackTrace(e);
+			log.error(stackTrace);
+			throw new ApplicationException(CODE_PARSING_SOURCE_CODE, MESSAGE_PARSING_SOURCE_CODE, e);
 		}
 		return commits;
 	}
@@ -679,10 +692,14 @@ public class GitCrawler extends AbstractScannerDataGenerator {
 				CanonicalTreeParser newTreeIter = new CanonicalTreeParser();
 				newTreeIter.reset(reader, to.getTree().getId());
 	
-				List<DiffEntry> diffs = (filter != null) ?
-					git.diff().setNewTree(newTreeIter).setOldTree(oldTreeIter).setPathFilter(filter).call() :             
-					git.diff().setNewTree(newTreeIter).setOldTree(oldTreeIter).call();             
-				
+				List<DiffEntry> diffs = null;
+
+//				synchronized(locker) {
+					diffs = (filter != null) ?
+						git.diff().setNewTree(newTreeIter).setOldTree(oldTreeIter).setPathFilter(filter).call() :             
+						git.diff().setNewTree(newTreeIter).setOldTree(oldTreeIter).call();             
+//				}
+
 				if  (diffs.size() == 0) {
 					return null;
 				}
@@ -714,6 +731,15 @@ public class GitCrawler extends AbstractScannerDataGenerator {
 				}
 				
 				return entry;
+			} catch (final CorruptObjectException | JGitInternalException | MissingObjectException gte) {
+				// The clone retrieved database possibly corrupted.
+				// We do not abort the generation for this scenario
+				// We just skip this file in the audit.
+				if (log.isWarnEnabled()) {
+					log.warn(String.format("%s handling for %s", gte.getClass().getName(), pathname));
+					log.warn(getStackTrace(gte));
+				}
+				return null;
 			} catch (final Exception e) {
 				log.error(pathname);
 				log.error(getStackTrace(e));
@@ -721,6 +747,7 @@ public class GitCrawler extends AbstractScannerDataGenerator {
 			}
 		}
 	}
+	
 	@Override
 	public RepositoryAnalysis retrieveRepositoryAnalysis(Project project, Repository repository) throws ApplicationException {
 

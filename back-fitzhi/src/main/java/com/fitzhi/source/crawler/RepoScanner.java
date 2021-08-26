@@ -370,6 +370,11 @@ public interface RepoScanner {
 	 * <p>
 	 * This method scans the local repository and returns the list of commits where the file has been modified, <b>and ALSO RENAMED as well</b>.
 	 * </p>
+	 * <em>
+	 * The corresponding implementation with GIT should be {@code synchronized} due to the fact that {@link RevWalk} is not thread safe
+	 * </em>
+	 * @see https://archive.eclipse.org/jgit/docs/jgit-2.0.0.201206130900-r/apidocs/org/eclipse/jgit/revwalk/RevWalk.html
+	 * 
 	 * @param project the current projett
 	 * @param repository the project repository
 	 * @param filePath the file Path
