@@ -5,7 +5,6 @@ import java.nio.file.Paths;
 import com.fitzhi.bean.ProjectHandler;
 import com.fitzhi.data.internal.Project;
 import com.fitzhi.data.source.ConnectionSettings;
-import com.fitzhi.exception.ApplicationException;
 import com.fitzhi.source.crawler.RepoScanner;
 
 import org.eclipse.jgit.api.errors.GitAPIException;
