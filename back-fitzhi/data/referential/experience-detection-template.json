@@ -52,5 +52,11 @@
 		"idSkill": "6",
 		"typeCode": "NumberOfLines",
 		"filePattern": ".py$"
+	},
+	{
+		"idEDT": 8,
+		"idSkill": "24",
+		"typeCode": "NumberOfLines",
+		"filePattern": ".sh$"
 	}
 ]

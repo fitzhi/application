@@ -142,5 +142,13 @@
 			"detectionType": "0",
 			"pattern": ".go$"
 		}
+	},
+	"24": {
+		"id": 24,
+		"title": "Shell script",
+		"detectionTemplate": {
+			"detectionType": "0",
+			"pattern": ".sh$"
+		}
 	}
 }
