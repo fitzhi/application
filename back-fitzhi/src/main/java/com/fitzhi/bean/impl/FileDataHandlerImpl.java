@@ -429,7 +429,7 @@ public class FileDataHandlerImpl implements DataHandler {
 				}
 			}
 		} catch (IOException ioe) {
-			log.error("Internal error", ioe);
+			log.error(String.format("Internal error for project %s", project.getName()) , ioe);
 			throw new ApplicationException(CODE_IO_ERROR, MessageFormat.format(MESSAGE_IO_ERROR, filename), ioe);
 		}
 

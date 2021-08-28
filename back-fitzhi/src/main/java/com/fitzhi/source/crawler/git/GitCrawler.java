@@ -659,8 +659,7 @@ public class GitCrawler extends AbstractScannerDataGenerator {
 			}
 			return commits;
 		} catch (final Exception e) {
-			String stackTrace = getStackTrace(e);
-			log.error(stackTrace);
+			log.error("exception", e);
 			throw new ApplicationException(CODE_PARSING_SOURCE_CODE, MESSAGE_PARSING_SOURCE_CODE, e);
 		}
 		return commits;
