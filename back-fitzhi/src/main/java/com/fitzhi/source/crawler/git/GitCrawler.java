@@ -691,13 +691,18 @@ public class GitCrawler extends AbstractScannerDataGenerator {
 				CanonicalTreeParser newTreeIter = new CanonicalTreeParser();
 				newTreeIter.reset(reader, to.getTree().getId());
 	
+				//
+				// We catch this error for some HUGE repositories (such as kubernetes in my sample projects)
+				//
 				List<DiffEntry> diffs = null;
-
-//				synchronized(locker) {
+				try {
 					diffs = (filter != null) ?
 						git.diff().setNewTree(newTreeIter).setOldTree(oldTreeIter).setPathFilter(filter).call() :             
 						git.diff().setNewTree(newTreeIter).setOldTree(oldTreeIter).call();             
-//				}
+				} catch (final OutOfMemoryError oome) {
+					log.error(pathname, oome);
+					return null;
+				}
 
 				if  (diffs.size() == 0) {
 					return null;
@@ -1424,6 +1429,7 @@ public class GitCrawler extends AbstractScannerDataGenerator {
 			tasks.addTask(DASHBOARD_GENERATION, "project", project.getId());
 			generate(project, settings);
 		} catch (ApplicationException ae) {
+			log.error(String.format("generateAsync('%s')", project.getName()), ae);
 			tasks.logMessage(DASHBOARD_GENERATION, "project", project.getId(), ae.errorCode, ae.errorMessage, NO_PROGRESSION);
 			failed = true;
 			throw ae;
@@ -1443,6 +1449,7 @@ public class GitCrawler extends AbstractScannerDataGenerator {
 					tasks.completeTaskOnError(DASHBOARD_GENERATION, "project", project.getId());
 				}
 			} catch (ApplicationException e) {
+				e.printStackTrace();
 				log.error(Error.getStackTrace(e));
 			}
 		}
