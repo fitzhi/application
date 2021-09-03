@@ -378,6 +378,20 @@ export class ProjectSunburstComponent extends BaseDirective implements OnInit, A
 		}
 	}
 
+	/**
+	 * Test if the previous chart is still present.
+	 * If this chart is still there, we hide this useless element.
+	 */
+	public hidePreviousSunburstChartDetector() {
+		let elements = document.getElementsByClassName('sunburst-viz');
+		if (elements && elements.length > 0) {
+			if (traceOn()) {
+				console.log ('Former element still present, we\'ll remove it.');
+			}
+			elements[0].setAttribute('style', 'display:none');
+		}
+	}
+
 	handleSunburstData(response: any) {
 
 		if (!this.myChart) {
@@ -393,6 +407,9 @@ export class ProjectSunburstComponent extends BaseDirective implements OnInit, A
 			console.warn ('The application is in an unexpected state');
 			console.warn('Chart is not present in the HTML layout for the projet %s', this.projectService.project.name);
 		} else {
+			// Hack to hide the previous chart container is it's still there
+			this.hidePreviousSunburstChartDetector();
+			// We insert the chart into the DOM
 			this.myChart.data(response.sunburstData)
 				.width(500)
 				.height(500)

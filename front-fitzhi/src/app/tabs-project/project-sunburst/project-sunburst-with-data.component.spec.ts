@@ -1,34 +1,30 @@
 
 import { ComponentFixture, TestBed, TestModuleMetadata, waitForAsync } from '@angular/core/testing';
-import { ProjectSunburstComponent, PreviewContext } from './project-sunburst.component';
-import { InitTest } from 'src/app/test/init-test';
-import { MatSidenavModule } from '@angular/material/sidenav';
-import { NodeDetailComponent } from './node-detail/node-detail.component';
 import { MatCardModule } from '@angular/material/card';
-import { ProjectGhostsComponent } from './project-ghosts/project-ghosts.component';
-import { TableDependenciesComponent } from './table-dependencies/table-dependencies.component';
-import { DialogLegendSunburstComponent } from './legend-sunburst/legend-sunburst.component';
-import { ListFilenamesComponent } from './node-detail/list-filenames/list-filenames.component';
-import { ListContributorsComponent } from './node-detail/list-contributors/list-contributors.component';
-import { TableGhostsComponent } from './project-ghosts/table-ghosts/table-ghosts.component';
+import { MatSidenavModule } from '@angular/material/sidenav';
 import { RouterTestingModule } from '@angular/router/testing';
-import { SSEWatcherComponent } from './ssewatcher/ssewatcher.component';
-import { ProjectService } from 'src/app/service/project/project.service';
+import { NgxPopper } from 'angular-popper';
+import { connectableObservableDescriptor } from 'rxjs/internal/observable/ConnectableObservable';
 import { Project } from 'src/app/data/project';
 import { MessageBoxComponent } from 'src/app/interaction/message-box/dialog/message-box.component';
-import { SunburstCinematicService } from './service/sunburst-cinematic.service';
-import { NgxPopper } from 'angular-popper';
-import { data } from './data-sunburst';
-import { SunburstCacheService } from './service/sunburst-cache.service';
-import { HttpTestingController } from '@angular/common/http/testing';
 import { BackendSetupService } from 'src/app/service/backend-setup/backend-setup.service';
-import { ProjectContributors } from 'src/app/data/external/ProjectContributors';
-import { ExpectedConditions } from 'protractor';
 import { CinematicService } from 'src/app/service/cinematic.service';
-import { TestabilityRegistry } from '@angular/core';
-import { Constants } from 'src/app/constants';
+import { ProjectService } from 'src/app/service/project/project.service';
+import { InitTest } from 'src/app/test/init-test';
+import { data } from './data-sunburst';
+import { DialogLegendSunburstComponent } from './legend-sunburst/legend-sunburst.component';
+import { ListContributorsComponent } from './node-detail/list-contributors/list-contributors.component';
+import { ListFilenamesComponent } from './node-detail/list-filenames/list-filenames.component';
+import { NodeDetailComponent } from './node-detail/node-detail.component';
+import { ProjectGhostsComponent } from './project-ghosts/project-ghosts.component';
+import { TableGhostsComponent } from './project-ghosts/table-ghosts/table-ghosts.component';
+import { PreviewContext, ProjectSunburstComponent } from './project-sunburst.component';
+import { SunburstCacheService } from './service/sunburst-cache.service';
+import { SunburstCinematicService } from './service/sunburst-cinematic.service';
+import { SSEWatcherComponent } from './ssewatcher/ssewatcher.component';
+import { TableDependenciesComponent } from './table-dependencies/table-dependencies.component';
 
-describe('ProjectSunburstComponent with data', () => {
+describe('ProjectSunburstComponent filled with data', () => {
 	let component: ProjectSunburstComponent;
 	let fixture: ComponentFixture<ProjectSunburstComponent>;
 	let projectService: ProjectService;
@@ -64,7 +60,7 @@ describe('ProjectSunburstComponent with data', () => {
 
 	});
 
-	it('drawing the chart', () => {
+	it('should draw correctly the chart.', () => {
 
 		component.activeContext = PreviewContext.SUNBURST_READY;
 		fixture.detectChanges();
@@ -82,6 +78,35 @@ describe('ProjectSunburstComponent with data', () => {
 		expect(component).toBeTruthy();
 
 	});
+
+	it('should hide the former chart (if present).', done => {
+
+		component.activeContext = PreviewContext.SUNBURST_READY;
+		fixture.detectChanges();
+
+		setTimeout(() => {
+			projectService.projectLoaded$.next(true);
+
+			const sunburstCacheService = TestBed.inject(SunburstCacheService);
+			sunburstCacheService.saveResponse(data);
+
+			const sunburstCinematicService = TestBed.inject(SunburstCinematicService);
+			sunburstCinematicService.refreshChart$.next(true);
+		}, 0);
+
+		setTimeout(() => {
+			expect(component).toBeTruthy();
+			component.hidePreviousSunburstChartDetector();
+			const sunburstViz = fixture.debugElement.nativeElement.querySelector('.sunburst-viz');
+			expect(sunburstViz).toBeTruthy();
+			expect(sunburstViz.style.display).toBe('none');
+			done();
+		}, 100);
+
+
+	});
+
+
 /*
 	it('handling a conflict error from the HttpClient', done => {
 		component.activeContext = PreviewContext.SUNBURST_READY;
