@@ -26,6 +26,7 @@ import static com.fitzhi.Global.LN;
 import static com.fitzhi.Global.NO_PROGRESSION;
 import static com.fitzhi.Global.PROJECT;
 import static org.eclipse.jgit.diff.DiffEntry.DEV_NULL;
+import static com.fitzhi.Error.CODE_UNDEFINED;
 
 import java.io.File;
 import java.io.FileReader;
@@ -1400,7 +1401,6 @@ public class GitCrawler extends AbstractScannerDataGenerator {
 					.append(Global.LN);
 			log.debug(sb.toString());
 		}
-
 	}
 
 	/**
@@ -1424,34 +1424,46 @@ public class GitCrawler extends AbstractScannerDataGenerator {
 	@Override
 	@Async
 	public void generateAsync(final Project project, final SettingsGeneration settings) throws ApplicationException {
-		boolean failed = false;
+
 		try {
 			tasks.addTask(DASHBOARD_GENERATION, "project", project.getId());
 			generate(project, settings);
+			success(project);
 		} catch (ApplicationException ae) {
-			log.error(String.format("generateAsync('%s')", project.getName()), ae);
-			tasks.logMessage(DASHBOARD_GENERATION, "project", project.getId(), ae.errorCode, ae.errorMessage, NO_PROGRESSION);
-			failed = true;
+			fail(project, ae.errorCode, ae.errorMessage);
 			throw ae;
 		} catch (GitAPIException | IOException e) {
-			log.error(e.getMessage());
-			tasks.logMessage(DASHBOARD_GENERATION, "project", project.getId(), 666, e.getLocalizedMessage(), NO_PROGRESSION);
-			failed = true;
+			log.error(String.format("generateAsync for (%d, %s)", project.getId(), project.getName()),e);
+			fail(project, CODE_UNDEFINED, e.getLocalizedMessage());
 			throw new ApplicationException(
 				CODE_GIT_ERROR, 
 				MessageFormat.format(MESSAGE_GIT_ERROR, project.getId(), project.getName()), 
 				e);
-		} finally {
-			try {
-				if (!failed) {
-					tasks.completeTask(DASHBOARD_GENERATION, "project", project.getId());
-				} else {
-					tasks.completeTaskOnError(DASHBOARD_GENERATION, "project", project.getId());
-				}
-			} catch (ApplicationException e) {
-				e.printStackTrace();
-				log.error(Error.getStackTrace(e));
-			}
+		}
+	}
+
+	/**
+	 * The operation has completed in an error state.
+	 * @param project the current given project
+	 */
+	private void fail(Project project, int errorCode, String errorMessage) {
+		try {
+			tasks.logMessage(DASHBOARD_GENERATION, "project", project.getId(), errorCode, errorMessage, NO_PROGRESSION);
+			tasks.completeTaskOnError(DASHBOARD_GENERATION, "project", project.getId());
+		} catch (ApplicationException e) {
+			log.error("completeTask in error", e);
+		}
+	}
+
+	/**
+	 * The operation has completed successfully.
+	 * @param project the current given project
+	 */
+	private void success(Project project) {
+		try {
+			tasks.completeTask(DASHBOARD_GENERATION, "project", project.getId());
+		} catch (ApplicationException e) {
+			log.error("completeTask in error", e);
 		}
 	}
 

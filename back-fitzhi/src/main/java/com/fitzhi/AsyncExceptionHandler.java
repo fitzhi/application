@@ -1,7 +1,5 @@
 package com.fitzhi;
 
-import static com.fitzhi.Error.getStackTrace;
-
 import java.lang.reflect.Method;
 
 import org.springframework.aop.interceptor.AsyncUncaughtExceptionHandler;
@@ -14,7 +12,7 @@ public class AsyncExceptionHandler implements AsyncUncaughtExceptionHandler {
     @Override
     public void handleUncaughtException(Throwable throwable, Method method, Object... obj) {
 
-        log.error(getStackTrace(throwable));
+        log.error("error", throwable);
         log.error(String.format("Method name - %s", method.getName()));
         for (Object param : obj) {
             log.error(String.format("Parameter value - %s", param));
