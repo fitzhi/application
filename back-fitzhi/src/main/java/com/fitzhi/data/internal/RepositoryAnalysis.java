@@ -270,7 +270,7 @@ public class RepositoryAnalysis {
 	 */
 	public Set<Integer> contributors() {
 		return changes.getChanges().values()
-			.stream()
+			.parallelStream()
 			.flatMap(history -> history.getChanges().stream())
 			.map(SourceChange::getIdStaff)
 			.filter(idStaff -> idStaff != 0)
@@ -290,9 +290,8 @@ public class RepositoryAnalysis {
 	public List<Author> authors() {
 		return changes.getChanges()
 			.values()
-			.stream()
-			.flatMap(history -> history.getChanges()
-			.stream())
+			.parallelStream()
+			.flatMap(history -> history.getChanges().stream())
 			.filter(SourceChange::isAuthorIdentified)
 			.map(SourceChange::getAuthor)
 			.distinct()
@@ -305,8 +304,9 @@ public class RepositoryAnalysis {
 	 * @param idStaff the staff identifier
 	 */
 	public void updateStaff(String authorName, int idStaff) {
-		changes.getChanges().values()
-			.stream()
+		changes.getChanges()
+			.values()
+			.parallelStream()
 			.flatMap(history -> history.getChanges().stream())
 			.filter(sc -> authorName.equals(sc.getAuthor().getName()))
 			.forEach(sc ->  sc.setIdStaff(idStaff));
@@ -319,7 +319,7 @@ public class RepositoryAnalysis {
 	 */
 	public List<SourceChange> getPersonalChange(int idStaff) {
 		return changes.getChanges().values()
-				.stream()
+				.parallelStream()
 				.flatMap(history -> history.getChanges().stream())				
 				.filter(change -> idStaff == change.getIdStaff())
 				.collect(Collectors.toList());
@@ -349,7 +349,6 @@ public class RepositoryAnalysis {
 				.max(Comparator.comparing(LocalDate::toEpochDay))
 				.orElseThrow(() -> new ApplicationRuntimeException(SHOULD_NOT_PASS_HERE));
 	}
-
 
 	/**
 	 * @param changes a stream of changes through which to c.
