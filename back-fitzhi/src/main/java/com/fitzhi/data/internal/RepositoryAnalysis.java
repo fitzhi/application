@@ -318,11 +318,12 @@ public class RepositoryAnalysis {
 	 * @return the list of changes for a staff member
 	 */
 	public List<SourceChange> getPersonalChange(int idStaff) {
-		return changes.getChanges().values()
-				.parallelStream()
-				.flatMap(history -> history.getChanges().stream())				
-				.filter(change -> idStaff == change.getIdStaff())
-				.collect(Collectors.toList());
+		return changes.getChanges()
+			.values()
+			.parallelStream()
+			.flatMap(history -> history.getChanges().stream())				
+			.filter(change -> idStaff == change.getIdStaff())
+			.collect(Collectors.toList());
 	}
 	
 	/**
