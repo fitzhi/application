@@ -1,24 +1,23 @@
 package com.fitzhi.source.crawler.git;
 
+import static com.fitzhi.Error.CODE_BRANCH_DOES_NOT_EXIST;
 import static com.fitzhi.Error.CODE_CANNOT_CREATE_DIRECTORY;
 import static com.fitzhi.Error.CODE_FILE_CONNECTION_SETTINGS_NOFOUND;
+import static com.fitzhi.Error.CODE_GIT_ERROR;
 import static com.fitzhi.Error.CODE_IO_ERROR;
 import static com.fitzhi.Error.CODE_IO_EXCEPTION;
 import static com.fitzhi.Error.CODE_PARSING_SOURCE_CODE;
 import static com.fitzhi.Error.CODE_PROJECT_CANNOT_RETRIEVE_INITIAL_COMMIT;
+import static com.fitzhi.Error.CODE_UNDEFINED;
 import static com.fitzhi.Error.CODE_UNEXPECTED_VALUE_PARAMETER;
-import static com.fitzhi.Error.CODE_BRANCH_DOES_NOT_EXIST;
-import static com.fitzhi.Error.CODE_GIT_ERROR;
-
+import static com.fitzhi.Error.MESSAGE_BRANCH_DOES_NOT_EXIST;
 import static com.fitzhi.Error.MESSAGE_CANNOT_CREATE_DIRECTORY;
 import static com.fitzhi.Error.MESSAGE_FILE_CONNECTION_SETTINGS_NOFOUND;
+import static com.fitzhi.Error.MESSAGE_GIT_ERROR;
 import static com.fitzhi.Error.MESSAGE_IO_ERROR;
 import static com.fitzhi.Error.MESSAGE_PARSING_SOURCE_CODE;
 import static com.fitzhi.Error.MESSAGE_PROJECT_CANNOT_RETRIEVE_INITIAL_COMMIT;
 import static com.fitzhi.Error.MESSAGE_UNEXPECTED_VALUE_PARAMETER;
-import static com.fitzhi.Error.MESSAGE_BRANCH_DOES_NOT_EXIST;
-import static com.fitzhi.Error.MESSAGE_GIT_ERROR;
-
 import static com.fitzhi.Error.getStackTrace;
 import static com.fitzhi.Global.DASHBOARD_GENERATION;
 import static com.fitzhi.Global.INTERNAL_FILE_SEPARATORCHAR;
@@ -26,7 +25,6 @@ import static com.fitzhi.Global.LN;
 import static com.fitzhi.Global.NO_PROGRESSION;
 import static com.fitzhi.Global.PROJECT;
 import static org.eclipse.jgit.diff.DiffEntry.DEV_NULL;
-import static com.fitzhi.Error.CODE_UNDEFINED;
 
 import java.io.File;
 import java.io.FileReader;

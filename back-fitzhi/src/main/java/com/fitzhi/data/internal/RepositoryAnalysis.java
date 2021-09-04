@@ -288,9 +288,11 @@ public class RepositoryAnalysis {
 	 * @return the list of contributors involved in the project
 	 */
 	public List<Author> authors() {
-		return changes.getChanges().values()
+		return changes.getChanges()
+			.values()
 			.stream()
-			.flatMap(history -> history.getChanges().stream())
+			.flatMap(history -> history.getChanges()
+			.stream())
 			.filter(SourceChange::isAuthorIdentified)
 			.map(SourceChange::getAuthor)
 			.distinct()
