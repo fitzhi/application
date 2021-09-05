@@ -317,7 +317,7 @@ public class RepositoryAnalysis {
 	 * @param idStaff the staff identifier
 	 * @return the list of changes for a staff member
 	 */
-	public List<SourceChange> getPersonalChange(int idStaff) {
+	public List<SourceChange> getStaffChanges(int idStaff) {
 		return changes.getChanges()
 			.values()
 			.parallelStream()
@@ -409,7 +409,7 @@ public class RepositoryAnalysis {
 			//
 			// We filter the changes data for a given staff member
 			//
-			List<SourceChange> personalChanges = this.getPersonalChange(idStaff);
+			List<SourceChange> personalChanges = this.getStaffChanges(idStaff);
 			
 			//
 			// We process the date of the FIRST commit submitted by this staff member
