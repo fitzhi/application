@@ -327,6 +327,20 @@ public class RepositoryAnalysis {
 	}
 	
 	/**
+	 * Collect and filter the {@link Project project} global changes for a given {@link Author author}
+	 * @param author the given author
+	 * @return the list of changes for a given author
+	 */
+	public List<SourceChange> getStaffChanges(Author author) {
+		return changes.getChanges()
+			.values()
+			.parallelStream()
+			.flatMap(history -> history.getChanges().stream())				
+			.filter(change -> author.equals(change.getAuthor()))
+			.collect(Collectors.toList());
+	}
+
+	/**
 	 * Crawl within the changes history in order the retrieve the <b>FIRST</b> commit of a staff member
  	 * @param changes a list of changes through which to collect the first commit.
 	 * @return the first commit 
