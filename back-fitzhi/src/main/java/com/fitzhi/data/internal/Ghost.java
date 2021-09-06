@@ -3,6 +3,7 @@ import java.io.Serializable;
 import java.time.LocalDate;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fitzhi.data.source.GitMetrics;
 
 import lombok.Data;
 
@@ -20,7 +21,7 @@ import lombok.Data;
  * 
  * @author Fr&eacute;d&eacute;ric VIDAL
  */
-public @Data class Ghost implements Serializable {
+public @Data class Ghost implements Serializable, GitMetrics {
 
 	/**
 	 * serialVersionUID for serialization purpose.
@@ -35,7 +36,6 @@ public @Data class Ghost implements Serializable {
 	 */
 	private String pseudo;
 	
-
 	/**
 	 * Staff id associated to the {@link com.fitzhi.data.internal.Ghost#pseudo pseudo} property.
 	 */
@@ -90,7 +90,6 @@ public @Data class Ghost implements Serializable {
 	 * </ul>
 	 */
 	public Ghost(String pseudo, int idStaff, boolean technical) {
-		super();
 		this.setPseudo(pseudo);
 		this.setIdStaff(idStaff);
 		this.setTechnical(technical);

@@ -38,7 +38,7 @@ public class BasicCommitRepositoryExtractContributionTest {
 		Staff staff = new Staff(10001, "MockFirst", "MOCKLAST", "the 1 o o o one", "the 1 o o o one", "mock@void.com", "N/A");
 		
 				
-		Contributor contributor = repository.extractContribution(staff);
+		Contributor contributor = repository.extractStaffMetrics(staff);
 		
 		Assert.assertNotNull(contributor);
 		Assert.assertEquals(10001, contributor.getIdStaff());
@@ -57,7 +57,7 @@ public class BasicCommitRepositoryExtractContributionTest {
 		
 		Staff staff = new Staff(10002, "none MockFirst", "none MOCKLAST", "none the 1 o o o one", "none the 1 o o o one", "mock@void.com", "N/A");
 		
-		Contributor contributor = repository.extractContribution(staff);
+		Contributor contributor = repository.extractStaffMetrics(staff);
 		
 		Assert.assertNull(contributor);
 	}

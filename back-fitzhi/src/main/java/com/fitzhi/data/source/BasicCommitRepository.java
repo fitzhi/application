@@ -1,6 +1,3 @@
-/**
- * 
- */
 package com.fitzhi.data.source;
 
 import static com.fitzhi.Global.LN;
@@ -20,6 +17,8 @@ import java.util.function.Function;
 
 import com.fitzhi.bean.StaffHandler;
 import com.fitzhi.bean.impl.PropectDashboardCustomizerImpl;
+import com.fitzhi.data.internal.Author;
+import com.fitzhi.data.internal.Ghost;
 import com.fitzhi.data.internal.Staff;
 
 import lombok.extern.slf4j.Slf4j;
@@ -50,7 +49,6 @@ public class BasicCommitRepository implements CommitRepository {
 		
 	@Override
 	public void addCommit(String sourceCodePath, int idStaff, String authorName, LocalDate dateCommit, long importance) {
-		
 		if (repo.containsKey(sourceCodePath)) {
 			final CommitHistory history = repo.get(sourceCodePath);
 			history.handle(idStaff, authorName, dateCommit);
@@ -104,15 +102,40 @@ public class BasicCommitRepository implements CommitRepository {
 	}
 
 	@Override
-	public Contributor extractContribution(Staff staff) {
-		BiFunction<Integer, Staff, Boolean> test  = (id, staff1) -> id == staff1.getIdStaff();
+	public Contributor extractStaffMetrics(Staff staff) {
+		BiFunction<Operation, Staff, Boolean> test  = (ope, st) -> ope.getIdStaff() == st.getIdStaff();
 		Function<Staff, Contributor> newInstance  = st -> new Contributor (st.getIdStaff());
 		return extract(staff, test, newInstance);
 	}
 
+	@Override
+	public Ghost extractGhostMetrics(Author author) {
+		BiFunction<Operation, Author, Boolean> test  = (ope, auth) -> ope.getAuthorName().equals(auth.getName());
+		Function<Author, Ghost> newInstance  = auth -> new Ghost(auth.getName(), false);
+		return extract(author, test, newInstance);
+	}
+
+	/**
+	 * Extract the data.
+	 * 
+	 * <p>
+	 * <font color="darkRed">In theory, the function should never return a {@code null}, 
+	 * but it appears that this case occurs. Therefore, we put a warning to trace this case and track the issue.
+	 * <em>Most probably a filter on files eligibility is the origin of this detect.</em>
+	 * </font>
+	 * </p>
+	 * 
+	 * @param <R> the returned classname which implements the interface {@link GitMetrics}
+	 * @param <T> the passed type
+	 * @param t the given object to be used to filter
+	 * @param test the filter to be tested on data.
+	 * @param create the creation method
+	 * 
+	 * @return the {@link GitMetrics metrics} implementation
+	 */
 	public <R extends GitMetrics, T> R extract(
 		T t, 
-		BiFunction<Integer, T, Boolean> test, 
+		BiFunction<Operation, T, Boolean> test, 
 		Function<T, R> create) {
 
 		int numberOfCommits = 0;
@@ -124,7 +147,7 @@ public class BasicCommitRepository implements CommitRepository {
 			boolean detected = false;
 			for (Operation operation : history.operations) {
 				
-				if (test.apply(operation.getIdStaff(), t)) {
+				if (test.apply(operation, t)) {
 					if (!detected) {
 						detected = true;
 						numberOfFiles++;

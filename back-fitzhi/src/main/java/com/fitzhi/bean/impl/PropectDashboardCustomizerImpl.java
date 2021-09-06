@@ -172,7 +172,7 @@ public class PropectDashboardCustomizerImpl implements ProjectDashboardCustomize
 					if (log.isDebugEnabled()) {
 						log.debug("Involving the staff " + staff.fullName() + " inside the project " + project.getName());
 					}
-					Contributor contributor = repository.extractContribution(staff);
+					Contributor contributor = repository.extractStaffMetrics(staff);
 					if (contributor != null) {
 						staffHandler.involve(project, contributor);
 					} else { 
