@@ -1722,13 +1722,15 @@ public class GitCrawler extends AbstractScannerDataGenerator {
 
 	}
 
-	private void manageAuthorWithGhostsList(Project project, RepositoryAnalysis analysis, Set<String> unknownContributors, String author) {
+	@Override
+	public void manageAuthorWithGhostsList(Project project, RepositoryAnalysis analysis, Set<String> unknownContributors, String author) {
 
 		// The use case behind these lines :
 		// A ghost has been linked through the Angular ghost form with the pseudo of an existing staff member.
 		// This ghost corresponds to this pseudo.
 		// So we update for this author the analysis data
-		Optional<Ghost> oGhost = project.getGhosts().stream()
+		Optional<Ghost> oGhost = project.getGhosts()
+			.stream()
 			.filter(g -> !g.isTechnical())
 			.filter(g -> g.getIdStaff() > 0)
 			.filter(g -> author.equalsIgnoreCase(g.getPseudo()))
@@ -1754,7 +1756,7 @@ public class GitCrawler extends AbstractScannerDataGenerator {
 		} else {
 			// It's a new ghost
 			if (log.isDebugEnabled()) {
-				log.debug(String.format("Adding the ghost : %s", author));
+				log.debug(String.format("Adding the new ghost : %s", author));
 			}
 			unknownContributors.add(author);
 		}

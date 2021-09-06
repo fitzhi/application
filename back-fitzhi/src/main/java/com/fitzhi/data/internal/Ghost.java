@@ -72,16 +72,16 @@ public @Data class Ghost implements Serializable {
 	
 	/**
 	 * @param pseudo the committer's pseudo.
-	 * @param technical technical or human being pseudo, boolean 
+	 * @param technical Is this pseudo either a technical alias, or a human being.
+	 * This parameter is a boolean value : 
 	 * <ul>
-	 * <li>{@code true} this pseudo is a technical user. The {@code idStaff} is there for equal to {@code NULL}</li>
+	 * <li>{@code true} this pseudo is a technical user. Therefore, the {@code idStaff} is equal to {@code NULL}</li>
 	 * <li>{@code false} this is pseudo of a real developer.</li>
 	 * </ul>
 	 */
 	public Ghost(String pseudo, boolean technical) {
 		this (pseudo, NULL, technical);
 	}
-
 
 	/**
 	 * @return the alleged pseudo for this ghost

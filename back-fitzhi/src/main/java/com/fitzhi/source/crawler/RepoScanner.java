@@ -196,6 +196,16 @@ public interface RepoScanner {
 	void updateStaff(Project project, RepositoryAnalysis analysis, Set<String> ghosts) throws ApplicationException;
 
 	/**
+	 * Edit the set of ghosts, not not, with a given pseudo.
+	 * @param project the current project (the project is necessary to retrieve the actual declared ghosts)
+	 * @param analysis the repository analysis 
+	 * (The changes behind the analysis. Some records might be edited, if a staff identifier is linked to this ghost).
+	 * @param unknownContributors the set of unknown contributors (the project ghosts) to be edited, or not, with the given author
+	 * @param author the pseudo of a committer unknown in the staff list 
+	 */
+	void manageAuthorWithGhostsList(Project project, RepositoryAnalysis analysis, Set<String> unknownContributors, String author);
+
+	/**
 	 * <p>
 	 * Update the GIT changes collection by setting the importance for every path impacted by each commit.
 	 * </p>
