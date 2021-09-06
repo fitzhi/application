@@ -1,5 +1,8 @@
 package com.fitzhi.data.internal;
 import java.io.Serializable;
+import java.time.LocalDate;
+
+import com.fasterxml.jackson.annotation.JsonFormat;
 
 import lombok.Data;
 
@@ -32,6 +35,7 @@ public @Data class Ghost implements Serializable {
 	 */
 	private String pseudo;
 	
+
 	/**
 	 * Staff id associated to the {@link com.fitzhi.data.internal.Ghost#pseudo pseudo} property.
 	 */
@@ -47,6 +51,28 @@ public @Data class Ghost implements Serializable {
 	 * </p>
 	 */
 	private boolean technical;
+
+	/**
+	 * Date of the first commit.
+	 */
+	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
+	private LocalDate firstCommit;
+
+	/**
+	 * Date of the latest commit.
+	 */
+	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
+	private LocalDate lastCommit;
+	
+	/**
+	 * @return number of commit submitted by a developer inside the project.
+	 */
+	private int numberOfCommits;
+	
+	/**
+	 * @return number of files modifier by a developer inside the project.
+	 */
+	private int numberOfFiles;
 
 	/**
 	 * Empty constructor for serialization purpose
@@ -69,7 +95,7 @@ public @Data class Ghost implements Serializable {
 		this.setIdStaff(idStaff);
 		this.setTechnical(technical);
 	}
-	
+
 	/**
 	 * @param pseudo the committer's pseudo.
 	 * @param technical Is this pseudo either a technical alias, or a human being.

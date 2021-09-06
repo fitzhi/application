@@ -69,6 +69,7 @@ import com.fitzhi.bean.SkylineProcessor;
 import com.fitzhi.bean.StaffHandler;
 import com.fitzhi.bean.impl.RiskCommitAndDevActiveProcessorImpl.StatActivity;
 import com.fitzhi.controller.in.SettingsGeneration;
+import com.fitzhi.data.GhostsListFactory;
 import com.fitzhi.data.encryption.DataEncryption;
 import com.fitzhi.data.internal.Author;
 import com.fitzhi.data.internal.Ecosystem;
@@ -1179,7 +1180,7 @@ public class GitCrawler extends AbstractScannerDataGenerator {
 			// We update the ghosts list, in the project with the up-to-date list of of
 			// ghosts.
 			//
-			projectHandler.integrateGhosts(project.getId(), repository.unknownContributors());
+			projectHandler.integrateGhosts(project.getId(), GhostsListFactory.getInstance(repository.unknownContributors()));
 
 			return repository;
 		} else {
@@ -1320,7 +1321,7 @@ public class GitCrawler extends AbstractScannerDataGenerator {
 	/**
 	 * <p>
 	 * This method is taking in account the staff, or the ghost, who has contributed
-	 * in the repository.
+	 * to the project.
 	 * </p>
 	 * 
 	 * @param project             the given project
@@ -1339,7 +1340,7 @@ public class GitCrawler extends AbstractScannerDataGenerator {
 		//
 		// We save the unknown contributors into the "contributing ghosts" collection.
 		//
-		projectHandler.integrateGhosts(project.getId(), unknownContributors);
+		projectHandler.integrateGhosts(project.getId(), GhostsListFactory.getInstance(unknownContributors));
 
 		//
 		// Retrieving the list of contributors involved in the project.

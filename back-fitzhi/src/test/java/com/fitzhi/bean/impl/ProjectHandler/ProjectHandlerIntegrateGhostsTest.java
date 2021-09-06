@@ -14,6 +14,7 @@ import org.springframework.test.context.junit4.SpringRunner;
 
 import com.fitzhi.bean.ProjectHandler;
 import com.fitzhi.bean.StaffHandler;
+import com.fitzhi.data.GhostsListFactory;
 import com.fitzhi.data.internal.Ghost;
 import com.fitzhi.data.internal.Project;
 import com.fitzhi.exception.ApplicationException;
@@ -48,7 +49,7 @@ public class ProjectHandlerIntegrateGhostsTest {
 	public void test() throws ApplicationException {
 		Set<String> pseudos = new HashSet<String>();
 		pseudos.add("newpseudo");
-		projectHandler.integrateGhosts(314116, pseudos);
+		projectHandler.integrateGhosts(314116, GhostsListFactory.getInstance(pseudos));
 		
 		Assert.assertTrue("Ghosts list contains 2 entries", project.getGhosts().size()== 2);
 		

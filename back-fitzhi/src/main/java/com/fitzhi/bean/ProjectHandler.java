@@ -4,7 +4,6 @@ import java.io.IOException;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
-import java.util.Set;
 
 import javax.validation.constraints.NotNull;
 
@@ -25,6 +24,12 @@ import com.fitzhi.data.source.Contributor;
 import com.fitzhi.exception.ApplicationException;
 import com.fitzhi.exception.NotFoundException;
 
+/**
+ * This interface is in charge of the Projects management.
+ * Its main implementation is ProjectHandlerImpl
+ * 
+ * @author Fr&eacute;d&eacute;ric VIDAL
+ */
 public interface ProjectHandler extends DataSaverLifeCycle {
 
 	/**
@@ -253,10 +258,10 @@ public interface ProjectHandler extends DataSaverLifeCycle {
 	 * Integrate the last list of unknowns pseudos into the ghosts list.
 	 * </p>
 	 * @param idProject idProject project identifiers 
-	 * @param pseudos the given list of pseudos retrieved from the repository
+	 * @param detectedGhosts the ghosts list detected in the repository
 	 * @throws ApplicationException thrown if any problem occurs (most probably if the project identifier does not exist)
 	 */
-	void integrateGhosts(int idProject, Set<String> pseudos) throws ApplicationException;
+	void integrateGhosts(int idProject, List<Ghost> detectedGhosts) throws ApplicationException;
 
 	/**
 	 * <p>

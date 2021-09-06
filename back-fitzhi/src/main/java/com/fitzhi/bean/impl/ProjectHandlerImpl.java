@@ -19,7 +19,6 @@ import java.util.Map;
 import java.util.NoSuchElementException;
 import java.util.Objects;
 import java.util.Optional;
-import java.util.Set;
 import java.util.stream.Collectors;
 
 import javax.validation.constraints.NotNull;
@@ -535,21 +534,30 @@ public class ProjectHandlerImpl extends AbstractDataSaverLifeCycleImpl implement
 	}
 
 	@Override
-	public void integrateGhosts(int idProject, Set<String> unknownPseudos) throws ApplicationException {
+	public void integrateGhosts(int idProject, List<Ghost> detectedGhosts) throws ApplicationException {
 
-		Project project = lookup(idProject);
+		Project project = getProject(idProject);
 
+		// We must keep the edit made on ghosts since the last analysis, such as
+		// - the identifer assigned to a ghost by an end-user.
+		// - the fact that a ghost is tag as technical
+		// Therefore, we keep the identified ghosts.
 		List<Ghost> ghosts = project.getGhosts()
 			.stream()
 			.filter (ghost ->  (ghost.getIdStaff() > 0) || (ghost.isTechnical()) )
 			.collect(Collectors.toList());
 		
-		for (String pseudo : unknownPseudos) {
-			if (!ghosts.stream().anyMatch(ghost -> pseudo.equals(ghost.getPseudo()))) {
-				ghosts.add(new Ghost(pseudo, false));
+		for (Ghost detectedGhost : detectedGhosts) {
+			if (!ghosts.stream().anyMatch(ghost -> detectedGhost.getPseudo().equals(ghost.getPseudo()))) {
+				ghosts.add(detectedGhost);
 			}
 		}
 		
+		for (Ghost ghost : ghosts) {
+			continue;
+		}
+
+
 		synchronized (lockDataUpdated) {
 			project.setGhosts(ghosts);
 			this.dataUpdated = true;
@@ -559,7 +567,7 @@ public class ProjectHandlerImpl extends AbstractDataSaverLifeCycleImpl implement
 		if (log.isInfoEnabled() && (!ghosts.isEmpty())) {
 			log.info(String.format("[%d] Ghost contributors for project %s", project.getId(), project.getName()));
 			StringBuilder sb = new StringBuilder(String.format("[%d]", project.getId()));
-			unknownPseudos.stream().forEach(s -> sb.append(s).append(" "));
+			detectedGhosts.stream().forEach(s -> sb.append(s).append(" "));
 			log.info(sb.toString());
 		}
 	}
