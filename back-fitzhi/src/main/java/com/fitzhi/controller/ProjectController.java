@@ -606,7 +606,7 @@ public class ProjectController  {
 					staff.isExternal(), 
 					contributor.getFirstCommit(), 
 					contributor.getLastCommit(),
-					contributor.getNumberOfCommitsSubmitted(), 
+					contributor.getNumberOfCommits(), 
 					contributor.getNumberOfFiles());
 		});
 

@@ -553,11 +553,6 @@ public class ProjectHandlerImpl extends AbstractDataSaverLifeCycleImpl implement
 			}
 		}
 		
-		for (Ghost ghost : ghosts) {
-			continue;
-		}
-
-
 		synchronized (lockDataUpdated) {
 			project.setGhosts(ghosts);
 			this.dataUpdated = true;

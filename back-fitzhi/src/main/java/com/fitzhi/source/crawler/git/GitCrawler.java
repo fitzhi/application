@@ -1176,11 +1176,14 @@ public class GitCrawler extends AbstractScannerDataGenerator {
 					.filter(pseudo -> (staffHandler.lookup(new Author(pseudo)) == null)) 
 					.collect(Collectors.toSet()));
 
+
 			//
 			// We update the ghosts list, in the project with the up-to-date list of of
 			// ghosts.
 			//
-			projectHandler.integrateGhosts(project.getId(), GhostsListFactory.getInstance(repository.unknownContributors()));
+			projectHandler.integrateGhosts(
+				project.getId(), 
+				GhostsListFactory.getInstance(repository.unknownContributors()));
 
 			return repository;
 		} else {

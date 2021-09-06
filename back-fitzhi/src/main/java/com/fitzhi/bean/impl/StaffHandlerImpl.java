@@ -451,7 +451,7 @@ public class StaffHandlerImpl extends AbstractDataSaverLifeCycleImpl implements 
 								project.getName(),
 								contributor.getFirstCommit(), 
 								contributor.getLastCommit(), 
-								contributor.getNumberOfCommitsSubmitted(), 
+								contributor.getNumberOfCommits(), 
 								contributor.getNumberOfFiles(),
 								contributor.getStaffActivitySkill());
 					synchronized (lockDataUpdated) {
@@ -496,7 +496,7 @@ public class StaffHandlerImpl extends AbstractDataSaverLifeCycleImpl implements 
 		mission.setIdStaff(staff.getIdStaff());
 		mission.setFirstCommit(contributor.getFirstCommit());
 		mission.setLastCommit(contributor.getLastCommit());
-		mission.setNumberOfCommits(contributor.getNumberOfCommitsSubmitted());
+		mission.setNumberOfCommits(contributor.getNumberOfCommits());
 		mission.setNumberOfFiles(contributor.getNumberOfFiles());
 		staff.addMission(mission);
 	}

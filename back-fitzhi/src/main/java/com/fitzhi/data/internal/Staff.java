@@ -240,7 +240,7 @@ public @Data class Staff implements UserDetails {
 			Mission missionSelected = optMission.get();
 			missionSelected.setFirstCommit(contributor.getFirstCommit());
 			missionSelected.setLastCommit(contributor.getLastCommit());
-			missionSelected.setNumberOfCommits(contributor.getNumberOfCommitsSubmitted());
+			missionSelected.setNumberOfCommits(contributor.getNumberOfCommits());
 			missionSelected.setNumberOfFiles(contributor.getNumberOfFiles());
 			missionSelected.setStaffActivitySkill(contributor.getStaffActivitySkill());
 		} else {

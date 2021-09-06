@@ -43,7 +43,7 @@ public class BasicCommitRepositoryExtractContributionTest {
 		Assert.assertNotNull(contributor);
 		Assert.assertEquals(10001, contributor.getIdStaff());
 		Assert.assertEquals(2, contributor.getNumberOfFiles());
-		Assert.assertEquals(6, contributor.getNumberOfCommitsSubmitted());
+		Assert.assertEquals(6, contributor.getNumberOfCommits());
 		Assert.assertEquals( LocalDate.of(2019, 11, 3), contributor.getFirstCommit());
 		Assert.assertEquals( LocalDate.of(2019, 12, 6), contributor.getLastCommit());
 		
@@ -57,11 +57,9 @@ public class BasicCommitRepositoryExtractContributionTest {
 		
 		Staff staff = new Staff(10002, "none MockFirst", "none MOCKLAST", "none the 1 o o o one", "none the 1 o o o one", "mock@void.com", "N/A");
 		
-				
 		Contributor contributor = repository.extractContribution(staff);
 		
 		Assert.assertNull(contributor);
-		
 	}
 
 }

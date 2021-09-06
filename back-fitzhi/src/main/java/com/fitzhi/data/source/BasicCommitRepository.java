@@ -15,6 +15,8 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.function.BiFunction;
+import java.util.function.Function;
 
 import com.fitzhi.bean.StaffHandler;
 import com.fitzhi.bean.impl.PropectDashboardCustomizerImpl;
@@ -103,7 +105,16 @@ public class BasicCommitRepository implements CommitRepository {
 
 	@Override
 	public Contributor extractContribution(Staff staff) {
-		
+		BiFunction<Integer, Staff, Boolean> test  = (id, staff1) -> id == staff1.getIdStaff();
+		Function<Staff, Contributor> newInstance  = st -> new Contributor (st.getIdStaff());
+		return extract(staff, test, newInstance);
+	}
+
+	public <R extends GitMetrics, T> R extract(
+		T t, 
+		BiFunction<Integer, T, Boolean> test, 
+		Function<T, R> create) {
+
 		int numberOfCommits = 0;
 		int numberOfFiles = 0;
 		LocalDate lastCommit = LocalDate.MIN; 
@@ -113,7 +124,7 @@ public class BasicCommitRepository implements CommitRepository {
 			boolean detected = false;
 			for (Operation operation : history.operations) {
 				
-				if (operation.getIdStaff() == staff.getIdStaff()) {
+				if (test.apply(operation.getIdStaff(), t)) {
 					if (!detected) {
 						detected = true;
 						numberOfFiles++;
@@ -133,12 +144,21 @@ public class BasicCommitRepository implements CommitRepository {
 		}
 		if (numberOfCommits == 0) {
 			if (log.isWarnEnabled()) {
-				log.warn(String.format("Cannot create an empty contributor for the staff member %s", staff.fullName()));
+				log.warn(String.format("Cannot create an empty contributor for %s %s", t.getClass(), t.toString()));
 			}
 		}
 		
-		return (numberOfCommits == 0) ? null :
-				new Contributor(staff.getIdStaff(), firstCommit, lastCommit, numberOfCommits, numberOfFiles);
+		R r = (numberOfCommits == 0) ? null : create.apply(t);
+
+		// If no commit is registered for this committer, we return null.
+		if (r != null) {
+			r.setFirstCommit(firstCommit);
+			r.setLastCommit(lastCommit);
+			r.setNumberOfCommits(numberOfCommits);
+			r.setNumberOfFiles(numberOfFiles);
+		}
+
+		return r;		
 	}
 	
 	@Override
