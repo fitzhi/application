@@ -24,6 +24,7 @@ import com.fitzhi.data.internal.Project;
 import com.fitzhi.data.internal.RiskDashboard;
 import com.fitzhi.data.internal.Skill;
 import com.fitzhi.data.internal.SourceControlChanges;
+import com.fitzhi.data.internal.Staff;
 import com.fitzhi.data.internal.StaffActivitySkill;
 import com.fitzhi.data.source.CommitHistory;
 import com.fitzhi.data.source.CommitRepository;
@@ -100,27 +101,49 @@ public abstract class AbstractScannerDataGenerator implements RepoScanner {
 					commit.evaluateDateLastestCommit(),
 					commit.committers());
 		}
+
+		List<Committer> ghosts = loadCommitters(staffHandler(), project);
 		
+		return new RiskDashboard(root, ghosts);
+	}
+
+	/**
+	 * Load the unknown committers with the ghosts saved in the project.
+	 * @param staffHandler the Staff service 
+	 * @param project the given project
+	 * @return the list of committers
+	 */
+	public static List<Committer> loadCommitters(StaffHandler staffHandler, Project project) {
 		List<Committer> ghosts = new ArrayList<>();
 		for (Ghost ghost : project.getGhosts()) {
+			Committer committer;
 			if (ghost.isTechnical()) {
-				ghosts.add (new Committer(ghost.getPseudo(), true));
+				committer = new Committer(ghost.getPseudo(), true);
 			} else {
 				if (ghost.getIdStaff() > 0) {
-					String login = staffHandler().getStaff().get(ghost.getIdStaff()).getLogin();
-					ghosts.add(new Committer(ghost.getPseudo(), ghost.getIdStaff(), login, false));
+					Staff staff = staffHandler.lookup(ghost.getIdStaff());
+					// The associated staff might do not exist anymore 
+					if (staff != null) {
+						committer = new Committer(ghost.getPseudo(), ghost.getIdStaff(), staff.getLogin(), false);
+					} else {
+						committer = new Committer(ghost.getPseudo(), false);
+					}	
 				} else {
-					ghosts.add(new Committer(ghost.getPseudo(), false));
+					committer = new Committer(ghost.getPseudo(), false);
 				}
 			}
-		};
-		
+			committer.setNumberOfCommits(ghost.getNumberOfCommits());
+			committer.setNumberOfFiles(ghost.getNumberOfFiles());
+			committer.setFirstCommit(ghost.getFirstCommit());
+			committer.setLastCommit(ghost.getLastCommit());
+			ghosts.add(committer);
+		}
 		if (log.isDebugEnabled()) {
 			StringBuilder sb = new StringBuilder(LN);
 			ghosts.stream().forEach(g -> sb.append(g).append(LN));
 			log.debug(sb.toString());
 		}
-		return new RiskDashboard(root, ghosts);
+		return ghosts;
 	}
 
 	/**
