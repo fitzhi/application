@@ -1183,7 +1183,7 @@ public class GitCrawler extends AbstractScannerDataGenerator {
 			//
 			projectHandler.integrateGhosts(
 				project.getId(), 
-				GhostsListFactory.getInstance(repository.unknownContributors()));
+				GhostsListFactory.getInstance(repository));
 
 			return repository;
 		} else {
@@ -1295,6 +1295,11 @@ public class GitCrawler extends AbstractScannerDataGenerator {
 			// We update the ghosts contributors.
 			repositoryOfCommit.setUnknownContributors(unknownContributors);
 
+			//
+			// We save the unknown contributors into the "contributing ghosts" collection.
+			//
+			projectHandler.integrateGhosts(project.getId(), GhostsListFactory.getInstance(repositoryOfCommit));
+
 			// We generate & save the skyline history for this project.
 			this.generateAndSaveSkyline(project, analysis);
 
@@ -1339,11 +1344,6 @@ public class GitCrawler extends AbstractScannerDataGenerator {
 		// We update the staff identifier on each change entry.
 		//
 		this.updateStaff(project, analysis, unknownContributors);
-
-		//
-		// We save the unknown contributors into the "contributing ghosts" collection.
-		//
-		projectHandler.integrateGhosts(project.getId(), GhostsListFactory.getInstance(unknownContributors));
 
 		//
 		// Retrieving the list of contributors involved in the project.

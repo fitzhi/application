@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
+import com.fitzhi.data.internal.Author;
 import com.fitzhi.data.internal.Ghost;
 import com.fitzhi.data.source.CommitRepository;
 
@@ -30,9 +31,10 @@ public class GhostsListFactory {
 		repository.unknownContributors()
 			.stream()
 			.forEach(unknown -> {
-				Ghost ghost = new Ghost(unknown, false);
-				// ghost.setFirstCommit(repository.firstCommit(idStaff));
-				detectedGhosts.add(ghost);
+				Ghost ghost = repository.extractGhostMetrics(new Author(unknown));
+				if (ghost != null) {
+					detectedGhosts.add(ghost);
+				}
 			});
 
 		return detectedGhosts;

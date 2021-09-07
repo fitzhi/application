@@ -20,9 +20,8 @@ import com.fitzhi.data.internal.Project;
 import com.fitzhi.exception.ApplicationException;
 
 /**
- * <p>
- * Test the method {@link ProjectHandler#setGhostTechnicalStatus(Project, String, boolean) ProjectHandler.setGhostTechnicalStatus}
- * </p>setGhostTechnicalStatus
+ * Test the method {@link ProjectHandler#integrateGhosts(int, java.util.List)}
+ * 
  * @author Fr&eacute;d&eacute;ric VIDAL
  */
 @RunWith(SpringRunner.class)
