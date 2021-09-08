@@ -4,6 +4,23 @@
   height: 2em;
 }
 
+:host >>> th#lastCommit > .mat-sort-header-container {
+  display: flex;
+  color: darkblue;
+  height: 2em;
+}
+:host >>> th#numberOfCommits > .mat-sort-header-container {
+  display: flex;
+  color: darkblue;
+  height: 2em;
+}
+
+:host >>> th#numberOfFiles > .mat-sort-header-container {
+  display: flex;
+  color: darkblue;
+  height: 2em;
+}
+
 :host >>> th#login > .mat-sort-header-container {
   display: flex;
   color: darkblue;
@@ -71,6 +88,10 @@
 
 .td-ghost {
   padding-left: 1em;
+}
+
+.td-num {
+  padding-right: 0;
 }
 
 .td-technical {

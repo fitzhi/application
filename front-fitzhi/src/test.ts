@@ -27,6 +27,7 @@ const context = require.context('./', true, /\.spec\.ts$/);
 // const context = require.context('./', true,  /staff-list\.reloadStaff\.service\.spec\.ts$/);
 // const context = require.context('./', true,  /project-calculateSonarEvaluation\.service\.spec\.ts$/);
 // const context = require.context('./', true,  /register-user\.component\.spec\.ts$/);
+// const context = require.context('./', true,  /table-ghosts-paginatorBehavior\.component\.spec\.ts$/);
 // const context = require.context('./', true,  /project-sunburst-with-data\.component\.spec\.ts$/);
 // const context = require.context('./', true,  /git\.service\.spec\.ts$/);
 // const context = require.context('./', true,  /project-reloadProjects\.service\.spec\.ts$/);

@@ -1,19 +1,15 @@
-import { ComponentFixture, TestBed, TestModuleMetadata, waitForAsync } from '@angular/core/testing';
-
-import { TableGhostsComponent } from './table-ghosts.component';
-import { MatTableModule } from '@angular/material/table';
-import { MatPaginatorModule } from '@angular/material/paginator';
-import { FormsModule } from '@angular/forms';
-import { InitTest } from 'src/app/test/init-test';
 import { Component, ViewChild } from '@angular/core';
+import { ComponentFixture, TestBed, TestModuleMetadata, waitForAsync } from '@angular/core/testing';
 import { BehaviorSubject, of } from 'rxjs';
-import { Unknown } from '../../../../data/unknown';
 import { Collaborator } from 'src/app/data/collaborator';
-import { ProjectGhostsDataSource } from '../project-ghosts-data-source';
 import { Project } from 'src/app/data/project';
-import { StaffService } from 'src/app/tabs-staff/service/staff.service';
-import { By } from '@angular/platform-browser';
 import { ProjectService } from 'src/app/service/project/project.service';
+import { StaffService } from 'src/app/tabs-staff/service/staff.service';
+import { InitTest } from 'src/app/test/init-test';
+import { Unknown } from '../../../../data/unknown';
+import { ProjectGhostsDataSource } from '../project-ghosts-data-source';
+import { TableGhostsComponent } from './table-ghosts.component';
+
 
 describe('TableGhostsComponent', () => {
 	let component: TestHostComponent;

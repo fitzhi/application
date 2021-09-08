@@ -1,12 +1,27 @@
 <mat-table #table [dataSource]="dataSource" class="mat-elevation-z8 tableGhosts" matSort>
 
   <ng-container matColumnDef="pseudo">
-    <th id="pseudo" mat-header-cell *matHeaderCellDef mat-sort-header>Pseudo</th>
+    <th id="pseudo" mat-header-cell *matHeaderCellDef [disabled]="true" mat-sort-header>Pseudo</th>
     <td mat-cell class="td-ghost" *matCellDef="let row">{{row.pseudo}}</td>
   </ng-container>
 
+  <ng-container matColumnDef="lastCommit">
+    <th id="lastCommit" mat-header-cell *matHeaderCellDef [disabled]="true" mat-sort-header>&nbsp;Last&nbsp;commit</th>
+    <td mat-cell class="td-ghost" *matCellDef="let row">{{row.lastCommit | date:'shortDate'}}</td>
+  </ng-container>
+
+  <ng-container matColumnDef="numberOfCommits">
+    <th id="numberOfCommits" mat-header-cell *matHeaderCellDef [disabled]="true" mat-sort-header>&nbsp;Commits</th>
+    <td mat-cell align="right" class="td-num" *matCellDef="let row">{{row.numberOfCommits}}</td>
+  </ng-container>
+
+  <ng-container matColumnDef="numberOfFiles">
+    <th id="numberOfFiles" mat-header-cell *matHeaderCellDef [disabled]="true" mat-sort-header>&nbsp;&nbsp;Files</th>
+    <td mat-cell align="right" class="td-num" *matCellDef="let row">{{row.numberOfFiles}}</td>
+  </ng-container>
+
   <ng-container matColumnDef="login">
-    <th id="login" mat-header-cell *matHeaderCellDef mat-sort-header>Related login</th>
+    <th id="login" mat-header-cell *matHeaderCellDef [disabled]="true" mat-sort-header>Related login</th>
     <td class="td-ghost" mat-cell *matCellDef="let row; let i = index;">
       <mat-form-field>
         <input matInput 

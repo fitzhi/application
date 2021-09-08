@@ -61,7 +61,27 @@ export class Unknown {
 	 * Staff status as active in the company.
 	 */
 	public external: boolean;
-
+	
+	/**
+	 * Date of the first commit.
+	 */
+	 public firstCommit?: Date;
+ 
+	 /**
+	  * Date of the latest commit.
+	  */
+	 public lastCommit?: Date;
+	 
+	 /**
+	  * @return number of commit submitted by a developer inside the project.
+	  */
+	 public numberOfCommits?: number;
+	 
+	 /**
+	  * @return number of files modifier by a developer inside the project.
+	  */
+	 public numberOfFiles?: number;
+ 
 	/**
 	 * Constructor.
 	 */
