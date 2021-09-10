@@ -592,7 +592,7 @@ public class ProjectController  {
 
 		ProjectContributors projectContributors = new ProjectContributors(idProject);
 		contributors.stream().forEach(contributor -> {
-			final Staff staff = staffHandler.getStaff().get(contributor.getIdStaff());
+			final Staff staff = staffHandler.lookup(contributor.getIdStaff());
 			if (staff == null) {
 				throw new ApplicationRuntimeException(
 						String.format("No staff member retrieved for the id %d", contributor.getIdStaff()));
