@@ -885,11 +885,10 @@ public class GitCrawler extends AbstractScannerDataGenerator {
 						}
 
 					} catch (final Exception e) {
-						String stackTrace = Stream
-							.of(e.getStackTrace())
-							.map(StackTraceElement::toString)
-							.collect(Collectors.joining("\n"));
-						log.error(stackTrace);
+						log.error("Internal error", e);
+						if (e.getCause() != null) {
+							log.error("Internal cause", e.getCause());
+						}
 						throw new ApplicationException(CODE_PARSING_SOURCE_CODE, String.format(MESSAGE_PARSING_SOURCE_CODE, finalFilePathName), e);
 					}
 				}

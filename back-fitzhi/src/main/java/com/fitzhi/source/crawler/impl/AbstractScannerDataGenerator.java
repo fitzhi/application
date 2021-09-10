@@ -8,6 +8,7 @@ import static com.fitzhi.Global.NO_PROGRESSION;
 
 import java.text.MessageFormat;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 import java.util.Random;
@@ -138,6 +139,7 @@ public abstract class AbstractScannerDataGenerator implements RepoScanner {
 			committer.setLastCommit(ghost.getLastCommit());
 			ghosts.add(committer);
 		}
+
 		if (log.isDebugEnabled()) {
 			StringBuilder sb = new StringBuilder(LN);
 			ghosts.stream().forEach(g -> sb.append(g).append(LN));
