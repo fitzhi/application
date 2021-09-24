@@ -10,9 +10,12 @@ div {
 }
 
 .mainDashboard {
-	width: calc(100% - var(--sidebar-width));
-	margin-left: var(--sidebar-width);
 	line-height: 1;
+	top: var(--toolbar-height);
+	bottom: 0;
+	left: var(--sidebar-width);
+	right: 0;
+	position: fixed;
 }
 
 .dashboard-pie {
