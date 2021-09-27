@@ -48,8 +48,28 @@ div.pie-projects {
 	position: absolute;
 	top: 0;
 	right: 0;
-	width: 300px;
 	height: 100%;
+}
+
+@media screen and (max-width: 1024px) {
+	div.pie-projects {
+		width: 0;
+		visibility: hidden;
+	}
+
+	div.pie-legend {
+		visibility: hidden;
+	}
+}
+
+@media screen and (min-width: 1024px) {
+	div.pie-projects {
+		width: 200px;
+		visibility: visible;
+	}
+	div.pie-legend {
+		visibility: visible;
+	}
 }
 
 #logo {
