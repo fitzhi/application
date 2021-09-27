@@ -145,9 +145,9 @@
 					(click)="switchTo(selection.currentSummary)">
 					<div class="pie-minimized">
 						<app-pie-chart
-										[radius]=200
-										[active]=false
-										[pie]=pieIdentifier.currentMinimized>
+							[radius]=200
+							[active]=false
+							[pie]=pieIdentifier.currentMinimized>
 						</app-pie-chart>
 				</div>
 		</button>
@@ -235,39 +235,39 @@
 		</div>
 	
 		<div class="dashboard" *ngIf="isSelected(selection.lastYearSummary)">
-				<div *ngIf="(projectService.allProjectsIsLoaded$|async) && ((pieDashboardService.slicesLastYear$|async).length > 0)" 
-								class="formerDashboard">
-						<p class="text">Last year snapshot</p>
-						<app-pie-chart
-								[radius]=180
-								[active]=false
-								[legend]=false
-								[pie]=pieIdentifier.lastYear>
-						</app-pie-chart>
-				</div>
-				<div class="camera">
-						Last year snapshot<br/>
-						<em class="fas fa-camera camera large-fas"></em>
-						<p class="camera">NO DATA AVAILABLE</p>
-				</div>
+			<div *ngIf="(projectService.allProjectsIsLoaded$|async) && ((pieDashboardService.slicesLastYear$|async).length > 0)" 
+							class="formerDashboard">
+				<p class="text">Last year snapshot</p>
+				<app-pie-chart
+					[radius]=180
+					[active]=false
+					[legend]=false
+					[pie]=pieIdentifier.lastYear>
+				</app-pie-chart>
+			</div>
+			<div class="camera">
+					Last year snapshot<br/>
+					<em class="fas fa-camera camera large-fas"></em>
+					<p class="camera">NO DATA AVAILABLE</p>
+			</div>
 		</div>
 
 
 		<div class="dashboard" *ngIf="isSelected(selection.lastMonthSummary)">
-				<div *ngIf="(projectService.allProjectsIsLoaded$|async) && ((pieDashboardService.slicesLastMonth$|async).length > 0)" class="formerDashboard">
-						<p class="text">Last month result</p>
-						<app-pie-chart
-								[radius]=180
-								[active]=false
-								[legend]=false
-								[pie]=pieIdentifier.lastMonth>
-						</app-pie-chart>
-				</div>
-				<div class="camera">
-						Last month snapshot<br/>
-						<em class="fas fa-camera camera large-fas"></em>
-						<p class="camera">NO DATA AVAILABLE</p>
-				</div>
+			<div *ngIf="(projectService.allProjectsIsLoaded$|async) && ((pieDashboardService.slicesLastMonth$|async).length > 0)" class="formerDashboard">
+				<p class="text">Last month result</p>
+				<app-pie-chart
+					[radius]=180
+					[active]=false
+					[legend]=false
+					[pie]=pieIdentifier.lastMonth>
+				</app-pie-chart>
+			</div>
+			<div class="camera">
+				Last month snapshot<br/>
+				<em class="fas fa-camera camera large-fas"></em>
+				<p class="camera">NO DATA AVAILABLE</p>
+			</div>
 		</div>
 		
 		<div id="logo" *ngIf="isSelected(selection.none)">质</div>

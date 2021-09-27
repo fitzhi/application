@@ -1,23 +1,25 @@
 <div class="headerTreeMap">
-    <nav class="navbar navbar-light bg-light headerTreeMap">
+	<nav class="navbar navbar-light bg-light">
 		<mat-checkbox (change)="onChangeExternal()" class="external-checkbox" 
 			[checked]="treeMapService.treemapFilter.external">
 			External
 		</mat-checkbox>
-        <app-tagify-stars 
-			[whitelist]="whitelist" 
-			[blacklist]="blacklist"
-			[placeholder]="''"
-			[colorON]="'#28a745'"
-			[colorOFF]="'white'"
-			[originalValues]="originalValues"
-			[additionalValues$]="additionalValues$"
-			[values$]="values$"
-			[editableState$]="editableState$"
-			(addTagEvent)="onAddTagEvent($event)"
-			(editTagEvent)="onEditTagEvent($event)"
-			(removeTagEvent)="onRemoveTagEvent($event)"
-			style="width:400px;height:50px">
-		</app-tagify-stars>
-    </nav>
+		<div>
+			<app-tagify-stars 
+				[whitelist]="whitelist" 
+				[blacklist]="blacklist"
+				[placeholder]="''"
+				[colorON]="'#28a745'"
+				[colorOFF]="'white'"
+				[originalValues]="originalValues"
+				[additionalValues$]="additionalValues$"
+				[values$]="values$"
+				[editableState$]="editableState$"
+				(addTagEvent)="onAddTagEvent($event)"
+				(editTagEvent)="onEditTagEvent($event)"
+				(removeTagEvent)="onRemoveTagEvent($event)"
+				style="width:300px;height:50px">
+			</app-tagify-stars>
+		</div>
+	</nav>
 </div>

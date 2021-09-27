@@ -1,19 +1,18 @@
 import { Component, Input, OnDestroy, OnInit } from '@angular/core';
+import { Router } from '@angular/router';
 import { EMPTY } from 'rxjs';
 import { switchMap } from 'rxjs/operators';
 import { BaseDirective } from 'src/app/base/base-directive.directive';
+import { Constants } from 'src/app/constants';
 import { traceOn } from 'src/app/global';
+import { CinematicService } from 'src/app/service/cinematic.service';
 import { DashboardService } from 'src/app/service/dashboard/dashboard.service';
 import { StatTypes } from 'src/app/service/dashboard/stat-types';
-import { ProjectService } from 'src/app/service/project/project.service';
-import { TreemapSkillsService } from '../treemap-skills-service/treemap-skills.service';
-import { TreemapSkillsFilter } from '../treemap-skills-service/treemap-skills-filter';
-import { CinematicService } from 'src/app/service/cinematic.service';
-import { Router } from '@angular/router';
 import { Form } from 'src/app/service/Form';
-import { Constants } from 'src/app/constants';
-import { SkillService } from 'src/app/skill/service/skill.service';
+import { ProjectService } from 'src/app/service/project/project.service';
 import { TabsStaffListService } from 'src/app/tabs-staff-list/service/tabs-staff-list.service';
+import { TreemapSkillsFilter } from '../treemap-skills-service/treemap-skills-filter';
+import { TreemapSkillsService } from '../treemap-skills-service/treemap-skills.service';
 
 @Component({
 	selector: 'app-treemap-skills-chart',
@@ -57,7 +56,7 @@ export class TreemapSkillsChartComponent extends BaseDirective implements OnInit
 					next: updated => {
 						if (updated) {
 							if (traceOn()) {
-								console.log ('Reloading after the detecion of a change in the filters');
+								console.log ('Reloading after the detection of a change in the filters');
 							}
 							this.loadDistribution(this.treeMapService.treemapFilter);
 						}

@@ -44,7 +44,7 @@ describe('TreemapProjectsContainerComponent', () => {
 
 	@Component({
 		selector: 'app-host-component',
-		template: `<div><app-treemap-projects width="300px" height="200px" ></app-treemap-projects></div>`
+		template: `<div style="position:fixed; top: 0; right: 0; top: 0"><app-treemap-projects></app-treemap-projects></div>`
 	})
 	class TestHostComponent {
 		@HostBinding('style.--sidebar-width')

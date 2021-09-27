@@ -15,10 +15,22 @@ import { TreemapHeaderComponent } from '../treemap-skills-header/treemap-skills-
 import { TreemapSkillsComponent } from './treemap-skills.component';
 import { TreemapProjectsService } from '../../treemap-projects/treemap-projects-service/treemap-projects.service';
 import { RouterTestingModule } from '@angular/router/testing';
+import { Component } from '@angular/core';
 
 describe('TreemapSkillsComponent container', () => {
-	let component: TreemapSkillsComponent;
-	let fixture: ComponentFixture<TreemapSkillsComponent>;
+	let component: TestHostComponent;
+	let fixture: ComponentFixture<TestHostComponent>;
+
+	@Component({
+		selector: 'app-host-component',
+		template: `
+			<div style="position: fixed; bottom: 0; right: 0; left: 0; top: 0">
+				<app-treemap-skills></app-treemap-skills>
+			</div>`})
+	class TestHostComponent {
+		constructor() {
+		}
+	}
 
 	const MOCK_DISTRIBUTIONS = [
 		{
@@ -40,7 +52,7 @@ describe('TreemapSkillsComponent container', () => {
 
 	beforeEach(waitForAsync(() => {
 		TestBed.configureTestingModule({
-			declarations: [ TreemapSkillsComponent, TreemapSkillsChartComponent, TreemapHeaderComponent, TagifyStarsComponent ],
+			declarations: [ TreemapSkillsComponent, TreemapSkillsChartComponent, TreemapHeaderComponent, TagifyStarsComponent, TestHostComponent ],
 			providers: [ReferentialService, DashboardService, TreemapProjectsService, ProjectService, CinematicService],
 			imports: [NgxChartsModule, BrowserAnimationsModule, MatCheckboxModule, MatDialogModule, HttpClientTestingModule,
 				RouterTestingModule]
@@ -49,7 +61,7 @@ describe('TreemapSkillsComponent container', () => {
 	}));
 
 	beforeEach(() => {
-		fixture = TestBed.createComponent(TreemapSkillsComponent);
+		fixture = TestBed.createComponent(TestHostComponent);
 		component = fixture.componentInstance;
 		fixture.detectChanges();
 	});

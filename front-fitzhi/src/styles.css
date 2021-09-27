@@ -16,6 +16,12 @@
 	/* Height of the top toolbar */
 	--toolbar-height: 65px;
 	--bottom-bar-message-height: 40px;
+
+	/* Height of the filter pane in the treemap Skills component. */
+	--filterTreemapSkillsPane-height: 50px;
+
+	/* Height of the help pane in the treemap Skills component. */
+	--help-height: 90px;
 }
 
 html {
