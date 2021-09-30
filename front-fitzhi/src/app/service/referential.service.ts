@@ -12,6 +12,7 @@ import { TopicLegend } from '../data/topic-legend';
 import { DeclaredSonarServer } from '../data/declared-sonar-server';
 import { Ecosystem } from '../data/ecosystem';
 import { traceOn } from '../global';
+import { textChangeRangeIsUnchanged } from 'typescript';
 
 @Injectable()
 export class ReferentialService {
@@ -25,6 +26,14 @@ export class ReferentialService {
 	 * Legend of the sunburst chart.
 	 */
 	public legends: RiskLegend[] = [];
+
+	/*
+	 * This array contains the optimal number of developers 
+	 * expected to work in the company, starting from a specific level.
+	 * 
+	 * This array contains 5 entries correcting to 5 level
+	 */
+	public optimalStaffNumberPerMoOfCode: number[] = [];
 
 	/**
 	 * Ecosystems declared inside the application.
@@ -66,9 +75,12 @@ export class ReferentialService {
 	 */
 	public skills: Skill[] = [];
 
-	constructor(
-		private httpClient: HttpClient,
-		private backendSetupService: BackendSetupService) {
+	constructor( private httpClient: HttpClient, private backendSetupService: BackendSetupService) {
+		this.optimalStaffNumberPerMoOfCode.push(8);
+		this.optimalStaffNumberPerMoOfCode.push(4);
+		this.optimalStaffNumberPerMoOfCode.push(2);
+		this.optimalStaffNumberPerMoOfCode.push(1);
+		this.optimalStaffNumberPerMoOfCode.push(1);
 	}
 
 	/**

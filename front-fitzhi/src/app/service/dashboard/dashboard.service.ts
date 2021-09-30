@@ -9,7 +9,7 @@ import { Experience } from 'src/app/data/experience';
 import { StatTypes } from './stat-types';
 import * as _ from 'lodash';
 import { traceOn } from 'src/app/global';
-import { trace } from 'console';
+import { ReferentialService } from '../referential.service';
 
 /**
  * This service is in charge of the calculation for global staff & skill analysis.
@@ -20,14 +20,6 @@ import { trace } from 'console';
 export class DashboardService {
 
 	static MAX_NUMBER_SKILLS_IN_DIAGRAM = 10;
-
-	static OPTIMAL_NUMBER_OF_STAFF_PER_1000_K_OF_CODE = [
-		8,
-		4,
-		2,
-		1,
-		1
-	];
 
 	static red(index: number): string {
 		const s = Math.round(28 + ((139 - 28) * index) / 10).toString(16).toUpperCase();
@@ -46,6 +38,7 @@ export class DashboardService {
 
 	constructor(
 		private skillService: SkillService,
+		private referentialService: ReferentialService,
 		private staffListService: StaffListService,
 		private projectService: ProjectService) { }
 
@@ -264,7 +257,7 @@ export class DashboardService {
 
 		// The rate might be negative if we exceed the perfection. The response is NO.
 		const rate = Math.max(
-			1 - countStaff / (sumTotalFilesSize * DashboardService.OPTIMAL_NUMBER_OF_STAFF_PER_1000_K_OF_CODE[minimumLevel - 1] / 1000000), 0);
+			1 - countStaff / (sumTotalFilesSize * this.referentialService.optimalStaffNumberPerMoOfCode[minimumLevel - 1] / 1000000), 0);
 		const indexColor = Math.round(rate * 10);
 		const color = '#' + DashboardService.red(indexColor) + DashboardService.green(indexColor) + DashboardService.blue(indexColor);
 

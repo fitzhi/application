@@ -15,6 +15,7 @@ describe('DashboardService.colorTile testing', () => {
 	let component: TestHostComponent;
 	let fixture: ComponentFixture<TestHostComponent>;
 	let dashboardService: DashboardService;
+	let referentialService: ReferentialService;
 
 	@Component({
 		selector: 'app-host-component',
@@ -52,6 +53,8 @@ describe('DashboardService.colorTile testing', () => {
 		dashboardService = TestBed.inject(DashboardService);
 		expect(dashboardService).toBeDefined();
 
+		referentialService = TestBed.inject(ReferentialService);
+
 		fixture = TestBed.createComponent(TestHostComponent);
 		component = fixture.componentInstance;
 
@@ -59,7 +62,7 @@ describe('DashboardService.colorTile testing', () => {
 			const color = dashboardService.colorTile(
 					1,
 					10000000,
-					i * DashboardService.OPTIMAL_NUMBER_OF_STAFF_PER_1000_K_OF_CODE[0]);
+					i * referentialService.optimalStaffNumberPerMoOfCode[0]);
 			component.colorTiles.push(color);
 		}
 		component.dataRiskLegends = dataRiskLegends;
@@ -75,7 +78,7 @@ describe('DashboardService.colorTile testing', () => {
 
 	it ('Produce color of perfection', () => {
 		expect(component).toBeTruthy();
-		const color = dashboardService.colorTile(1, 1000000, DashboardService.OPTIMAL_NUMBER_OF_STAFF_PER_1000_K_OF_CODE[0]);
+		const color = dashboardService.colorTile(1, 1000000, referentialService.optimalStaffNumberPerMoOfCode[0]);
 		expect(color).toEqual('#1CB745');
 	});
 
@@ -88,16 +91,16 @@ describe('DashboardService.colorTile testing', () => {
 	it ('Produce different colors of risk depending on the skill minimum level', () => {
 		expect(component).toBeTruthy();
 
-		let color = dashboardService.colorTile(1, 1000000, DashboardService.OPTIMAL_NUMBER_OF_STAFF_PER_1000_K_OF_CODE[3]);
+		let color = dashboardService.colorTile(1, 1000000, referentialService.optimalStaffNumberPerMoOfCode[3]);
 		expect(color).not.toEqual('#1CB745');
 
-		color = dashboardService.colorTile(4, 1000000, DashboardService.OPTIMAL_NUMBER_OF_STAFF_PER_1000_K_OF_CODE[3]);
+		color = dashboardService.colorTile(4, 1000000, referentialService.optimalStaffNumberPerMoOfCode[3]);
 		expect(color).toEqual('#1CB745');
 	});
 
 	it('Execute a test if we exceed the perfection', () => {
 		expect(component).toBeTruthy();
-		component.color = dashboardService.colorTile(1, DashboardService.OPTIMAL_NUMBER_OF_STAFF_PER_1000_K_OF_CODE[0], 2);
+		component.color = dashboardService.colorTile(1, referentialService.optimalStaffNumberPerMoOfCode[0], 2);
 		fixture.detectChanges();
 		expect('#1CB745').toEqual(component.color);
 	});
