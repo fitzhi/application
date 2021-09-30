@@ -39,7 +39,7 @@ describe('DashboardService', () => {
 		expect(skillService).toBeDefined();
 		skillService.allSkills = [];
 		for (let i = 0; i < DashboardService.MAX_NUMBER_SKILLS_IN_DIAGRAM - 1; i++) {
-			skillService.allSkills.push(new Skill(i, 'title for Skill ' + i));
+			skillService.allSkills.push(new Skill(i, `title for Skill ${i}`));
 		}
 		skillService.allSkills.push(new Skill(10, 'java'));
 
@@ -50,7 +50,7 @@ describe('DashboardService', () => {
 		const service: DashboardService = TestBed.inject(DashboardService);
 		expect(service).toBeDefined();
 
-		const tiles = service.processSkillDistributionFilesSize(generateSkillProjectsAggregation(), {});
+		const tiles = service.processSkillDistributionFilesSize(1, generateSkillProjectsAggregation(), {});
 
 		expect(10).toEqual(tiles.length);
 		expect(true).toBeDefined(tiles[0].name);

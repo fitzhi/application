@@ -9,6 +9,7 @@ import { Experience } from 'src/app/data/experience';
 import { StatTypes } from './stat-types';
 import * as _ from 'lodash';
 import { traceOn } from 'src/app/global';
+import { trace } from 'console';
 
 /**
  * This service is in charge of the calculation for global staff & skill analysis.
@@ -20,7 +21,13 @@ export class DashboardService {
 
 	static MAX_NUMBER_SKILLS_IN_DIAGRAM = 10;
 
-	static OPTIMAL_NUMBER_OF_STAFF_PER_1000_K_OF_CODE = 2;
+	static OPTIMAL_NUMBER_OF_STAFF_PER_1000_K_OF_CODE = [
+		8,
+		4,
+		2,
+		1,
+		1
+	];
 
 	static red(index: number): string {
 		const s = Math.round(28 + ((139 - 28) * index) / 10).toString(16).toUpperCase();
@@ -125,10 +132,10 @@ export class DashboardService {
 		const aggregationStaff = this.countStaffBySkills(includeExternal, minimumLevel);
 
 		if (statTypes === StatTypes.FilesSize) {
-			return this.processSkillDistributionFilesSize(aggregationProjects, aggregationStaff);
+			return this.processSkillDistributionFilesSize(minimumLevel, aggregationProjects, aggregationStaff);
 		}
 		if (statTypes === StatTypes.NumberOfFiles) {
-			return this.processSkillDistributionNumberOfFiles(aggregationProjects, aggregationStaff);
+			return this.processSkillDistributionNumberOfFiles(minimumLevel, aggregationProjects, aggregationStaff);
 		}
 		throw new Error('Unknown type of statistics ' + statTypes);
 	}
@@ -159,12 +166,29 @@ export class DashboardService {
 		return entries;
 	}
 
-	processSkillDistributionFilesSize(aggregationProjects: SkillProjectsAggregation[], aggregationStaff: any) {
+	/**
+	 * Process the developers distribution per skill in order to evaluate the level of risk for each skill.
+	 * The calculation is based on a minimum level. 
+	 * Therefore, the result might be applicable either for **all** developers, or for **senior** developers.
+	 * 
+	 * **The data aggregated in this method is the total files size**.
+	 * 
+	 * This method aims to answer questions as :
+	 * - _Do we have enough developers in Java?_
+	 * - _Do we have enough skilled developers in Java?_
+	 * 
+	 * @param minimumLevel the starting level required in the skill
+	 * @param aggregationProjects the projects data
+	 * @param aggregationStaff the set of developers filtered on the minimum level
+	 * @returns the tiles ready to be drawn in the treeMap chart
+	 */
+	 processSkillDistributionFilesSize(minimumLevel: number, aggregationProjects: SkillProjectsAggregation[], aggregationStaff: any) {
 
 		const sumAllTotalFilesSize = _.sumBy(aggregationProjects, 'sumTotalFilesSize');
 		if (traceOn()) {
-			console.log('sumAllTotalFilesSize', sumAllTotalFilesSize);
+			console.log ('processSkillDistributionFilesSize(%d, ...) -> %d', minimumLevel, sumAllTotalFilesSize);
 		}
+		
 		const sortedRepo = _.sortBy(aggregationProjects, [function (o) { return -o.sumTotalFilesSize; }]);
 		const aggregateData = this.aggregateRestOfData(sortedRepo);
 
@@ -178,7 +202,7 @@ export class DashboardService {
 			//
 			const staffCount = (aggregationStaff[projectAggregation.idSkill]) ? aggregationStaff[projectAggregation.idSkill] : 0;
 			if (size > 0) {
-				const color = this.colorTile(projectAggregation.sumTotalFilesSize, staffCount);
+				const color = this.colorTile(minimumLevel, projectAggregation.sumTotalFilesSize, staffCount);
 				tiles.push({ name: title, value: size, color: color });
 			}
 		});
@@ -192,7 +216,28 @@ export class DashboardService {
 		return tiles;
 	}
 
-	processSkillDistributionNumberOfFiles(aggregationProjects: SkillProjectsAggregation[], aggregationStaff: any) {
+	/**
+	 * Process the developers distribution per skill in order to evaluate the level of risk for each skill.
+	 * The calculation is based on a minimum level. 
+	 * Therefore, the result might be applicable either for **all** developers, or for **senior** developers.
+	 * 
+	 * **The data aggregated in this method is the number of files**.
+	 * 
+	 * This method aims to answer questions as :
+	 * - _Do we have enough developers in Java?_
+	 * - _Do we have enough skilled developers in Java?_
+	 * 
+	 * @param minimumLevel the starting level required in the skill
+	 * @param aggregationProjects the projects data
+	 * @param aggregationStaff the set of developers filtered on the minimum level
+	 * @returns the tiles ready to be drawn in the treeMap chart
+	 */
+	processSkillDistributionNumberOfFiles(minimumLevel: number, aggregationProjects: SkillProjectsAggregation[], aggregationStaff: any) {
+
+		if (traceOn()) {
+			console.log ('processSkillDistributionNumberOfFiles(%d, ...)', minimumLevel);
+		}
+
 		const sortedRepo = _.sortBy(aggregationProjects, 'sumNumberOfFiles');
 		const aggregateData = this.aggregateRestOfData(sortedRepo);
 
@@ -208,13 +253,18 @@ export class DashboardService {
 	 * Calculate and return the color of a tile.
 	 *
 	 * This color figures the number of active developers available for this skill
+	 *
+	 * @param minimumLevel the starting level required in the skill
 	 * @param sumTotalFilesSize the total files size in this skill
 	 * @param countStaff the number of staff members with this
+	 * 
+	 * @returns the string representation of a color in HTML
 	 */
-	colorTile(sumTotalFilesSize: number, countStaff: any): string {
+	colorTile(minimumLevel: number, sumTotalFilesSize: number, countStaff: any): string {
+
 		// The rate might be negative if we exceed the perfection. The response is NO.
 		const rate = Math.max(
-			1 - countStaff / (sumTotalFilesSize * DashboardService.OPTIMAL_NUMBER_OF_STAFF_PER_1000_K_OF_CODE / 1000000), 0);
+			1 - countStaff / (sumTotalFilesSize * DashboardService.OPTIMAL_NUMBER_OF_STAFF_PER_1000_K_OF_CODE[minimumLevel-1] / 1000000), 0);
 		const indexColor = Math.round(rate * 10);
 		const color = '#' + DashboardService.red(indexColor) + DashboardService.green(indexColor) + DashboardService.blue(indexColor);
 
