@@ -57,8 +57,8 @@ describe('DashboardService.colorTile testing', () => {
 
 		for (let i = 10; i >= 0; i--) {
 			const color = dashboardService.colorTile(
-					1, 
-					10000000, 
+					1,
+					10000000,
 					i * DashboardService.OPTIMAL_NUMBER_OF_STAFF_PER_1000_K_OF_CODE[0]);
 			component.colorTiles.push(color);
 		}
@@ -87,12 +87,12 @@ describe('DashboardService.colorTile testing', () => {
 
 	it ('Produce different colors of risk depending on the skill minimum level', () => {
 		expect(component).toBeTruthy();
-		
+
 		let color = dashboardService.colorTile(1, 1000000, DashboardService.OPTIMAL_NUMBER_OF_STAFF_PER_1000_K_OF_CODE[3]);
 		expect(color).not.toEqual('#1CB745');
 
 		color = dashboardService.colorTile(4, 1000000, DashboardService.OPTIMAL_NUMBER_OF_STAFF_PER_1000_K_OF_CODE[3]);
-		expect(color).toEqual('#1CB745');		
+		expect(color).toEqual('#1CB745');
 	});
 
 	it('Execute a test if we exceed the perfection', () => {

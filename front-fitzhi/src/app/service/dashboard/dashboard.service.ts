@@ -168,27 +168,27 @@ export class DashboardService {
 
 	/**
 	 * Process the developers distribution per skill in order to evaluate the level of risk for each skill.
-	 * The calculation is based on a minimum level. 
+	 * The calculation is based on a minimum level.
 	 * Therefore, the result might be applicable either for **all** developers, or for **senior** developers.
-	 * 
+	 *
 	 * **The data aggregated in this method is the total files size**.
-	 * 
+	 *
 	 * This method aims to answer questions as :
 	 * - _Do we have enough developers in Java?_
 	 * - _Do we have enough skilled developers in Java?_
-	 * 
+	 *
 	 * @param minimumLevel the starting level required in the skill
 	 * @param aggregationProjects the projects data
 	 * @param aggregationStaff the set of developers filtered on the minimum level
 	 * @returns the tiles ready to be drawn in the treeMap chart
 	 */
-	 processSkillDistributionFilesSize(minimumLevel: number, aggregationProjects: SkillProjectsAggregation[], aggregationStaff: any) {
+	processSkillDistributionFilesSize(minimumLevel: number, aggregationProjects: SkillProjectsAggregation[], aggregationStaff: any) {
 
 		const sumAllTotalFilesSize = _.sumBy(aggregationProjects, 'sumTotalFilesSize');
 		if (traceOn()) {
 			console.log ('processSkillDistributionFilesSize(%d, ...) -> %d', minimumLevel, sumAllTotalFilesSize);
 		}
-		
+
 		const sortedRepo = _.sortBy(aggregationProjects, [function (o) { return -o.sumTotalFilesSize; }]);
 		const aggregateData = this.aggregateRestOfData(sortedRepo);
 
@@ -218,15 +218,15 @@ export class DashboardService {
 
 	/**
 	 * Process the developers distribution per skill in order to evaluate the level of risk for each skill.
-	 * The calculation is based on a minimum level. 
+	 * The calculation is based on a minimum level.
 	 * Therefore, the result might be applicable either for **all** developers, or for **senior** developers.
-	 * 
+	 *
 	 * **The data aggregated in this method is the number of files**.
-	 * 
+	 *
 	 * This method aims to answer questions as :
 	 * - _Do we have enough developers in Java?_
 	 * - _Do we have enough skilled developers in Java?_
-	 * 
+	 *
 	 * @param minimumLevel the starting level required in the skill
 	 * @param aggregationProjects the projects data
 	 * @param aggregationStaff the set of developers filtered on the minimum level
@@ -257,14 +257,14 @@ export class DashboardService {
 	 * @param minimumLevel the starting level required in the skill
 	 * @param sumTotalFilesSize the total files size in this skill
 	 * @param countStaff the number of staff members with this
-	 * 
+	 *
 	 * @returns the string representation of a color in HTML
 	 */
 	colorTile(minimumLevel: number, sumTotalFilesSize: number, countStaff: any): string {
 
 		// The rate might be negative if we exceed the perfection. The response is NO.
 		const rate = Math.max(
-			1 - countStaff / (sumTotalFilesSize * DashboardService.OPTIMAL_NUMBER_OF_STAFF_PER_1000_K_OF_CODE[minimumLevel-1] / 1000000), 0);
+			1 - countStaff / (sumTotalFilesSize * DashboardService.OPTIMAL_NUMBER_OF_STAFF_PER_1000_K_OF_CODE[minimumLevel - 1] / 1000000), 0);
 		const indexColor = Math.round(rate * 10);
 		const color = '#' + DashboardService.red(indexColor) + DashboardService.green(indexColor) + DashboardService.blue(indexColor);
 

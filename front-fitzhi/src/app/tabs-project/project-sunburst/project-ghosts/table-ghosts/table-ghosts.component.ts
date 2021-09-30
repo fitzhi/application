@@ -50,7 +50,7 @@ export class TableGhostsComponent extends BaseDirective implements OnInit, OnDes
 	 */
 	@ViewChild('table', { static: true }) table: MatTable<Unknown>;
 
-	public editableColumns: string[] = ['pseudo', 'lastCommit', 'numberOfCommits', 'numberOfFiles','login', 'technical', 'firstname', 'lastname', 'active', 'external', 'creation'];
+	public editableColumns: string[] = ['pseudo', 'lastCommit', 'numberOfCommits', 'numberOfFiles', 'login', 'technical', 'firstname', 'lastname', 'active', 'external', 'creation'];
 	public enhancedColumns: string[] = ['pseudo', 'lastCommit', 'numberOfCommits', 'numberOfFiles', 'login', 'fullName', 'technical'];
 
 	/**

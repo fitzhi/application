@@ -20,14 +20,14 @@ export class TreemapProjectsContainerComponent implements OnInit {
 
 	/**
 	 * Will this treemap be used as a button inside the navbar, or as a chart inside the dashboard container ?
-	 * 
+	 *
 	 * This property is concatenated with the class name "treemap-projects-" to specify which classname to be used :
 	 * either **treemap-projects-button**, or **treemap-projects-chart**.
 	 * **Default is chart.**
 	 */
-	 @Input() buttonOrChart = 'chart';
+	@Input() buttonOrChart = 'chart';
 
-	 /**
+	/**
 	 * The treemap chart is clickable, or not...
 	 */
 	@Input() active = true;

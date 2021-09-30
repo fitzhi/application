@@ -383,7 +383,7 @@ export class ProjectSunburstComponent extends BaseDirective implements OnInit, A
 	 * If this chart is still there, we hide this useless element.
 	 */
 	public hidePreviousSunburstChartDetector() {
-		let elements = document.getElementsByClassName('sunburst-viz');
+		const elements = document.getElementsByClassName('sunburst-viz');
 		if (elements && elements.length > 0) {
 			if (traceOn()) {
 				console.log ('Former element still present, we\'ll remove it.');

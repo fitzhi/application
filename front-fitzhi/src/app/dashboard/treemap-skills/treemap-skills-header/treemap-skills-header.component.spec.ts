@@ -19,7 +19,7 @@ describe('TreemapHeaderComponent', () => {
 			constructor() {
 			}
 		}
-				
+
 	beforeEach(waitForAsync(() => {
 		TestBed.configureTestingModule({
 			declarations: [ TreemapHeaderComponent, TagifyStarsComponent, TestHostComponent ],
