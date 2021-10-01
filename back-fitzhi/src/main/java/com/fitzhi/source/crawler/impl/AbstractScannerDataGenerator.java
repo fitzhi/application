@@ -3,12 +3,11 @@ package com.fitzhi.source.crawler.impl;
 import static com.fitzhi.Global.DASHBOARD_GENERATION;
 import static com.fitzhi.Global.INTERNAL_FILE_SEPARATOR;
 import static com.fitzhi.Global.LN;
-import static com.fitzhi.Global.PROJECT;
 import static com.fitzhi.Global.NO_PROGRESSION;
+import static com.fitzhi.Global.PROJECT;
 
 import java.text.MessageFormat;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 import java.util.Random;

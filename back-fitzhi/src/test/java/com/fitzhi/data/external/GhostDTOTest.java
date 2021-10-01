@@ -1,21 +1,14 @@
-/**
- * 
- */
 package com.fitzhi.data.external;
-
-
-
-import org.junit.Assert;
-import org.junit.Test;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import lombok.extern.slf4j.Slf4j;
 
 import java.time.LocalDate;
 
 import com.fitzhi.data.internal.Committer;
 import com.google.gson.Gson;
+
+import org.junit.Assert;
+import org.junit.Test;
+
+import lombok.extern.slf4j.Slf4j;
 
 /**
  * @author Fr&eacute;d&eacute;ric VIDAL

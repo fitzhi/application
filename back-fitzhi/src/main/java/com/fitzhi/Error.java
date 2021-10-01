@@ -63,7 +63,7 @@ public class Error {
 	public static final String MESSAGE_STAFF_ACTIVE_ON_PROJECT = "You cannot remove an active project. {0} commits are registered for this staff member";
 	
 	public static final int CODE_FILE_REFERENTIAL_NOFOUND = -1017;
-	public static final String MESSAGE_FILE_REFERENTIAL_NOFOUND = "The referential file {0} doesn't exist!";
+	public static final String MESSAGE_FILE_REFERENTIAL_NOFOUND = "The referential file {0} does not exist!";
 
 	public static final int CODE_SONAR_KEY_NOFOUND = -1018;
 	public static final String MESSAGE_SONAR_KEY_NOFOUND = "There is no Sonar project {0} declared for the project {1}";
