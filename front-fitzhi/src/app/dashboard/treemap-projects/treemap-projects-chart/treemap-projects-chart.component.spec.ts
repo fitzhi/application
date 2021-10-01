@@ -7,7 +7,7 @@ import { NgxChartsModule } from '@swimlane/ngx-charts';
 import { CinematicService } from 'src/app/service/cinematic.service';
 import { DashboardService } from 'src/app/service/dashboard/dashboard.service';
 import { ProjectService } from 'src/app/service/project/project.service';
-import { ReferentialService } from 'src/app/service/referential.service';
+import { ReferentialService } from 'src/app/service/referential/referential.service';
 import { StaffListService } from 'src/app/service/staff-list-service/staff-list.service';
 import { SkillService } from 'src/app/skill/service/skill.service';
 import { TreemapProjectsChartComponent } from './treemap-projects-chart.component';

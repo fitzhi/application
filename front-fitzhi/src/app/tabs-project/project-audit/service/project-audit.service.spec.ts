@@ -8,7 +8,7 @@ import { Project } from 'src/app/data/project';
 import { MessageService } from 'src/app/interaction/message/message.service';
 import { CinematicService } from 'src/app/service/cinematic.service';
 import { ProjectService } from 'src/app/service/project/project.service';
-import { ReferentialService } from 'src/app/service/referential.service';
+import { ReferentialService } from 'src/app/service/referential/referential.service';
 import { AuditChosenDetail } from '../project-audit-badges/audit-badge/audit-chosen-detail';
 import { TopicWeight } from '../project-audit-badges/topic-weight';
 import { Topic } from '../table-categories/topic';

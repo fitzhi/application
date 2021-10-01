@@ -15,7 +15,7 @@ import { SonarEvaluation } from 'src/app/data/sonar-evaluation';
 import { SonarProject } from 'src/app/data/SonarProject';
 import { CinematicService } from 'src/app/service/cinematic.service';
 import { ProjectService } from 'src/app/service/project/project.service';
-import { ReferentialService } from 'src/app/service/referential.service';
+import { ReferentialService } from 'src/app/service/referential/referential.service';
 import { StaffListService } from 'src/app/service/staff-list-service/staff-list.service';
 import { AuditGraphicBadgeComponent } from '../project-audit/project-audit-badges/audit-badge/audit-graphic-badge/audit-graphic-badge.component';
 import { QuotationBadgeComponent } from '../project-sonar/sonar-dashboard/sonar-quotation/quotation-badge/quotation-badge.component';

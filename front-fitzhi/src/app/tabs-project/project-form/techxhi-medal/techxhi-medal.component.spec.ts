@@ -4,7 +4,7 @@ import { TechxhiMedalComponent } from './techxhi-medal.component';
 import { ProjectService } from 'src/app/service/project/project.service';
 import { Project } from 'src/app/data/project';
 import { BehaviorSubject } from 'rxjs';
-import { ReferentialService } from 'src/app/service/referential.service';
+import { ReferentialService } from 'src/app/service/referential/referential.service';
 import { PortalHostDirective } from '@angular/cdk/portal';
 import { SonarProject } from 'src/app/data/SonarProject';
 import { SonarEvaluation } from 'src/app/data/sonar-evaluation';

@@ -10,7 +10,7 @@ import { Constants } from './constants';
 import { ListCriteria } from './data/listCriteria';
 import { traceOn } from './global';
 import { CinematicService } from './service/cinematic.service';
-import { ReferentialService } from './service/referential.service';
+import { ReferentialService } from './service/referential/referential.service';
 import { SonarService } from './service/sonar.service';
 import { SkillService } from './skill/service/skill.service';
 import { ListProjectsService } from './tabs-project/list-project/list-projects-service/list-projects.service';

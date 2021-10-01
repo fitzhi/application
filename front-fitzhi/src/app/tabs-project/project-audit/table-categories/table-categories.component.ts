@@ -3,7 +3,7 @@ import { take } from 'rxjs/operators';
 import { BaseDirective } from 'src/app/base/base-directive.directive';
 import { MessageService } from 'src/app/interaction/message/message.service';
 import { ProjectService } from 'src/app/service/project/project.service';
-import { ReferentialService } from 'src/app/service/referential.service';
+import { ReferentialService } from 'src/app/service/referential/referential.service';
 import { ProjectAuditService } from '../service/project-audit.service';
 import { Topic } from './topic';
 

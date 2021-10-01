@@ -9,7 +9,7 @@ import { Experience } from 'src/app/data/experience';
 import { StatTypes } from './stat-types';
 import * as _ from 'lodash';
 import { traceOn } from 'src/app/global';
-import { ReferentialService } from '../referential.service';
+import { ReferentialService } from '../referential/referential.service';
 
 /**
  * This service is in charge of the calculation for global staff & skill analysis.

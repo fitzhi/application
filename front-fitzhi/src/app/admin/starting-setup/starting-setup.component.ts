@@ -4,7 +4,7 @@ import { Collaborator } from 'src/app/data/collaborator';
 import { BaseDirective } from 'src/app/base/base-directive.directive';
 import { BackendSetupService } from 'src/app/service/backend-setup/backend-setup.service';
 import { HttpClient } from '@angular/common/http';
-import { ReferentialService } from 'src/app/service/referential.service';
+import { ReferentialService } from 'src/app/service/referential/referential.service';
 import { SkillService } from 'src/app/skill/service/skill.service';
 import { Router } from '@angular/router';
 import { traceOn } from 'src/app/global';

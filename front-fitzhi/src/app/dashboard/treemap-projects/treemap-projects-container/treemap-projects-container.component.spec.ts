@@ -8,7 +8,7 @@ import { NgxChartsModule } from '@swimlane/ngx-charts';
 import { CinematicService } from 'src/app/service/cinematic.service';
 import { DashboardService } from 'src/app/service/dashboard/dashboard.service';
 import { ProjectService } from 'src/app/service/project/project.service';
-import { ReferentialService } from 'src/app/service/referential.service';
+import { ReferentialService } from 'src/app/service/referential/referential.service';
 import { FitzhiDashboardComponent } from '../../fitzhi-dashboard.component';
 import { TreemapProjectsChartComponent } from '../treemap-projects-chart/treemap-projects-chart.component';
 import { TreemapProjectsContainerComponent } from './treemap-projects-container.component';

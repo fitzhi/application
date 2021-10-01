@@ -5,7 +5,7 @@ import { AttachmentFile } from 'src/app/data/AttachmentFile';
 import { AuditDetail } from 'src/app/data/audit-detail';
 import { CinematicService } from 'src/app/service/cinematic.service';
 import { ProjectService } from 'src/app/service/project/project.service';
-import { ReferentialService } from 'src/app/service/referential.service';
+import { ReferentialService } from 'src/app/service/referential/referential.service';
 import { ProjectAuditService } from '../service/project-audit.service';
 import { AuditChosenDetail } from './audit-badge/audit-chosen-detail';
 import { TopicEvaluation } from './topic-evaluation';

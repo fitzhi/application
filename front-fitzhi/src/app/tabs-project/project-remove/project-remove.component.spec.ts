@@ -3,7 +3,7 @@ import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 import { ProjectRemoveComponent } from './project-remove.component';
 import { HttpClientTestingModule, HttpTestingController } from '@angular/common/http/testing';
 import { ProjectService } from 'src/app/service/project/project.service';
-import { ReferentialService } from 'src/app/service/referential.service';
+import { ReferentialService } from 'src/app/service/referential/referential.service';
 import { MatDialogModule } from '@angular/material/dialog';
 import { Project } from 'src/app/data/project';
 import { BackendSetupService } from 'src/app/service/backend-setup/backend-setup.service';

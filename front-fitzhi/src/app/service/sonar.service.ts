@@ -15,7 +15,7 @@ import { traceOn } from '../global';
 import { InternalService } from '../internal-service';
 import { ILanguageCount } from './ILanguageCount';
 import { ProjectService } from './project/project.service';
-import { ReferentialService } from './referential.service';
+import { ReferentialService } from './referential/referential.service';
 
 @Injectable({
 	providedIn: 'root'

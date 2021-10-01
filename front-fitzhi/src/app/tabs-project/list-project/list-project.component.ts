@@ -9,7 +9,7 @@ import { CinematicService } from 'src/app/service/cinematic.service';
 import { Commit } from '../../data/commit';
 import { Project } from '../../data/project';
 import { ProjectService } from '../../service/project/project.service';
-import { ReferentialService } from '../../service/referential.service';
+import { ReferentialService } from '../../service/referential/referential.service';
 import { StaffListService } from '../../service/staff-list-service/staff-list.service';
 import { ListProjectsService } from './list-projects-service/list-projects.service';
 import { ProjectsDataSource } from './projects-data-source';

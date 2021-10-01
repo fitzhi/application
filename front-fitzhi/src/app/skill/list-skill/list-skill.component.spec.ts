@@ -1,6 +1,6 @@
 import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 import { ListSkillComponent } from './list-skill.component';
-import { ReferentialService } from '../../service/referential.service';
+import { ReferentialService } from '../../service/referential/referential.service';
 import { CinematicService } from '../../service/cinematic.service';
 import { MatTableModule } from '@angular/material/table';
 import { MatCheckboxModule } from '@angular/material/checkbox';

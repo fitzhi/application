@@ -2,7 +2,7 @@ import { TestBed } from '@angular/core/testing';
 
 import { PieDashboardService } from './pie-dashboard.service';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
-import { ReferentialService } from 'src/app/service/referential.service';
+import { ReferentialService } from 'src/app/service/referential/referential.service';
 import { MatDialogModule } from '@angular/material/dialog';
 import { CinematicService } from 'src/app/service/cinematic.service';
 

@@ -5,7 +5,7 @@ import { MatDialogModule } from '@angular/material/dialog';
 import { EvaluationDistribution } from 'src/app/data/EvalutionDistribution';
 import { Project } from '../../data/project';
 import { CinematicService } from '../cinematic.service';
-import { ReferentialService } from '../referential.service';
+import { ReferentialService } from '../referential/referential.service';
 import { ProjectService } from './project.service';
 
 

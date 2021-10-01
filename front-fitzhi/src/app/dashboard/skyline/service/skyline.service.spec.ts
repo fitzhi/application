@@ -7,7 +7,7 @@ import { ProjectFloor } from 'src/app/data/project-floor';
 import { SkylineAnimation } from 'src/app/data/skyline-animation';
 import { CinematicService } from 'src/app/service/cinematic.service';
 import { ProjectService } from 'src/app/service/project/project.service';
-import { ReferentialService } from 'src/app/service/referential.service';
+import { ReferentialService } from 'src/app/service/referential/referential.service';
 
 import { SkylineService } from './skyline.service';
 

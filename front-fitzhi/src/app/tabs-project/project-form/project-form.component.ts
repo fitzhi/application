@@ -15,7 +15,7 @@ import { BooleanDTO } from 'src/app/data/external/booleanDTO';
 import { SonarService } from 'src/app/service/sonar.service';
 import Tagify from '@yaireo/tagify';
 import { MessageGravity } from 'src/app/interaction/message/message-gravity';
-import { ReferentialService } from 'src/app/service/referential.service';
+import { ReferentialService } from 'src/app/service/referential/referential.service';
 import { Skill } from 'src/app/data/skill';
 import { traceOn } from 'src/app/global';
 import { ProjectSkill } from '../../data/project-skill';

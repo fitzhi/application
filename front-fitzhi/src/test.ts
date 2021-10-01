@@ -17,7 +17,8 @@ getTestBed().initTestEnvironment(
 // Then we find all the tests
 
 const context = require.context('./', true, /\.spec\.ts$/);
-// const context = require.context('./', true,  /treemap-projects-container\.component\.spec\.ts$/);
+// const context = require.context('./', true,  /dashboard\.service\.spec\.ts$/);
+// const context = require.context('./', true,  /dashboardService-testingComponentFor-colorTile\.component\.spec\.ts$/);
 // const context = require.context('./', true,  /treemap-skills-chart\.component\.spec\.ts$/);
 // const context = require.context('./', true,  /treemap-skills.component\.spec\.ts$/);
 // const context = require.context('./', true,  /project-sunburst-with-data\.component\.spec\.ts$/);
@@ -26,7 +27,6 @@ const context = require.context('./', true, /\.spec\.ts$/);
 // const context = require.context('./', true,  /project-appropriateDistribution\.service\.spec\.ts$/);
 // const context = require.context('./', true,  /staff-list\.reloadStaff\.service\.spec\.ts$/);
 // const context = require.context('./', true,  /project-calculateSonarEvaluation\.service\.spec\.ts$/);
-// const context = require.context('./', true,  /register-user\.component\.spec\.ts$/);
 // const context = require.context('./', true,  /treemap-skills\.component\.spec\.ts$/);
 // const context = require.context('./', true,  /treemap-skills\.component\.spec\.ts$/);
 // const context = require.context('./', true,  /treemap-projects-container\.component\.spec\.ts$/);

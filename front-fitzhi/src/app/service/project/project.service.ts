@@ -30,7 +30,7 @@ import { BackendSetupService } from '../backend-setup/backend-setup.service';
 import { CinematicService } from '../cinematic.service';
 import { FileService } from '../file.service';
 import { GitService } from '../git/git.service';
-import { ReferentialService } from '../referential.service';
+import { ReferentialService } from '../referential/referential.service';
 import { SonarService } from '../sonar.service';
 import { ProjectsListenerService } from './projects-listener.service';
 

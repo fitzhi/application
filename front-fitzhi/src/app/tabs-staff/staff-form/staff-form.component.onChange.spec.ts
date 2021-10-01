@@ -3,7 +3,7 @@ import { RouterTestingModule } from '@angular/router/testing';
 import { of } from 'rxjs';
 import { Collaborator } from 'src/app/data/collaborator';
 import { MessageBoxService } from 'src/app/interaction/message-box/service/message-box.service';
-import { ReferentialService } from 'src/app/service/referential.service';
+import { ReferentialService } from 'src/app/service/referential/referential.service';
 import { InitTest } from 'src/app/test/init-test';
 import { Profile } from '../../data/profile';
 import { StaffService } from '../service/staff.service';

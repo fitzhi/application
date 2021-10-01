@@ -5,7 +5,7 @@ import { SonarProject } from '../data/SonarProject';
 import { ProjectSonarMetricValue } from '../data/project-sonar-metric-value';
 import { SonarServer } from '../data/sonar-server';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
-import { ReferentialService } from './referential.service';
+import { ReferentialService } from './referential/referential.service';
 import { CinematicService } from './cinematic.service';
 import { InitTest } from '../test/init-test';
 

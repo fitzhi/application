@@ -10,7 +10,7 @@ import { BaseDirective } from '../base/base-directive.directive';
 import { ProjectService } from '../service/project/project.service';
 import { switchMap, take } from 'rxjs/operators';
 import { MessageGravity } from '../interaction/message/message-gravity';
-import { ReferentialService } from '../service/referential.service';
+import { ReferentialService } from '../service/referential/referential.service';
 import { SonarService } from '../service/sonar.service';
 import { traceOn } from '../global';
 

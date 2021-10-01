@@ -10,7 +10,7 @@ import { DynamicPieChartModule } from 'dynamic-pie-chart';
 import { take } from 'rxjs/operators';
 import { CinematicService } from 'src/app/service/cinematic.service';
 import { ProjectService } from 'src/app/service/project/project.service';
-import { ReferentialService } from 'src/app/service/referential.service';
+import { ReferentialService } from 'src/app/service/referential/referential.service';
 import { AnalysisTypeSlice } from '../analysis-type-slice';
 import { LevelStaffRisk } from '../level-staff-risk';
 import { PieDashboardService } from '../service/pie-dashboard.service';

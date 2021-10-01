@@ -6,7 +6,7 @@ import { AuditDetail } from 'src/app/data/audit-detail';
 import { traceOn } from 'src/app/global';
 import { CinematicService } from 'src/app/service/cinematic.service';
 import { ProjectService } from 'src/app/service/project/project.service';
-import { ReferentialService } from 'src/app/service/referential.service';
+import { ReferentialService } from 'src/app/service/referential/referential.service';
 import { TopicEvaluation } from '../topic-evaluation';
 import { TopicWeight } from '../topic-weight';
 import { AuditChosenDetail } from './audit-chosen-detail';

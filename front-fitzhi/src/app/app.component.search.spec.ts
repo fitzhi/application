@@ -20,7 +20,7 @@ import { ListCriteria } from './data/listCriteria';
 import { MessageComponent } from './interaction/message/message.component';
 import { ToolbarComponent } from './interaction/toolbar/toolbar.component';
 import { CinematicService } from './service/cinematic.service';
-import { ReferentialService } from './service/referential.service';
+import { ReferentialService } from './service/referential/referential.service';
 import { ListSkillComponent } from './skill/list-skill/list-skill.component';
 import { SkillService } from './skill/service/skill.service';
 import { ListProjectComponent } from './tabs-project/list-project/list-project.component';

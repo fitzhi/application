@@ -13,7 +13,7 @@ import { Collaborator } from '../../data/collaborator';
 import { Profile } from '../../data/profile';
 import { MessageService } from '../../interaction/message/message.service';
 import { CinematicService } from '../../service/cinematic.service';
-import { ReferentialService } from '../../service/referential.service';
+import { ReferentialService } from '../../service/referential/referential.service';
 import { StaffService } from '../service/staff.service';
 
 @Component({

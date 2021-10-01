@@ -4,7 +4,7 @@ import { ToolbarComponent } from './interaction/toolbar/toolbar.component';
 
 import { RouterTestingModule } from '@angular/router/testing';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
-import { ReferentialService } from './service/referential.service';
+import { ReferentialService } from './service/referential/referential.service';
 import { CinematicService } from './service/cinematic.service';
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatTableModule } from '@angular/material/table';

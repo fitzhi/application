@@ -9,7 +9,7 @@ import { MatInputModule } from '@angular/material/input';
 import { FormsModule } from '@angular/forms';
 import { CinematicService } from 'src/app/service/cinematic.service';
 import { AuditDetailsHistory } from 'src/app/service/cinematic/audit-details-history';
-import { ReferentialService } from 'src/app/service/referential.service';
+import { ReferentialService } from 'src/app/service/referential/referential.service';
 import { RiskLegend } from 'src/app/data/riskLegend';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { MatDialogModule } from '@angular/material/dialog';

@@ -7,7 +7,7 @@ import { StaffListService } from 'src/app/service/staff-list-service/staff-list.
 import { SkillService } from '../../skill/service/skill.service';
 import { CinematicService } from '../cinematic.service';
 import { ProjectService } from '../project/project.service';
-import { ReferentialService } from '../referential.service';
+import { ReferentialService } from '../referential/referential.service';
 import { DashboardService } from './dashboard.service';
 import { dataRiskLegends } from './data-riskLegends';
 
@@ -50,10 +50,17 @@ describe('DashboardService.colorTile testing', () => {
 	}));
 
 	beforeEach(() => {
+		referentialService = TestBed.inject(ReferentialService);
+		console.log (referentialService.optimalStaffNumberPerMoOfCode);
+		referentialService.optimalStaffNumberPerMoOfCode.push(8);
+		referentialService.optimalStaffNumberPerMoOfCode.push(4);
+		referentialService.optimalStaffNumberPerMoOfCode.push(2);
+		referentialService.optimalStaffNumberPerMoOfCode.push(1);
+		referentialService.optimalStaffNumberPerMoOfCode.push(1);
+
+
 		dashboardService = TestBed.inject(DashboardService);
 		expect(dashboardService).toBeDefined();
-
-		referentialService = TestBed.inject(ReferentialService);
 
 		fixture = TestBed.createComponent(TestHostComponent);
 		component = fixture.componentInstance;

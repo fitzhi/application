@@ -4,7 +4,7 @@ import { AuditGraphicBadgeComponent } from './audit-graphic-badge.component';
 import { Component } from '@angular/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { RiskLegend } from 'src/app/data/riskLegend';
-import { ReferentialService } from 'src/app/service/referential.service';
+import { ReferentialService } from 'src/app/service/referential/referential.service';
 import { CinematicService } from 'src/app/service/cinematic.service';
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import { HttpClientTestingModule } from '@angular/common/http/testing';

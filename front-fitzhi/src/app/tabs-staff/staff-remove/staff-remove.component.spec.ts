@@ -3,7 +3,7 @@ import { async, ComponentFixture, TestBed, waitForAsync } from '@angular/core/te
 import { MatDialogModule } from '@angular/material/dialog';
 import { BackendSetupService } from 'src/app/service/backend-setup/backend-setup.service';
 import { CinematicService } from 'src/app/service/cinematic.service';
-import { ReferentialService } from 'src/app/service/referential.service';
+import { ReferentialService } from 'src/app/service/referential/referential.service';
 import { StaffListService } from 'src/app/service/staff-list-service/staff-list.service';
 import { StaffService } from 'src/app/tabs-staff/service/staff.service';
 import { StaffRemoveComponent } from './staff-remove.component';

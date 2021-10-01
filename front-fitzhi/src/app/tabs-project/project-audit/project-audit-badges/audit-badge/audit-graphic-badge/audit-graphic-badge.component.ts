@@ -7,7 +7,7 @@ import { BehaviorSubject } from 'rxjs';
 import { CinematicService } from 'src/app/service/cinematic.service';
 import { Constants } from 'src/app/constants';
 import { take } from 'rxjs/operators';
-import { ReferentialService } from 'src/app/service/referential.service';
+import { ReferentialService } from 'src/app/service/referential/referential.service';
 import { traceOn } from 'src/app/global';
 
 @Component({

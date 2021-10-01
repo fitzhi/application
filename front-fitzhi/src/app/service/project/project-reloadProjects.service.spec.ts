@@ -11,7 +11,7 @@ import { SunburstCinematicService } from '../../tabs-project/project-sunburst/se
 import { BackendSetupService } from '../backend-setup/backend-setup.service';
 import { CinematicService } from '../cinematic.service';
 import { FileService } from '../file.service';
-import { ReferentialService } from '../referential.service';
+import { ReferentialService } from '../referential/referential.service';
 import { ProjectService } from './project.service';
 import { ProjectsListenerService } from './projects-listener.service';
 

@@ -1,7 +1,7 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { BaseDirective } from '../../../base/base-directive.directive';
 import { RiskLegend } from '../../../data/riskLegend';
-import { ReferentialService } from '../../../service/referential.service';
+import { ReferentialService } from '../../../service/referential/referential.service';
 
 @Component({
 	selector: 'app-legend-sunburst',

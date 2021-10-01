@@ -6,7 +6,7 @@ import { MatSort, Sort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
 import { Constants } from '../../constants';
 import { Profile } from '../../data/profile';
-import { ReferentialService } from '../../service/referential.service';
+import { ReferentialService } from '../../service/referential/referential.service';
 import { Experience } from '../../data/experience';
 import { ListCriteria } from '../../data/listCriteria';
 import { SkillService } from '../../skill/service/skill.service';

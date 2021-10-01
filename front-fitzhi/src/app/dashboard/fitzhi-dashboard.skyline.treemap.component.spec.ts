@@ -12,7 +12,7 @@ import { NgxChartsModule } from '@swimlane/ngx-charts';
 import { DynamicPieChartModule } from 'dynamic-pie-chart';
 import { RisingSkylineModule, SkylineComponent } from 'rising-skyline';
 import { CinematicService } from 'src/app/service/cinematic.service';
-import { ReferentialService } from 'src/app/service/referential.service';
+import { ReferentialService } from 'src/app/service/referential/referential.service';
 import { TagifyStarsComponent } from '../tabs-staff/staff-experience/tagify-stars/tagify-stars.component';
 import { FitzhiDashboardComponent } from './fitzhi-dashboard.component';
 import { PieChartComponent } from './pie-chart/pie-chart.component';

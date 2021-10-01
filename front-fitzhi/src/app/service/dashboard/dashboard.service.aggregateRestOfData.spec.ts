@@ -6,7 +6,7 @@ import { ProjectService } from '../project/project.service';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { StaffService } from '../../tabs-staff/service/staff.service';
 import { MatDialogModule } from '@angular/material/dialog';
-import { ReferentialService } from '../referential.service';
+import { ReferentialService } from '../referential/referential.service';
 import { SkillProjectsAggregation } from './skill-projects-aggregration';
 import { CinematicService } from '../cinematic.service';
 describe('DashboardService', () => {

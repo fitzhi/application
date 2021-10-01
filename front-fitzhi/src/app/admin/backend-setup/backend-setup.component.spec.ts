@@ -16,7 +16,7 @@ import { of, throwError } from 'rxjs';
 import { FirstConnection } from 'src/app/data/first-connection';
 import { BackendSetupService } from '../../service/backend-setup/backend-setup.service';
 import { CinematicService } from '../../service/cinematic.service';
-import { ReferentialService } from '../../service/referential.service';
+import { ReferentialService } from '../../service/referential/referential.service';
 import { BackendSetupComponent } from './backend-setup.component';
 
 

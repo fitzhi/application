@@ -1,18 +1,19 @@
-import { Constants } from '../constants';
+import { Constants } from '../../constants';
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { Profile } from '../data/profile';
-import { RiskLegend } from '../data/riskLegend';
-import { Skill } from '../data/skill';
-import { BackendSetupService } from './backend-setup/backend-setup.service';
+import { Profile } from '../../data/profile';
+import { RiskLegend } from '../../data/riskLegend';
+import { Skill } from '../../data/skill';
+import { BackendSetupService } from '../backend-setup/backend-setup.service';
 import { take, switchMap } from 'rxjs/operators';
 import { Observable, BehaviorSubject, Subject } from 'rxjs';
-import { SupportedMetric } from '../data/supported-metric';
-import { TopicLegend } from '../data/topic-legend';
-import { DeclaredSonarServer } from '../data/declared-sonar-server';
-import { Ecosystem } from '../data/ecosystem';
-import { traceOn } from '../global';
+import { SupportedMetric } from '../../data/supported-metric';
+import { TopicLegend } from '../../data/topic-legend';
+import { DeclaredSonarServer } from '../../data/declared-sonar-server';
+import { Ecosystem } from '../../data/ecosystem';
+import { traceOn } from '../../global';
 import { textChangeRangeIsUnchanged } from 'typescript';
+import { OptimalSkillCoverage } from '../../data/optimal-skill-coverage';
 
 @Injectable()
 export class ReferentialService {
@@ -75,13 +76,7 @@ export class ReferentialService {
 	 */
 	public skills: Skill[] = [];
 
-	constructor( private httpClient: HttpClient, private backendSetupService: BackendSetupService) {
-		this.optimalStaffNumberPerMoOfCode.push(8);
-		this.optimalStaffNumberPerMoOfCode.push(4);
-		this.optimalStaffNumberPerMoOfCode.push(2);
-		this.optimalStaffNumberPerMoOfCode.push(1);
-		this.optimalStaffNumberPerMoOfCode.push(1);
-	}
+	constructor( private httpClient: HttpClient, private backendSetupService: BackendSetupService) {}
 
 	/**
 	 * Loading all referential.
@@ -131,24 +126,39 @@ export class ReferentialService {
 						}
 						this.legendsLoaded$.next(true);
 						legends.forEach(legend => this.legends.push(legend));
+						return this.httpClient.get<OptimalSkillCoverage[]>
+							(this.backendSetupService.url() + '/referential/treemap-skills-coverage');
+					}))
+			.pipe(
+				take(1),
+				switchMap(
+					(osc: OptimalSkillCoverage[]) => {
+						if (traceOn()) {
+							console.groupCollapsed('Treemap skills coverage : ');
+							osc.forEach(function (sc) {
+								console.log(sc.optimalStaffNumberPerMoOfCode + ' ' + sc.minimumLevel);
+							});
+							console.groupEnd();
+						}
+						osc.forEach(sc => this.optimalStaffNumberPerMoOfCode.push(sc.optimalStaffNumberPerMoOfCode));
 						return this.httpClient.get<DeclaredSonarServer[]>
 							(this.backendSetupService.url() + '/referential/sonar-servers');
 					}))
-				.pipe(
-					take(1),
-					switchMap(
-						(sonarServers: DeclaredSonarServer[]) => {
-							if (traceOn()) {
-								console.groupCollapsed('Sonar servers declared : ');
-								sonarServers.forEach(server => console.log(server.urlSonarServer));
-								console.groupEnd();
-							}
-							const declaredSonarServers: DeclaredSonarServer[] = [];
-							declaredSonarServers.push(...sonarServers);
-							this.sonarServers$.next(declaredSonarServers);
-							return this.httpClient.get<Ecosystem[]>
-								(this.backendSetupService.url() + '/referential/ecosystem');
-						}))
+			.pipe(
+				take(1),
+				switchMap(
+					(sonarServers: DeclaredSonarServer[]) => {
+						if (traceOn()) {
+							console.groupCollapsed('Sonar servers declared : ');
+							sonarServers.forEach(server => console.log(server.urlSonarServer));
+							console.groupEnd();
+						}
+						const declaredSonarServers: DeclaredSonarServer[] = [];
+						declaredSonarServers.push(...sonarServers);
+						this.sonarServers$.next(declaredSonarServers);
+						return this.httpClient.get<Ecosystem[]>
+							(this.backendSetupService.url() + '/referential/ecosystem');
+					}))
 				.pipe(
 					take(1),
 					switchMap(
@@ -190,21 +200,22 @@ export class ReferentialService {
 							console.groupEnd();
 						}
 
-				/**
-				 * List of topic legends registered on the back office.
-				 */
-				const topics: { [id: string]: string; } = {};
+						/**
+						 * List of topic legends registered on the back office.
+						 */
+						const topics: { [id: string]: string; } = {};
 
-				topicslegends.forEach(topic => {
-					topics['' + topic.id] = topic.title;
-				});
-				this.topics$.next(topics);
+						topicslegends.forEach(topic => {
+							topics['' + topic.id] = topic.title;
+						});
+						this.topics$.next(topics);
 
-				/**
-				 * All referential are loaded.
-				 */
-				this.referentialLoaded$.next(true);
-			});
+						/**
+						 * All referential are loaded.
+						 */
+						this.referentialLoaded$.next(true);
+					}
+				);
 	}
 
 }

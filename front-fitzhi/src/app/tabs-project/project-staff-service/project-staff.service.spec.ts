@@ -4,7 +4,7 @@ import { MatDialogModule } from '@angular/material/dialog';
 import { Collaborator } from 'src/app/data/collaborator';
 import { Contributor } from 'src/app/data/contributor';
 import { FileService } from 'src/app/service/file.service';
-import { ReferentialService } from 'src/app/service/referential.service';
+import { ReferentialService } from 'src/app/service/referential/referential.service';
 import { StaffListService } from 'src/app/service/staff-list-service/staff-list.service';
 import { ListProjectsService } from '../list-project/list-projects-service/list-projects.service';
 

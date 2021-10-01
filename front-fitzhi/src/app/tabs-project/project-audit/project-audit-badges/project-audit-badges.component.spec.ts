@@ -8,7 +8,7 @@ import { MatGridListModule } from '@angular/material/grid-list';
 import { AuditGraphicBadgeComponent } from './audit-badge/audit-graphic-badge/audit-graphic-badge.component';
 import { ReportDetailFormComponent } from './report-detail-form/report-detail-form.component';
 import { FilesDetailFormComponent } from './files-detail-form/files-detail-form.component';
-import { ReferentialService } from 'src/app/service/referential.service';
+import { ReferentialService } from 'src/app/service/referential/referential.service';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MatSliderModule } from '@angular/material/slider';
