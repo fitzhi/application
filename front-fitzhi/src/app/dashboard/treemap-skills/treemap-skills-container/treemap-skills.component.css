@@ -124,3 +124,9 @@ li.bad {
 	color: var(--color-error);
 	margin-bottom: 1px;
 }
+
+em.info {
+	margin-top: 5px;
+	font-size: xx-large;
+	color: green;
+}
