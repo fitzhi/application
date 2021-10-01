@@ -17,7 +17,7 @@ getTestBed().initTestEnvironment(
 // Then we find all the tests
 
 const context = require.context('./', true, /\.spec\.ts$/);
-// const context = require.context('./', true,  /dashboard\.service\.spec\.ts$/);
+// const context = require.context('./', true,  /referential\.service\.spec\.ts$/);
 // const context = require.context('./', true,  /dashboardService-testingComponentFor-colorTile\.component\.spec\.ts$/);
 // const context = require.context('./', true,  /treemap-skills-chart\.component\.spec\.ts$/);
 // const context = require.context('./', true,  /treemap-skills.component\.spec\.ts$/);

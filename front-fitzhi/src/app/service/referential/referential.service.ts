@@ -29,9 +29,9 @@ export class ReferentialService {
 	public legends: RiskLegend[] = [];
 
 	/*
-	 * This array contains the optimal number of developers 
+	 * This array contains the optimal number of developers
 	 * expected to work in the company, starting from a specific level.
-	 * 
+	 *
 	 * This array contains 5 entries correcting to 5 level
 	 */
 	public optimalStaffNumberPerMoOfCode: number[] = [];
@@ -76,13 +76,15 @@ export class ReferentialService {
 	 */
 	public skills: Skill[] = [];
 
-	constructor( private httpClient: HttpClient, private backendSetupService: BackendSetupService) {}
+	constructor(private httpClient: HttpClient, private backendSetupService: BackendSetupService) {}
 
 	/**
 	 * Loading all referential.
 	 * This method should be called on the main container (app.component) at startup...
 	 */
 	public loadAllReferentials(): void {
+
+		console.log('Nope');
 
 		if (traceOn()) {
 			if (!this.backendSetupService.hasSavedAnUrl()) {
@@ -92,10 +94,12 @@ export class ReferentialService {
 				console.log('Fetching the profiles on URL ' + this.backendSetupService.url() + '/referential/profiles');
 			}
 		}
+		console.log(this.backendSetupService.url() + '/referential/profiles');
 
 		if (!this.backendSetupService.hasSavedAnUrl()) {
 			return;
 		}
+
 
 		this.httpClient.get<Profile[]>(this.backendSetupService.url() + '/referential/profiles')
 			.pipe(
