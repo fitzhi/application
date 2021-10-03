@@ -32,6 +32,7 @@ export class TreemapSkillsComponent  {
 
 	public displayHelp($event: boolean) {
 		this.helpHeight = (!$event) ? '0' : '110px';
+		this.helpPaneVisible =  (this.helpHeight === '110px');
 		localStorage.setItem('helpHeight', this.helpHeight);
 		this.treemapSkillsService.filterUpdated$.next(true);
 	}
