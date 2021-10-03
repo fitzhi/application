@@ -1,5 +1,6 @@
 import { Component, HostBinding, Input } from '@angular/core';
 import { ProjectService } from 'src/app/service/project/project.service';
+import { ReferentialService } from 'src/app/service/referential/referential.service';
 import { TreemapSkillsService } from '../treemap-skills-service/treemap-skills.service';
 
 @Component({
@@ -21,7 +22,8 @@ export class TreemapSkillsComponent  {
 	helpPaneVisible = true;
 
 	constructor(
-		public projectService: ProjectService, 
+		public projectService: ProjectService,
+		public referentialService: ReferentialService,
 		public treemapSkillsService: TreemapSkillsService) {
 		const localHelpHeight = localStorage.getItem('helpHeight');
 		if (localHelpHeight) {

@@ -125,3 +125,17 @@ em.info {
 	font-size: xx-large;
 	color: green;
 }
+
+span.star {
+	color: var(--color-success);
+}
+
+span.number-star {
+	color: var(--color-success);
+	font-size: x-large;
+	font-weight: 700;
+}
+
+p.description {
+	line-height: 24px;
+}

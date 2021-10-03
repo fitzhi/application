@@ -2,12 +2,22 @@
 	<app-treemap-skills-header (messengerDisplayHelp)="displayHelp($event)"></app-treemap-skills-header>
 	<div class="content-skills">
 		<div class="treemap-skills">
-			<div class="w-100 p-3 bg-light mt-2 description" *ngIf="treemapSkillsService.displaySettings$|async">
-				Data based explanation of this chart will be provided here soon !
+			<div class="w-100 p-2 bg-light mt-2 description" *ngIf="treemapSkillsService.displaySettings$|async">
+				<p style="font-weight: 700;">
+					Your current settings :
+				</p>
+				<p class="description">
+					To fullfill the maintenance of the portfolio, your technical staff must contain for each MO of code,
+					<span class="number-star">{{referentialService.optimalStaffNumberPerMoOfCode[0]}}</span>&nbsp;developer(s) of at least a level of (<span class="star">&#x2605;</span>) ,
+					<span class="number-star">{{referentialService.optimalStaffNumberPerMoOfCode[1]}}</span>&nbsp;developer(s) of at least a level of (<span class="star">&#x2605;</span><span class="star">&#x2605;</span>),
+					<span class="number-star">{{referentialService.optimalStaffNumberPerMoOfCode[2]}}</span>&nbsp;developer(s) of at least a level of (<span class="star">&#x2605;</span><span class="star">&#x2605;</span><span class="star">&#x2605;</span>),
+					<span class="number-star">{{referentialService.optimalStaffNumberPerMoOfCode[3]}}</span>&nbsp;developer(s) of at least a level of (<span class="star">&#x2605;</span><span class="star">&#x2605;</span><span class="star">&#x2605;</span><span class="star">&#x2605;</span>) and
+					<span class="number-star">{{referentialService.optimalStaffNumberPerMoOfCode[4]}}</span>&nbsp;developer(s) of at least a level of (<span class="star">&#x2605;</span><span class="star">&#x2605;</span><span class="star">&#x2605;</span><span class="star">&#x2605;</span><span class="star">&#x2605;</span>).
+				</p>
 			</div>
 			<app-treemap-skills-chart></app-treemap-skills-chart>
 		</div>
-		<div class="legend" *ngIf="!(treemapSkillsService.displaySettings$|async)">
+		<div class="legend">
 			<div class="w-100 h-100 d-flex justify-content-center">
 				<div class="d-flex flex-column">
 					<div class="high sign">+</div>
