@@ -1,10 +1,13 @@
 <div id="host-treemap" *ngIf="projectService.allProjectsIsLoaded$|async">
-	<app-treemap-skills-header></app-treemap-skills-header>
+	<app-treemap-skills-header (messengerDisplayHelp)="displayHelp($event)"></app-treemap-skills-header>
 	<div class="content-skills">
 		<div class="treemap-skills">
+			<div class="w-100 p-3 bg-light mt-2 description" *ngIf="treemapSkillsService.displaySettings$|async">
+				Data based explanation of this chart will be provided here soon !
+			</div>
 			<app-treemap-skills-chart></app-treemap-skills-chart>
 		</div>
-		<div class="legend">
+		<div class="legend" *ngIf="(treemapSkillsService.displaySettings$|async)">
 			<div class="internal d-flex justify-content-center">
 				<div class="d-flex flex-column">
 					<div class="high sign">+</div>
@@ -14,7 +17,7 @@
 			</div>
 		</div>
 	</div>
-	<div class="container-help">
+	<div id="help" class="container-help" *ngIf="(helpPaneVisible)">
 		<div class="help">
 			<div style="display: inline-flex; padding: 5px;">
 				<em class="fas fa-info info"></em>

@@ -1,22 +1,20 @@
 import { HttpClientTestingModule } from '@angular/common/http/testing';
+import { Component } from '@angular/core';
 import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatDialogModule } from '@angular/material/dialog';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { RouterTestingModule } from '@angular/router/testing';
 import { NgxChartsModule } from '@swimlane/ngx-charts';
 import { CinematicService } from 'src/app/service/cinematic.service';
 import { DashboardService } from 'src/app/service/dashboard/dashboard.service';
 import { ProjectService } from 'src/app/service/project/project.service';
 import { ReferentialService } from 'src/app/service/referential/referential.service';
 import { TagifyStarsComponent } from 'src/app/tabs-staff/staff-experience/tagify-stars/tagify-stars.component';
-import { TreemapSkillsService } from '../treemap-skills-service/treemap-skills.service';
+import { TreemapProjectsService } from '../../treemap-projects/treemap-projects-service/treemap-projects.service';
 import { TreemapSkillsChartComponent } from '../treemap-skills-chart/treemap-skills-chart.component';
 import { TreemapHeaderComponent } from '../treemap-skills-header/treemap-skills-header.component';
 import { TreemapSkillsComponent } from './treemap-skills.component';
-import { TreemapProjectsService } from '../../treemap-projects/treemap-projects-service/treemap-projects.service';
-import { RouterTestingModule } from '@angular/router/testing';
-import { Component } from '@angular/core';
-import { not } from '@angular/compiler/src/output/output_ast';
 
 describe('TreemapSkillsComponent container', () => {
 	let component: TestHostComponent;
@@ -63,6 +61,7 @@ describe('TreemapSkillsComponent container', () => {
 	}));
 
 	beforeEach(() => {
+		localStorage.setItem('helpHeight', '110px');
 		fixture = TestBed.createComponent(TestHostComponent);
 		component = fixture.componentInstance;
 
@@ -72,21 +71,12 @@ describe('TreemapSkillsComponent container', () => {
 	});
 
 	function loadChart() {
-		localStorage.removeItem('helpHeight');
 		const dashboardService = TestBed.inject(DashboardService);
 		const spy = spyOn(dashboardService, 'processSkillDistribution').and.returnValue(MOCK_DISTRIBUTIONS);
 		projectService.allProjectsIsLoaded$.next(true);
 	}
 
-	it('should be created without error.', done => {
-		loadChart();
-		fixture.detectChanges();
-		expect(component).toBeTruthy();
-		done();
-
-	});
-
-	it('should display the help pane by default.', () => {
+	it('should display the help pane if this feature is saved in the local storage.', done => {
 		loadChart();
 		fixture.detectChanges();
 
@@ -95,6 +85,14 @@ describe('TreemapSkillsComponent container', () => {
 		expect(document.getElementById('btHelp').classList[0]).toBe('btn');
 		expect(document.getElementById('btHelp').classList[1]).toBe('ml-2');
 		expect(document.getElementById('btHelp').classList[2]).toBe('btn-outline-success');
+
+		projectService.allProjectsIsLoaded$.subscribe({
+			next: doneAndOk => {
+				if (doneAndOk) {
+					done();
+				}
+			}
+		})
 	});
 
 });

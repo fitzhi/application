@@ -15,26 +15,26 @@ import { BackendSetupService } from '../../service/backend-setup/backend-setup.s
 export class BackendSetupComponent extends BaseDirective implements OnInit, OnDestroy {
 
 	/**
-     * We'll send to the parent component (startingSetup) the fact that this is the very first connection.
-     */
+	 * We'll send to the parent component (startingSetup) the fact that this is the very first connection.
+	 */
 	@Output() messengerVeryFirstConnection = new EventEmitter<boolean>();
 
 	/**
-     * Button states : Edition, Selected, Ok, Error
-     */
+	 * Button states : Edition, Selected, Ok, Error
+	 */
 	currentState = 1;
 
 	/**
-     * 3 of the 4 states, The fourth (button activated) is handled in CSS file with the :hover event
-     */
+	 * 3 of the 4 states, The fourth (button activated) is handled in CSS file with the :hover event
+	 */
 	BUTTON_IN_EDITION = 1;
 	BUTTON_VALID_URL = 2;
 	BUTTON_INVALID_URL = 3;
 
 	/**
-     * This boolean is equal to <code>true</code> if we are in the very fist call to fitzhì.
-     * Specific setup forms should be filled to complete this startup procedure.
-     */
+	 * This boolean is equal to <code>true</code> if we are in the very fist call to fitzhì.
+	 * Specific setup forms should be filled to complete this startup procedure.
+	 */
 	veryFirstConnection = false;
 
 	public environment = environment;
@@ -60,8 +60,8 @@ export class BackendSetupComponent extends BaseDirective implements OnInit, OnDe
 	}
 
 	/**
-     * Test and save the URL.
-     */
+	 * Test and save the URL.
+	 */
 	onSubmit() {
 		const urlCandidate = this.backendSetupForm.get('url').value;
 		if (traceOn()) {
@@ -94,15 +94,15 @@ export class BackendSetupComponent extends BaseDirective implements OnInit, OnDe
 	}
 
 	/**
-     * Called when the end-user edit the content of the url field.
-     */
+	 * Called when the end-user edit the content of the url field.
+	 */
 	urlInEdition() {
 		this.currentState = this.BUTTON_IN_EDITION;
 	}
 
 	/**
-     * Class of the button corresponding to the  4 states : Edition, Selected, Ok, Error
-     */
+	 * Class of the button corresponding to the  4 states : Edition, Selected, Ok, Error
+	 */
 	classButton() {
 		let classButton = '';
 		switch (this.currentState) {
@@ -120,8 +120,8 @@ export class BackendSetupComponent extends BaseDirective implements OnInit, OnDe
 	}
 
 	/**
-     * Calling the base class to unsubscribe all subscriptions.
-     */
+	 * Calling the base class to unsubscribe all subscriptions.
+	 */
 	ngOnDestroy() {
 		super.ngOnDestroy();
 	}
