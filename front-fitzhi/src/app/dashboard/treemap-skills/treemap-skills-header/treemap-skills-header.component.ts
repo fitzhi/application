@@ -48,9 +48,15 @@ export class TreemapHeaderComponent implements OnInit {
 	 */
 	public editableState$ = new Subject<TagifyEditableState>();
 
+	/**
+	 * This boolean is used in an *ngIf to show the the data help pane.
+	 */
 	public displayData = false;
 
-	public displayHelp = true;
+	/**
+	 * This boolean is used in an *ngIf to show the help pane.
+	 */
+	 public displayHelp = true;
 
 	constructor(public treeMapService: TreemapSkillsService) {
 		this.treeMapService.treemapFilter.external = (localStorage.getItem('external') === '1');
@@ -95,7 +101,7 @@ export class TreemapHeaderComponent implements OnInit {
 		throw Error('SHOULD NOT PASS HERE !');
 	}
 
-	click() {
+	data() {
 		this.displayData = !this.displayData;
 		this.treeMapService.displaySettings(this.displayData);
 	}
