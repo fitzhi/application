@@ -7,8 +7,8 @@
 			</div>
 			<app-treemap-skills-chart></app-treemap-skills-chart>
 		</div>
-		<div class="legend" *ngIf="(treemapSkillsService.displaySettings$|async)">
-			<div class="internal d-flex justify-content-center">
+		<div class="legend" *ngIf="!(treemapSkillsService.displaySettings$|async)">
+			<div class="w-100 h-100 d-flex justify-content-center">
 				<div class="d-flex flex-column">
 					<div class="high sign">+</div>
 					<div class="gradient"></div>

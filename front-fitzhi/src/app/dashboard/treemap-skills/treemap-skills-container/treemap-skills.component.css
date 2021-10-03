@@ -56,11 +56,6 @@ div.legend {
 	padding: 5px;
 }
 
-div.legend div.internal {
-	width: 100%;
-	height: 100%;
-}
-
 div.container-help {
 	position: absolute;
 	bottom: 0;
