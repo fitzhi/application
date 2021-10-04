@@ -1,22 +1,20 @@
 import { HttpClientTestingModule } from '@angular/common/http/testing';
+import { Component } from '@angular/core';
 import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatDialogModule } from '@angular/material/dialog';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { RouterTestingModule } from '@angular/router/testing';
 import { NgxChartsModule } from '@swimlane/ngx-charts';
 import { CinematicService } from 'src/app/service/cinematic.service';
 import { DashboardService } from 'src/app/service/dashboard/dashboard.service';
 import { ProjectService } from 'src/app/service/project/project.service';
 import { ReferentialService } from 'src/app/service/referential/referential.service';
 import { TagifyStarsComponent } from 'src/app/tabs-staff/staff-experience/tagify-stars/tagify-stars.component';
-import { TreemapSkillsService } from '../treemap-skills-service/treemap-skills.service';
+import { TreemapProjectsService } from '../../treemap-projects/treemap-projects-service/treemap-projects.service';
 import { TreemapSkillsChartComponent } from '../treemap-skills-chart/treemap-skills-chart.component';
 import { TreemapHeaderComponent } from '../treemap-skills-header/treemap-skills-header.component';
 import { TreemapSkillsComponent } from './treemap-skills.component';
-import { TreemapProjectsService } from '../../treemap-projects/treemap-projects-service/treemap-projects.service';
-import { RouterTestingModule } from '@angular/router/testing';
-import { Component } from '@angular/core';
-import { not } from '@angular/compiler/src/output/output_ast';
 
 describe('TreemapSkillsComponent container', () => {
 	let component: TestHostComponent;
