@@ -2,11 +2,11 @@
 	<app-treemap-skills-header (messengerDisplayHelp)="displayHelp($event)"></app-treemap-skills-header>
 	<div class="content-skills">
 		<div class="treemap-skills">
-			<div class="w-100 p-2 bg-light mt-2 description" *ngIf="treemapSkillsService.displaySettings$|async">
-				<p style="font-weight: 700;">
+			<div class="w-100 p-2 bg-light m-0 description" *ngIf="treemapSkillsService.displaySettings$|async">
+				<p class="m-0" style="font-weight: 700;">
 					Your current settings :
 				</p>
-				<p class="description">
+				<p class="m-0 description">
 					To fullfill the maintenance of the portfolio, your technical staff must contain for each MO of code,
 					<span class="number-star">{{referentialService.optimalStaffNumberPerMoOfCode[0]}}</span>&nbsp;developer(s) of at least a level of (<span class="star">&#x2605;</span>) ,
 					<span class="number-star">{{referentialService.optimalStaffNumberPerMoOfCode[1]}}</span>&nbsp;developer(s) of at least a level of (<span class="star">&#x2605;</span><span class="star">&#x2605;</span>),
