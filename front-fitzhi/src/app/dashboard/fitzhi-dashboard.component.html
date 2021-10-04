@@ -101,16 +101,17 @@
 	</div>
 </angular-popper>
 
-<angular-popper placement="left" target="#lastMonthSummary" *ngIf="popupHelper.isButtonActivated(selection.lastMonthSummary) && !hasSelectedADashboard()">
+<angular-popper placement="left" target="#technicalDate" *ngIf="popupHelper.isButtonActivated(selection.technicalDate) && !hasSelectedADashboard()">
 	<div content class="help">
-		<h4 class="help-title">Summary dashboard for last month</h4>
+		<h4 class="help-title">Technical datation of portfolio</h4>
 		<div class="help-content">
 			<p>
-				You must monitor your IT assets over time. Here, you'll find a snapshot of your portfolio for last month.
+				You will find on this dashboard the technical datation of your portfolio, and each project as well.
 			</p>
 			<p>
-				As you don't have any history in Fitzhi yet, no snapshot from last month is available.<br/>
-				<em>Good for us. We don't have yet developed this feature!</em>
+				Each project in Fitzhì has an &laquo; historic datation &raquo; and a &laquo; technical &raquo; one.
+				<br/>
+				A project developed in 2016 might involve frameworks of 2011. 
 			</p>
 		</div>
 	</div>
@@ -200,15 +201,14 @@
 				</div>
 		</button>
 
-		<button id="lastMonthSummary" class="btn rounded lastMonthMinimized"
+		<button id="technicalDate" class="btn rounded lastMonthMinimized"
 				[ngClass]="{
-						'btn-outline-success' : isSelected(selection.lastMonthSummary), 
-						'btn-outline-secondary': !isSelected(selection.lastMonthSummary)}" 
-					(mouseenter)="popupHelper.mouseEnter(selection.lastMonthSummary)" 
+						'btn-outline-success' : isSelected(selection.technicalDate), 
+						'btn-outline-secondary': !isSelected(selection.technicalDate)}" 
+					(mouseenter)="popupHelper.mouseEnter(selection.technicalDate)" 
 					(mouseleave)="popupHelper.mouseLeave()"
-					(click)="switchTo(selection.lastMonthSummary)">
-			<p>Last month</p>
-				<em class="fas fa-camera"></em>
+					(click)="switchTo(selection.technicalDate)">
+			<em class="fas fa-calendar-alt"></em>
 		</button>
 
 		<button id="lastYearSummary" class="btn rounded lastYearMinimized"
@@ -255,23 +255,12 @@
 		</div>
 
 
-		<div class="dashboard" *ngIf="isSelected(selection.lastMonthSummary)">
-			<div *ngIf="(projectService.allProjectsIsLoaded$|async) && ((pieDashboardService.slicesLastMonth$|async).length > 0)" class="formerDashboard">
-				<p class="text">Last month result</p>
-				<app-pie-chart
-					[radius]=180
-					[active]=false
-					[legend]=false
-					[pie]=pieIdentifier.lastMonth>
-				</app-pie-chart>
-			</div>
+		<div class="dashboard" *ngIf="isSelected(selection.technicalDate)">
 			<div class="camera">
-				Last month snapshot<br/>
-				<em class="fas fa-camera camera large-fas"></em>
-				<p class="camera">NO DATA AVAILABLE</p>
+				Datation of portfolio will be available soon.
 			</div>
 		</div>
-		
+
 		<div id="logo" *ngIf="isSelected(selection.none)">质</div>
 
 		<div class="dashboard-pie" *ngIf="isSelected(selection.currentSummary) && (projectService.allProjectsIsLoaded$|async)">

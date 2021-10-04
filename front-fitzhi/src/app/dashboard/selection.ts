@@ -3,7 +3,7 @@
  */
 export const selection  = {
 	none: 0,
-	lastMonthSummary: 1,
+	technicalDate: 1,
 	lastYearSummary: 2,
 	currentSummary: 3,
 	treeMapSkills: 4,
