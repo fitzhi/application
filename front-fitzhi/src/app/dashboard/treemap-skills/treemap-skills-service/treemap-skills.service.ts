@@ -13,9 +13,9 @@ export class TreemapSkillsService {
 
 	public static TAG_LABEL = 'Minimal level :';
 
-	private displaySettingsSubject$ = new BehaviorSubject<boolean>(false); 
+	private displaySettingsSubject$ = new BehaviorSubject<boolean>(false);
 
-	public displaySettings$ = this.displaySettingsSubject$.asObservable(); 
+	public displaySettings$ = this.displaySettingsSubject$.asObservable();
 
 	/**
 	 * Filter necessaries to process the chart.

@@ -92,7 +92,7 @@ describe('TreemapSkillsComponent container', () => {
 					done();
 				}
 			}
-		})
+		});
 	});
 
 });

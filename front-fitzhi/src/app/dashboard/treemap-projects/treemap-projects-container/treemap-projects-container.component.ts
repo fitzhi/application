@@ -6,6 +6,7 @@ import { Component, HostBinding, Input, OnInit } from '@angular/core';
 	styleUrls: ['./treemap-projects-container.component.css']
 })
 export class TreemapProjectsContainerComponent implements OnInit {
+
 	/**
 	 * Width of the chart.
 	 */

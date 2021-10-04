@@ -11,7 +11,7 @@ import { TreemapSkillsService } from '../treemap-skills-service/treemap-skills.s
 export class TreemapSkillsComponent  {
 
 	/**
-	 * Height of the help pane in the treemap Skills component. 
+	 * Height of the help pane in the treemap Skills component.
 	 */
 	@HostBinding('style.--help-height')
 	@Input() helpHeight = '110px';

@@ -56,7 +56,7 @@ export class TreemapHeaderComponent implements OnInit {
 	/**
 	 * This boolean is used in an *ngIf to show the help pane.
 	 */
-	 public displayHelp = true;
+	public displayHelp = true;
 
 	constructor(public treeMapService: TreemapSkillsService) {
 		this.treeMapService.treemapFilter.external = (localStorage.getItem('external') === '1');
@@ -108,7 +108,7 @@ export class TreemapHeaderComponent implements OnInit {
 
 	help() {
 		this.displayHelp = !this.displayHelp;
-		this.messengerDisplayHelp.emit(this.displayHelp)
+		this.messengerDisplayHelp.emit(this.displayHelp);
 	}
 
 }
