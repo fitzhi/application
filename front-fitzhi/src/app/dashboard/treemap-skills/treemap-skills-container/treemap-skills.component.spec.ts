@@ -63,6 +63,7 @@ describe('TreemapSkillsComponent container', () => {
 	}));
 
 	beforeEach(() => {
+		localStorage.clear();
 		fixture = TestBed.createComponent(TestHostComponent);
 		component = fixture.componentInstance;
 
