@@ -65,6 +65,8 @@ export class FitzhiDashboardComponent extends BaseDirective implements OnInit, O
 	 */
 	public skylineSelected$ = new BehaviorSubject<boolean>(false);
 
+	treemapProjectsFilter = false;
+
 	constructor(
 		public httpClient: HttpClient,
 		public projectService: ProjectService,
@@ -138,5 +140,9 @@ export class FitzhiDashboardComponent extends BaseDirective implements OnInit, O
 	 */
 	hasSelectedADashboard(): boolean {
 		return (this.selected !== this.selection.none);
+	}
+
+	flip() {
+		this.treemapProjectsFilter = !this.treemapProjectsFilter;
 	}
 }

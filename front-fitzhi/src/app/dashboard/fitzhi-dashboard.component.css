@@ -7,6 +7,9 @@ div {
 	--sidebar-width: 70px;
 	--sidebar-button-width: 60px;
 	--sidebar-button-height: 60px;
+
+	/* Offset of the projects-treemap located on left of the sidebar */
+	--treemap-left-offset: 0px;
 }
 
 .mainDashboard {
@@ -238,4 +241,32 @@ tr.evaluationDistributions td {
 
 tr.evaluationDistributions td em {
 	color: var(--color-selected);
+}
+
+div.panelDeveloperBase {
+	border: 1px;
+	width: 5px;
+	height: 25px;
+	border: 1px solid black;
+}
+
+div.panelDeveloperArrowRight {
+    width: 15px;
+    height: 25px;
+	border-top: 1px solid black;
+	border-bottom: 1px solid black;
+	border-right: 1px solid black;
+}
+
+div.panelDeveloperArrowLeft {
+    width: 15px;
+    height: 25px;
+	border-top: 1px solid black;
+	border-bottom: 1px solid black;
+	border-left: 1px solid black;
+}
+
+a.flipProjectsFilter {
+	color: black;
+	text-decoration: none;
 }

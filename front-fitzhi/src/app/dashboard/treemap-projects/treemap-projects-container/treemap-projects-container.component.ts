@@ -20,6 +20,12 @@ export class TreemapProjectsContainerComponent implements OnInit {
 	@Input() height = '200px';
 
 	/**
+	 * Offset of the treemap right of the toolbar.
+	 */
+	 @HostBinding('style.--treemap-left-offset')
+	 @Input() treeMapOffsetLeft = '0px';
+ 
+	/**
 	 * Will this treemap be used as a button inside the navbar, or as a chart inside the dashboard container ?
 	 *
 	 * This property is concatenated with the class name "treemap-projects-" to specify which classname to be used :
@@ -36,6 +42,7 @@ export class TreemapProjectsContainerComponent implements OnInit {
 	constructor() { }
 
 	ngOnInit(): void {
+		console.log ('treeMapOffsetLeft', this.treeMapOffsetLeft);
 	}
 
 }

@@ -164,6 +164,28 @@
 			</div>
 		</button>
 	
+		<a class="flipProjectsFilter" href="javascript:;" (click)="flip()">
+			<div class="d-flex justify-content-end m-1" 
+				*ngIf="(!(treemapProjectsFilter) && (projectService.allProjectsIsLoaded$|async) && (isSelected(selection.treeMapProjects)))">
+				<div class="p-0 m-0 panelDeveloperBase">
+				</div>
+				<div class="p-0 panelDeveloperArrowRight">
+					<span class="p-0">&#x25B6;</span>
+				</div>
+			</div>
+		</a>
+
+		<a class="flipProjectsFilter" href="javascript:;" (click)="flip()">
+			<div class="d-flex justify-content-end m-2" 
+				*ngIf="((treemapProjectsFilter) && (projectService.allProjectsIsLoaded$|async) && (isSelected(selection.treeMapProjects)))">
+				<div class="p-0 panelDeveloperArrowLeft">
+					<span class="p-0">&#9664;</span>
+				</div>
+				<div class="p-0 m-0 panelDeveloperBase">
+				</div>
+			</div>
+		</a>
+
 		<button id="treeMap-skills" class="btn rounded treeMap-skills"
 				[ngClass]="{
 						'btn-outline-success' : isSelected(selection.treeMapSkills), 
@@ -232,8 +254,23 @@
 		</div>
 
 		<div id="container-treemap-projects" 
-			*ngIf="(projectService.allProjectsIsLoaded$|async) && (isSelected(selection.treeMapProjects))">
-			<app-treemap-projects width="95%" height="95%" active="true"></app-treemap-projects>
+				*ngIf="(projectService.allProjectsIsLoaded$|async) && (isSelected(selection.treeMapProjects))">
+			<div *ngIf="(treemapProjectsFilter)">
+				<div class="position-absolute start-0 top-0 bottom-0 h-100 pt-2 pb-2 pl-2" style="width: 250px">
+					<div class="w-100 h-100 border">
+						<p>
+							Projects filter
+						</p>
+						<p>
+							Coming soon...
+						</p>
+					</div>
+				</div>
+				<app-treemap-projects width="95%" height="95%" [treeMapOffsetLeft]="'250px'" active="true"></app-treemap-projects>
+			</div>
+			<div *ngIf="!(treemapProjectsFilter)">
+				<app-treemap-projects width="100%" height="95%" active="true"></app-treemap-projects>
+			</div>
 		</div>
 	
 		<div class="dashboard" *ngIf="isSelected(selection.lastYearSummary)">

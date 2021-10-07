@@ -7,7 +7,7 @@ div.treemap-projects-button {
 
 div.treemap-projects-chart {
 	top: var(--toolbar-height);
-	left: var(--sidebar-width);
+	left: calc(var(--sidebar-width) + var(--treemap-left-offset));
 	right: 0;
 	bottom: 0;
 	padding: 5;
