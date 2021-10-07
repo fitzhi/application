@@ -1,45 +1,46 @@
+
 .container {
-    background-color: transparent;
-    margin: 30vh auto;
-    width: 350px;
-    transform: translateY(-50%);
+	background-color: transparent;
+	margin: 30vh auto;
+	width: 350px;
+	transform: translateY(-50%);
 }
 
 .container * {
-    padding: 2px;
+	padding: 2px;
 }
 
 button.connection-ok, button.connection-cancel {
-    width: 100%;
+	width: 100%;
 }
 
 div.connection {
-    margin-top: 5px;
-    margin-bottom: 5px;
+	margin-top: 5px;
+	margin-bottom: 5px;
 }
 
 label.labelConnection {
-    margin-top: 5px;
-    margin-bottom: 0;
+	margin-top: 5px;
+	margin-bottom: 0;
 }
 
 span.welcome {
-    font-size: 26px;
-    font-weight: 500;
+	font-size: 26px;
+	font-weight: 500;
 }
 
 
 #logo {
-    font-size: 80px;
-    background: -webkit-linear-gradient(var(--color-selected), var(--color-error));
-    background-clip: text;
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    text-align: center;
+	font-size: 80px;
+	background: -webkit-linear-gradient(var(--color-selected), var(--color-error));
+	background-clip: text;
+	-webkit-background-clip: text;
+	-webkit-text-fill-color: transparent;
+	text-align: center;
 }
 
 label.warning-text {
-    font-size: 12px;
-    width: 100%;
+	font-size: 12px;
+	width: 100%;
 }
 
