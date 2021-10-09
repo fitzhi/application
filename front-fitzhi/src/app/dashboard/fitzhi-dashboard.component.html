@@ -257,13 +257,8 @@
 				*ngIf="(projectService.allProjectsIsLoaded$|async) && (isSelected(selection.treeMapProjects))">
 			<div *ngIf="(treemapProjectsFilter)">
 				<div class="position-absolute start-0 top-0 bottom-0 h-100 pt-2 pb-2 pl-2" style="width: 250px">
-					<div class="w-100 h-100 border">
-						<p>
-							Projects filter
-						</p>
-						<p>
-							Coming soon...
-						</p>
+					<div class="w-100 h-100 border p-1">
+						<app-table-projects-filter></app-table-projects-filter>
 					</div>
 				</div>
 				<app-treemap-projects width="95%" height="95%" [treeMapOffsetLeft]="'250px'" active="true"></app-treemap-projects>
