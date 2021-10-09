@@ -1,4 +1,4 @@
-import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { Component, EventEmitter, OnDestroy, OnInit, Output, ViewChild } from '@angular/core';
 import { MatTable } from '@angular/material/table';
 import { BaseDirective } from 'src/app/base/base-directive.directive';
 import { ProjectService } from 'src/app/service/project/project.service';
@@ -16,6 +16,12 @@ export enum EventOrigin {
 	styleUrls: ['./table-projects-filter.component.css']
 })
 export class TableProjectsFilterComponent extends BaseDirective implements OnInit, OnDestroy {
+
+	/**
+	 * We'll send to the parent component the selected projects in the filter.
+	 */
+	@Output() messengerFilteredProjects = new EventEmitter<FilteredProject[]>();
+
 
 	displayedColumns: String[] = ['selected', 'name'];
 
@@ -35,7 +41,7 @@ export class TableProjectsFilterComponent extends BaseDirective implements OnIni
 	public EventOrigin = EventOrigin;
 
 	/**
-	 * ID representing all projects.
+	 * ID representing all projects in the list of projects.
 	 */
 	private ALL_PROJECTS = -1;
 
@@ -78,7 +84,15 @@ export class TableProjectsFilterComponent extends BaseDirective implements OnIni
 				this.dataSource.data[0].selected = false;
 			}
 		}
+		this.messengerFilteredProjects.emit(this.dataSource.selectedProjects());
 		this.table.renderRows();
+	}
+
+	extractSelectedProjects(projects: FilteredProject[]): FilteredProject[] {
+
+		const selected = [];
+		projects.filter(p => p.selected)
+		return [];
 	}
 
 	/**
