@@ -5,6 +5,11 @@ import { ProjectService } from 'src/app/service/project/project.service';
 import { FilteredProject } from './filtered-project';
 import { FilteredProjectsDataSource } from './filtered-projects-data-source';
 
+export enum EventOrigin {
+	SELECTED = 0,
+	NAME = 1,
+}
+
 @Component({
 	selector: 'app-table-projects-filter',
 	templateUrl: './table-projects-filter.component.html',
@@ -23,6 +28,16 @@ export class TableProjectsFilterComponent extends BaseDirective implements OnIni
 	 * The table
 	 */
 	 @ViewChild('table') table: MatTable<FilteredProject>;
+
+	/**
+	 * Origin of the mouse-event passed to the function flipSelection(...).
+	 */
+	public EventOrigin = EventOrigin;
+
+	/**
+	 * ID representing all projects.
+	 */
+	private ALL_PROJECTS = -1;
 
 	constructor(private projectService: ProjectService) { 
 		super();
@@ -45,9 +60,24 @@ export class TableProjectsFilterComponent extends BaseDirective implements OnIni
 		);
 	}
 
-	flipSelection(project: FilteredProject) {
-//		console.log (project);
-//		console.log (this.dataSource.data);
+	/**
+	 * Flip the selection of the given project
+	 * @param project the current project 
+	 * @param origin the widget which emits this event.
+	 */
+	flipSelection(project: FilteredProject, origin: EventOrigin) {
+		project.selected = !project.selected;
+		if (project.id === this.ALL_PROJECTS) {
+			this.dataSource.data.forEach( p => {
+				if (p.id > this.ALL_PROJECTS) {
+					p.selected = project.selected;
+				}
+			});
+		} else {
+			if (!project.selected) {
+				this.dataSource.data[0].selected = false;
+			}
+		}
 		this.table.renderRows();
 	}
 
