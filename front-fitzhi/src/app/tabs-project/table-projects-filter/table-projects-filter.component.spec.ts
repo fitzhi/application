@@ -25,7 +25,8 @@ describe('TableProjectsFilterComponent', () => {
 	  					<app-table-projects-filter></app-table-projects-filter>
 					</div>`})
 	class TestHostComponent implements OnInit {
-		projects = []
+
+		projects = [];
 
 		@ViewChild(TableProjectsFilterComponent) tableProjectsFilterComponent: TableProjectsFilterComponent;
 
@@ -74,7 +75,7 @@ describe('TableProjectsFilterComponent', () => {
 		name.nativeElement.click(); // triggerEventHandler('click', null);
 		tick(); // simulates the passage of time until all pending asynchronous activities finish
 		fixture.detectChanges();
-		
+
 		prj = component.tableProjectsFilterComponent.dataSource.data.find(p => p.id === 3);
 		expect(prj.selected).toBeFalse();
 	}));
@@ -90,7 +91,7 @@ describe('TableProjectsFilterComponent', () => {
 		name.nativeElement.click(); // triggerEventHandler('click', null);
 		tick(); // simulates the passage of time until all pending asynchronous activities finish
 		fixture.detectChanges();
-		
+
 		prj = component.tableProjectsFilterComponent.dataSource.data.find(p => p.id === -1);
 		expect(prj.selected).toBeFalse();
 
@@ -106,7 +107,7 @@ describe('TableProjectsFilterComponent', () => {
 		name.nativeElement.click(); // triggerEventHandler('click', null);
 		tick(); // simulates the passage of time until all pending asynchronous activities finish
 		fixture.detectChanges();
-		
+
 		prj = component.tableProjectsFilterComponent.dataSource.data.find(p => p.id === 3);
 		expect(prj.selected).toBeTrue();
 	}));
@@ -118,14 +119,11 @@ describe('TableProjectsFilterComponent', () => {
 		name.nativeElement.click(); // triggerEventHandler('click', null);
 		tick(); // simulates the passage of time until all pending asynchronous activities finish
 		fixture.detectChanges();
-
 		component.tableProjectsFilterComponent.dataSource.data.forEach(
 			p => {
 				expect(p.selected).toBeFalse();
-			} 
+			}
 		);
-
 	}));
-
 });
 

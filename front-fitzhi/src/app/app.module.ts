@@ -196,7 +196,7 @@ import { TableProjectsFilterComponent } from './tabs-project/table-projects-filt
 		ChartInProgressComponent,
 		TreemapProjectsContainerComponent,
 		TreemapProjectsChartComponent,
-  TableProjectsFilterComponent
+		TableProjectsFilterComponent
 	],
 	imports: [
 		BsDropdownModule.forRoot(),

@@ -27,7 +27,7 @@ export class TableProjectsFilterComponent extends BaseDirective implements OnIni
 	/**
 	 * The table
 	 */
-	 @ViewChild('table') table: MatTable<FilteredProject>;
+	@ViewChild('table') table: MatTable<FilteredProject>;
 
 	/**
 	 * Origin of the mouse-event passed to the function flipSelection(...).
@@ -39,7 +39,7 @@ export class TableProjectsFilterComponent extends BaseDirective implements OnIni
 	 */
 	private ALL_PROJECTS = -1;
 
-	constructor(private projectService: ProjectService) { 
+	constructor(private projectService: ProjectService) {
 		super();
 	}
 
@@ -62,7 +62,7 @@ export class TableProjectsFilterComponent extends BaseDirective implements OnIni
 
 	/**
 	 * Flip the selection of the given project
-	 * @param project the current project 
+	 * @param project the current project
 	 * @param origin the widget which emits this event.
 	 */
 	flipSelection(project: FilteredProject, origin: EventOrigin) {

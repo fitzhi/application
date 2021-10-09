@@ -22,9 +22,9 @@ export class TreemapProjectsContainerComponent implements OnInit {
 	/**
 	 * Offset of the treemap right of the toolbar.
 	 */
-	 @HostBinding('style.--treemap-left-offset')
-	 @Input() treeMapOffsetLeft = '0px';
- 
+	@HostBinding('style.--treemap-left-offset')
+	@Input() treeMapOffsetLeft = '0px';
+
 	/**
 	 * Will this treemap be used as a button inside the navbar, or as a chart inside the dashboard container ?
 	 *
