@@ -58,7 +58,9 @@ describe('TableProjectsFilterComponent', () => {
 		fixture.detectChanges();
 		projectService.allProjects = [];
 		for (let i = 0; i < 10; i++) {
-			projectService.allProjects.push(new Project(i, 'Project ' + i));
+			const project = new Project(i, 'Project ' + i);
+			project.staffEvaluation = 1;
+			projectService.allProjects.push(project);
 		}
 		projectService.allProjectsIsLoaded$.next(true);
 	});

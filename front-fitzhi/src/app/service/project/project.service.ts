@@ -1474,4 +1474,17 @@ export class ProjectService extends InternalService {
 
 		return Math.floor(evaluation / 100);
 	}
+
+	/**
+	 * Test if the project has been once evaluated
+	 * - either with a staff evaluation,
+	 * - or a Sonar one,
+	 * - or an audit one.
+	 * @param project the given project
+	 * @returns **TRUE** if this given project has been once evaluated, **FALSE** otherwise
+	 */
+	hasBeenEvaluated(project: Project): boolean {
+		return (this.calculateSonarEvaluation(project) > 0) || (project.auditEvaluation > 0) || (project.staffEvaluation > 0); 
+	}
+
 }

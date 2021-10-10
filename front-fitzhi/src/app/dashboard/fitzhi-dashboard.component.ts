@@ -7,6 +7,8 @@ import { BaseDirective } from 'src/app/base/base-directive.directive';
 import { Constants } from 'src/app/constants';
 import { ProjectService } from 'src/app/service/project/project.service';
 import { FitzhiSettings } from '../data/FitzhiSettings';
+import { traceOn } from '../global';
+import { FilteredProject } from '../tabs-project/table-projects-filter/filtered-project';
 import { FitzhiDashboardPopupHelper } from './fitzhi-dashboard-popup-helper';
 import { selection } from './selection';
 import { PieDashboardService } from './service/pie-dashboard.service';
@@ -145,4 +147,11 @@ export class FitzhiDashboardComponent extends BaseDirective implements OnInit, O
 	flip() {
 		this.treemapProjectsFilter = !this.treemapProjectsFilter;
 	}
+
+	onChangeFileredProjects(projects: FilteredProject[]) {
+		if (traceOn()) {
+			console.log ('onChangeFileredProjects(...) %d projects', projects.length);
+		}
+	}
 }
+
