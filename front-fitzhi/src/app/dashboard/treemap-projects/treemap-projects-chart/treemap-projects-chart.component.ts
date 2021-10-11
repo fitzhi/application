@@ -1,4 +1,4 @@
-import { Component, Input, OnDestroy, OnInit } from '@angular/core';
+import { ChangeDetectorRef, Component, Input, OnDestroy, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { BaseDirective } from 'src/app/base/base-directive.directive';
 import { Constants } from 'src/app/constants';
@@ -21,8 +21,6 @@ export class TreemapProjectsChartComponent extends BaseDirective implements OnIn
 	 */
 	@Input() active = true;
 
-	distribution: any[];
-
 	view: any[];
 
 	gradient = false;
@@ -38,6 +36,7 @@ export class TreemapProjectsChartComponent extends BaseDirective implements OnIn
 		public treeMapService: TreemapProjectsService,
 		public projectService: ProjectService,
 		private cinematicService: CinematicService,
+		public treemapProjectsService: TreemapProjectsService,
 		private router: Router) {
 		super();
 	}
@@ -47,13 +46,28 @@ export class TreemapProjectsChartComponent extends BaseDirective implements OnIn
 	}
 
 	loadDistribution() {
-		this.distribution = this.dashboardService.processProjectsDistribution();
+		this.subscriptions.add(
+			this.treemapProjectsService.selectedProjects$.subscribe({
+				next: idProjects => {
+					this.loadChart(idProjects);
+				}
+			})
+		)
+	}
+
+	private loadChart(idProjects: number[]) {
+		this.treemapProjectsService.distribution = this.dashboardService.processProjectsDistribution();
+		this.treemapProjectsService.distribution.forEach(project => {
+			if (idProjects.findIndex(id => id === project.id) === -1) {
+				project.value = 0;
+			}
+		});
 		this.colorScheme.domain = [];
-		this.distribution.forEach(data => this.colorScheme.domain.push(data.color));
+		this.treemapProjectsService.distribution.forEach(data => this.colorScheme.domain.push(data.color));
 		if (traceOn()) {
 			console.groupCollapsed('Projects distribution');
-			this.distribution.forEach(skillData =>
-				console.log(skillData.name, skillData.value)
+			this.treemapProjectsService.distribution.forEach(project =>
+				console.log(project.name, project.value)
 			);
 			console.groupEnd();
 		}
@@ -66,7 +80,7 @@ export class TreemapProjectsChartComponent extends BaseDirective implements OnIn
 	onSelect(event) {
 		// We pass the onSelect as a callback to the treemap component. We receive the callback before this is initialized...
 		if ((this) && (this.active)) {
-			const idProject = this.distribution.filter(element => (element.name === event.name))[0].id;
+			const idProject = this.treemapProjectsService.distribution.filter(element => (element.name === event.name))[0].id;
 			if (traceOn()) {
 				console.log('idProject selected', idProject);
 			}

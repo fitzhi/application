@@ -1,6 +1,7 @@
 import { Component, EventEmitter, OnDestroy, OnInit, Output, ViewChild } from '@angular/core';
 import { MatTable } from '@angular/material/table';
 import { BaseDirective } from 'src/app/base/base-directive.directive';
+import { TreemapProjectsService } from 'src/app/dashboard/treemap-projects/treemap-projects-service/treemap-projects.service';
 import { ProjectService } from 'src/app/service/project/project.service';
 import { FilteredProject } from './filtered-project';
 import { FilteredProjectsDataSource } from './filtered-projects-data-source';
@@ -16,12 +17,6 @@ export enum EventOrigin {
 	styleUrls: ['./table-projects-filter.component.css']
 })
 export class TableProjectsFilterComponent extends BaseDirective implements OnInit, OnDestroy {
-
-	/**
-	 * We'll send to the parent component the selected projects in the filter.
-	 */
-	@Output() messengerFilteredProjects = new EventEmitter<FilteredProject[]>();
-
 
 	displayedColumns: String[] = ['selected', 'name'];
 
@@ -45,7 +40,9 @@ export class TableProjectsFilterComponent extends BaseDirective implements OnIni
 	 */
 	private ALL_PROJECTS = -1;
 
-	constructor(private projectService: ProjectService) {
+	constructor(
+			private projectService: ProjectService,
+			private treemapProjectsService: TreemapProjectsService) {
 		super();
 	}
 
@@ -86,15 +83,9 @@ export class TableProjectsFilterComponent extends BaseDirective implements OnIni
 				this.dataSource.data[0].selected = false;
 			}
 		}
-		this.messengerFilteredProjects.emit(this.dataSource.selectedProjects());
+		this.treemapProjectsService.informSelectedProjects(
+			this.dataSource.data.filter(p => p.selected).map(p => p.id));
 		this.table.renderRows();
-	}
-
-	extractSelectedProjects(projects: FilteredProject[]): FilteredProject[] {
-
-		const selected = [];
-		projects.filter(p => p.selected)
-		return [];
 	}
 
 	/**

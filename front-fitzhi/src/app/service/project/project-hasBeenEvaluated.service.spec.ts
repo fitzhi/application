@@ -25,8 +25,8 @@ describe('ProjectService', () => {
 	it('should reject a project without any evaluation.', () => {
 		const spy = spyOn(service, 'calculateSonarEvaluation').and.returnValue(0);
 		const project = new Project(1, 'Test');
-		project.staffEvaluation = 0;
-		project.auditEvaluation = -1;
+		project.staffEvaluation = -1;
+		project.auditEvaluation = 0;
 		expect(service.hasBeenEvaluated(project)).toBe(false);
 		expect(spy).toHaveBeenCalled();
 	});

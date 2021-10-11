@@ -7,6 +7,7 @@ import { MatDialogModule } from '@angular/material/dialog';
 import { MatTableModule } from '@angular/material/table';
 import { By } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { TreemapProjectsService } from 'src/app/dashboard/treemap-projects/treemap-projects-service/treemap-projects.service';
 import { Project } from 'src/app/data/project';
 import { CinematicService } from 'src/app/service/cinematic.service';
 import { ProjectService } from 'src/app/service/project/project.service';
@@ -19,11 +20,12 @@ describe('TableProjectsFilterComponent', () => {
 	let component: TestHostComponent;
 	let fixture: ComponentFixture<TestHostComponent>;
 	let projectService: ProjectService;
+	let treemapProjectsService: TreemapProjectsService;
 
 	@Component({
 		selector: 'app-host-component',
 		template: `<div style="width: 250px; height: 400px">
-	  					<app-table-projects-filter (messengerFilteredProjects)="onChangeFilteredProjects($event)"></app-table-projects-filter>
+	  					<app-table-projects-filter></app-table-projects-filter>
 					</div>`})
 	class TestHostComponent implements OnInit {
 
@@ -50,6 +52,7 @@ describe('TableProjectsFilterComponent', () => {
 		})
 			.compileComponents();
 		projectService = TestBed.inject(ProjectService);
+		treemapProjectsService = TestBed.inject(TreemapProjectsService);
 	});
 
 	beforeEach(() => {
@@ -131,27 +134,5 @@ describe('TableProjectsFilterComponent', () => {
 			}
 		);
 	}));
-
-	it('should inform the parent container with the selected projects.', fakeAsync(() => {
-		fixture.detectChanges();
-
-		// We deselect all projects.
-		fixture.debugElement.query(By.css('#name--1')).nativeElement.click();
-		tick();
-		fixture.detectChanges();
-
-		// We select 2 projects.
-		fixture.debugElement.query(By.css('#name-3')).nativeElement.click();
-		tick();
-		fixture.debugElement.query(By.css('#name-7')).nativeElement.click();
-		tick();
-		fixture.detectChanges();
-
-		// We verify that the 2 projects have been emitted to the parent container.
-		expect(component.projects.length).toBe(2);
-		expect(component.projects[0].id).toBe(3);
-		expect(component.projects[1].id).toBe(7);
-	}));
-
 });
 

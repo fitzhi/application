@@ -84,8 +84,6 @@ export class ReferentialService {
 	 */
 	public loadAllReferentials(): void {
 
-		console.log('Nope');
-
 		if (traceOn()) {
 			if (!this.backendSetupService.hasSavedAnUrl()) {
 				console.log('First start of application. Referentials loading is postponed.');
