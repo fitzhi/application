@@ -52,12 +52,15 @@ export class TableProjectsFilterComponent extends BaseDirective implements OnIni
 				next: loadAndOk => {
 					if (loadAndOk) {
 						const projects = [];
-						projects.push(new FilteredProject(true, -1, 'All projects'));
+						projects.push(new FilteredProject(this.treemapProjectsService.isSelected(-1), -1, 'All projects'));
 						this.projectService.allProjects
 							.filter(prj => prj.active)
 							.filter(prj => this.projectService.hasBeenEvaluated(prj))
 							.map(prj => new FilteredProject(true, prj.id, prj.name))
-							.forEach(fp => projects.push(fp));
+							.forEach(fp => { 
+								fp.selected = this.treemapProjectsService.isSelected(fp.id);
+								projects.push(fp)
+							});
 						this.dataSource = new FilteredProjectsDataSource(projects);
 					}
 				}

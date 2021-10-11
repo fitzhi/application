@@ -19,7 +19,17 @@ describe('TreemapProjectsService', () => {
 		service = TestBed.inject(TreemapProjectsService);
 	});
 
-	it('should be created', () => {
+	it('should be created successfully', () => {
 		expect(service).toBeTruthy();
 	});
+
+	it('should kown if a project is selected for the chart', () => {
+		expect(service).toBeTruthy();
+
+		service.idProjects = [1, 2, 7, 9];
+		expect(service.isSelected(2)).toBeTrue();
+		expect(service.isSelected(8)).toBeFalse();
+
+	});
+
 });

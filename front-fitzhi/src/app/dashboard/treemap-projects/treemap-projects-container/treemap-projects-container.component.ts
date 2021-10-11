@@ -42,7 +42,6 @@ export class TreemapProjectsContainerComponent implements OnInit {
 	constructor() { }
 
 	ngOnInit(): void {
-		console.log ('treeMapOffsetLeft', this.treeMapOffsetLeft);
 	}
 
 }

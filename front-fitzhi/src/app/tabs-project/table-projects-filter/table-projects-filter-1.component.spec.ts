@@ -59,12 +59,14 @@ describe('TableProjectsFilterComponent', () => {
 		fixture = TestBed.createComponent(TestHostComponent);
 		component = fixture.componentInstance;
 		fixture.detectChanges();
+
 		projectService.allProjects = [];
 		for (let i = 0; i < 10; i++) {
 			const project = new Project(i, 'Project ' + i);
 			project.staffEvaluation = 1;
 			projectService.allProjects.push(project);
 		}
+		treemapProjectsService.idProjects.push(...[-1, 0, 1, 2, 3, 4, 5, 6, 7, 8, 9]);
 		projectService.allProjectsIsLoaded$.next(true);
 	});
 
