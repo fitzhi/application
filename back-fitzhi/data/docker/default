@@ -1,0 +1,63 @@
+#
+# Default server configuration for the Docker container.
+#
+server {
+	listen 80 default_server;
+	listen [::]:80 default_server;
+
+	# include snippets/fitzhi.com.conf;
+	# include snippets/self-signed.conf;
+	# include snippets/ssl-params.conf;
+
+	location /oauth/token {
+		proxy_pass http://localhost:8080;
+
+		proxy_set_header Host $http_host;
+		proxy_set_header X-Real-IP $remote_addr;
+		proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+		proxy_set_header X-Forwarded-Proto $scheme;
+	}
+
+	location /api {
+		proxy_pass http://localhost:8080;
+
+		proxy_set_header Host $http_host;
+		proxy_set_header X-Real-IP $remote_addr;
+		proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+		proxy_set_header X-Forwarded-Proto $scheme;
+
+		# When we create new entitiy like 'project',the API returns a 201 response with a 'location' header
+		# We add this setting to ensure that the https scheme is present in the response 
+		# cf. http://nginx.org/en/docs/http/ngx_http_proxy_module.html#proxy_redirect
+		proxy_redirect http://$host https://$host;
+
+		# These 3 settings are set to enable the event-stream flow from the server
+		# https://stackoverflow.com/questions/13672743/eventsource-server-sent-events-through-nginx
+		proxy_set_header Connection '';
+		proxy_http_version 1.1;
+		chunked_transfer_encoding off;
+	}
+
+	location /sonar {
+		proxy_pass http://localhost:9000/sonar;
+
+		proxy_set_header Host $http_host;
+		proxy_set_header X-Real-IP $remote_addr;
+		proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+		proxy_set_header X-Forwarded-Proto $scheme;
+	}
+
+	root /var/www/fitzhi;
+
+	# Add index.php to the list if you are using PHP
+	index index.html index.htm index.nginx-debian.html;
+
+	# server_name localhost;
+	error_page 404 /;
+	
+	location / {
+		# First attempt to serve request as file, then
+		# as directory, then fall back to displaying a 404.
+		try_files $uri $uri/ =404;
+	}
+}

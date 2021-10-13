@@ -1,0 +1,264 @@
+{
+	"1": {
+		"id": 1,
+		"name": "Empty project",
+		"connectionSettings": 0,
+		"urlRepository": "",
+		"skills": {},
+		"ghosts": []
+	},
+	"2": {
+		"id": 2,
+		"name": "Fitzhi",
+		"connectionSettings": 3,
+		"branch": "release-1.4",
+		"urlCodeFactorIO": "https://www.codefactor.io/repository/github/fitzhi/application",
+		"urlRepository": "https://github.com/fitzhi/application",
+		"libraries": [
+			{
+				"exclusionDirectory": "docs",
+				"type": 2
+			}
+		],
+		"username": "",
+		"password": "",
+		"skills": {},
+		"ghosts": []
+	},
+	"3": {
+		"id": 3,
+		"name": "Spring Framework",
+		"active": true,
+		"connectionSettings": 3,
+		"branch": "5.2.x",
+		"urlRepository": "https://github.com/spring-projects/spring-framework",
+		"sonarProjects": [],
+		"audit": {}
+	},
+	"4": {
+		"id": 4,
+		"name": "Spring Boot",
+		"active": true,
+		"connectionSettings": 3,
+		"branch": "2.5.x",
+		"urlRepository": "https://github.com/spring-projects/spring-boot",
+		"urlCodeFactorIO": "",
+		"urlSonarServer": "",
+		"sonarProjects": [],
+		"audit": {}
+	},
+	"5": {
+		"id": 5,
+		"name": "Sl4j",
+		"active": true,
+		"connectionSettings": 3,
+		"branch": "master",
+		"urlRepository": "https://github.com/qos-ch/slf4j",
+		"username": "",
+		"password": "",
+		"sonarProjects": [],
+		"audit": {}
+	},
+	"6": {
+		"id": 6,
+		"name": "Apache POI",
+		"active": true,
+		"connectionSettings": 3,
+		"branch": "trunk",
+		"urlRepository": "https://github.com/apache/poi.git",
+		"sonarProjects": [],
+		"audit": {}
+	},
+	"7": {
+		"id": 7,
+		"name": "lombok",
+		"active": true,
+		"connectionSettings": 3,
+		"branch": "master",
+		"urlRepository": "https://github.com/rzwitserloot/lombok",
+		"urlCodeFactorIO": "",
+		"urlSonarServer": "",
+		"sonarProjects": [],
+		"audit": {}
+	},
+	"8": {
+		"id": 8,
+		"name": "Spring Security",
+		"active": true,
+		"connectionSettings": 3,
+		"branch": "main",
+		"urlRepository": "https://github.com/spring-projects/spring-security",
+		"sonarProjects": [],
+		"audit": {}
+	},
+	"9": {
+		"id": 9,
+		"name": "Spring Fox",
+		"active": true,
+		"connectionSettings": 3,
+		"branch": "master",
+		"urlRepository": "https://github.com/springfox/springfox",
+		"sonarProjects": [],
+		"audit": {}
+	},
+	"10": {
+		"id": 10,
+		"name": "Angular",
+		"active": true,
+		"connectionSettings": 3,
+		"branch": "9.1.x",
+		"urlRepository": "https://github.com/angular/angular",
+		"sonarProjects": [],
+		"audit": {}
+	},
+	"11": {
+		"id": 11,
+		"name": "Angular Material",
+		"active": true,
+		"connectionSettings": 3,
+		"branch": "master",
+		"urlRepository": "https://github.com/angular/material",
+		"sonarProjects": [],
+		"audit": {}
+	},
+	"12": {
+		"id": 12,
+		"name": "Eclipse JGIT",
+		"active": true,
+		"connectionSettings": 3,
+		"branch": "stable-5.10",
+		"urlRepository": "https://github.com/eclipse/jgit",
+		"sonarProjects": [],
+		"audit": {}
+	},
+	"13": {
+		"id": 13,
+		"name": "Spring Security Oauth",
+		"active": true,
+		"connectionSettings": 3,
+		"branch": "main",
+		"urlRepository": "https://github.com/spring-projects/spring-security-oauth",
+		"sonarProjects": [],
+		"audit": {}
+	},
+	"14": {
+		"id": 14,
+		"name": "OpenNlp",
+		"active": true,
+		"connectionSettings": 3,
+		"branch": "master",
+		"urlRepository": "https://github.com/apache/opennlp",
+		"sonarProjects": [],
+		"audit": {}
+	},
+	"15": {
+		"id": 15,
+		"name": "Skyline",
+		"active": true,
+		"connectionSettings": 3,
+		"branch": "master",
+		"urlRepository": "https://github.com/frvidal/workspace-skyline",
+		"urlCodeFactorIO": "",
+		"urlSonarServer": "",
+		"sonarProjects": [],
+		"audit": {}
+	},
+	"16": {
+		"id": 16,
+		"name": "Popper",
+		"active": true,
+		"connectionSettings": 3,
+		"branch": "master",
+		"urlRepository": "https://github.com/popperjs/popper-core",
+		"sonarProjects": [],
+		"audit": {}
+	},
+	"17": {
+		"id": 17,
+		"name": "Puppeteer",
+		"active": true,
+		"connectionSettings": 3,
+		"branch": "main",
+		"urlRepository": "https://github.com/puppeteer/puppeteer",
+		"urlCodeFactorIO": "",
+		"urlSonarServer": "",
+		"sonarProjects": [],
+		"audit": {}
+	},
+	"18": {
+		"id": 18,
+		"name": "JQuery",
+		"active": true,
+		"connectionSettings": 3,
+		"branch": "main",
+		"urlRepository": "https://github.com/jquery/jquery",
+		"sonarProjects": [],
+		"audit": {}
+	},
+	"19": {
+		"id": 19,
+		"name": "Dynamic Pie Chart",
+		"active": true,
+		"connectionSettings": 3,
+		"branch": "master",
+		"urlRepository": "https://github.com/frvidal/dynamic-pie-chart",
+		"sonarProjects": [],
+		"audit": {}
+	},
+	"20": {
+		"id": 20,
+		"name": "File saver",
+		"active": true,
+		"connectionSettings": 3,
+		"branch": "master",
+		"urlRepository": "https://github.com/eligrey/FileSaver.js.git",
+		"sonarProjects": [],
+		"audit": {}
+	},
+	"21": {
+		"id": 21,
+		"name": "NGX-Bootstrap",
+		"active": true,
+		"connectionSettings": 3,
+		"branch": "master",
+		"urlRepository": "https://github.com/valor-software/ngx-bootstrap.git",
+		"sonarProjects": [],
+		"audit": {}
+	},
+	"23": {
+		"id": 23,
+		"name": "Sunburst chart",
+		"active": true,
+		"connectionSettings": 3,
+		"branch": "master",
+		"urlRepository": "https://github.com/vasturiano/sunburst-chart",
+		"urlCodeFactorIO": "",
+		"urlSonarServer": "",
+		"sonarProjects": [],
+		"audit": {}
+	},
+	"24": {
+		"id": 24,
+		"name": "Log4J",
+		"active": true,
+		"connectionSettings": 3,
+		"branch": "trunk",
+		"urlRepository": "https://github.com/apache/log4j",
+		"username": "",
+		"password": "",
+		"sonarProjects": [],
+		"audit": {}
+	},
+	"25": {
+		"id": 25,
+		"name": "commons-validator",
+		"active": true,
+		"connectionSettings": 3,
+		"branch": "master",
+		"urlRepository": "https://github.com/apache/commons-validator",
+		"username": "",
+		"password": "",
+		"sonarProjects": [],
+		"audit": {}
+	}
+}
