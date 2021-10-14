@@ -47,7 +47,7 @@ server {
 		proxy_set_header X-Forwarded-Proto $scheme;
 	}
 
-	root /var/www/fitzhi;
+	root /spoq;
 
 	# Add index.php to the list if you are using PHP
 	index index.html index.htm index.nginx-debian.html;
