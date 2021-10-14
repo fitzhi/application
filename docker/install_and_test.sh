@@ -15,7 +15,7 @@ apt-get -y install git
 # export PATH=$PATH:jdk-13.0.2/bin
 #
 
-git clone --branch release-1.4 https://github.com/fitzhi/application.git
+git clone --branch release-1.6 https://github.com/fitzhi/application.git
 
 cd application
 
