@@ -70,6 +70,10 @@ cp target/fitzhi.jar ../$dir/backend-fitzhi/fitzhi.jar
 cp target/application.properties ../$dir/backend-fitzhi/application.properties
 cp target/logback-spring.xml ../$dir/backend-fitzhi/logback-spring.xml
 
+# docker & nginx settings
+rm -rf ../$dir/docker
+cp -R ../docker/docker ../$dir
+
 if [ $force = "Y" ]
 then 
 cp -R data ../$dir
