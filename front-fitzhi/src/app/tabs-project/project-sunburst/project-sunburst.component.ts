@@ -297,11 +297,13 @@ export class ProjectSunburstComponent extends BaseDirective implements OnInit, A
 			.pipe(take(1))
 			.subscribe({
 				next: data => {
-					this.setActiveContext (PreviewContext.SUNBURST_READY);
-					setTimeout(() => {
-						this.cacheService.saveResponse(data);
-						this.generateChart(data);
-					}, 0);
+					if (!data) {
+						this.setActiveContext (PreviewContext.SUNBURST_READY);
+						setTimeout(() => {
+							this.cacheService.saveResponse(data);
+							this.generateChart(data);
+						}, 0);
+					}
 				},
 				error: error => {
 					if (error instanceof String) {
