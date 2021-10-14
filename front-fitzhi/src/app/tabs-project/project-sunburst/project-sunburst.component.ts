@@ -297,7 +297,7 @@ export class ProjectSunburstComponent extends BaseDirective implements OnInit, A
 			.pipe(take(1))
 			.subscribe({
 				next: data => {
-					if (!data) {
+					if (data !== null) {
 						this.setActiveContext (PreviewContext.SUNBURST_READY);
 						setTimeout(() => {
 							this.cacheService.saveResponse(data);
@@ -395,6 +395,10 @@ export class ProjectSunburstComponent extends BaseDirective implements OnInit, A
 	}
 
 	handleSunburstData(response: any) {
+
+		if (!response) {
+			return;
+		}
 
 		if (!this.myChart) {
 			this.myChart = Sunburst();
