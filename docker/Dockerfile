@@ -2,20 +2,18 @@
 FROM adoptopenjdk/openjdk11:armv7l-ubuntu-jre-11.0.12_7
 LABEL Frederic VIDAL (frederic.vidal@fitzhi.com)
 
-
 RUN apt update; \
     apt-get -y install git; \
-    apt-get -y install nginx
-
-RUN mkdir fitzhi; \
+    apt-get -y install nginx; \
+    mkdir fitzhi; \
     cd fitzhi; \
     curl --insecure https://spoq.fitzhi.com/release/deploy.zip --output deploy.zip; \
     tar xvf deploy.zip; \
-    cp deploy/docker/default /etc/nginx/sites-enabled/default; \
+    cp ./deploy/docker/default /etc/nginx/sites-enabled/default; \
     cd /; \
     rm -rf spoq; \
     git clone https://github.com/fitzhi/spoq.git; \
-    cd spoq; \
+    cd ./spoq; \
     rm -rf .git; \
     cd ..
 
