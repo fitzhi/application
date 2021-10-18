@@ -2,6 +2,6 @@
 { 
 "urlSonarServer": "http://localhost:80/sonar", 
 "user": "admin",
-"password": "parissg75" 
+"password": "#password" 
 }
 ]
