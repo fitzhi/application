@@ -74,7 +74,7 @@ describe(`AuthHttpInterceptor`, () => {
 		expect(httpRequest.request.headers.has('authorization')).toEqual(false);
 	});
 
-	it('should avoid to add the authorization header for Github', () => {
+	it('should avoid to add the authorization header for Github.', () => {
 
 		dataService.ROOT_URL = 'https://api.github.com/nope';
 		dataService.getPosts().subscribe(response => {

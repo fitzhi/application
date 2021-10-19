@@ -38,7 +38,7 @@ describe(`HttpRefreshTokenErrorInterceptor`, () => {
 
 	});
 
-	it('should redirect the application to "/login" if an "Invalid refresh" error is emitted', () => {
+	it('should redirect the application to "/login" if an "Invalid refresh" error is emitted.', () => {
 
 		const navigateSpy = spyOn(router, 'navigate');
 

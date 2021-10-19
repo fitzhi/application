@@ -24,14 +24,18 @@ export class SonarServer {
 	 * @param sonarVersion the version of the Sonar
 	 * @param urlSonar the Sonar URL
 	 * @param sonarOn `TRUE` if we cannot access the SONAR
-	 * @param user User connect
+	 * @param user the user to be used for connection
+	 * @param password the password associated to this user
+	 * @param login the login token as a replacement of the login user/password.
+	 * 
 	 */
 	constructor(
 		public sonarVersion: string,
 		public urlSonar: string,
 		public sonarOn = false,
 		public user?: string,
-		public password?: string) {}
+		public password?: string,
+		public login?: string) {}
 
 	/**
 	 * This observable inform the application is SONAR is accessible.

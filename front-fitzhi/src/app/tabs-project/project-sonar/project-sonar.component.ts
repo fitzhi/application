@@ -84,7 +84,7 @@ export class ProjectSonarComponent extends BaseDirective implements OnInit, OnDe
 
 					if (this.projectService.project && this.projectService.project.sonarProjects.length > 0) {
 						if (traceOn()) {
-							console.log ('By default, we starts on the %s dashboard with %s.',
+							console.log ('By default, we start on the %s dashboard with %s.',
 								Constants.TITLE_PANELS[this.SETTINGS],
 								this.projectService.project.sonarProjects[0].key);
 						}

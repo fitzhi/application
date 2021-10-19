@@ -34,7 +34,7 @@ describe('GitService', () => {
 			});
 	}));
 
-	it('should connect handle a wrong repository url.', waitForAsync(() => {
+	it('should handle a wrong repository url.', waitForAsync(() => {
 		expect(service).toBeTruthy();
 		service.connect$('https://api.github.com/repos/fitzhi/wrong')
 			.subscribe({
@@ -44,22 +44,22 @@ describe('GitService', () => {
 			});
 	}));
 
-	it('Testing isGithubUrl(...) with a wrong url.', () => {
+	it('should handle correctly the method isGithubUrl(...) with a wrong url.', () => {
 		expect(service).toBeTruthy();
 		expect(service.isGithubUrl('gitoub.com/fitzhi/test')).toBeFalse();
 	});
 
-	it('Testing isGithubUrl(...) with a valid URL.', () => {
+	it('should handle correctly the method with a valid URL.', () => {
 		expect(service).toBeTruthy();
 		expect(service.isGithubUrl('htpps://www.github.com/fitzhi/application')).toBeTrue();
 	});
 
-	it('Testing generateUrlApiGithub(...) with a GITHUB url ', () => {
+	it('should handle correctly the method generateUrlApiGithub(...) with a GITHUB url ', () => {
 		expect(service).toBeTruthy();
 		expect(service.generateUrlApiGithub('htpps://www.github.com/fitzhi/application')).toBe('https://api.github.com/repos/fitzhi/application');
 	});
 
-	it('Testing branches(...) with the Fitzhi GITHUB url.', waitForAsync(() => {
+	it('should handle correctly the method branches(...) with the Fitzhi GITHUB url.', waitForAsync(() => {
 		expect(service).toBeTruthy();
 		service.branches$('https://api.github.com/repos/fitzhi/application/branches', 'master')
 			.subscribe({
@@ -78,7 +78,7 @@ describe('GitService', () => {
 			});
 	}));
 
-	it('Testing default behavior of branches(...) with the url is wrong.', waitForAsync(() => {
+	it('should handle correctly the method branches(...) with the url is wrong.', waitForAsync(() => {
 		expect(service).toBeTruthy();
 		service.branches$('https://api.github.com/repos/fitzhi/application/wrong', 'master')
 			.subscribe({
