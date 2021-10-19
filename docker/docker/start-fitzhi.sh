@@ -14,7 +14,13 @@ fi
 if [ ${password} ] && [ ${password} != "" ]
 then
 	echo Given password ${password}
-	sed -i 's/"password": "#password"/"password": "'${password}'"/g' ../data/referential/sonar-servers.json
+	sed -i 's/"password": "#password",/"password": "'${password}'",/g' ../data/referential/sonar-servers.json
+fi
+
+if [ ${login} ] && [ ${login} != "" ]
+then
+	echo Given password ${login}
+	sed -i 's/"login": "#login"/"login": "'${login}'"/g' ../data/referential/sonar-servers.json
 fi
 
 service nginx start 
