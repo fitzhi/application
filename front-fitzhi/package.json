@@ -10,6 +10,7 @@
     "lint": "ng lint",
     "e2e": "ng e2e",
     "prod-spoq": "ng build --configuration spoq --output-path ../../spoq/docs --base-href /",
+    "build-prod-docker": "ng build --configuration docker --output-path ./dist-docker --base-href /",
     "prod-var-www-fitzhi": "ng build --prod --output-path /var/www/fitzhi --base-href /"
   },
   "private": true,

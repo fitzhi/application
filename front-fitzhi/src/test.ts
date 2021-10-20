@@ -18,7 +18,7 @@ getTestBed().initTestEnvironment(
 
 const context = require.context('./', true, /\.spec\.ts$/);
 // const context = require.context('./', true,  /referential\.service\.spec\.ts$/);
-// const context = require.context('./', true,  /dashboardService-testingComponentFor-colorTile\.component\.spec\.ts$/);
+// const context = require.context('./', true,  /starting-setup\.component\.spec\.ts$/);
 // const context = require.context('./', true,  /treemap-skills\.component\.spec\.ts$/);
 // const context = require.context('./', true,  /project-sunburst-with-data\.component\.spec\.ts$/);
 // const context = require.context('./', true,  /pie-chart-display\.component\.spec\.ts$/);
