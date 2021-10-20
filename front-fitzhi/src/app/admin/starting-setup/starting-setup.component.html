@@ -1,47 +1,48 @@
 <mat-horizontal-stepper [linear]="true" #stepper id="setup">
 
-<mat-step [completed]="completed[0]">
-    <ng-template matStepLabel>Register the server</ng-template>
-    <app-backend-setup (messengerVeryFirstConnection)="onChangeVeryFirstConnection($event)"></app-backend-setup>
-  </mat-step> 
+	<mat-step [completed]="completed[0]">
+		<ng-template matStepLabel>Register the server</ng-template>
+		<app-backend-setup (messengerVeryFirstConnection)="onChangeVeryFirstConnection($event)"></app-backend-setup>
+	</mat-step> 
 
-  <mat-step [completed]="completed[1]">
-    <ng-template matStepLabel>{{labelUser}}</ng-template>
-    <app-register-user 
-        (messengerUserRegistered)="setRegisteredUser($event)" 
-        (messengerSkipAndConnect)="skipAndConnect($event)" 
-        [veryFirstConnection]="veryFirstConnection$|async"></app-register-user>
-  </mat-step>
+	<mat-step [completed]="completed[1]">
+		<ng-template matStepLabel>{{labelUser}}</ng-template>
+		<app-register-user 
+				(messengerUserRegistered)="setRegisteredUser($event)" 
+				(messengerSkipAndConnect)="skipAndConnect($event)" 
+				[veryFirstConnection]="veryFirstConnection$|async"></app-register-user>
+	</mat-step>
 
-  <mat-step [completed]="completed[2]">
-    <ng-template matStepLabel>Connection</ng-template>
-    <app-connect-user [directLogin]="false" (messengerUserConnected)="setConnection($event)"></app-connect-user>
-  </mat-step>
+	<mat-step [completed]="completed[2]">
+		<ng-template matStepLabel>Connection</ng-template>
+		<app-connect-user [directLogin]="false" (messengerUserConnected)="setConnection($event)"></app-connect-user>
+	</mat-step>
 
-  <mat-step [completed]="completed[3]">
-    <ng-template matStepLabel>Update this new user</ng-template>
-    <app-staff-form *ngIf="completed[1]" (messengerStaffUpdated)="setStaffUpdatedForUser($event)"></app-staff-form>
-  </mat-step>
+	<mat-step [completed]="completed[3]">
+		<ng-template matStepLabel>Update this new user</ng-template>
+		<app-staff-form *ngIf="completed[1]" (messengerStaffUpdated)="setStaffUpdatedForUser($event)"></app-staff-form>
+	</mat-step>
 
-  <mat-step >
-    <ng-template matStepLabel>Done</ng-template>
-    <p>
-        The installation is complete for your desktop.
-        The toolbar above is now accessible.
-    </p>
-    <div class="row">
-        <div class="col-md-8 text-right">
-            A suggestion for a good start ?<br/>Save your skills on the dedicated formula.
-        </div>
-        <div class="col-md-4">
-            <a [routerLink]="['/user', idStaff]">
-                <button id="zoom" class="btn btn-outline-primary rounded btn-developer">
-				          <em id="btn-label" class="fas glyphicon fa-user-graduate"></em>
-			          </button>
-            </a>
-        </div>
-    </div>
-  </mat-step>
+	<mat-step >
+		<ng-template matStepLabel>Done</ng-template>
+		<p>
+				The installation is complete for your desktop.
+				The toolbar above is now accessible.
+		</p>
+		<div class="row">
+				<div class="col-md-8 text-right">
+						A suggestion for a good start ?<br/>Save your skills on the dedicated formula.
+				</div>
+				<div class="col-md-4">
+						<a [routerLink]="['/user', idStaff]">
+								<button id="zoom" class="btn btn-outline-primary rounded btn-developer">
+									<em id="btn-label" class="fas glyphicon fa-user-graduate"></em>
+								</button>
+						</a>
+				</div>
+		</div>
+	</mat-step>
+
 </mat-horizontal-stepper>
 
 

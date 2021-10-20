@@ -19,7 +19,7 @@ fi
 
 if [ ${login} ] && [ ${login} != "" ]
 then
-	echo Given password ${login}
+	echo Given login ${login}
 	sed -i 's/"login": "#login"/"login": "'${login}'"/g' ../data/referential/sonar-servers.json
 fi
 

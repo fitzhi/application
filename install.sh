@@ -3,7 +3,7 @@
 helpFunction()
 {
 	echo ""
-	echo "Usage: $0 [-f Y/N] [-d inst_dir] [-?]"
+	echo "Usage: $0 [-f Y/N] [-d inst_dir] [-t Y/N] [-?]"
 	echo -e "\t-f (Y/N) force mode is ON. Script will erase all data in the installation directory"
 	echo -e "\t-d set the installation directory. Default is 'deploy'"
 	echo -e "\t-t (Y/N) activate or inactivate the test"
