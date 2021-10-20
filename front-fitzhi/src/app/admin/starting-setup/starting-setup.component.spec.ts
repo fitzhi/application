@@ -18,6 +18,8 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatSliderModule } from '@angular/material/slider';
 import { MatInputModule } from '@angular/material/input';
 import { MatDialogModule } from '@angular/material/dialog';
+import { MatStepperModule } from '@angular/material/stepper';
+import { BackendSetupComponent } from '../backend-setup/backend-setup.component';
 
 
 describe('StartingSetupComponent', () => {
@@ -26,11 +28,12 @@ describe('StartingSetupComponent', () => {
 
 	beforeEach(waitForAsync(() => {
 		TestBed.configureTestingModule({
-			declarations: [StartingSetupComponent],
+			declarations: [StartingSetupComponent, BackendSetupComponent],
 			schemas: [ NO_ERRORS_SCHEMA ],
 			providers: [ReferentialService, CinematicService],
 			imports: [MatCheckboxModule, MatTableModule, FormsModule, MatPaginatorModule, MatGridListModule,
 				HttpClientTestingModule, HttpClientModule, BrowserAnimationsModule, MatFormFieldModule,
+				MatStepperModule,
 				ReactiveFormsModule, MatSliderModule, MatInputModule, MatDialogModule,
 				RouterTestingModule.withRoutes([])]
 		})
