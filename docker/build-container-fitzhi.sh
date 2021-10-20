@@ -3,7 +3,7 @@
 docker stop fitzhi
 docker rm fitzhi
 # --no-cache 
-docker build --no-cache  --rm -t  fitzhi:1.6 .
+docker build --rm -t  fitzhi:1.6 .
 #docker run --name fitzhi -p 80:80 -it --rm fitzhi:1.6 /bin/bash
 docker volume create fitzhi-volume
 docker volume ls

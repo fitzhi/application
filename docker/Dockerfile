@@ -23,17 +23,16 @@ ARG login
 
 RUN mkdir fitzhi; \
 	cd fitzhi; \
-	curl --insecure https://spoq.fitzhi.com/release/deploy.zip --output deploy.zip; \
+	curl --insecure https://spoq.fitzhi.com/release/back-fitzhi.zip --output deploy.zip; \
 	tar xvf deploy.zip; \
 	cp ./deploy/docker/default /etc/nginx/sites-enabled/default; \
 	cp ./deploy/docker/start-fitzhi.sh ./deploy/backend-fitzhi/start-fitzhi.sh; \
 	cp ./deploy/docker/sonar-servers.json ./deploy/data/referential/sonar-servers.json; \
 	cd /; \
-	rm -rf spoq; \
-	git clone https://github.com/fitzhi/spoq.git; \
-	cd ./spoq; \
-	rm -rf .git; \
-	echo "test"; \
+	curl --insecure https://spoq.fitzhi.com/release/front-fitzhi.zip --output spoq.zip; \
+	mkdir spoq; \
+	cd spoq; \
+	tar xvf ../spoq.zip; \
 	cd ..
 
 WORKDIR /fitzhi/deploy/backend-fitzhi
