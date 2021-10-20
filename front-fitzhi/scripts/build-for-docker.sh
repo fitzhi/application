@@ -56,6 +56,7 @@ rm -f $dir/../front-fitzhi.zip
 rm -rf $dir
 mv ../dist-docker $dir
 
-tar -zcvf $dir/../front-fitzhi.zip $dir
+cd $dir
+tar -zcvf $dir/../front-fitzhi.zip .
 
 echo "--- end ---"
