@@ -106,13 +106,6 @@ export class FitzhiDashboardComponent extends BaseDirective implements OnInit, O
 	}
 
 	/**
-	* Calling the base class to unsubscribe all subscriptions.
-	*/
-	ngOnDestroy() {
-		super.ngOnDestroy();
-	}
-
-	/**
 	 * In progress method...
 	 * @returns ALWAYS **true**
 	 */
@@ -153,5 +146,13 @@ export class FitzhiDashboardComponent extends BaseDirective implements OnInit, O
 			console.log ('onChangeFileredProjects(...) %d projects', projects.length);
 		}
 	}
+	
+	/**
+	* Calling the base class to unsubscribe all subscriptions.
+	*/
+	ngOnDestroy() {
+		super.ngOnDestroy();
+	}
+
 }
 

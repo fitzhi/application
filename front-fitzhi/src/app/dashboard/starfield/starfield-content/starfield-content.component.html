@@ -1,0 +1,5 @@
+<div>
+	<div *ngFor="let star of starfieldService.stars$|async" class="d-inline-flex flex-wrap">
+		<span [style]="style(star)">&#x2605;</span>
+	</div>
+</div>

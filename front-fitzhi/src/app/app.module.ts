@@ -122,6 +122,9 @@ import { WelcomeComponent } from './welcome/welcome.component';
 import { TreemapProjectsContainerComponent } from './dashboard/treemap-projects/treemap-projects-container/treemap-projects-container.component';
 import { TreemapProjectsChartComponent } from './dashboard/treemap-projects/treemap-projects-chart/treemap-projects-chart.component';
 import { TableProjectsFilterComponent } from './tabs-project/table-projects-filter/table-projects-filter.component';
+import { StarfieldComponent } from './dashboard/starfield/starfield.component';
+import { StarfieldHeaderComponent } from './dashboard/starfield/starfield-header/starfield-header.component';
+import { StarfieldContentComponent } from './dashboard/starfield/starfield-content/starfield-content.component';
 
 @NgModule({
 	declarations: [
@@ -196,7 +199,10 @@ import { TableProjectsFilterComponent } from './tabs-project/table-projects-filt
 		ChartInProgressComponent,
 		TreemapProjectsContainerComponent,
 		TreemapProjectsChartComponent,
-		TableProjectsFilterComponent
+		TableProjectsFilterComponent,
+		StarfieldComponent,
+		StarfieldHeaderComponent,
+		StarfieldContentComponent
 	],
 	imports: [
 		BsDropdownModule.forRoot(),

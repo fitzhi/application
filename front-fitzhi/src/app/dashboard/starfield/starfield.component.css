@@ -1,0 +1,19 @@
+:host {
+	
+	display: block;
+	left: 0;
+
+	width: 100%;
+	height: 100%;
+
+}
+
+div.startfield-header, div.startfield-content {
+	width: 100%;
+}
+
+
+div.startfield-header {
+	background-color: aquamarine;
+	height: 80px;
+}

@@ -269,21 +269,7 @@
 		</div>
 	
 		<div class="dashboard" *ngIf="isSelected(selection.lastYearSummary)">
-			<div *ngIf="(projectService.allProjectsIsLoaded$|async) && ((pieDashboardService.slicesLastYear$|async).length > 0)" 
-							class="formerDashboard">
-				<p class="text">Last year snapshot</p>
-				<app-pie-chart
-					[radius]=180
-					[active]=false
-					[legend]=false
-					[pie]=pieIdentifier.lastYear>
-				</app-pie-chart>
-			</div>
-			<div class="camera">
-					Last year snapshot<br/>
-					<em class="fas fa-camera camera large-fas"></em>
-					<p class="camera">NO DATA AVAILABLE</p>
-			</div>
+			<app-starfield></app-starfield>
 		</div>
 
 
