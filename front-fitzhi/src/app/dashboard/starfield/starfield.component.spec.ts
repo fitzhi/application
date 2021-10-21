@@ -38,12 +38,12 @@ describe('StarfieldComponent', () => {
 	constellations.push(new Constellation(1, 50, 'black', 'lightGreen'));
 	constellations.push(new Constellation(2, 100, 'black', 'lightGrey'));
 	const starfieldService = TestBed.inject(StarfieldService);
-	starfieldService.emit(constellations);
+	starfieldService.broadcastConstellations(constellations);
 
 	fixture.detectChanges();
   });
 
-  it('should create', () => {
+  it('should be correctly created.', () => {
 	expect(component).toBeTruthy();
   });
 });

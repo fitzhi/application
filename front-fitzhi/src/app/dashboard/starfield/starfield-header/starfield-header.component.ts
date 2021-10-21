@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { StarfieldService } from '../service/starfield.service';
 
 @Component({
   selector: 'app-starfield-header',
@@ -7,7 +8,7 @@ import { Component, OnInit } from '@angular/core';
 })
 export class StarfieldHeaderComponent implements OnInit {
 
-  constructor() { }
+  constructor(public starfieldService: StarfieldService) { }
 
   ngOnInit(): void {
   }

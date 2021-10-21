@@ -29,10 +29,18 @@ export class StarfieldService {
 
 	/**
 	 * Emit the skills constellation to be drawn in the starfield component.
-	 * @param stars array of data
+	 * @param constellations array of constellations
 	 */
-	public emit(constellations: Constellation[]) {
+	public broadcastConstellations(constellations: Constellation[]) {
 		this.constellationsSubject$.next(constellations);
+	}
+
+	/**
+	 * Emit the skills constellation to be drawn in the starfield component.
+	 * @param stars array of stars
+	 */
+	 public broadcastStars(stars: Star[]) {
+		this.starsSubject$.next(stars);
 	}
 
 	/**
@@ -55,6 +63,6 @@ export class StarfieldService {
 		if (traceOn()) {
 			console.log ('%d stars have been assembled.', stars.length);
 		}
-		this.starsSubject$.next(stars);
+		this.broadcastStars(stars);
 	}
 }
