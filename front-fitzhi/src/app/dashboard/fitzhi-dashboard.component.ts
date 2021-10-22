@@ -124,13 +124,8 @@ export class FitzhiDashboardComponent extends BaseDirective implements OnInit, O
 		this.selected = clickedselection;
 		this.skylineSelected$.next((this.selected === selection.skyline));
 		if (clickedselection === selection.lastYearSummary) {
-			const constellations = [];
-			constellations.push(new Constellation(1, 2, 'black', 'lightGreen'));
-			constellations.push(new Constellation(2, 3));
-			this.starfieldService.broadcastConstellations(constellations);
+			this.starfieldService.generateAndBroadcastConstellations();
 		}
-
-
 	}
 
 	/**

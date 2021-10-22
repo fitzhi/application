@@ -8,10 +8,11 @@ import { SkillService } from '../../skill/service/skill.service';
 import { CinematicService } from '../cinematic.service';
 import { ProjectService } from '../project/project.service';
 import { ReferentialService } from '../referential/referential.service';
+import { DashboardColor } from './dashboard-color';
 import { DashboardService } from './dashboard.service';
 import { dataRiskLegends } from './data-riskLegends';
 
-describe('DashboardService.colorTile testing', () => {
+describe('DashboardService.colorTile(...)', () => {
 	let component: TestHostComponent;
 	let fixture: ComponentFixture<TestHostComponent>;
 	let dashboardService: DashboardService;
@@ -77,39 +78,42 @@ describe('DashboardService.colorTile testing', () => {
 
 	});
 
-	it('Execute the creation with a comparison with the legends loaded from the referential', () => {
+	it('should execute the creation with a comparison with the legends loaded from the referential', () => {
 		expect(component).toBeTruthy();
 		expect(component.colorTiles[0]).toEqual(dataRiskLegends[0].color);
 		expect(component.colorTiles[10]).toEqual(dataRiskLegends[10].color);
 	});
 
-	it ('Produce color of perfection', () => {
+	it ('should be able to produced the color of perfection', () => {
 		expect(component).toBeTruthy();
+		// 	--color-selected: #28a745;
 		const color = dashboardService.colorTile(1, 1000000, referentialService.optimalStaffNumberPerMoOfCode[0]);
-		expect(color).toEqual('#1CB745');
+		expect(color).toEqual('#28A745');
 	});
 
-	it ('Produce the worst color for the worst project', () => {
+	it ('should produce the worst color for the worst project', () => {
 		expect(component).toBeTruthy();
 		const color = dashboardService.colorTile(5, 1000000, 0);
 		expect(color).toEqual('#8B0000');
 	});
 
-	it ('Produce different colors of risk depending on the skill minimum level', () => {
+	it ('should produce different colors of risk depending on the skill minimum level', () => {
 		expect(component).toBeTruthy();
 
+		// We are not at the perfection level with the input.
 		let color = dashboardService.colorTile(1, 1000000, referentialService.optimalStaffNumberPerMoOfCode[3]);
-		expect(color).not.toEqual('#1CB745');
+		expect(color).not.toEqual('#28A745');
 
+		// We reach the perfection level with the input.
 		color = dashboardService.colorTile(4, 1000000, referentialService.optimalStaffNumberPerMoOfCode[3]);
-		expect(color).toEqual('#1CB745');
+		expect(color).toEqual('#28A745');
 	});
 
-	it('Execute a test if we exceed the perfection', () => {
+	it('should execute a test if we exceed the perfection', () => {
 		expect(component).toBeTruthy();
 		component.color = dashboardService.colorTile(1, referentialService.optimalStaffNumberPerMoOfCode[0], 2);
 		fixture.detectChanges();
-		expect('#1CB745').toEqual(component.color);
+		expect('#28A745').toEqual(component.color);
 	});
 
 });

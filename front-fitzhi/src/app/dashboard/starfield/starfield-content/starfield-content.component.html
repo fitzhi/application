@@ -1,5 +1,5 @@
-<div>
+<div class="m-5">
 	<div *ngFor="let star of starfieldService.stars$|async; index as id" class="d-inline-flex flex-wrap">
-		<span id="star-{{id}}" [style]="style(star)">&#x2605;</span>
+		<span class="star" id="star-{{id}}" [style]="style(star)">&#x2605;</span>
 	</div>
 </div>

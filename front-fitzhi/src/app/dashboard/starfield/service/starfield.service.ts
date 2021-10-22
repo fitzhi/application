@@ -4,6 +4,7 @@ import { BehaviorSubject } from 'rxjs';
 import { take } from 'rxjs/operators';
 import { Collaborator } from 'src/app/data/collaborator';
 import { traceOn } from 'src/app/global';
+import { DashboardColor } from 'src/app/service/dashboard/dashboard-color';
 import { StaffListService } from 'src/app/service/staff-list-service/staff-list.service';
 import { StaffService } from 'src/app/tabs-staff/service/staff.service';
 import { Constellation } from '../data/constellation';
@@ -83,9 +84,9 @@ export class StarfieldService {
 	}
 
 	/**
-	 * **GENERATE** and **EMIT** the constellations based on the actual active staff members.
+	 * **GENERATE** and **BROADCAST** the constellations based on the actual active staff members.
 	 */
-	public generateConstellations() {
+	public generateAndBroadcastConstellations() {
 		this.staffListService.allStaff$.pipe(take(1)).subscribe({
 			next: allStaff => {
 				const constellations = this.takeStaffInAccount(allStaff);
@@ -115,6 +116,10 @@ export class StarfieldService {
 				})
 			}
 		});
+		for (let i = 0; i < constellations.length; i++) {
+			constellations[i].backgroundColor = 'white';
+			constellations[i].color = DashboardColor.rgb(i, constellations.length - 1);
+		}
 		return constellations;
 	}
 }

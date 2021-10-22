@@ -93,11 +93,11 @@ describe('StarfieldService', () => {
 
 	it('should GENERATE & BROADCAST the constellations based on the staff collection.', done => {
 
-		const spy1 = spyOn(service, 'generateConstellations').and.callThrough();
+		const spy1 = spyOn(service, 'generateAndBroadcastConstellations').and.callThrough();
 		const spy2 = spyOn(service, 'broadcastConstellations').and.callThrough();
 
 		staffListService.allStaff$.next(allStaff());
-		service.generateConstellations();
+		service.generateAndBroadcastConstellations();
 		service.constellations$.subscribe({
 			next: constellations => {
 				expect(spy1).toHaveBeenCalled();

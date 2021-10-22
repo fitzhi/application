@@ -32,7 +32,7 @@ export class StarfieldContentComponent extends BaseDirective implements OnInit, 
 	}
 
 	style(star: Star) {
-		return `background-color: ${star.backgroundColor}`;
+		return `background-color: ${star.backgroundColor}; color: ${star.color}`;
 	}
 	
 	/**

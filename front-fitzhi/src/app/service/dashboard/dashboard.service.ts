@@ -10,6 +10,7 @@ import { StatTypes } from './stat-types';
 import * as _ from 'lodash';
 import { traceOn } from 'src/app/global';
 import { ReferentialService } from '../referential/referential.service';
+import { DashboardColor } from './dashboard-color';
 
 /**
  * This service is in charge of the calculation for global staff & skill analysis.
@@ -19,22 +20,7 @@ import { ReferentialService } from '../referential/referential.service';
 })
 export class DashboardService {
 
-	static MAX_NUMBER_SKILLS_IN_DIAGRAM = 10;
-
-	static red(index: number): string {
-		const s = Math.round(28 + ((139 - 28) * index) / 10).toString(16).toUpperCase();
-		return (s.length === 1) ? '0' + s : s;
-	}
-
-	static green(index: number) {
-		const s = Math.round((183 - (183 * index) / 10)).toString(16).toUpperCase();
-		return (s.length === 1) ? '0' + s : s;
-	}
-
-	static blue(index: number) {
-		const s = Math.round((69 - (69 * index) / 10)).toString(16).toUpperCase();
-		return (s.length === 1) ? '0' + s : s;
-	}
+    static MAX_NUMBER_SKILLS_IN_DIAGRAM = 10;
 
 	constructor(
 		private skillService: SkillService,
@@ -245,22 +231,22 @@ export class DashboardService {
 	/**
 	 * Calculate and return the color of a tile.
 	 *
-	 * This color figures the number of active developers available for this skill
+	 * This color figures the number of active developers available for this skill.
 	 *
 	 * @param minimumLevel the starting level required in the skill
 	 * @param sumTotalFilesSize the total files size in this skill
-	 * @param countStaff the number of staff members with this
+	 * @param countStaff the number of staff members with this skill
 	 *
 	 * @returns the string representation of a color in HTML
 	 */
 	colorTile(minimumLevel: number, sumTotalFilesSize: number, countStaff: any): string {
 
-		// The rate might be negative if we exceed the perfection. The response is NO.
+		// The rate might be negative if we exceed the perfection. Is perfection is possible ? The answer is NO.
 		const rate = Math.max(
 			1 - countStaff / (sumTotalFilesSize * this.referentialService.optimalStaffNumberPerMoOfCode[minimumLevel - 1] / 1000000), 0);
 		const indexColor = Math.round(rate * 10);
-		const color = '#' + DashboardService.red(indexColor) + DashboardService.green(indexColor) + DashboardService.blue(indexColor);
 
+		const color = DashboardColor.rgb(indexColor); 
 		//
 		// These lines are commented, too chatty...
 		// 		if (traceOn()) {
