@@ -1,5 +1,10 @@
+import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { MatDialogModule } from '@angular/material/dialog';
 import { doesNotReject } from 'assert';
+import { MessageBoxService } from 'src/app/interaction/message-box/service/message-box.service';
+import { FileService } from 'src/app/service/file.service';
+import { StaffService } from 'src/app/tabs-staff/service/staff.service';
 import { Star } from '../data/star';
 import { StarfieldService } from '../service/starfield.service';
 
@@ -13,7 +18,8 @@ describe('StarfieldHeaderComponent', () => {
 	beforeEach(async () => {
 		await TestBed.configureTestingModule({
 			declarations: [ StarfieldHeaderComponent ],
-			providers: [StarfieldService]
+			providers: [StarfieldService, StaffService, FileService, MessageBoxService],
+			imports: [MatDialogModule, HttpClientTestingModule]
 		})
 		.compileComponents();
 	});

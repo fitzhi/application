@@ -13,6 +13,8 @@ import { FitzhiDashboardPopupHelper } from './fitzhi-dashboard-popup-helper';
 import { selection } from './selection';
 import { PieDashboardService } from './service/pie-dashboard.service';
 import { SkylineService } from './skyline/service/skyline.service';
+import { Constellation } from './starfield/data/constellation';
+import { StarfieldService } from './starfield/service/starfield.service';
 
 @Component({
 	selector: 'app-fitzhi-dashboard',
@@ -74,6 +76,7 @@ export class FitzhiDashboardComponent extends BaseDirective implements OnInit, O
 		public projectService: ProjectService,
 		public skylineService: SkylineService,
 		public controlledRisingSkylineService: ControlledRisingSkylineService,
+		public starfieldService: StarfieldService,
 		public pieDashboardService: PieDashboardService) {
 			super();
 	}
@@ -120,6 +123,14 @@ export class FitzhiDashboardComponent extends BaseDirective implements OnInit, O
 	switchTo(clickedselection: number) {
 		this.selected = clickedselection;
 		this.skylineSelected$.next((this.selected === selection.skyline));
+		if (clickedselection === selection.lastYearSummary) {
+			const constellations = [];
+			constellations.push(new Constellation(1, 2, 'black', 'lightGreen'));
+			constellations.push(new Constellation(2, 3));
+			this.starfieldService.broadcastConstellations(constellations);
+		}
+
+
 	}
 
 	/**

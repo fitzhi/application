@@ -17,8 +17,9 @@ getTestBed().initTestEnvironment(
 // Then we find all the tests
 
 const context = require.context('./', true, /\.spec\.ts$/);
-// const context = require.context('./', true,  /referential\.service\.spec\.ts$/);
-// const context = require.context('./', true,  /starting-setup\.component\.spec\.ts$/);
+// const context = require.context('./', true,  /starfield\.service\.spec\.ts$/);
+// const context = require.context('./', true,  /starfield\.component\.spec\.ts$/);
+// const context = require.context('./', true,  /starfield-header\.component\.spec\.ts$/);
 // const context = require.context('./', true,  /treemap-skills\.component\.spec\.ts$/);
 // const context = require.context('./', true,  /project-sunburst-with-data\.component\.spec\.ts$/);
 // const context = require.context('./', true,  /pie-chart-display\.component\.spec\.ts$/);
