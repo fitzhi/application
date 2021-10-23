@@ -42,7 +42,6 @@ export class StarfieldContentComponent extends BaseDirective implements OnInit, 
 	 * @param star the given star
 	 */
 	public mouseEnter(star: Star) {
-		console.log ('nope');
 		this.idSkillHighlighted = star.idSkill;
 		// We force to refresh here, because the result of the function style(...) will change
 		// due to the current skill highlighted. 
