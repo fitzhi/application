@@ -3,8 +3,10 @@ import { Component } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { MatDialogModule } from '@angular/material/dialog';
 import { By } from '@angular/platform-browser';
+import { Skill } from 'src/app/data/skill';
 import { MessageBoxService } from 'src/app/interaction/message-box/service/message-box.service';
 import { FileService } from 'src/app/service/file.service';
+import { SkillService } from 'src/app/skill/service/skill.service';
 import { StaffService } from 'src/app/tabs-staff/service/staff.service';
 import { StarfieldHeaderComponent } from 'target/classes/app/dashboard/starfield/starfield-header/starfield-header.component';
 import { Constellation } from './data/constellation';
@@ -39,7 +41,7 @@ describe('StarfieldComponent', () => {
 	beforeEach(async () => {
 		await TestBed.configureTestingModule({
 			declarations: [ TestHostComponent, StarfieldComponent, StarfieldContentComponent, StarfieldHeaderComponent],
-			providers: [StarfieldService, StaffService, FileService, MessageBoxService],
+			providers: [StarfieldService, StaffService, FileService, MessageBoxService, SkillService],
 			imports: [MatDialogModule, HttpClientTestingModule]
 		})
 		.compileComponents();
@@ -48,6 +50,10 @@ describe('StarfieldComponent', () => {
 	beforeEach(() => {
 		fixture = TestBed.createComponent(TestHostComponent);
 		component = fixture.componentInstance;
+		const skillService = TestBed.inject(SkillService);
+		skillService.allSkills = [];
+		skillService.allSkills.push (new Skill(1, "Java"));
+		skillService.allSkills.push (new Skill(2, "Typescript"));
 	});
 
 	it('should be correctly created.', () => {

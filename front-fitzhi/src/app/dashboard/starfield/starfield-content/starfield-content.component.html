@@ -1,9 +1,16 @@
+<angular-popper placement="top" target="#star-{{indexHighlighted}}" *ngIf="skillPopupDisplay">
+	<div content class="help">
+		<h3 class="help-title">{{activeSkill.title}}</h3>
+		<p>...</p>
+	</div>
+</angular-popper>
+
 <div class="m-5">
 	<div *ngFor="let star of starfieldService.stars$|async; index as id" 
-		(mouseenter)="mouseEnter(star)" 
-		(mouseleave)="mouseLeave(star)"
+		(mouseenter)="mouseEnter(star, id)" 
+		(mouseleave)="mouseLeave()"
 		class="d-inline-flex flex-wrap p-1"
 		[style]="style(star)">
 		<span class="star" id="star-{{id}}">&#x2605;</span>
-	</div>
+	</div>	
 </div>
