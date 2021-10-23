@@ -2,11 +2,13 @@ import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { Component } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { MatDialogModule } from '@angular/material/dialog';
+import { By } from '@angular/platform-browser';
 import { MessageBoxService } from 'src/app/interaction/message-box/service/message-box.service';
 import { FileService } from 'src/app/service/file.service';
 import { StaffService } from 'src/app/tabs-staff/service/staff.service';
 import { StarfieldHeaderComponent } from 'target/classes/app/dashboard/starfield/starfield-header/starfield-header.component';
 import { Constellation } from './data/constellation';
+import { Star } from './data/star';
 import { StarfieldService } from './service/starfield.service';
 import { StarfieldContentComponent } from './starfield-content/starfield-content.component';
 import { StarfieldComponent } from './starfield.component';
@@ -15,6 +17,14 @@ import { StarfieldComponent } from './starfield.component';
 describe('StarfieldComponent', () => {
 	let component: TestHostComponent;
 	let fixture: ComponentFixture<TestHostComponent>;
+
+	function generateConstellations() {
+		const constellations = [];
+		// #28a745
+		constellations.push(new Constellation(1, 50, 'var(--color-success)', 'transparent'));
+		constellations.push(new Constellation(2, 100, 'var(--color-error)', 'transparent'));
+		return constellations;
+	}
 
 	@Component({
 		selector: 'app-host-component',
@@ -46,18 +56,34 @@ describe('StarfieldComponent', () => {
 
 	it('should handle a new version of constellations.', done => {
 		expect(document.getElementById('id-0')).toBeNull();
-		const constellations = [];
-		constellations.push(new Constellation(1, 50, 'black', 'lightGreen'));
-		constellations.push(new Constellation(2, 100, 'black', 'lightGrey'));
+		const constellations = generateConstellations();
 		const starfieldService = TestBed.inject(StarfieldService);
 		starfieldService.broadcastConstellations(constellations);
 		fixture.detectChanges();
 		setTimeout(() => {
 			fixture.detectChanges();
 			expect(document.getElementById('star-0')).not.toBeNull();
+			expect(document.getElementById('star-0').parentElement.style.cssText).toContain('--color-success');
 			expect(document.getElementById('star-149')).not.toBeNull();
+			expect(document.getElementById('star-149').parentElement.style.cssText).toContain('--color-error');
 			expect(document.getElementById('star-150')).toBeNull();
 			done();
 		}, 0);
 	});
+
+	it('should handle the mouse move on the starfield.', done => {
+		const constellations = generateConstellations();
+		const starfieldService = TestBed.inject(StarfieldService);
+		starfieldService.broadcastConstellations(constellations);
+		fixture.detectChanges();
+		const div = fixture.debugElement.query(By.css('#star-20')).parent;
+		div.triggerEventHandler('mouseenter', new Star(50, 'var(--color-success)', 'transparent'));
+		fixture.detectChanges();
+		expect(div.nativeElement.style.cssText).toContain('background-color: lightgrey');
+		div.triggerEventHandler('mouseleave', new Star(50, 'var(--color-success)', 'transparent'));
+		fixture.detectChanges();
+		expect(div.nativeElement.style.cssText).toContain('background-color: transparent');
+		done();
+	});
+
 });

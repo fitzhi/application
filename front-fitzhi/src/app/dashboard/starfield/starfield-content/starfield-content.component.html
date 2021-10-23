@@ -1,5 +1,9 @@
 <div class="m-5">
-	<div *ngFor="let star of starfieldService.stars$|async; index as id" class="d-inline-flex flex-wrap">
-		<span class="star" id="star-{{id}}" [style]="style(star)">&#x2605;</span>
+	<div *ngFor="let star of starfieldService.stars$|async; index as id" 
+		(mouseenter)="mouseEnter(star)" 
+		(mouseleave)="mouseLeave(star)"
+		class="d-inline-flex flex-wrap p-1"
+		[style]="style(star)">
+		<span class="star" id="star-{{id}}">&#x2605;</span>
 	</div>
 </div>
