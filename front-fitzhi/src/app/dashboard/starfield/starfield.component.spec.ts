@@ -55,17 +55,18 @@ describe('StarfieldComponent', () => {
 		skillService.allSkills.push (new Skill(1, "Java"));
 		skillService.allSkills.push (new Skill(2, "Typescript"));
 	});
-
 	it('should be correctly created.', () => {
 		expect(component).toBeTruthy();
 	});
 
 	it('should handle a new version of constellations.', done => {
+
 		expect(document.getElementById('id-0')).toBeNull();
 		const constellations = generateConstellations();
 		const starfieldService = TestBed.inject(StarfieldService);
 		starfieldService.broadcastConstellations(constellations);
 		fixture.detectChanges();
+
 		setTimeout(() => {
 			fixture.detectChanges();
 			expect(document.getElementById('star-0')).not.toBeNull();
@@ -78,17 +79,43 @@ describe('StarfieldComponent', () => {
 	});
 
 	it('should handle the mouse move on the starfield.', done => {
+
 		const constellations = generateConstellations();
 		const starfieldService = TestBed.inject(StarfieldService);
 		starfieldService.broadcastConstellations(constellations);
 		fixture.detectChanges();
+
 		const div = fixture.debugElement.query(By.css('#star-20')).parent;
-		div.triggerEventHandler('mouseenter', new Star(50, 'var(--color-success)', 'transparent'));
+		div.triggerEventHandler('mouseenter', new Star(20, 50, 'var(--color-success)', 'transparent'));
 		fixture.detectChanges();
+
 		expect(div.nativeElement.style.cssText).toContain('background-color: lightgrey');
-		div.triggerEventHandler('mouseleave', new Star(50, 'var(--color-success)', 'transparent'));
+		div.triggerEventHandler('mouseleave', new Star(20, 50, 'var(--color-success)', 'transparent'));
 		fixture.detectChanges();
+
 		expect(div.nativeElement.style.cssText).toContain('background-color: transparent');
+		done();
+	});
+
+	it('should contextually display the detail panel for a skill in the starfield.', done => {
+
+		const constellations = generateConstellations();
+		const starfieldService = TestBed.inject(StarfieldService);
+		starfieldService.broadcastConstellations(constellations);
+		fixture.detectChanges();
+
+		const detailSkillPanel = fixture.debugElement.query(By.css('#detail-skill'));
+		expect(detailSkillPanel).toBeNull();
+		const div = fixture.debugElement.query(By.css('#star-10')).parent;
+
+		div.triggerEventHandler('mouseenter', new Star(10, 50, 'var(--color-success)', 'transparent'));
+		fixture.detectChanges();
+		expect(detailSkillPanel).toBeDefined();
+
+		div.triggerEventHandler('mouseleave', new Star(10, 50, 'var(--color-success)', 'transparent'));
+		fixture.detectChanges();
+		expect(detailSkillPanel).toBeNull();
+
 		done();
 	});
 

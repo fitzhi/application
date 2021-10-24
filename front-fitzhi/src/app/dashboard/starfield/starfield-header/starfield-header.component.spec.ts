@@ -38,7 +38,7 @@ describe('StarfieldHeaderComponent', () => {
 	it('should take in account every new version of the array of stars.', done => {
 		expect(document.getElementById('numberOfStars').innerText).toBe('0');
 		const stars = [];
-		stars.push(new Star(1));
+		stars.push(new Star(1, 1));
 		starfieldService.broadcastStars(stars);
 		fixture.detectChanges();
 		setTimeout(() => {

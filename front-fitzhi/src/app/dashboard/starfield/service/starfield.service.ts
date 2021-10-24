@@ -74,7 +74,7 @@ export class StarfieldService {
 		const stars = [];
 		constellations.forEach(constellation => {
 			for (let i = 0; i < constellation.count; i++) {
-				stars.push(new Star(constellation.idSkill, constellation.color, constellation.backgroundColor));
+				stars.push(new Star(constellation.idSkill, constellation.count, constellation.color, constellation.backgroundColor));
 			}
 		});
 		if (traceOn()) {
