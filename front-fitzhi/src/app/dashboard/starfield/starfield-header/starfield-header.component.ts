@@ -8,9 +8,14 @@ import { StarfieldService } from '../service/starfield.service';
 })
 export class StarfieldHeaderComponent implements OnInit {
 
+  public displayHelp = false;
+
   constructor(public starfieldService: StarfieldService) { }
 
   ngOnInit(): void {
   }
 
+  help(): void {
+    
+  }
 }

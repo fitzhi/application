@@ -1,5 +1,10 @@
-<p>
-    System has counted 
-    <span id="numberOfStars">{{(starfieldService.stars$|async).length}}</span> 
-    skills levels (<span>&#x2605;</span>)
-</p>
+<nav class="navbar navbar-light bg-light justify-content-between">
+	<div>
+		System has counted <span id="numberOfStars">{{(starfieldService.stars$|async).length}}</span> skill-units (<span>&#x2605;</span>)
+	</div>
+	<button id="btHelp"
+		type="button"
+		class="btn ml-2"
+		[ngClass]="{'btn-outline-success' : displayHelp, 'btn-outline-secondary': !displayHelp}" 
+		(click)="help()">?</button>	
+</nav>
