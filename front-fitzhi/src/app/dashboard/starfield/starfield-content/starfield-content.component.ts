@@ -18,6 +18,11 @@ export class StarfieldContentComponent extends BaseDirective implements OnInit, 
 	public activeSkill: Skill = undefined;
 
 	/**
+	 * Star highlighted by the mouse.
+	 */
+	 public activeStar: Star = undefined;
+
+	 /**
 	 * Index in the series of the star highlighted by the mouse.
 	 */
 	 public indexHighlighted = -1;
@@ -61,6 +66,7 @@ export class StarfieldContentComponent extends BaseDirective implements OnInit, 
 	 */
 	public mouseEnter(star: Star, index: number) {
 		this.activeSkill = this.skillService.allSkills.find(sk => sk.id == star.idSkill);
+		this.activeStar = star;
 		this.skillPopupDisplay = true;
 		this.indexHighlighted = index;
 		// We force to refresh here, because the result of the function style(...) will change
@@ -74,6 +80,7 @@ export class StarfieldContentComponent extends BaseDirective implements OnInit, 
 	 */
 	public mouseLeave() {
 		this.activeSkill = undefined;
+		this.activeStar = undefined;
 		this.indexHighlighted = -1;
 		this.skillPopupDisplay = false;
 		// We force to refresh here, because the result of the function style(...) will change
