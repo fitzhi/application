@@ -8,11 +8,11 @@ import { MessageBoxService } from 'src/app/interaction/message-box/service/messa
 import { FileService } from 'src/app/service/file.service';
 import { SkillService } from 'src/app/skill/service/skill.service';
 import { StaffService } from 'src/app/tabs-staff/service/staff.service';
-import { StarfieldHeaderComponent } from 'target/classes/app/dashboard/starfield/starfield-header/starfield-header.component';
 import { Constellation } from './data/constellation';
 import { Star } from './data/star';
 import { StarfieldService } from './service/starfield.service';
 import { StarfieldContentComponent } from './starfield-content/starfield-content.component';
+import { StarfieldHeaderComponent } from './starfield-header/starfield-header.component';
 import { StarfieldComponent } from './starfield.component';
 
 
