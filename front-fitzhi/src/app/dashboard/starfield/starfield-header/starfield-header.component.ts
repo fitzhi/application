@@ -2,20 +2,27 @@ import { Component, OnInit } from '@angular/core';
 import { StarfieldService } from '../service/starfield.service';
 
 @Component({
-  selector: 'app-starfield-header',
-  templateUrl: './starfield-header.component.html',
-  styleUrls: ['./starfield-header.component.css']
+	selector: 'app-starfield-header',
+	templateUrl: './starfield-header.component.html',
+	styleUrls: ['./starfield-header.component.css']
 })
 export class StarfieldHeaderComponent implements OnInit {
 
-  public displayHelp = false;
+	public displayHelp = false;
 
-  constructor(public starfieldService: StarfieldService) { }
+	public today = new Date();
 
-  ngOnInit(): void {
-  }
+	constructor(public starfieldService: StarfieldService) { }
 
-  help(): void {
-    
-  }
+	ngOnInit(): void {
+	}
+
+	help(): void {
+	}
+	
+	next(): void {
+	}
+
+	previous(): void {
+	}
 }

@@ -1,6 +1,8 @@
 import { HttpClientTestingModule } from '@angular/common/http/testing';
-import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { ComponentFixture, fakeAsync, TestBed, tick } from '@angular/core/testing';
+import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatDialogModule } from '@angular/material/dialog';
+import { By } from '@angular/platform-browser';
 import { doesNotReject } from 'assert';
 import { MessageBoxService } from 'src/app/interaction/message-box/service/message-box.service';
 import { FileService } from 'src/app/service/file.service';
@@ -19,7 +21,7 @@ describe('StarfieldHeaderComponent', () => {
 		await TestBed.configureTestingModule({
 			declarations: [ StarfieldHeaderComponent ],
 			providers: [StarfieldService, StaffService, FileService, MessageBoxService],
-			imports: [MatDialogModule, HttpClientTestingModule]
+			imports: [MatDialogModule, HttpClientTestingModule, MatCheckboxModule]
 		})
 		.compileComponents();
 	});
@@ -47,4 +49,15 @@ describe('StarfieldHeaderComponent', () => {
 		}, 0);
 
 	});
+
+	it('should broadcast a new version of the constellations if the user checks, or unchecks, the external checkbox.', fakeAsync(() => {
+		const spy1 = spyOn(starfieldService, 'switchExternalFilter').and.callThrough();
+		const spy2 = spyOn(starfieldService, 'generateAndBroadcastConstellations');
+		const cbExternal = fixture.debugElement.query(By.css('#external'));
+		cbExternal.triggerEventHandler('change', null);
+		tick(); // simulates the passage of time until all pending asynchronous activities finish
+		expect(spy1).toHaveBeenCalled();
+		expect(spy2).toHaveBeenCalled();
+	}));
+
 });

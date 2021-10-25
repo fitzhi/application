@@ -1,10 +1,30 @@
-<nav class="navbar navbar-light bg-light justify-content-between">
-	<div>
-		System has counted <span id="numberOfStars">{{(starfieldService.stars$|async).length}}</span> skill-units (<span>&#x2605;</span>)
+<nav class="navbar navbar-light bg-light justify-content-between p-0">
+	<div class="p-1 ml-4 d-inline-flex">
+		<div id="btPrevious"
+			class="border-0"
+			(click)="previous()">
+			<h2><em class="fas fa-caret-left"></em></h2>
+		</div>	
+		<div class="ml-2 mt-1">
+			<span class="navbar-text" id="numberOfStars">{{(starfieldService.stars$|async).length}}</span> 
+			<span class="navbar-text">(<span>&#x2605;</span>) units of skills for {{ today | date:'MM/YYYY'}}</span>
+		</div>
+		<div id="btNext"
+			class="border-0 ml-2"
+			(click)="next()">
+			<h2><em class="fas fa-caret-right"></em></h2>
+		</div>	
+		<mat-checkbox 
+				id="external"
+				class="ml-4 mt-2" 
+				[checked]="starfieldService.filter.external"
+				(change)="starfieldService.switchExternalFilter()" >
+				External
+		</mat-checkbox>
 	</div>
 	<button id="btHelp"
-		type="button"
-		class="btn ml-2"
+		type="button "
+		class="btn ml-2 mr-3"
 		[ngClass]="{'btn-outline-success' : displayHelp, 'btn-outline-secondary': !displayHelp}" 
 		(click)="help()">?</button>	
 </nav>

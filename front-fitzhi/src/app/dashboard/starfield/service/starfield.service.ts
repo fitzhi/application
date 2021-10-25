@@ -36,7 +36,24 @@ export class StarfieldService {
 	 */
 	public filter = new StarfieldFilter();
 
+	private helpPanelVisible = false;
+
+	private helpPanelVisibleSubject$ = new BehaviorSubject<boolean>(this.helpPanelVisible);
+
+	public helpPanelVisible$ = this.helpPanelVisibleSubject$.asObservable();
+
 	constructor(private staffListService: StaffListService) { }
+
+	/**
+	 * Reverve the value of the external boolean filter.
+	 */
+	public switchExternalFilter(): void {
+		this.filter.external = !this.filter.external;
+		if (traceOn()) {
+			console.log ('External filter is %s', this.filter.external);
+		}
+		this.generateAndBroadcastConstellations();
+	}
 
 	/**
 	 * Emit the skills constellation to be drawn in the starfield component.
@@ -106,14 +123,19 @@ export class StarfieldService {
 		const constellations: Constellation[] = [];
 		allStaff.forEach(staff => {
 			if (staff.active) {
-				staff.experiences.forEach(experience => {
-					const constellation = constellations.find(constellation => constellation.idSkill === experience.id);
-					if (constellation) {
-						constellation.count = constellation.count + experience.level;
-					} else {
-						constellations.push (new Constellation(experience.id, experience.level));
-					}
-				})
+
+				// Either we take in account the external staff, which means we involved all staff members
+				// Or the take in account only the 'internal' staff.
+				if ((this.filter.external) || (!staff.external)) {
+					staff.experiences.forEach(experience => {
+						const constellation = constellations.find(constellation => constellation.idSkill === experience.id);
+						if (constellation) {
+							constellation.count = constellation.count + experience.level;
+						} else {
+							constellations.push (new Constellation(experience.id, experience.level));
+						}
+					})
+				}
 			}
 		});
 		for (let i = 0; i < constellations.length; i++) {
@@ -121,5 +143,14 @@ export class StarfieldService {
 			constellations[i].color = DashboardColor.rgb(i, constellations.length - 1);
 		}
 		return constellations;
+	}
+
+	/**
+	 * Switch the visibility of the Help panel. If the panel is hidden, it will be shown.
+	 * Otherwise, if visible, the help panel will be hidden. 
+	 */
+	switchHelpPanelVisibility() {
+		this.helpPanelVisible = !this.helpPanelVisible;
+		this.helpPanelVisibleSubject$.next (this.helpPanelVisible);
 	}
 }
