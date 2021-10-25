@@ -15,3 +15,25 @@ div.startfield-header, div.startfield-content {
 div.startfield-header {
 	height: 55px;
 }
+
+div.container-help {
+	position: absolute;
+	height: 80px;
+	bottom: 0;
+	padding: 5px;
+}
+
+div.container-help div.help {
+	width: 100%;
+	background-color: var(--color-help);
+	border: 1px solid black;
+	border-radius: 5px;
+}
+
+em.info {
+	margin-top: 3px;
+	margin-left: 3px;
+	position: absolute;
+	color: var(--color-success);
+	font-size: larger;
+}

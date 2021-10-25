@@ -1,6 +1,6 @@
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { Component } from '@angular/core';
-import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { ComponentFixture, fakeAsync, TestBed, tick } from '@angular/core/testing';
 import { MatDialogModule } from '@angular/material/dialog';
 import { By } from '@angular/platform-browser';
 import { Skill } from 'src/app/data/skill';
@@ -118,5 +118,24 @@ describe('StarfieldComponent', () => {
 
 		done();
 	});
+
+	it('should show the help panel when the user clicks on the help button.', fakeAsync(() => {
+
+		let logoInfo = fixture.debugElement.query(By.css('#logoInfo'));
+		expect(logoInfo).toBeNull();
+
+		const constellations = generateConstellations();
+		const starfieldService = TestBed.inject(StarfieldService);
+		starfieldService.broadcastConstellations(constellations);
+		fixture.detectChanges();
+
+		const btHelp = fixture.debugElement.query(By.css('#btHelp'));
+		btHelp.triggerEventHandler('click', null);
+		tick();
+
+		logoInfo = fixture.debugElement.query(By.css('#logoInfo'));
+		expect(logoInfo).toBeDefined();
+
+	}));
 
 });

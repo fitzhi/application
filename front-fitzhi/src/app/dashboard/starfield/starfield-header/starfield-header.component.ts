@@ -17,9 +17,6 @@ export class StarfieldHeaderComponent implements OnInit {
 	ngOnInit(): void {
 	}
 
-	help(): void {
-	}
-	
 	next(): void {
 	}
 

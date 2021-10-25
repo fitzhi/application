@@ -1,9 +1,9 @@
 <div class="starfield">
 	<app-starfield-header></app-starfield-header>
 	<app-starfield-content></app-starfield-content>
-	<div id="help" class="container-help" *ngIf="starfieldService.helpPanelVisible$|async">
-		<div class="help">
-			<div style="display: inline-flex; padding: 5px;">
+	<div id="help" class="container-help w-100 position-absolute" *ngIf="starfieldService.helpPanelVisible$|async">
+		<div class="help w-100 h-100">
+			<div id="logoInfo" style="display: inline-flex">
 				<em class="fas fa-info info"></em>
 				<span style="padding: 5px;">
 				</span>

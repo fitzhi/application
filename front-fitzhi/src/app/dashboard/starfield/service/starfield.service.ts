@@ -150,6 +150,9 @@ export class StarfieldService {
 	 * Otherwise, if visible, the help panel will be hidden. 
 	 */
 	switchHelpPanelVisibility() {
+		if (traceOn()) {
+			console.log('switchHelpPanelVisibility to', !this.helpPanelVisible);
+		}
 		this.helpPanelVisible = !this.helpPanelVisible;
 		this.helpPanelVisibleSubject$.next (this.helpPanelVisible);
 	}

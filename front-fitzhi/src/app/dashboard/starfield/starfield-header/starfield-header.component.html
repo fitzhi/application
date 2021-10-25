@@ -26,5 +26,5 @@
 		type="button "
 		class="btn ml-2 mr-3"
 		[ngClass]="{'btn-outline-success' : displayHelp, 'btn-outline-secondary': !displayHelp}" 
-		(click)="help()">?</button>	
+		(click)="starfieldService.switchHelpPanelVisibility()">?</button>	
 </nav>
