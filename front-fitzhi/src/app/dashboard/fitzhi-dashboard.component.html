@@ -240,8 +240,19 @@
 						(mouseenter)="popupHelper.mouseEnter(selection.starfield)" 
 						(mouseleave)="popupHelper.mouseLeave()"
 					(click)="switchTo(selection.starfield)">
-				<p>Last year</p>
-				<em class="fas fa-camera"></em>
+				<div class="justify-content-center w-100">
+					<div class="ml-1 d-inline-flex flex-wrap" style="line-height: 1;">
+						<span style="color: var(--color-success)">
+							<span>&#x2605;</span><span>&#x2605;</span><span>&#x2605;</span>
+						</span>
+						<span style="color: #5A5423;">
+							<span>&#x2605;</span><span>&#x2605;</span><span>&#x2605;</span>
+						</span>
+						<span style="color: var(--color-error)">
+							<span>&#x2605;</span><span>&#x2605;</span>
+						</span>
+					</div>
+				</div>
 		</button>
 
 </div>
