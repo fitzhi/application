@@ -1,26 +1,27 @@
 <nav class="navbar navbar-light bg-light justify-content-between p-0">
-	<div class="p-1 ml-4 d-inline-flex">
+	<mat-checkbox 
+		id="external"
+		class="ml-4 mt-2" 
+		[checked]="starfieldService.filter.external"
+		(change)="starfieldService.switchExternalFilter()" >
+		External
+	</mat-checkbox>
+	<div class="p-1 ml-2 d-inline-flex">
 		<div id="btPrevious"
-			class="border-0"
+			class="border-0 mt-2"
 			(click)="previous()">
 			<h2><em class="fas fa-caret-left"></em></h2>
 		</div>	
 		<div class="ml-2 mt-1">
-			<span class="navbar-text" id="numberOfStars">{{(starfieldService.stars$|async).length}}</span> 
-			<span class="navbar-text">(<span>&#x2605;</span>) units of skills for {{ today | date:'MM/YYYY'}}</span>
+			<span class="navbar-text h3" id="numberOfStars">{{(starfieldService.stars$|async).length}}</span> 
+			<span class="navbar-text h3">(<span>&#x2605;</span>)</span>
+			<span lass="navbar-text h2">units of skills for {{ today | date:'MM/YYYY'}}</span>
 		</div>
 		<div id="btNext"
-			class="border-0 ml-2"
+			class="border-0 ml-2 mt-2"
 			(click)="next()">
 			<h2><em class="fas fa-caret-right"></em></h2>
-		</div>	
-		<mat-checkbox 
-				id="external"
-				class="ml-4 mt-2" 
-				[checked]="starfieldService.filter.external"
-				(change)="starfieldService.switchExternalFilter()" >
-				External
-		</mat-checkbox>
+		</div>
 	</div>
 	<button id="btHelp"
 		type="button "

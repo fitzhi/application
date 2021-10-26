@@ -12,3 +12,7 @@
 #next, #previous {
 	background-color: transparent;
 }
+
+#numberOfStars {
+	color: var(--color-success);
+}

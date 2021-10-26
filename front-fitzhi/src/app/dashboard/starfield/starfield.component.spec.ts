@@ -55,6 +55,7 @@ describe('StarfieldComponent', () => {
 		skillService.allSkills.push (new Skill(1, "Java"));
 		skillService.allSkills.push (new Skill(2, "Typescript"));
 	});
+	
 	it('should be correctly created.', () => {
 		expect(component).toBeTruthy();
 	});

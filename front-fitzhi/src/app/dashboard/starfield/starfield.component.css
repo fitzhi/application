@@ -18,7 +18,7 @@ div.startfield-header {
 
 div.container-help {
 	position: absolute;
-	height: 80px;
+	height: 100px;
 	bottom: 0;
 	padding: 5px;
 }
@@ -35,5 +35,6 @@ em.info {
 	margin-left: 3px;
 	position: absolute;
 	color: var(--color-success);
-	font-size: larger;
+	font-size: x-large;
 }
+
