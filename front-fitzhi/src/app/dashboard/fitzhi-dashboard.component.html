@@ -117,7 +117,7 @@
 	</div>
 </angular-popper>        
 
-<angular-popper placement="left" target="#lastYearSummary" *ngIf="popupHelper.isButtonActivated(selection.lastYearSummary) && !hasSelectedADashboard()">
+<angular-popper placement="left" target="#starfield" *ngIf="popupHelper.isButtonActivated(selection.starfield) && !hasSelectedADashboard()">
 	<div content class="help">
 		<h4 class="help-title">Summary dashboard for last year</h4>
 		<div class="help-content">
@@ -233,13 +233,13 @@
 			<em class="fas fa-calendar-alt"></em>
 		</button>
 
-		<button id="lastYearSummary" class="btn rounded lastYearMinimized"
+		<button id="starfield" class="btn rounded lastYearMinimized"
 				[ngClass]="{
-						'btn-outline-success' : isSelected(selection.lastYearSummary), 
-						'btn-outline-secondary': !isSelected(selection.lastYearSummary)}" 
-						(mouseenter)="popupHelper.mouseEnter(selection.lastYearSummary)" 
+						'btn-outline-success' : isSelected(selection.starfield), 
+						'btn-outline-secondary': !isSelected(selection.starfield)}" 
+						(mouseenter)="popupHelper.mouseEnter(selection.starfield)" 
 						(mouseleave)="popupHelper.mouseLeave()"
-					(click)="switchTo(selection.lastYearSummary)">
+					(click)="switchTo(selection.starfield)">
 				<p>Last year</p>
 				<em class="fas fa-camera"></em>
 		</button>
@@ -268,7 +268,7 @@
 			</div>
 		</div>
 	
-		<div class="dashboard" *ngIf="isSelected(selection.lastYearSummary)">
+		<div class="dashboard" *ngIf="isSelected(selection.starfield)">
 			<app-starfield></app-starfield>
 		</div>
 

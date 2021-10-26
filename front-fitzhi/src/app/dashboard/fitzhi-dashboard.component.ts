@@ -123,7 +123,7 @@ export class FitzhiDashboardComponent extends BaseDirective implements OnInit, O
 	switchTo(clickedselection: number) {
 		this.selected = clickedselection;
 		this.skylineSelected$.next((this.selected === selection.skyline));
-		if (clickedselection === selection.lastYearSummary) {
+		if (clickedselection === selection.starfield) {
 			this.starfieldService.generateAndBroadcastConstellations();
 		}
 	}

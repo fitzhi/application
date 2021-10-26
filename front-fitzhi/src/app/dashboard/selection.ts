@@ -4,7 +4,7 @@
 export const selection  = {
 	none: 0,
 	technicalDate: 1,
-	lastYearSummary: 2,
+	starfield: 2,
 	currentSummary: 3,
 	treeMapSkills: 4,
 	skyline: 5,
