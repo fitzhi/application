@@ -16,3 +16,13 @@
 #numberOfStars {
 	color: var(--color-success);
 }
+
+div.button-direction:hover em {
+	color: var(--color-selected);
+}
+
+div.button-direction em {
+	line-height: 70px;
+	font-size: 50px;
+}
+
