@@ -1,6 +1,7 @@
 package com.fitzhi.bean;
 
 import java.time.LocalDate;
+import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -130,15 +131,15 @@ public interface SkillHandler extends DataSaverLifeCycle {
 	boolean checkFilePattern(String filenameDependencies, String rootPath, String sourcePath, String dependency) throws ApplicationException;
 
 	/**
-	 * Save the skills constellation for the given month.
+	 * Save the skills constellations for the given month.
 	 * @param month the saving month
 	 * @throws ApplicationException thrown if any exception occurs during the saving process, most probably an {@link IOException}.
 	 */
-	void saveConstellation(LocalDate month) throws ApplicationException;
+	void saveConstellations(LocalDate month) throws ApplicationException;
 
 	/**
 	 * <p>
-	 * Load the skills constellation for the given month.
+	 * Load the skills constellations for the given month.
 	 * </p>
 	 * <em>
 	 * An internal control is executed to verify
@@ -151,6 +152,6 @@ public interface SkillHandler extends DataSaverLifeCycle {
 	 * or there is no constellationn registrered for the given month, 
 	 * or an unknown skill identifier has been detected.
 	 */
-	Constellation loadConstellation(LocalDate month) throws ApplicationException;
+	Collection<Constellation> loadConstellations(LocalDate month) throws ApplicationException;
 
 }

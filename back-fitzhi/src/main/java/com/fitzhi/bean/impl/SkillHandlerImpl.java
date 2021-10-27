@@ -10,6 +10,7 @@ import java.io.File;
 import java.io.FileReader;
 import java.text.MessageFormat;
 import java.time.LocalDate;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -254,12 +255,12 @@ public class SkillHandlerImpl extends AbstractDataSaverLifeCycleImpl implements 
 	}
 
 	@Override
-	public Constellation loadConstellation(LocalDate month) throws ApplicationException {
+	public Collection<Constellation> loadConstellations(LocalDate month) throws ApplicationException {
 		return null;
 	}
 
 	@Override
-	public void saveConstellation(LocalDate month) throws ApplicationException {
+	public void saveConstellations(LocalDate month) throws ApplicationException {
 	}	
 	
 	

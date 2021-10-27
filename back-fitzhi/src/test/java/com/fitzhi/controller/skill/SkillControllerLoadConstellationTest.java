@@ -5,10 +5,9 @@ import static com.fitzhi.Error.CODE_YEAR_MONTH_INVALID;
 import static com.fitzhi.Error.MESSAGE_MONTH_SKILLS_CONSTELLATION_NOFOUND;
 import static org.hamcrest.Matchers.is;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.times;
-import static org.mockito.Mockito.when;
 import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
@@ -67,7 +66,7 @@ public class SkillControllerLoadConstellationTest {
 	public void notfound() throws Exception {
 
 		LocalDate month = LocalDate.of(2020, 12, 1);
-		when(skillHandler.loadConstellation(month)).thenThrow(
+		when(skillHandler.loadConstellations(month)).thenThrow(
 			new NotFoundException(
 				CODE_MONTH_SKILLS_CONSTELLATION_NOFOUND, 
 				MessageFormat.format(MESSAGE_MONTH_SKILLS_CONSTELLATION_NOFOUND, 12, 2020)));
@@ -79,7 +78,7 @@ public class SkillControllerLoadConstellationTest {
 			.andExpect(jsonPath("$.code", is(CODE_MONTH_SKILLS_CONSTELLATION_NOFOUND)))
 			.andDo(print());
 
-		Mockito.verify(skillHandler, times(1)).loadConstellation(month);
+		Mockito.verify(skillHandler, times(1)).loadConstellations(month);
 	}
 
 	/**
@@ -89,14 +88,14 @@ public class SkillControllerLoadConstellationTest {
 	@Test
 	@WithMockUser
 	public void invalidDate() throws Exception {
-		when(skillHandler.loadConstellation(any())).thenReturn(null);
+		when(skillHandler.loadConstellations(any())).thenReturn(null);
 		this.mvc.perform(get("/api/skill/constellation/2020/13")
 			.contentType(MediaType.APPLICATION_JSON_UTF8))
 			.andExpect(status().isInternalServerError())
 			.andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
 			.andExpect(jsonPath("$.code", is(CODE_YEAR_MONTH_INVALID)))
 			.andDo(print());
-		verify(skillHandler, times(0)).loadConstellation(any());
+		verify(skillHandler, times(0)).loadConstellations(any());
 	}
 
 }

@@ -183,9 +183,9 @@ public class SkillController {
 	}
 
 	@ResponseBody
-	@ApiOperation(value = "Load and return the constellation (if any), registered for the given month.")
+	@ApiOperation(value = "Load and return the constellations, if any, registered for the given month.")
 	@GetMapping("/constellation/{year}/{month}")
-	public Constellation loadConstellation(@PathVariable("year") int year, @PathVariable("month") int month) throws ApplicationException {
+	public Collection<Constellation> loadConstellation(@PathVariable("year") int year, @PathVariable("month") int month) throws ApplicationException {
 
 		if (!YearMonthParser.isValid(year, month)) {
 			throw new ApplicationException(
@@ -194,11 +194,11 @@ public class SkillController {
 		}
 		
 		LocalDate date = LocalDate.of(year, month, 1);
-		Constellation constellation = skillHandler.loadConstellation(date);
+		Collection<Constellation> constellations = skillHandler.loadConstellations(date);
 		if (log.isDebugEnabled()) {
 			log.debug(String.format("'/constellation' is returning %d skills in its constellation for %d/%d.", 0, month, year));
 		}
-		return constellation;
+		return constellations;
 	}
 
 }
