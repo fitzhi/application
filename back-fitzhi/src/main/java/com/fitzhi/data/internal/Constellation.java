@@ -2,11 +2,8 @@ package com.fitzhi.data.internal;
 
 import java.io.Serializable;
 
-import javax.validation.constraints.NotNull;
-
 import lombok.AllArgsConstructor;
 import lombok.Data;
-import lombok.RequiredArgsConstructor;
 
 /**
  * <p>
