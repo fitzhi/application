@@ -93,13 +93,6 @@ export class PieProjectsComponent extends BaseDirective implements OnDestroy, On
 	}
 
 	/**
-	 * Removing useless subscriptions.
-	 */
-	ngOnDestroy() {
-		super.ngOnDestroy();
-	}
-
-	/**
 	 * Route the application to the corresponding Project form.
 	 *
 	 * @param id the selected project identifier
@@ -142,6 +135,13 @@ export class PieProjectsComponent extends BaseDirective implements OnDestroy, On
 			console.log ('Project %d is left', id);
 		}
 		document.getElementById('project-' + id).setAttribute('style', 'background-color: ' );
+	}
+
+	/**
+	 * Removing useless subscriptions.
+	 */
+	 ngOnDestroy() {
+		super.ngOnDestroy();
 	}
 
 }
