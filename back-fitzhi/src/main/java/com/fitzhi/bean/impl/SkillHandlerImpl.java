@@ -9,6 +9,7 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
 import java.text.MessageFormat;
+import java.time.LocalDate;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -23,6 +24,7 @@ import javax.validation.constraints.NotNull;
 import com.fitzhi.ApplicationRuntimeException;
 import com.fitzhi.bean.DataHandler;
 import com.fitzhi.bean.SkillHandler;
+import com.fitzhi.data.internal.Constellation;
 import com.fitzhi.data.internal.ProjectSkill;
 import com.fitzhi.data.internal.Skill;
 import com.fitzhi.data.internal.SkillDetectorType;
@@ -249,6 +251,16 @@ public class SkillHandlerImpl extends AbstractDataSaverLifeCycleImpl implements 
 			}
 			throw e;
 		}
+	}
+
+	@Override
+	public Constellation loadConstellation(LocalDate month) throws ApplicationException {
+		return null;
+	}
+
+	@Override
+	public void saveConstellation(LocalDate month) throws ApplicationException {
 	}	
+	
 	
 }

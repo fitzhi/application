@@ -1,5 +1,6 @@
 package com.fitzhi.bean;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -7,6 +8,7 @@ import java.util.Optional;
 import javax.validation.constraints.NotNull;
 
 import com.fitzhi.bean.impl.SkillHandlerImpl;
+import com.fitzhi.data.internal.Constellation;
 import com.fitzhi.data.internal.ProjectSkill;
 import com.fitzhi.data.internal.Skill;
 import com.fitzhi.data.internal.SkillDetectorType;
@@ -126,5 +128,29 @@ public interface SkillHandler extends DataSaverLifeCycle {
 	 * @throws ApplicationException exception thrown if any problem occurs (most probably an IOException)
 	 */
 	boolean checkFilePattern(String filenameDependencies, String rootPath, String sourcePath, String dependency) throws ApplicationException;
+
+	/**
+	 * Save the skills constellation for the given month.
+	 * @param month the saving month
+	 * @throws ApplicationException thrown if any exception occurs during the saving process, most probably an {@link IOException}.
+	 */
+	void saveConstellation(LocalDate month) throws ApplicationException;
+
+	/**
+	 * <p>
+	 * Load the skills constellation for the given month.
+	 * </p>
+	 * <em>
+	 * An internal control is executed to verify
+	 * that each skill-identifier declared in the constellation does still exist effectively. 
+	 * </em>
+	 * @param month the saving month
+	 * @throws ApplicationException thrown if any exception occurs during the saving process, 
+	 * most probably 
+	 * either an {@link IOException}, 
+	 * or there is no constellationn registrered for the given month, 
+	 * or an unknown skill identifier has been detected.
+	 */
+	Constellation loadConstellation(LocalDate month) throws ApplicationException;
 
 }

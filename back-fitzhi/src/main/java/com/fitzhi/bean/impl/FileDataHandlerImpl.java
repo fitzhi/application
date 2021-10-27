@@ -41,6 +41,7 @@ import com.fitzhi.bean.DataHandler;
 import com.fitzhi.bean.ProjectHandler;
 import com.fitzhi.bean.ShuffleService;
 import com.fitzhi.data.internal.Author;
+import com.fitzhi.data.internal.Constellation;
 import com.fitzhi.data.internal.DetectedExperience;
 import com.fitzhi.data.internal.ProjectDetectedExperiences;
 import com.fitzhi.data.internal.Project;
@@ -937,6 +938,21 @@ public class FileDataHandlerImpl implements DataHandler {
 				log.debug (String.format("File %s is skipped. It does not exist.", f.getAbsolutePath()));
 			}
 		}
+	}
+
+	@Override
+	public boolean hasAlreadySavedSkillsConstellations(LocalDate month) throws ApplicationException {
+		return false;
+	}
+
+	@Override
+	public Constellation loadSkillsConstellations(LocalDate month) {
+		return null;
+	}
+
+	@Override
+	public void saveSkillsConstellations(LocalDate month, Constellation constellation) {
+		
 	}
 
 

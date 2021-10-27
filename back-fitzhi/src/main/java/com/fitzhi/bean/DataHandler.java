@@ -1,13 +1,12 @@
-/**
- * 
- */
 package com.fitzhi.bean;
 
 import java.io.IOException;
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Map;
 
 import com.fitzhi.bean.impl.FileDataHandlerImpl.PathsType;
+import com.fitzhi.data.internal.Constellation;
 import com.fitzhi.data.internal.DetectedExperience;
 import com.fitzhi.data.internal.ProjectDetectedExperiences;
 import com.fitzhi.data.internal.Project;
@@ -258,4 +257,28 @@ public interface DataHandler {
 	 * @throws ApplicationException thrown if an exception occurs during the remove process, most probably an IOException.
 	 */
 	void removeCrawlerFiles(Project project) throws ApplicationException;
+
+	/**
+	 * Test if a {@link Constellation constellation} has been already saved for the given month.
+	 * @param month the month
+	 * @return {@code true} if the given month has aleady been saved, {@code false} otherwise.
+	 * @throws ApplicationException thrown if any exception occurs during the test, most probably an {@link IOException}.
+	 */
+	boolean hasAlreadySavedSkillsConstellations(LocalDate month) throws ApplicationException;
+	
+	/**
+	 * Save the skills constellation for the given month.
+	 * @param month the saving month
+	 * @param constellation the given {@link Constellation constellation}
+	 * @throws ApplicationException thrown if any exception occurs during the saving process, most probably an {@link IOException}.
+	 */
+	void saveSkillsConstellations(LocalDate month, Constellation constellation);
+
+	/**
+	 * Load the skills constellation associated with the given month.
+	 * @param month the month to retrieve
+	 * @throws ApplicationException thrown if any exception occurs during the load process, most probably an {@link IOException}.
+	 */
+	Constellation loadSkillsConstellations(LocalDate month);
+
 }
