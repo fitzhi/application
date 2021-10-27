@@ -14,15 +14,21 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
+import java.lang.reflect.Type;
 import java.text.MessageFormat;
 import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
 
 import com.fitzhi.bean.SkillHandler;
 import com.fitzhi.controller.SkillController;
+import com.fitzhi.data.internal.Constellation;
 import com.fitzhi.exception.NotFoundException;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
+import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mockito;
@@ -34,6 +40,9 @@ import org.springframework.http.MediaType;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.MvcResult;
+
+import com.google.gson.reflect.TypeToken;
 
 /**
  * Testing the method {@link SkillController#loadConstellation(int, int)}
@@ -96,6 +105,35 @@ public class SkillControllerLoadConstellationTest {
 			.andExpect(jsonPath("$.code", is(CODE_YEAR_MONTH_INVALID)))
 			.andDo(print());
 		verify(skillHandler, times(0)).loadConstellations(any());
+	}
+
+	/**
+	 * We test the nominal mode.
+	 * @throws Exception
+	 */
+	@Test
+	@WithMockUser
+	public void nominal() throws Exception {
+
+		List<Constellation> constellations = new ArrayList<>();
+		constellations.add( Constellation.of(1, 10));
+		constellations.add( Constellation.of(2, 21));
+		when(skillHandler.loadConstellations(LocalDate.of(2021,10,1))).thenReturn(constellations);
+
+		MvcResult result = this.mvc.perform(get("/api/skill/constellation/2021/10")
+			.contentType(MediaType.APPLICATION_JSON_UTF8))
+			.andExpect(status().isOk())
+			.andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
+			.andDo(print())
+			.andReturn();
+
+		Type listConstellationsType = new TypeToken<List<Constellation>>() {
+		}.getType();
+
+		Collection<Constellation> res = gson.fromJson(result.getResponse().getContentAsString(), listConstellationsType);
+		Assert.assertEquals(2, res.size());
+
+		verify(skillHandler, times(1)).loadConstellations(LocalDate.of(2021,10,1));
 	}
 
 }

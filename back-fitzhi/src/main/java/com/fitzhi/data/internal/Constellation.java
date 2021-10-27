@@ -2,7 +2,11 @@ package com.fitzhi.data.internal;
 
 import java.io.Serializable;
 
+import javax.validation.constraints.NotNull;
+
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.RequiredArgsConstructor;
 
 /**
  * <p>
@@ -17,6 +21,17 @@ import lombok.Data;
  * Every month, a constellation will be saved in Fitzhì.
  * </p>
  */
+@AllArgsConstructor(staticName = "of")
 public @Data class Constellation implements Serializable {
+
+    /**
+     * Identifier of the skill corresponding to the constellation.
+     */
+    int idSkill;
+
+    /**
+     * Number of stars counted for this skill.
+     */
+    private int starsNumber;
     
 }
