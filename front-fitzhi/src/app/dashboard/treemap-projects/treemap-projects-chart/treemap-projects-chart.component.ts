@@ -25,7 +25,7 @@ export class TreemapProjectsChartComponent extends BaseDirective implements OnIn
 
 	gradient = false;
 
-	animations = true;
+	animations = false;
 
 	colorScheme = {
 		domain: []
@@ -91,6 +91,10 @@ export class TreemapProjectsChartComponent extends BaseDirective implements OnIn
 
 	labelFormatting(tile) {
 		return `<p>${(tile.label)}</p>`;
+	}
+
+	public valueFormatting(value) {
+		return value.toLocaleString() + ' lines'; // <p style="display: none"></p>`; // value + 'lines'; // `<p>${(tile.label)}</p>`;
 	}
 
 	ngOnDestroy() {
