@@ -776,7 +776,6 @@ public class FileDataHandlerImpl implements DataHandler {
 			log.debug(String.format("filename %s", filename));
 		}
 		Path path = rootLocation.resolve(filename);
-		System.out.println(path.toAbsolutePath());
 		return Files.exists(path);
 	}
 

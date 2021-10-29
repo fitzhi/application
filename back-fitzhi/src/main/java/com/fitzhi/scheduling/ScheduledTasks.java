@@ -1,10 +1,13 @@
 package com.fitzhi.scheduling;
 
+import java.time.LocalDate;
 import java.util.Calendar;
 
 import com.fitzhi.Global;
 import com.fitzhi.bean.AsyncTask;
+import com.fitzhi.bean.DataHandler;
 import com.fitzhi.bean.ProjectHandler;
+import com.fitzhi.bean.StaffHandler;
 import com.fitzhi.source.crawler.BatchRepositoryCrawler;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -40,6 +43,12 @@ public class ScheduledTasks {
 	ProjectHandler projectHandler;
 
 	@Autowired
+	StaffHandler staffHandler;
+
+	@Autowired
+	DataHandler dataHandler;
+
+	@Autowired
 	AsyncTask asyncTask;
 
 	/**
@@ -70,6 +79,32 @@ public class ScheduledTasks {
 			projectHandler.updateStaffSkillLevel(projectHandler.processGlobalExperiences());
 			if (log.isInfoEnabled()) {
 				log.info("Peacefully terminate the experiences detection.");
+			}
+		} catch (Exception e) {
+			log.error(e.getMessage(), e);
+		}
+	}
+
+	/**
+	 * <p>
+	 * <strong>MONTHLY</strong> generation of the skills constellations.
+	 * </p>
+	 * This method is daily invoked to ensure that this generation is effectively processed,
+	 * but the generation will be processed only once per month.
+	 */
+	@Scheduled(cron = "${cron.constellations.generation}")
+	public void constellationsGeneration() {
+		try {
+			LocalDate month = LocalDate.now();
+			if (!dataHandler.hasAlreadySavedSkillsConstellations(month)) {
+				if (log.isInfoEnabled()) {
+					log.info(String.format("Starting the generation of the constellations for month %d/%d.", 
+						month.getMonthValue(), month.getYear()));
+				}
+				staffHandler.saveCurrentConstellations();
+				if (log.isInfoEnabled()) {
+					log.info("Peacefully terminate the generation of the constellations.");
+				}
 			}
 		} catch (Exception e) {
 			log.error(e.getMessage(), e);
