@@ -21,8 +21,11 @@ div.button-direction:hover em {
 	color: var(--color-selected);
 }
 
-div.button-direction em {
+div.button-direction-disable em, div.button-direction-disable:hover em {
+	color: var(--color-disable);
+}
+
+div.button-direction em, div.button-direction-disable em {
 	line-height: 70px;
 	font-size: 50px;
 }
-

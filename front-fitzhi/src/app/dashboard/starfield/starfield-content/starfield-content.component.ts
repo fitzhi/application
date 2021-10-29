@@ -1,6 +1,7 @@
 import { ChangeDetectorRef, Component, OnDestroy, OnInit } from '@angular/core';
 import { BaseDirective } from 'src/app/base/base-directive.directive';
 import { Skill } from 'src/app/data/skill';
+import { traceOn } from 'src/app/global';
 import { SkillService } from 'src/app/skill/service/skill.service';
 import { Star } from '../data/star';
 import { StarfieldService } from '../service/starfield.service';
@@ -46,6 +47,9 @@ export class StarfieldContentComponent extends BaseDirective implements OnInit, 
 				next: constellations => this.starfieldService.assembleTheStars(constellations)
 			})
 		);
+		if (traceOn()) {
+			console.log ('Actual month display %d/%d', this.starfieldService.selectedMonth.month, this.starfieldService.selectedMonth.year);
+		}
 	}
 
 	/**

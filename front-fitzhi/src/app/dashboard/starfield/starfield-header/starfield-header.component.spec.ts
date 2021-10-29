@@ -8,8 +8,8 @@ import { FileService } from 'src/app/service/file.service';
 import { StaffService } from 'src/app/tabs-staff/service/staff.service';
 import { Star } from '../data/star';
 import { StarfieldService } from '../service/starfield.service';
-
 import { StarfieldHeaderComponent } from './starfield-header.component';
+
 
 describe('StarfieldHeaderComponent', () => {
 	let component: StarfieldHeaderComponent;
@@ -58,5 +58,22 @@ describe('StarfieldHeaderComponent', () => {
 		expect(spy1).toHaveBeenCalled();
 		expect(spy2).toHaveBeenCalled();
 	}));
+
+	it('should have the buttons "next" and "previous" disabled by default.', () => {
+		expect(document.getElementById('btPrevious').classList.value).toBe('px-2 button-direction-disable');
+		expect(document.getElementById('btNext').classList.value).toBe('px-2 button-direction-disable');
+	});
+
+	it('should activate the buttons "next" and "previous".', done => {
+		expect(document.getElementById('btPrevious').classList.value).toBe('px-2 button-direction-disable');
+		expect(document.getElementById('btNext').classList.value).toBe('px-2 button-direction-disable');
+		starfieldService.switchActiveStateNext(true);
+		fixture.detectChanges();
+		expect(document.getElementById('btNext').classList.value).toBe('px-2 button-direction');
+		starfieldService.switchActiveStatePrevious(true);
+		fixture.detectChanges();
+		expect(document.getElementById('btPrevious').classList.value).toBe('px-2 button-direction');
+		done();
+	});
 
 });

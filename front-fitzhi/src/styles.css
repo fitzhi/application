@@ -12,6 +12,7 @@
 	--color-error: darkred;
 	--color-warning: orange;
 	--color-help: lightYellow;
+	--color-disable: grey;
 	
 	/* Height of the top toolbar */
 	--toolbar-height: 65px;

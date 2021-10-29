@@ -11,6 +11,7 @@ import * as _ from 'lodash';
 import { traceOn } from 'src/app/global';
 import { ReferentialService } from '../referential/referential.service';
 import { DashboardColor } from './dashboard-color';
+import { DashboardConstants } from './dashboard-constants';
 
 /**
  * This service is in charge of the calculation for global staff & skill analysis.
@@ -19,8 +20,6 @@ import { DashboardColor } from './dashboard-color';
 	providedIn: 'root'
 })
 export class DashboardService {
-
-	static MAX_NUMBER_SKILLS_IN_DIAGRAM = 10;
 
 	constructor(
 		private skillService: SkillService,
@@ -126,10 +125,10 @@ export class DashboardService {
 	 */
 	aggregateRestOfData(entries: SkillProjectsAggregation[]): SkillProjectsAggregation[] {
 
-		const cumulIndex = DashboardService.MAX_NUMBER_SKILLS_IN_DIAGRAM - 1;
+		const cumulIndex = DashboardConstants.MAX_NUMBER_SKILLS_IN_DIAGRAM - 1;
 
 		// Below the limit, we return the input array without aggregation
-		if (entries.length <= DashboardService.MAX_NUMBER_SKILLS_IN_DIAGRAM) {
+		if (entries.length <= DashboardConstants.MAX_NUMBER_SKILLS_IN_DIAGRAM) {
 			return entries;
 		}
 
@@ -137,11 +136,11 @@ export class DashboardService {
 		// We limit the number of areas to MAX_NUMBER_SKILLS_IN_DIAGRAM.
 		// Therefore, we aggregate all the smallest 'sumNumberOfFiles' to this tenth record
 		//
-		for (let ind = DashboardService.MAX_NUMBER_SKILLS_IN_DIAGRAM; ind < entries.length; ind++) {
+		for (let ind = DashboardConstants.MAX_NUMBER_SKILLS_IN_DIAGRAM; ind < entries.length; ind++) {
 			entries[cumulIndex].sumNumberOfFiles += entries[ind].sumNumberOfFiles;
 			entries[cumulIndex].sumTotalFilesSize += entries[ind].sumTotalFilesSize;
 		}
-		entries.splice(DashboardService.MAX_NUMBER_SKILLS_IN_DIAGRAM, entries.length - DashboardService.MAX_NUMBER_SKILLS_IN_DIAGRAM);
+		entries.splice(DashboardConstants.MAX_NUMBER_SKILLS_IN_DIAGRAM, entries.length - DashboardConstants.MAX_NUMBER_SKILLS_IN_DIAGRAM);
 		return entries;
 	}
 

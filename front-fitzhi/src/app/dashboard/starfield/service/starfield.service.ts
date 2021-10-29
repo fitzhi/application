@@ -10,6 +10,7 @@ import { StaffService } from 'src/app/tabs-staff/service/staff.service';
 import { Constellation } from '../data/constellation';
 import { Star } from '../data/star';
 import { StarfieldFilter } from '../data/starfield-filter';
+import { StarfieldMonth } from '../data/starfield-month';
 
 @Injectable({
 	providedIn: 'root'
@@ -30,6 +31,26 @@ export class StarfieldService {
 	 * The serie of stars (<span>&#x2605;</span>) to be assembled in the catterpilar .
 	 */
 	public stars$ = this.starsSubject$.asObservable();
+
+	/**
+	 * Selected month displayed on the starfield.
+	 * Default value is the current month.
+	 */
+	public selectedMonth = new StarfieldMonth(new Date().getMonth(), new Date().getFullYear());
+
+	private nextSubject$ = new BehaviorSubject<boolean>(false);
+
+	/**
+	 * This observable reflects the fact that the button "next" should be active or not.
+	 */
+	public next$ = this.nextSubject$.asObservable();
+
+	private previousSubject$ = new BehaviorSubject<boolean>(false);
+
+	/**
+	 * This observable reflects the fact that the button "next" should be active or not.
+	 */
+	public previous$ = this.previousSubject$.asObservable();
 
 	/**
 	 * Actual filters chosen by the end user for the starfield component.
@@ -145,6 +166,9 @@ export class StarfieldService {
 		return constellations;
 	}
 
+	private nextMonth() {
+
+	}
 	/**
 	 * Switch the visibility of the Help panel. If the panel is hidden, it will be shown.
 	 * Otherwise, if visible, the help panel will be hidden.
@@ -155,5 +179,21 @@ export class StarfieldService {
 		}
 		this.helpPanelVisible = !this.helpPanelVisible;
 		this.helpPanelVisibleSubject$.next (this.helpPanelVisible);
+	}
+
+	/**
+	 * switch the state of the next button.
+	 * @param state the new state for the **NEXT** button
+	 */
+	switchActiveStateNext(state: boolean) {
+		this.nextSubject$.next(state);
+	}
+
+	/**
+	 * switch the state of the previous button.
+	 * @param state the new state for the **PREVIOUS** button
+	 */
+	 switchActiveStatePrevious(state: boolean) {
+		this.previousSubject$.next(state);
 	}
 }
