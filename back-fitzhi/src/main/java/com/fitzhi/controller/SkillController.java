@@ -1,21 +1,16 @@
 package com.fitzhi.controller;
 
 import static com.fitzhi.Error.CODE_SKILL_NOFOUND;
-import static com.fitzhi.Error.CODE_YEAR_MONTH_INVALID;
 import static com.fitzhi.Error.MESSAGE_SKILL_NOFOUND;
-import static com.fitzhi.Error.MESSAGE_YEAR_MONTH_INVALID;
 
 import java.io.IOException;
 import java.text.MessageFormat;
-import java.time.LocalDate;
 import java.util.Collection;
 import java.util.Map;
 import java.util.Optional;
 
 import com.fitzhi.ApplicationRuntimeException;
 import com.fitzhi.bean.SkillHandler;
-import com.fitzhi.controller.util.YearMonthParser;
-import com.fitzhi.data.internal.Constellation;
 import com.fitzhi.data.internal.Skill;
 import com.fitzhi.exception.ApplicationException;
 import com.fitzhi.exception.NotFoundException;
@@ -180,25 +175,6 @@ public class SkillController {
 	public Map<Integer, String> detectionTemplate() throws ApplicationException {
 		Map<Integer, String> mapDetectionTemplates = this.skillHandler.detectorTypes();
 		return mapDetectionTemplates;
-	}
-
-	@ResponseBody
-	@ApiOperation(value = "Load and return the constellations, if any, registered for the given month.")
-	@GetMapping("/constellation/{year}/{month}")
-	public Collection<Constellation> loadConstellation(@PathVariable("year") int year, @PathVariable("month") int month) throws ApplicationException {
-
-		if (!YearMonthParser.isValid(year, month)) {
-			throw new ApplicationException(
-				CODE_YEAR_MONTH_INVALID,
-				MessageFormat.format(MESSAGE_YEAR_MONTH_INVALID, year, month));
-		}
-		
-		LocalDate date = LocalDate.of(year, month, 1);
-		Collection<Constellation> constellations = skillHandler.loadConstellations(date);
-		if (log.isDebugEnabled()) {
-			log.debug(String.format("'/constellation' is returning %d skills in its constellation for %d/%d.", 0, month, year));
-		}
-		return constellations;
 	}
 
 }

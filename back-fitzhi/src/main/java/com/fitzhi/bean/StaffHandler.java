@@ -1,5 +1,7 @@
 package com.fitzhi.bean;
 
+import java.time.LocalDate;
+import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -19,6 +21,7 @@ import com.fitzhi.data.source.Contributor;
 import com.fitzhi.exception.ApplicationException;
 import com.fitzhi.exception.NotFoundException;
 import com.fitzhi.data.internal.Author;
+import com.fitzhi.data.internal.Constellation;
 
 /**
  * Interface in charge of handling the staff collection.
@@ -449,5 +452,28 @@ public interface StaffHandler extends DataSaverLifeCycle {
 	 * @throws ApplicationException thrown if any problem occurs.
 	 */
 	void updateSkillSystemLevel(int idStaff, int idSkill, int level) throws ApplicationException;
+
+	/**
+	 * Save the skills constellations for the current date.
+	 * @throws ApplicationException thrown if any exception occurs during the saving process, most probably an {@link IOException}.
+	 */
+	void saveCurrentConstellations() throws ApplicationException;
+
+	/**
+	 * <p>
+	 * Load the skills constellations for the given month.
+	 * </p>
+	 * <em>
+	 * An internal control is executed to verify
+	 * that each skill-identifier declared in the constellation does still exist effectively. 
+	 * </em>
+	 * @param month the saving month
+	 * @throws ApplicationException thrown if any exception occurs during the saving process, 
+	 * most probably 
+	 * either an {@link IOException}, 
+	 * or there is no constellationn registrered for the given month, 
+	 * or an unknown skill identifier has been detected.
+	 */
+	Collection<Constellation> loadConstellations(LocalDate month) throws ApplicationException;
 
 }

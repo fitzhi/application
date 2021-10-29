@@ -6,6 +6,8 @@ import static com.fitzhi.Error.CODE_STAFF_NOFOUND;
 import static com.fitzhi.Error.MESSAGE_PROJECT_NOFOUND;
 import static com.fitzhi.Error.MESSAGE_STAFF_ACTIVE_ON_PROJECT;
 import static com.fitzhi.Error.MESSAGE_STAFF_NOFOUND;
+import static com.fitzhi.Error.CODE_YEAR_MONTH_INVALID;
+import static com.fitzhi.Error.MESSAGE_YEAR_MONTH_INVALID;
 
 import java.text.MessageFormat;
 import java.time.LocalDate;
@@ -25,7 +27,9 @@ import com.fitzhi.bean.ProjectHandler;
 import com.fitzhi.bean.ShuffleService;
 import com.fitzhi.bean.SkillHandler;
 import com.fitzhi.bean.StaffHandler;
+import com.fitzhi.controller.util.YearMonthParser;
 import com.fitzhi.data.external.StaffResume;
+import com.fitzhi.data.internal.Constellation;
 import com.fitzhi.data.internal.Experience;
 import com.fitzhi.data.internal.Mission;
 import com.fitzhi.data.internal.PeopleCountExperienceMap;
@@ -629,4 +633,25 @@ public class StaffController {
 
 		return true;
 	}
+
+	@ResponseBody
+	@ApiOperation(value = "Load and return the constellations, if any, registered for the given month.")
+	@GetMapping("/constellation/{year}/{month}")
+	public Collection<Constellation> loadConstellation(@PathVariable("year") int year, @PathVariable("month") int month) throws ApplicationException {
+
+		if (!YearMonthParser.isValid(year, month)) {
+			throw new ApplicationException(
+				CODE_YEAR_MONTH_INVALID,
+				MessageFormat.format(MESSAGE_YEAR_MONTH_INVALID, year, month));
+		}
+		
+		LocalDate date = LocalDate.of(year, month, 1);
+		Collection<Constellation> constellations = staffHandler.loadConstellations(date);
+		if (log.isDebugEnabled()) {
+			log.debug(String.format("'/constellation' is returning %d skills in its constellation for %d/%d.", 0, month, year));
+		}
+		return constellations;
+	}
+
+
 }

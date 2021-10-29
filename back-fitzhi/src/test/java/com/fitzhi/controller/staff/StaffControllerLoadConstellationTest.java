@@ -1,4 +1,4 @@
-package com.fitzhi.controller.skill;
+package com.fitzhi.controller.staff;
 
 import static com.fitzhi.Error.CODE_MONTH_SKILLS_CONSTELLATION_NOFOUND;
 import static com.fitzhi.Error.CODE_YEAR_MONTH_INVALID;
@@ -21,12 +21,13 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
-import com.fitzhi.bean.SkillHandler;
+import com.fitzhi.bean.StaffHandler;
 import com.fitzhi.controller.SkillController;
 import com.fitzhi.data.internal.Constellation;
 import com.fitzhi.exception.NotFoundException;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.google.gson.reflect.TypeToken;
 
 import org.junit.Assert;
 import org.junit.Test;
@@ -42,8 +43,6 @@ import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 
-import com.google.gson.reflect.TypeToken;
-
 /**
  * Testing the method {@link SkillController#loadConstellation(int, int)}
  * 
@@ -53,13 +52,13 @@ import com.google.gson.reflect.TypeToken;
 @RunWith(SpringRunner.class)
 @SpringBootTest
 @AutoConfigureMockMvc
-public class SkillControllerLoadConstellationTest {
+public class StaffControllerLoadConstellationTest {
 
 	@Autowired
 	private MockMvc mvc;
 
 	@MockBean
-	private SkillHandler skillHandler;
+	private StaffHandler staffHandler;
 
 	/**
 	 * Initialization of the Google JSON parser.
@@ -75,19 +74,19 @@ public class SkillControllerLoadConstellationTest {
 	public void notfound() throws Exception {
 
 		LocalDate month = LocalDate.of(2020, 12, 1);
-		when(skillHandler.loadConstellations(month)).thenThrow(
+		when(staffHandler.loadConstellations(month)).thenThrow(
 			new NotFoundException(
 				CODE_MONTH_SKILLS_CONSTELLATION_NOFOUND, 
 				MessageFormat.format(MESSAGE_MONTH_SKILLS_CONSTELLATION_NOFOUND, 12, 2020)));
 
-		this.mvc.perform(get("/api/skill/constellation/2020/12")
+		this.mvc.perform(get("/api/staff/constellation/2020/12")
 			.contentType(MediaType.APPLICATION_JSON_UTF8))
 			.andExpect(status().isNotFound())
 			.andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
 			.andExpect(jsonPath("$.code", is(CODE_MONTH_SKILLS_CONSTELLATION_NOFOUND)))
 			.andDo(print());
 
-		Mockito.verify(skillHandler, times(1)).loadConstellations(month);
+		Mockito.verify(staffHandler, times(1)).loadConstellations(month);
 	}
 
 	/**
@@ -97,14 +96,14 @@ public class SkillControllerLoadConstellationTest {
 	@Test
 	@WithMockUser
 	public void invalidDate() throws Exception {
-		when(skillHandler.loadConstellations(any())).thenReturn(null);
-		this.mvc.perform(get("/api/skill/constellation/2020/13")
+		when(staffHandler.loadConstellations(any())).thenReturn(null);
+		this.mvc.perform(get("/api/staff/constellation/2020/13")
 			.contentType(MediaType.APPLICATION_JSON_UTF8))
 			.andExpect(status().isInternalServerError())
 			.andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
 			.andExpect(jsonPath("$.code", is(CODE_YEAR_MONTH_INVALID)))
 			.andDo(print());
-		verify(skillHandler, times(0)).loadConstellations(any());
+		verify(staffHandler, times(0)).loadConstellations(any());
 	}
 
 	/**
@@ -116,11 +115,11 @@ public class SkillControllerLoadConstellationTest {
 	public void nominal() throws Exception {
 
 		List<Constellation> constellations = new ArrayList<>();
-		constellations.add( Constellation.of(1, 10));
-		constellations.add( Constellation.of(2, 21));
-		when(skillHandler.loadConstellations(LocalDate.of(2021,10,1))).thenReturn(constellations);
+		constellations.add( Constellation.of(1, 10, 10));
+		constellations.add( Constellation.of(2, 21, 21));
+		when(staffHandler.loadConstellations(LocalDate.of(2021,10,1))).thenReturn(constellations);
 
-		MvcResult result = this.mvc.perform(get("/api/skill/constellation/2021/10")
+		MvcResult result = this.mvc.perform(get("/api/staff/constellation/2021/10")
 			.contentType(MediaType.APPLICATION_JSON_UTF8))
 			.andExpect(status().isOk())
 			.andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
@@ -133,7 +132,7 @@ public class SkillControllerLoadConstellationTest {
 		Collection<Constellation> res = gson.fromJson(result.getResponse().getContentAsString(), listConstellationsType);
 		Assert.assertEquals(2, res.size());
 
-		verify(skillHandler, times(1)).loadConstellations(LocalDate.of(2021,10,1));
+		verify(staffHandler, times(1)).loadConstellations(LocalDate.of(2021,10,1));
 	}
 
 }

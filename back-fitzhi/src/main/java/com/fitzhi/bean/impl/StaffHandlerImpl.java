@@ -29,6 +29,7 @@ import com.fitzhi.Error;
 import com.fitzhi.bean.DataHandler;
 import com.fitzhi.bean.StaffHandler;
 import com.fitzhi.data.internal.Author;
+import com.fitzhi.data.internal.Constellation;
 import com.fitzhi.data.internal.Experience;
 import com.fitzhi.data.internal.Mission;
 import com.fitzhi.data.internal.PeopleCountExperienceMap;
@@ -940,6 +941,18 @@ public class StaffHandlerImpl extends AbstractDataSaverLifeCycleImpl implements 
 				staff.getExperiences().add(new Experience(idSkill, level, level));
 			}
 			this.dataUpdated = true;
+		}
+	}
+	
+	@Override
+	public Collection<Constellation> loadConstellations(LocalDate month) throws ApplicationException {
+		return null;
+	}
+
+	@Override
+	public void saveCurrentConstellations() throws ApplicationException {
+		if (!dataSaver.hasAlreadySavedSkillsConstellations(LocalDate.now())) {
+
 		}
 	}
 

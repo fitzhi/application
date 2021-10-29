@@ -5,7 +5,7 @@ import java.io.Serializable;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 
-/**
+/** FRVI8611
  * <p>
  * This object is called &laquo; <strong>Constellation</strong> &raquo; 
  * because its representation on the Angular front-end is a serie of &#x2605; stars.
@@ -21,14 +21,18 @@ import lombok.Data;
 @AllArgsConstructor(staticName = "of")
 public @Data class Constellation implements Serializable {
 
-    /**
-     * Identifier of the skill corresponding to the constellation.
-     */
-    int idSkill;
+	/**
+	 * Identifier of the skill corresponding to the constellation.
+	 */
+	int idSkill;
 
-    /**
-     * Number of stars counted for this skill.
-     */
-    private int starsNumber;
-    
+	/**
+	 * Number of internal stars counted for this skill.
+	 */
+	private int starsNumber;
+	
+	/**
+	 * Number of internal AND EXTERNAL stars counted for this skill.
+	 */
+	private int starsNumberWithExternal;
 }
