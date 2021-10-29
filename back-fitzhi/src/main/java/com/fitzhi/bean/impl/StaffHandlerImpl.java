@@ -13,6 +13,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Comparator;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.NoSuchElementException;
@@ -951,8 +952,29 @@ public class StaffHandlerImpl extends AbstractDataSaverLifeCycleImpl implements 
 
 	@Override
 	public void saveCurrentConstellations() throws ApplicationException {
-		if (!dataSaver.hasAlreadySavedSkillsConstellations(LocalDate.now())) {
-
+		LocalDate currentMonth = LocalDate.of(LocalDate.now().getYear(), LocalDate.now().getMonth(), 1);
+		if (!dataSaver.hasAlreadySavedSkillsConstellations(currentMonth)) {
+			Map<Integer, Constellation> constellations = new HashMap<>();
+			for (Staff staff : getStaff().values()) {
+				if (!staff.isActive()) {
+					continue;
+				}
+				for (Experience experience : staff.getExperiences()) {
+					Constellation constellation = constellations.get(experience.getId());
+					if (constellation == null) {
+						constellations.put(
+							experience.getId(),
+							Constellation.of(
+								experience.getId(), 
+								(staff.isExternal() ? 0 : experience.getLevel()), 
+								experience.getLevel()));
+					} else {
+						constellation.setStarsNumber(constellation.getStarsNumber() + (staff.isExternal() ? 0 : experience.getLevel()));
+						constellation.setStarsNumberWithExternal(constellation.getStarsNumberWithExternal() + experience.getLevel());
+					}
+				}
+			}
+			dataSaver.saveSkillsConstellations(currentMonth, List.copyOf(constellations.values()));
 		}
 	}
 

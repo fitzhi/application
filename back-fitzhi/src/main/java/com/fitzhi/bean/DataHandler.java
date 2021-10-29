@@ -8,9 +8,9 @@ import java.util.Map;
 import com.fitzhi.bean.impl.FileDataHandlerImpl.PathsType;
 import com.fitzhi.data.internal.Constellation;
 import com.fitzhi.data.internal.DetectedExperience;
-import com.fitzhi.data.internal.ProjectDetectedExperiences;
 import com.fitzhi.data.internal.Project;
 import com.fitzhi.data.internal.ProjectBuilding;
+import com.fitzhi.data.internal.ProjectDetectedExperiences;
 import com.fitzhi.data.internal.ProjectLayers;
 import com.fitzhi.data.internal.RepositoryAnalysis;
 import com.fitzhi.data.internal.Skill;
@@ -267,18 +267,19 @@ public interface DataHandler {
 	boolean hasAlreadySavedSkillsConstellations(LocalDate month) throws ApplicationException;
 	
 	/**
-	 * Save the skills constellation for the given month.
+	 * Save the skills constellations for the given month.
 	 * @param month the saving month
-	 * @param constellation the given {@link Constellation constellation}
+	 * @param constellations the given list of {@link Constellation constellations}
 	 * @throws ApplicationException thrown if any exception occurs during the saving process, most probably an {@link IOException}.
 	 */
-	void saveSkillsConstellations(LocalDate month, Constellation constellation);
+	void saveSkillsConstellations(LocalDate month, List<Constellation> constellations);
 
 	/**
-	 * Load the skills constellation associated with the given month.
-	 * @param month the month to retrieve
+	 * Load the skills constellations associated with the given month.
+	 * @param month the month to retrieve in the history
+	 * @return the retrieved list of {@link Constellation constellations}.
 	 * @throws ApplicationException thrown if any exception occurs during the load process, most probably an {@link IOException}.
 	 */
-	Constellation loadSkillsConstellations(LocalDate month);
+	List<Constellation> loadSkillsConstellations(LocalDate month);
 
 }

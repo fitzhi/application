@@ -43,10 +43,10 @@ import com.fitzhi.bean.ShuffleService;
 import com.fitzhi.data.internal.Author;
 import com.fitzhi.data.internal.Constellation;
 import com.fitzhi.data.internal.DetectedExperience;
-import com.fitzhi.data.internal.ProjectDetectedExperiences;
 import com.fitzhi.data.internal.Project;
 import com.fitzhi.data.internal.ProjectBuilding;
 import com.fitzhi.data.internal.ProjectBuilding.YearWeek;
+import com.fitzhi.data.internal.ProjectDetectedExperiences;
 import com.fitzhi.data.internal.ProjectFloor;
 import com.fitzhi.data.internal.ProjectLayer;
 import com.fitzhi.data.internal.ProjectLayers;
@@ -946,12 +946,12 @@ public class FileDataHandlerImpl implements DataHandler {
 	}
 
 	@Override
-	public Constellation loadSkillsConstellations(LocalDate month) {
+	public List<Constellation> loadSkillsConstellations(LocalDate month) {
 		return null;
 	}
 
 	@Override
-	public void saveSkillsConstellations(LocalDate month, Constellation constellation) {
+	public void saveSkillsConstellations(LocalDate month, List<Constellation> constellations) {
 		
 	}
 
