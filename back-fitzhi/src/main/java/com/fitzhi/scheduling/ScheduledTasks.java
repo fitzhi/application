@@ -20,7 +20,8 @@ import lombok.extern.slf4j.Slf4j;
 
 /**
  * This class is a scheduler in charge of the execution of the global code analysis in batch mode.
- * This scheduler is configured with the cron settings {@code cron.code.analysis} declared in the {@code application.properties} file. 
+ * This scheduler is configured with the cron settings {@code cron.code.analysis}, {@code cron.experiences.detection} and
+ * {@code cron.constellations.generation} declared in the {@code application.properties} file. 
  */
 @EnableScheduling
 @Slf4j
