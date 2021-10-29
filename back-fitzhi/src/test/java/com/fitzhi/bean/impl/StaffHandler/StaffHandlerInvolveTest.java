@@ -48,10 +48,11 @@ public class StaffHandlerInvolveTest {
 	@Test
 	public void addMission() throws ApplicationException {
 		Map<Integer, Staff> staffs = new HashMap<>();
-		staffs.put(1802, 
-			new Staff(1902, "Napoleon", "Bonaparte", "l'emprereur", "l'empereur", "noemail", "Big level"));
-   
+		Staff st = new Staff(1802, "Napoleon", "Bonaparte", "l'emprereur", "l'empereur", "noemail", "Big level");
+		staffs.put(1802, st);
 		when(dataHandler.loadStaff()).thenReturn(staffs);
+		staffHandler.getStaff().put(1802, st);
+
 		Project project = new Project(1789, "The revolutionary project");
 		List<Contributor> contributors = new ArrayList<>();
 		contributors.add(new Contributor(1802, LocalDate.of(1802, 12, 1), LocalDate.of(1802, 12, 2), 2, 5));
@@ -66,8 +67,9 @@ public class StaffHandlerInvolveTest {
 	@Test
 	public void updateMission() throws ApplicationException {
 		Map<Integer, Staff> staffs = new HashMap<>();
-		staffs.put(1802, 
-			new Staff(1902, "Napoleon", "Bonaparte", "l'emprereur", "l'empereur", "noemail", "Big level"));
+		Staff st = new Staff(1802, "Napoleon", "Bonaparte", "l'emprereur", "l'empereur", "noemail", "Big level");
+		staffs.put(1802, st);
+		staffHandler.getStaff().put(1802, st);
    
 		when(dataHandler.loadStaff()).thenReturn(staffs);
 		Project project = new Project(1789, "The revolutionary project");
