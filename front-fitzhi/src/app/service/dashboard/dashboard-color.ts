@@ -1,4 +1,4 @@
-import { DashboardService } from "./dashboard.service";
+import { DashboardService } from './dashboard.service';
 
 export class DashboardColor {
 
@@ -17,7 +17,7 @@ export class DashboardColor {
 		return (s.length === 1) ? '0' + s : s;
 	}
 
-    public static rgb (index: number, scale = DashboardService.MAX_NUMBER_SKILLS_IN_DIAGRAM) {
-        return '#' + DashboardColor.red(index, scale) + DashboardColor.green(index, scale) + DashboardColor.blue(index, scale);
-    }
+	public static rgb (index: number, scale = DashboardService.MAX_NUMBER_SKILLS_IN_DIAGRAM) {
+		return '#' + DashboardColor.red(index, scale) + DashboardColor.green(index, scale) + DashboardColor.blue(index, scale);
+	}
 }

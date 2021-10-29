@@ -57,9 +57,9 @@ export class TableProjectsFilterComponent extends BaseDirective implements OnIni
 							.filter(prj => prj.active)
 							.filter(prj => this.projectService.hasBeenEvaluated(prj))
 							.map(prj => new FilteredProject(true, prj.id, prj.name))
-							.forEach(fp => { 
+							.forEach(fp => {
 								fp.selected = this.treemapProjectsService.isSelected(fp.id);
-								projects.push(fp)
+								projects.push(fp);
 							});
 						this.dataSource = new FilteredProjectsDataSource(projects);
 					}

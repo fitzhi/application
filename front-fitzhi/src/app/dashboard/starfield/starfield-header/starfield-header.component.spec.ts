@@ -35,7 +35,7 @@ describe('StarfieldHeaderComponent', () => {
 	it('should be correctly created.', () => {
 		expect(component).toBeTruthy();
 	});
-	
+
 	it('should take in account every new version of the array of stars.', done => {
 		expect(document.getElementById('numberOfStars').innerText).toBe('0');
 		const stars = [];

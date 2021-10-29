@@ -72,14 +72,14 @@ describe('TableProjectsFilterComponent', () => {
 	it('should inform the parent container with the selected projects.', fakeAsync(() => {
 		fixture.detectChanges();
 		const spy = spyOn(treemapProjectsService, 'informSelectedProjects');
-		
+
 		// We deselect all projects.
 		fixture.debugElement.query(By.css('#name--1')).nativeElement.click();
 		tick();
 		(<jasmine.Spy>treemapProjectsService.informSelectedProjects).and.returnValue([]);
 		fixture.detectChanges();
 		expect(spy).toHaveBeenCalled();
-		
+
 		// We select 2 projects.
 		(<jasmine.Spy>treemapProjectsService.informSelectedProjects).and.returnValue([3, 7]);
 		fixture.debugElement.query(By.css('#name-3')).nativeElement.click();
@@ -87,7 +87,7 @@ describe('TableProjectsFilterComponent', () => {
 		tick();
 		fixture.detectChanges();
 		expect(spy).toHaveBeenCalled();
-		
+
 		// We verify that the 2 projects have been emitted to the parent container.
 	}));
 

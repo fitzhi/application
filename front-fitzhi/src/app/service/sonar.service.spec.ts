@@ -220,7 +220,7 @@ describe('SonarService', () => {
 
 	it('tests the pair user/password to check the user authorization.', () => {
 		const service: SonarService = TestBed.inject(SonarService);
-		const sonarServer = new SonarServer("1.0", "urlSonar", true, "frvidal", "nope");
+		const sonarServer = new SonarServer('1.0', 'urlSonar', true, 'frvidal', 'nope');
 		const headers = service.sonarHeaders(sonarServer);
 		expect(headers.get('Authorization')).not.toBeNull();
 		expect(headers.get('Authorization')).toBe('Basic ' + btoa('frvidal:nope'));
@@ -228,17 +228,17 @@ describe('SonarService', () => {
 
 	it('tests the scenario without security of the SonarQube server.', () => {
 		const service: SonarService = TestBed.inject(SonarService);
-		const sonarServer = new SonarServer("1.0", "urlSonar", true);
+		const sonarServer = new SonarServer('1.0', 'urlSonar', true);
 		const headers = service.sonarHeaders(sonarServer);
 		expect(headers.get('Authorization')).toBeNull();
 	});
 
 	it('tests the login token to check the user authorization.', () => {
 		const service: SonarService = TestBed.inject(SonarService);
-		const sonarServer = new SonarServer("1.0", "urlSonar", true, null, null, "my-token");
+		const sonarServer = new SonarServer('1.0', 'urlSonar', true, null, null, 'my-token');
 		const headers = service.sonarHeaders(sonarServer);
 		expect(headers.get('Authorization')).not.toBeNull();
 		expect(headers.get('Authorization')).toBe('Basic ' + btoa('my-token:'));
 	});
-	
+
 });

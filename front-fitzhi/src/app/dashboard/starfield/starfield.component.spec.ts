@@ -52,10 +52,10 @@ describe('StarfieldComponent', () => {
 		component = fixture.componentInstance;
 		const skillService = TestBed.inject(SkillService);
 		skillService.allSkills = [];
-		skillService.allSkills.push (new Skill(1, "Java"));
-		skillService.allSkills.push (new Skill(2, "Typescript"));
+		skillService.allSkills.push (new Skill(1, 'Java'));
+		skillService.allSkills.push (new Skill(2, 'Typescript'));
 	});
-	
+
 	it('should be correctly created.', () => {
 		expect(component).toBeTruthy();
 	});

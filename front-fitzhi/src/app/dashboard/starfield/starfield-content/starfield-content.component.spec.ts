@@ -10,25 +10,25 @@ import { StarfieldContentComponent } from './starfield-content.component';
 
 
 describe('StarfieldContentComponent', () => {
-  let component: StarfieldContentComponent;
-  let fixture: ComponentFixture<StarfieldContentComponent>;
+	let component: StarfieldContentComponent;
+	let fixture: ComponentFixture<StarfieldContentComponent>;
 
-  beforeEach(async () => {
-    await TestBed.configureTestingModule({
-      declarations: [ StarfieldContentComponent ],
+	beforeEach(async () => {
+		await TestBed.configureTestingModule({
+			declarations: [ StarfieldContentComponent ],
 			providers: [StarfieldService, StaffService, FileService, MessageBoxService, SkillService],
 			imports: [MatDialogModule, HttpClientTestingModule]
-    })
-    .compileComponents();
-  });
+		})
+		.compileComponents();
+	});
 
-  beforeEach(() => {
-    fixture = TestBed.createComponent(StarfieldContentComponent);
-    component = fixture.componentInstance;
-    fixture.detectChanges();
-  });
+	beforeEach(() => {
+		fixture = TestBed.createComponent(StarfieldContentComponent);
+		component = fixture.componentInstance;
+		fixture.detectChanges();
+	});
 
-  it('should create', () => {
-    expect(component).toBeTruthy();
-  });
+	it('should create', () => {
+		expect(component).toBeTruthy();
+	});
 });

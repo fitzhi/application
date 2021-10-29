@@ -23,10 +23,10 @@ export class TreemapProjectsService {
 	public idProjects: number[];
 
 	constructor(dashboardService: DashboardService) {
-		const distribution = dashboardService.processProjectsDistribution()
+		const distribution = dashboardService.processProjectsDistribution();
 		this.idProjects = distribution.map(p => p.id);
 		this.selectedProjectsSubject$.next(distribution.map(item => item.id));
-	 }
+	}
 
 	/**
 	 * Inform the treemap projects chart of the selected projects.

@@ -20,7 +20,7 @@ import { DashboardColor } from './dashboard-color';
 })
 export class DashboardService {
 
-    static MAX_NUMBER_SKILLS_IN_DIAGRAM = 10;
+	static MAX_NUMBER_SKILLS_IN_DIAGRAM = 10;
 
 	constructor(
 		private skillService: SkillService,
@@ -246,7 +246,7 @@ export class DashboardService {
 			1 - countStaff / (sumTotalFilesSize * this.referentialService.optimalStaffNumberPerMoOfCode[minimumLevel - 1] / 1000000), 0);
 		const indexColor = Math.round(rate * 10);
 
-		const color = DashboardColor.rgb(indexColor); 
+		const color = DashboardColor.rgb(indexColor);
 		//
 		// These lines are commented, too chatty...
 		// 		if (traceOn()) {

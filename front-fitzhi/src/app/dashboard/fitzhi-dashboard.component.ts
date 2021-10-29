@@ -152,7 +152,7 @@ export class FitzhiDashboardComponent extends BaseDirective implements OnInit, O
 			console.log ('onChangeFileredProjects(...) %d projects', projects.length);
 		}
 	}
-	
+
 	/**
 	* Calling the base class to unsubscribe all subscriptions.
 	*/

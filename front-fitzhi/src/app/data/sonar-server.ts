@@ -27,7 +27,6 @@ export class SonarServer {
 	 * @param user the user to be used for connection
 	 * @param password the password associated to this user
 	 * @param login the login token as a replacement of the login user/password.
-	 * 
 	 */
 	constructor(
 		public sonarVersion: string,

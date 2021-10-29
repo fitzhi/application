@@ -1484,7 +1484,7 @@ export class ProjectService extends InternalService {
 	 * @returns **TRUE** if this given project has been once evaluated, **FALSE** otherwise
 	 */
 	hasBeenEvaluated(project: Project): boolean {
-		return !((this.calculateSonarEvaluation(project) === 0) && (project.auditEvaluation === 0) && (project.staffEvaluation === -1)); 
+		return !((this.calculateSonarEvaluation(project) === 0) && (project.auditEvaluation === 0) && (project.staffEvaluation === -1));
 	}
 
 }

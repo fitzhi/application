@@ -52,7 +52,7 @@ export class TreemapProjectsChartComponent extends BaseDirective implements OnIn
 					this.loadChart(idProjects);
 				}
 			})
-		)
+		);
 	}
 
 	private loadChart(idProjects: number[]) {

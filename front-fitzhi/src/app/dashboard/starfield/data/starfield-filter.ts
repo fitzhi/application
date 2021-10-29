@@ -1,5 +1,5 @@
 export class StarfieldFilter {
 
-    constructor(public external = false) {}
-    
+	constructor(public external = false) {}
+
 }

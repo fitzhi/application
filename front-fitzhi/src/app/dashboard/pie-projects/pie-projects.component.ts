@@ -140,7 +140,7 @@ export class PieProjectsComponent extends BaseDirective implements OnDestroy, On
 	/**
 	 * Removing useless subscriptions.
 	 */
-	 ngOnDestroy() {
+	ngOnDestroy() {
 		super.ngOnDestroy();
 	}
 

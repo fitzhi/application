@@ -42,12 +42,12 @@ describe('StarfieldService', () => {
 		staff3.experiences = [];
 		staff3.experiences.push(new Experience(1, 'One', 4));
 
-		const allStaff = [];
-		allStaff.push(staff1);
-		allStaff.push(staff2);
-		allStaff.push(staff3);
+		const theStaff = [];
+		theStaff.push(staff1);
+		theStaff.push(staff2);
+		theStaff.push(staff3);
 
-		return allStaff;
+		return theStaff;
 	}
 
 	beforeEach(() => {
@@ -81,10 +81,10 @@ describe('StarfieldService', () => {
 			}
 		});
 	});
-	
+
 	it('should manage correctly an empty staff collection.', () => {
 		const constellations = service.takeStaffInAccount([]);
-		expect(constellations.length).toBe(0)
+		expect(constellations.length).toBe(0);
 	});
 
 	it('should generate the constellations based on the staff collection.', () => {
@@ -115,7 +115,7 @@ describe('StarfieldService', () => {
 	it('should exclude from the generation of constellations the external staff members.', () => {
 		const staff = allStaff();
 		staff.find(st => st.idStaff === 2).external = true;
-		
+
 		// We exclude the external developers
 		service.filter.external = false;
 

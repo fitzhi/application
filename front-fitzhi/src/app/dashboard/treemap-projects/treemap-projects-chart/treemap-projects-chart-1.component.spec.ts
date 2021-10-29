@@ -48,12 +48,12 @@ describe('TeamProjectsChartComponent', () => {
 	/**
 	 * We load all labels present in the chart
 	 */
-	 function loadLabels(): string[] {
+	function loadLabels(): string[] {
 		const html = fixture.debugElement.queryAll(By.css('.treemap-label'));
 		const labels = [];
 		html.forEach(element => {
 			if (element.name === 'span') {
-				labels.push(element.nativeNode.innerText);				
+				labels.push(element.nativeNode.innerText);
 			}
 		});
 		return labels;
@@ -80,7 +80,7 @@ describe('TeamProjectsChartComponent', () => {
 		treemapProjectsService.informSelectedProjects([1, 2, 3]);
 		spyProcessProjectsDistribution = spyOn(dashboardService, 'processProjectsDistribution').and.returnValue(MOCK_DISTRIBUTIONS);
 	});
-	
+
 	it('should instantiate successfully the chart with projects.', () => {
 		fixture.detectChanges();
 		expect(component).toBeTruthy();
@@ -97,5 +97,5 @@ describe('TeamProjectsChartComponent', () => {
 			done();
 		}, 0);
 	});
-	
+
 });

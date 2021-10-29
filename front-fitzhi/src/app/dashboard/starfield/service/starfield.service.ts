@@ -70,7 +70,7 @@ export class StarfieldService {
 	 * Emit the skills constellation to be drawn in the starfield component.
 	 * @param stars array of stars
 	 */
-	 public broadcastStars(stars: Star[]) {
+	public broadcastStars(stars: Star[]) {
 		if (traceOn()) {
 			console.log ('Broadcasting %d stars', stars.length);
 		}
@@ -79,8 +79,8 @@ export class StarfieldService {
 
 	/**
 	 * Assemble the array of constellations into one **unique** serie of <span>&#x2605;</span>.
-	 * *We aggregate the constallations into one single serie of <span>&#x2605;</span> 
-	 * in order to be able to wrap a serie in the middle of a skill.* 
+	 * *We aggregate the constallations into one single serie of <span>&#x2605;</span>
+	 * in order to be able to wrap a serie in the middle of a skill.*
 	 * @param stars the array of skills data
 	 */
 	public assembleTheStars(constellations: Constellation[]) {
@@ -115,7 +115,7 @@ export class StarfieldService {
 	/**
 	 * Take in account the staff collection and *GENERATE* a new array of constellations.
 	 * *This generation will take account as well, the filters chosen by the user.*
-	 *  
+	 *
 	 * @param allStaff the staff collections registered in Fitzhi
 	 * @returns the newly array of constellations
 	 */
@@ -128,13 +128,13 @@ export class StarfieldService {
 				// Or the take in account only the 'internal' staff.
 				if ((this.filter.external) || (!staff.external)) {
 					staff.experiences.forEach(experience => {
-						const constellation = constellations.find(constellation => constellation.idSkill === experience.id);
+						const constellation = constellations.find(cnst => cnst.idSkill === experience.id);
 						if (constellation) {
 							constellation.count = constellation.count + experience.level;
 						} else {
 							constellations.push (new Constellation(experience.id, experience.level));
 						}
-					})
+					});
 				}
 			}
 		});
@@ -147,7 +147,7 @@ export class StarfieldService {
 
 	/**
 	 * Switch the visibility of the Help panel. If the panel is hidden, it will be shown.
-	 * Otherwise, if visible, the help panel will be hidden. 
+	 * Otherwise, if visible, the help panel will be hidden.
 	 */
 	switchHelpPanelVisibility() {
 		if (traceOn()) {

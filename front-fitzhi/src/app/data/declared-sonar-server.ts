@@ -1,12 +1,12 @@
 export class DeclaredSonarServer {
 
 	/**
-	 * Declared Sonars declared in the referential of the Fitzhi backend. 
+	 * Declared Sonars declared in the referential of the Fitzhi backend.
 	 * 2 credentials are available :
-	 * 
+	 *
 	 * - either the pair user/password,
 	 * - or the login token.
-	 * 
+	 *
 	 * @param urlSonarServer the madatory Sonar URL
 	 * @param user the facultative user
 	 * @param password the facultative password associated with the user

@@ -1,13 +1,5 @@
-import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { TestBed, TestModuleMetadata } from '@angular/core/testing';
-import { MatDialogModule } from '@angular/material/dialog';
-import { SkillService } from '../../skill/service/skill.service';
-import { StaffService } from '../../tabs-staff/service/staff.service';
-import { CinematicService } from '../cinematic.service';
-import { ProjectService } from '../project/project.service';
-import { ReferentialService } from '../referential/referential.service';
 import { DashboardColor } from './dashboard-color';
-import { DashboardService } from './dashboard.service';
 
 describe('DashboardService', () => {
 
@@ -49,7 +41,7 @@ describe('DashboardService', () => {
 
 		// --color-success: #28A745; rgb(40,167,69)
 		// --color-error: darkred; #8B0000	rgb(139,0,0)
-	
+
 		expect (DashboardColor.rgb(0)).toBe('#28A745');
 	});
 
@@ -57,7 +49,7 @@ describe('DashboardService', () => {
 
 		// --color-success: #28A745; rgb(40,167,69)
 		// --color-error: darkred; #8B0000	rgb(139,0,0)
-	
+
 		const red = DashboardColor.red(10);
 		const green = DashboardColor.green(10);
 		const blue = DashboardColor.blue(10);
