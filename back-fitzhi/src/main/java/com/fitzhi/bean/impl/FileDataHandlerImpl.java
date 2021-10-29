@@ -133,6 +133,11 @@ public class FileDataHandlerImpl implements DataHandler {
 	private final String savedChanges = "changes-data";
 
 	/**
+	 * Directory where the constellations files are saved.
+	 */
+	private final String constellationsLocation = "constellations-data";
+
+	/**
 	 * Directory where the different pathnames file are stored. 
 	 */
 	private final String pathNames = "pathnames-data";
@@ -352,6 +357,17 @@ public class FileDataHandlerImpl implements DataHandler {
 	 */
 	private String generateProjectDetectedExperiencesJsonFilename(Project project) {
 		return savedChanges + INTERNAL_FILE_SEPARATORCHAR + project.getId() + "-project-detected-experiences.json";
+	}
+
+	/**
+	 * Generate the constellations-year-month.json filename for loading and saving the
+	 * {@link Constellation constellatons} list.
+	 * 
+	 * @param month the year/month associated with the constellations
+	 * @return the filename to be used.
+	 */
+	private String generateConstellationsJsonFilename(LocalDate month) {
+		return constellationsLocation + INTERNAL_FILE_SEPARATORCHAR + String.format("constellations-%d-%d.json", month.getYear(), month.getMonthValue());
 	}
 
 	@Override
@@ -753,6 +769,29 @@ public class FileDataHandlerImpl implements DataHandler {
 	}
 
 	@Override
+	public boolean hasAlreadySavedSkillsConstellations(LocalDate month) throws ApplicationException {
+		final String filename = generateConstellationsJsonFilename(month);
+		if (log.isDebugEnabled()) {
+			log.debug(String.format("hasAlreadySavedSkillsConstellations(%d, %d)", month.getYear(), month.getMonth()));
+			log.debug(String.format("filename %s", filename));
+		}
+		Path path = rootLocation.resolve(filename);
+		System.out.println(path.toAbsolutePath());
+		return Files.exists(path);
+	}
+
+	@Override
+	public List<Constellation> loadSkillsConstellations(LocalDate month) {
+		return null;
+	}
+
+	@Override
+	public void saveSkillsConstellations(LocalDate month, List<Constellation> constellations) {
+		
+	}
+
+	
+	@Override
 	public void saveSkylineLayers(Project project, ProjectLayers layers) throws ApplicationException {
 		//
 		// As the method-name explains, we create the directory.
@@ -939,21 +978,5 @@ public class FileDataHandlerImpl implements DataHandler {
 			}
 		}
 	}
-
-	@Override
-	public boolean hasAlreadySavedSkillsConstellations(LocalDate month) throws ApplicationException {
-		return false;
-	}
-
-	@Override
-	public List<Constellation> loadSkillsConstellations(LocalDate month) {
-		return null;
-	}
-
-	@Override
-	public void saveSkillsConstellations(LocalDate month, List<Constellation> constellations) {
-		
-	}
-
 
 }
