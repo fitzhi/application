@@ -272,7 +272,7 @@ public interface DataHandler {
 	 * @param constellations the given list of {@link Constellation constellations}
 	 * @throws ApplicationException thrown if any exception occurs during the saving process, most probably an {@link IOException}.
 	 */
-	void saveSkillsConstellations(LocalDate month, List<Constellation> constellations);
+	void saveSkillsConstellations(LocalDate month, List<Constellation> constellations) throws ApplicationException;
 
 	/**
 	 * Load the skills constellations associated with the given month.
@@ -280,6 +280,6 @@ public interface DataHandler {
 	 * @return the retrieved list of {@link Constellation constellations}.
 	 * @throws ApplicationException thrown if any exception occurs during the load process, most probably an {@link IOException}.
 	 */
-	List<Constellation> loadSkillsConstellations(LocalDate month);
+	List<Constellation> loadSkillsConstellations(LocalDate month) throws ApplicationException;
 
 }

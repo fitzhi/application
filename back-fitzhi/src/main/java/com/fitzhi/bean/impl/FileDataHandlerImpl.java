@@ -781,12 +781,39 @@ public class FileDataHandlerImpl implements DataHandler {
 	}
 
 	@Override
-	public List<Constellation> loadSkillsConstellations(LocalDate month) {
-		return null;
+	public List<Constellation> loadSkillsConstellations(LocalDate month) throws ApplicationException{
+		final String filename = generateConstellationsJsonFilename(month);
+		if (log.isDebugEnabled()) {
+			log.debug(String.format(LOADING_FILE_S, rootLocation.resolve(filename)));
+		}
+
+		try (FileReader fr = new FileReader(rootLocation.resolve(filename).toFile())) {
+			Type typeListConstellations = new TypeToken<List<Constellation>>() {}.getType();
+			List <Constellation> constellations = gson.fromJson(fr, typeListConstellations);
+			return constellations;
+		} catch (final Exception e) {
+			throw new ApplicationException(CODE_IO_ERROR, MessageFormat.format(MESSAGE_IO_ERROR, filename), e);
+		}
 	}
 
 	@Override
-	public void saveSkillsConstellations(LocalDate month, List<Constellation> constellations) {
+	public void saveSkillsConstellations(LocalDate month, List<Constellation> constellations) throws ApplicationException {
+		//
+		// As the method-name explains, we create the directory.
+		//
+		createIfNeededDirectory(constellationsLocation);
+
+		final String filename = generateConstellationsJsonFilename(month);
+
+		if (log.isDebugEnabled()) {
+			log.debug(String.format(SAVING_FILE_S, rootLocation.resolve(filename)));
+		}
+
+		try (FileWriter fw = new FileWriter(rootLocation.resolve(filename).toFile())) {
+			fw.write(gson.toJson(constellations));
+		} catch (final Exception e) {
+			throw new ApplicationException(CODE_IO_ERROR, MessageFormat.format(MESSAGE_IO_ERROR, filename), e);
+		}
 		
 	}
 
