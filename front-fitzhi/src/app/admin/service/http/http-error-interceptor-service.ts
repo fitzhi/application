@@ -57,7 +57,7 @@ export class HttpErrorInterceptorService implements HttpInterceptor {
 							console.log(apiError.debugMessage);
 							console.groupEnd();
 						}
-						return throwError(errorMessage);
+						return throwError(response);
 					}
 
 					if ( (response.error) && (response.error.hasOwnProperty('error')) && (response.error.hasOwnProperty('error_description'))) {

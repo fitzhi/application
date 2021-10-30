@@ -1,12 +1,15 @@
-import { HttpClientTestingModule } from '@angular/common/http/testing';
-import { TestBed } from '@angular/core/testing';
+import { HttpClientTestingModule, HttpTestingController } from '@angular/common/http/testing';
+import { ComponentFixtureAutoDetect, TestBed } from '@angular/core/testing';
 import { MatDialogModule } from '@angular/material/dialog';
+import { disconnect } from 'process';
+import { take } from 'rxjs/operators';
 import { Collaborator } from 'src/app/data/collaborator';
 import { Experience } from 'src/app/data/experience';
 import { MessageBoxService } from 'src/app/interaction/message-box/service/message-box.service';
+import { MessageService } from 'src/app/interaction/message/message.service';
+import { BackendSetupService } from 'src/app/service/backend-setup/backend-setup.service';
 import { FileService } from 'src/app/service/file.service';
 import { StaffListService } from 'src/app/service/staff-list-service/staff-list.service';
-import { SsewatcherService } from 'src/app/tabs-project/project-sunburst/ssewatcher/service/ssewatcher.service';
 import { StaffService } from 'src/app/tabs-staff/service/staff.service';
 import { Constellation } from '../data/constellation';
 import { StarfieldService } from './starfield.service';
@@ -15,6 +18,7 @@ import { StarfieldService } from './starfield.service';
 describe('StarfieldService', () => {
 	let service: StarfieldService;
 	let staffListService: StaffListService;
+	let httpTestingController: HttpTestingController;
 
 	function allStaff() {
 
@@ -52,11 +56,14 @@ describe('StarfieldService', () => {
 
 	beforeEach(() => {
 		TestBed.configureTestingModule({
-			providers: [StarfieldService, StaffService, FileService, MessageBoxService],
+			providers: [StarfieldService, StaffService, FileService, MessageBoxService, MessageService, BackendSetupService],
 			imports: [MatDialogModule, HttpClientTestingModule]
 		});
 		service = TestBed.inject(StarfieldService);
 		staffListService = TestBed.inject(StaffListService);
+		httpTestingController = TestBed.inject(HttpTestingController);
+		const backendSetupService = TestBed.inject(BackendSetupService);
+		backendSetupService.saveUrl('TEST_URL');
 	});
 
 	it('should be successfully created.', () => {
@@ -136,5 +143,37 @@ describe('StarfieldService', () => {
 
 	});
 
+	it('should be able to retrieve the constellations of the previous month and therefore to activate the PREVIOUS button.', done => {
+		service.retrieveActiveStatePrevious();
+		const req = httpTestingController.expectOne('TEST_URL/api/staff/constellation/2021/9');
+		expect(req.request.method).toBe('GET');
+		req.flush([]);
+		service.previous$.subscribe({
+			next: doneAndOk => {
+				expect(doneAndOk).toBe(true);
+				done();
+			}
+		});
+	});
+
+	it('should handle the lack of constellations for the previous month.', done => {
+		service.retrieveActiveStatePrevious();
+		const req = httpTestingController.expectOne('TEST_URL/api/staff/constellation/2021/9');
+		expect(req.request.method).toBe('GET');
+		const error = new ErrorEvent('error');
+		req.error(
+			error,
+			{
+				status: 404,
+				statusText: 'Not found!',
+			});
+
+		service.previous$.subscribe({
+			next: doneAndOk => {
+				expect(doneAndOk).toBe(false);
+				done();
+			}
+		});
+	});
 
 });

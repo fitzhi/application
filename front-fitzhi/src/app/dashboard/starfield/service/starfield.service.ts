@@ -1,12 +1,15 @@
+import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { trace } from 'console';
-import { BehaviorSubject } from 'rxjs';
-import { take } from 'rxjs/operators';
+import { NOT_FOUND } from 'http-status-codes';
+import { BehaviorSubject, EMPTY } from 'rxjs';
+import { catchError, take } from 'rxjs/operators';
 import { Collaborator } from 'src/app/data/collaborator';
 import { traceOn } from 'src/app/global';
+import { MessageService } from 'src/app/interaction/message/message.service';
+import { BackendSetupService } from 'src/app/service/backend-setup/backend-setup.service';
 import { DashboardColor } from 'src/app/service/dashboard/dashboard-color';
 import { StaffListService } from 'src/app/service/staff-list-service/staff-list.service';
-import { StaffService } from 'src/app/tabs-staff/service/staff.service';
 import { Constellation } from '../data/constellation';
 import { Star } from '../data/star';
 import { StarfieldFilter } from '../data/starfield-filter';
@@ -63,7 +66,11 @@ export class StarfieldService {
 
 	public helpPanelVisible$ = this.helpPanelVisibleSubject$.asObservable();
 
-	constructor(private staffListService: StaffListService) { }
+	constructor(
+		private staffListService: StaffListService,
+		private backendSetupService: BackendSetupService,
+		private messageService: MessageService,
+		private httpClient: HttpClient) { }
 
 	/**
 	 * Reverve the value of the external boolean filter.
@@ -144,7 +151,6 @@ export class StarfieldService {
 		const constellations: Constellation[] = [];
 		allStaff.forEach(staff => {
 			if (staff.active) {
-
 				// Either we take in account the external staff, which means we involved all staff members
 				// Or the take in account only the 'internal' staff.
 				if ((this.filter.external) || (!staff.external)) {
@@ -195,5 +201,36 @@ export class StarfieldService {
 	 */
 	 switchActiveStatePrevious(state: boolean) {
 		this.previousSubject$.next(state);
+	}
+
+	/**
+	 * Retrieve the active state for the previous month.
+	 */
+	public retrieveActiveStatePrevious() {
+		const date = new Date(this.selectedMonth.year, this.selectedMonth.month, 1);
+		date.setDate(0);
+
+		// Months range is from 0 to 11.
+		const month = date.getMonth() + 1;
+		const year = date.getFullYear();
+
+		if (traceOn()) {
+			console.log ('Retrieving constellations for %d/%d', month, year);
+		}
+		this.httpClient
+			.get<Constellation[]>(`${this.backendSetupService.url()}/staff/constellation/${year}/${month}`)
+			.pipe(
+				take(1),
+				catchError(error => {
+					if  (error.status === NOT_FOUND) {
+						this.switchActiveStateNext(false);
+					}
+					return EMPTY;
+				})
+			).subscribe({
+				next: constellations => {
+					this.switchActiveStatePrevious(true);
+				}
+			});
 	}
 }

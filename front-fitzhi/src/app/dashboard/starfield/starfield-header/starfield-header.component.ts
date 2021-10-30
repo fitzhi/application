@@ -15,6 +15,7 @@ export class StarfieldHeaderComponent implements OnInit {
 	constructor(public starfieldService: StarfieldService) { }
 
 	ngOnInit(): void {
+		this.starfieldService.retrieveActiveStatePrevious();
 	}
 
 	next(): void {
