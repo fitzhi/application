@@ -119,7 +119,7 @@ public class Error {
 	public static final String MESSAGE_DASHBOARD_START = "The generation of the dashboard has been launched. Operation might last a while...";
 
 	public static final int CODE_MONTH_SKILLS_CONSTELLATION_NOFOUND = -1035;
-	public static final String MESSAGE_MONTH_SKILLS_CONSTELLATION_NOFOUND = "There is no skills data available for the month {0}/{1}.";
+	public static final String MESSAGE_MONTH_SKILLS_CONSTELLATION_NOFOUND = "There is no skills data available for the month {0}/{1, number,####}.";
 
 	public static final int CODE_YEAR_MONTH_INVALID = -1036;
 	public static final String MESSAGE_YEAR_MONTH_INVALID = "The given month {0}/{1} is invalid.";

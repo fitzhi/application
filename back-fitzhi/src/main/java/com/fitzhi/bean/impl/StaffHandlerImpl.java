@@ -4,6 +4,8 @@ import static com.fitzhi.Error.CODE_LOGIN_ALREADY_EXIST;
 import static com.fitzhi.Error.CODE_STAFF_NOFOUND;
 import static com.fitzhi.Error.MESSAGE_LOGIN_ALREADY_EXIST;
 import static com.fitzhi.Error.MESSAGE_STAFF_NOFOUND;
+import static com.fitzhi.Error.CODE_MONTH_SKILLS_CONSTELLATION_NOFOUND;
+import static com.fitzhi.Error.MESSAGE_MONTH_SKILLS_CONSTELLATION_NOFOUND;
 import static com.fitzhi.Global.UNKNOWN;
 
 import java.text.MessageFormat;
@@ -946,8 +948,14 @@ public class StaffHandlerImpl extends AbstractDataSaverLifeCycleImpl implements 
 	}
 	
 	@Override
-	public Collection<Constellation> loadConstellations(LocalDate month) throws ApplicationException {
-		return null;
+	public List<Constellation> loadConstellations(LocalDate month) throws ApplicationException {
+		if (!dataSaver.hasAlreadySavedSkillsConstellations(month)) {
+			throw new NotFoundException(
+				CODE_MONTH_SKILLS_CONSTELLATION_NOFOUND, 
+				MESSAGE_MONTH_SKILLS_CONSTELLATION_NOFOUND,
+				month.getMonthValue(), month.getYear());
+		}
+		return dataSaver.loadSkillsConstellations(month);
 	}
 
 	@Override

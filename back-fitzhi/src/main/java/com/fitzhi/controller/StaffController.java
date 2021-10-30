@@ -637,7 +637,7 @@ public class StaffController {
 	@ResponseBody
 	@ApiOperation(value = "Load and return the constellations, if any, registered for the given month.")
 	@GetMapping("/constellation/{year}/{month}")
-	public Collection<Constellation> loadConstellation(@PathVariable("year") int year, @PathVariable("month") int month) throws ApplicationException {
+	public Collection<Constellation> loadConstellation(@PathVariable("year") int year, @PathVariable("month") int month) throws ApplicationException, NotFoundException {
 
 		if (!YearMonthParser.isValid(year, month)) {
 			throw new ApplicationException(

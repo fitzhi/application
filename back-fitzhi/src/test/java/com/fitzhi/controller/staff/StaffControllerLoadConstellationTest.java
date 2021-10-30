@@ -84,6 +84,7 @@ public class StaffControllerLoadConstellationTest {
 			.andExpect(status().isNotFound())
 			.andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
 			.andExpect(jsonPath("$.code", is(CODE_MONTH_SKILLS_CONSTELLATION_NOFOUND)))
+			.andExpect(jsonPath("$.message", is("There is no skills data available for the month 12/2020.")))
 			.andDo(print());
 
 		Mockito.verify(staffHandler, times(1)).loadConstellations(month);

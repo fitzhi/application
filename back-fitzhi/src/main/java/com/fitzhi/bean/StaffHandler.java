@@ -1,7 +1,7 @@
 package com.fitzhi.bean;
 
+import java.io.IOException;
 import java.time.LocalDate;
-import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -11,6 +11,8 @@ import javax.validation.constraints.NotNull;
 import com.fitzhi.ApplicationRuntimeException;
 import com.fitzhi.bean.impl.StringTransform;
 import com.fitzhi.controller.StaffController;
+import com.fitzhi.data.internal.Author;
+import com.fitzhi.data.internal.Constellation;
 import com.fitzhi.data.internal.Experience;
 import com.fitzhi.data.internal.Mission;
 import com.fitzhi.data.internal.PeopleCountExperienceMap;
@@ -20,8 +22,6 @@ import com.fitzhi.data.internal.Staff;
 import com.fitzhi.data.source.Contributor;
 import com.fitzhi.exception.ApplicationException;
 import com.fitzhi.exception.NotFoundException;
-import com.fitzhi.data.internal.Author;
-import com.fitzhi.data.internal.Constellation;
 
 /**
  * Interface in charge of handling the staff collection.
@@ -468,12 +468,14 @@ public interface StaffHandler extends DataSaverLifeCycle {
 	 * that each skill-identifier declared in the constellation does still exist effectively. 
 	 * </em>
 	 * @param month the saving month
+	 * @return the resulting list of constellations
 	 * @throws ApplicationException thrown if any exception occurs during the saving process, 
 	 * most probably 
 	 * either an {@link IOException}, 
 	 * or there is no constellationn registrered for the given month, 
 	 * or an unknown skill identifier has been detected.
+	 * @throws NotFoundException thrown if there is no constellation for the given month 
 	 */
-	Collection<Constellation> loadConstellations(LocalDate month) throws ApplicationException;
+	List<Constellation> loadConstellations(LocalDate month) throws ApplicationException, NotFoundException;
 
 }
