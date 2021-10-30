@@ -172,9 +172,6 @@ export class StarfieldService {
 		return constellations;
 	}
 
-	private nextMonth() {
-
-	}
 	/**
 	 * Switch the visibility of the Help panel. If the panel is hidden, it will be shown.
 	 * Otherwise, if visible, the help panel will be hidden.
@@ -223,7 +220,7 @@ export class StarfieldService {
 				take(1),
 				catchError(error => {
 					if  (error.status === NOT_FOUND) {
-						this.switchActiveStateNext(false);
+						this.switchActiveStatePrevious(false);
 					}
 					return EMPTY;
 				})
@@ -233,4 +230,44 @@ export class StarfieldService {
 				}
 			});
 	}
+
+	/**
+	 * Retrieve the active state for the previous month.
+	 */
+	 public retrieveActiveStateNext() {
+
+		const nextMonth = this.nextMonth(new Date(this.selectedMonth.year, this.selectedMonth.month, 1));
+
+		// Months range is from 0 to 11.
+		const month = nextMonth.getMonth() + 1;
+		const year = nextMonth.getFullYear();
+
+		if (traceOn()) {
+			console.log ('Retrieving constellations for %d/%d', month, year);
+		}
+		this.httpClient
+			.get<Constellation[]>(`${this.backendSetupService.url()}/staff/constellation/${year}/${month}`)
+			.pipe(
+				take(1),
+				catchError(error => {
+					if  (error.status === NOT_FOUND) {
+						this.switchActiveStateNext(false);
+					}
+					return EMPTY;
+				})
+			).subscribe({
+				next: constellations => {
+					this.switchActiveStateNext(true);
+				}
+			});
+	}
+
+	public nextMonth(currentMonth: Date): Date {
+		if (currentMonth.getMonth() == 11) {
+			return new Date(currentMonth.getFullYear() + 1, 0, 1);
+		} else {
+			return new Date(currentMonth.getFullYear(), currentMonth.getMonth() + 1, 1);
+		}
+	}
+	
 }

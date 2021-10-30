@@ -49,12 +49,18 @@ export class HttpErrorInterceptorService implements HttpInterceptor {
 
 					if ((response.error) && response.error.hasOwnProperty('flagApiError')) {
 						// Server side error
-						const apiError = response.error;
-						errorMessage = 'Error: ' + apiError.message;
-						setTimeout(() => messageService.error(errorMessage), 0);
+						// If a "NOT_FOUND" status is returned by the server inside a flagApiError present in the body
+						// This is not the use case of an URL NOT_FOUND, this is a server returning a status code NOT_FOUND.
+						// We do not display an error message. This use case will be treated by the calling httpClient.
+						if (response.status !== NOT_FOUND) {
+							const apiError = response.error;
+							errorMessage = 'Error: ' + apiError.message;
+							setTimeout(() => messageService.error(errorMessage), 0);
+						}
+						
 						if (traceOn()) {
 							console.groupCollapsed ('Error stacktrace');
-							console.log(apiError.debugMessage);
+							console.log(response.error);
 							console.groupEnd();
 						}
 						return throwError(response);

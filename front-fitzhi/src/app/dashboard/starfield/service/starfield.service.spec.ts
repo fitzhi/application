@@ -143,7 +143,7 @@ describe('StarfieldService', () => {
 
 	});
 
-	it('should be able to retrieve the constellations of the previous month and therefore to activate the PREVIOUS button.', done => {
+	it('should be able to retrieve the constellations of the PREVIOUS month and therefore activate the PREVIOUS button.', done => {
 		service.retrieveActiveStatePrevious();
 		const req = httpTestingController.expectOne('TEST_URL/api/staff/constellation/2021/9');
 		expect(req.request.method).toBe('GET');
@@ -156,7 +156,7 @@ describe('StarfieldService', () => {
 		});
 	});
 
-	it('should handle the lack of constellations for the previous month.', done => {
+	it('should handle the lack of constellations for the PREVIOUS month.', done => {
 		service.retrieveActiveStatePrevious();
 		const req = httpTestingController.expectOne('TEST_URL/api/staff/constellation/2021/9');
 		expect(req.request.method).toBe('GET');
@@ -169,6 +169,53 @@ describe('StarfieldService', () => {
 			});
 
 		service.previous$.subscribe({
+			next: doneAndOk => {
+				expect(doneAndOk).toBe(false);
+				done();
+			}
+		});
+	});
+
+	it('should evaluate correctly the next month for the 30/10/2021.', () => {
+		const next = service.nextMonth(new Date(2021, 10, 30));
+		expect(next.getFullYear()).toBe(2021);
+		expect(next.getMonth()).toBe(11);
+	});
+
+	
+	it('should evaluate correctly the next month for the 30/11/2021 (Be aware that month are evaluated from 0 to 11).', () => {
+		const next = service.nextMonth(new Date(2021, 11, 30));
+		expect(next.getFullYear()).toBe(2022);
+		expect(next.getMonth()).toBe(0);
+	});
+
+
+	it('should be able to retrieve the constellations of the NEXT month, and therefore activate the NEXT button.', done => {
+		service.retrieveActiveStateNext();
+		const req = httpTestingController.expectOne('TEST_URL/api/staff/constellation/2021/11');
+		expect(req.request.method).toBe('GET');
+		req.flush([]);
+		service.next$.subscribe({
+			next: doneAndOk => {
+				expect(doneAndOk).toBe(true);
+				done();
+			}
+		});
+	});
+
+	it('should handle the lack of constellations for the NEXT month.', done => {
+		service.retrieveActiveStateNext();
+		const req = httpTestingController.expectOne('TEST_URL/api/staff/constellation/2021/11');
+		expect(req.request.method).toBe('GET');
+		const error = new ErrorEvent('error');
+		req.error(
+			error,
+			{
+				status: 404,
+				statusText: 'Not found!',
+			});
+
+		service.next$.subscribe({
 			next: doneAndOk => {
 				expect(doneAndOk).toBe(false);
 				done();
