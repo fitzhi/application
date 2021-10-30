@@ -95,7 +95,7 @@ div.styline-icon {
 }
 
 
-button.lastYearMinimized, button.lastMonthMinimized, button.currentMinimized, button.treeMap-skills, button.treeMap-projects, div.styline-icon {
+button.starfield, button.technicalDate, button.pie, button.treeMap-skills, button.treeMap-projects, div.styline-icon {
 	width: var(--sidebar-button-width);
 	height: var(--sidebar-button-height);
 	left: 5px;
@@ -105,42 +105,42 @@ button.lastYearMinimized, button.lastMonthMinimized, button.currentMinimized, bu
 	margin: 0;
 }
 
-button.lastYearMinimized P, button.lastMonthMinimized P {
+button.starfield P, button.technicalDate P {
 	margin-bottom: 0;
 	font-size: 8px;
 }
 
-button.lastYearMinimized I, button.lastMonthMinimized I, button.currentMinimized I {
+button.starfield I, button.technicalDate I, button.pie I {
 	font-size: 34px;
 }
 
-button.lastYearMinimized {
+button.technicalDate {
 	bottom: 5px;
 }
 
-button.lastMonthMinimized {
+button.pie {
 	bottom: 70px;
 }
 
-button.currentMinimized {
-	bottom: 140px;
+button.starfield {
+	bottom: 210px;
 }
 
 div.skyline-icon {
-	bottom: 350px;
+	bottom: 140px;
 	position: absolute;
 	margin-left: 5px;
 }
 
 button.treeMap-projects {
-	bottom: 280px;
+	bottom: 350px;
 }
 
 button.treeMap-skills {
-	bottom: 210px;
+	bottom: 280px;
 }
 
-button.currentMinimized  div.pie-minimized {
+button.pie  div.pie-minimized {
   width: 50px;
   height: 50px;
   margin: 0 auto;

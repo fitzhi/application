@@ -85,7 +85,7 @@
 	</div>
 </angular-popper>        
 
-<angular-popper placement="left" target="#currentSummary" *ngIf="popupHelper.isButtonActivated(selection.currentSummary) && !hasSelectedADashboard()">
+<angular-popper placement="left" target="#pie" *ngIf="popupHelper.isButtonActivated(selection.currentSummary) && !hasSelectedADashboard()">
 	<div content class="help">
 		<h4 class="help-title">Display Pie dashboard</h4>
 		<div class="help-content">
@@ -135,130 +135,130 @@
 <div class="vertical-nav" id="sidebar">
 
 	<div id="skyline" class="skyline-icon"
-			(mouseenter)="popupHelper.mouseEnter(selection.skyline)" 
-			(mouseleave)="popupHelper.mouseLeave()">
-			<app-skyline-icon
-				[selected$]=skylineSelected$ 
-				[width]="'60px'" 
-				[height]="'60px'" 
-				(dashboardSelected$)="switchTo(selection.skyline)">
-			</app-skyline-icon>
-		</div>
+		(mouseenter)="popupHelper.mouseEnter(selection.skyline)" 
+		(mouseleave)="popupHelper.mouseLeave()">
+		<app-skyline-icon
+			[selected$]=skylineSelected$ 
+			[width]="'60px'" 
+			[height]="'60px'" 
+			(dashboardSelected$)="switchTo(selection.skyline)">
+		</app-skyline-icon>
+	</div>
 
-		<button id="treeMap-projects" 
-				class="btn rounded treeMap-projects"
-				*ngIf="projectService.allProjectsIsLoaded$|async"
-				[ngClass]="{
-						'btn-outline-success' : isSelected(selection.treeMapProjects), 
-						'btn-outline-secondary': !isSelected(selection.treeMapProjects)}" 
-						(mouseenter)="popupHelper.mouseEnter(selection.treeMapProjects)" 
-						(mouseleave)="popupHelper.mouseLeave()"
-						(click)="switchTo(selection.treeMapProjects)">
-			<!-- 	The ngx-charts-tree-map make a translate(10, 10),
-					therefore, the class 'host-treemap-projects' operates a translate -->
-			<div class="host-treemap-projects">
-				<app-treemap-projects 
-					width="71px" height="71px" 
-					[buttonOrChart]="'button'"
-					[active]="false"></app-treemap-projects>
-			</div>
-		</button>
-	
-		<a class="flipProjectsFilter" href="javascript:;" (click)="flip()">
-			<div class="d-flex justify-content-end m-1" 
-				*ngIf="(!(treemapProjectsFilter) && (projectService.allProjectsIsLoaded$|async) && (isSelected(selection.treeMapProjects)))">
-				<div class="p-0 m-0 panelDeveloperBase">
-				</div>
-				<div class="p-0 panelDeveloperArrowRight">
-					<span class="p-0">&#x25B6;</span>
-				</div>
-			</div>
-		</a>
-
-		<a class="flipProjectsFilter" href="javascript:;" (click)="flip()">
-			<div class="d-flex justify-content-end m-2" 
-				*ngIf="((treemapProjectsFilter) && (projectService.allProjectsIsLoaded$|async) && (isSelected(selection.treeMapProjects)))">
-				<div class="p-0 panelDeveloperArrowLeft">
-					<span class="p-0">&#9664;</span>
-				</div>
-				<div class="p-0 m-0 panelDeveloperBase">
-				</div>
-			</div>
-		</a>
-
-		<button id="treeMap-skills" class="btn rounded treeMap-skills"
-				[ngClass]="{
-						'btn-outline-success' : isSelected(selection.treeMapSkills), 
-						'btn-outline-secondary': !isSelected(selection.treeMapSkills)}" 
-						(mouseenter)="popupHelper.mouseEnter(selection.treeMapSkills)" 
-						(mouseleave)="popupHelper.mouseLeave()"
-						(click)="switchTo(selection.treeMapSkills)">
-
-					<svg class="treeMapButton">
-							<rect x="6" y="6" class="rectTreeMap" style="fill:#3D8131" />
-							<rect x="21" y="6" class="rectTreeMap" style="fill:#3D8131" />
-							<rect x="36" y="6" class="rectTreeMap" style="fill:#329338"  /> 
-							<rect x="6" y="21" class="rectTreeMap" style="fill:#3D8131" />
-							<rect x="21" y="21" class="rectTreeMap" style="fill:#3D8131" />
-							<rect x="36" y="21" class="rectTreeMap" style="fill:#5E4A1C"  />
-							<rect x="6" y="36" class="rectTreeMap" style="fill:#74250E" />
-							<rect x="21" y="36" class="rectTreeMap" style="fill:#7F1307" />
-							<rect x="36" y="36" class="rectTreeMap" style="fill:#8B0000"  />
-					</svg>
-		</button>
-
-		<button id="currentSummary" class="btn rounded currentMinimized"
-				[ngClass]="{
-						'btn-outline-success' : isSelected(selection.currentSummary), 
-						'btn-outline-secondary': !isSelected(selection.currentSummary)}" 
-					(mouseenter)="popupHelper.mouseEnter(selection.currentSummary)" 
-					(mouseleave)="popupHelper.mouseLeave()"
-					(click)="switchTo(selection.currentSummary)">
-					<div class="pie-minimized">
-						<app-pie-chart
-							[radius]=200
-							[active]=false
-							[pie]=pieIdentifier.currentMinimized>
-						</app-pie-chart>
-				</div>
-		</button>
-
-		<button id="technicalDate" class="btn rounded lastMonthMinimized"
-				[ngClass]="{
-						'btn-outline-success' : isSelected(selection.technicalDate), 
-						'btn-outline-secondary': !isSelected(selection.technicalDate)}" 
-					(mouseenter)="popupHelper.mouseEnter(selection.technicalDate)" 
-					(mouseleave)="popupHelper.mouseLeave()"
-					(click)="switchTo(selection.technicalDate)">
-			<em class="fas fa-calendar-alt"></em>
-		</button>
-
-		<button id="starfield" class="btn rounded lastYearMinimized"
+	<button id="treeMap-projects" 
+			class="btn rounded treeMap-projects"
+			*ngIf="projectService.allProjectsIsLoaded$|async"
 			[ngClass]="{
-					'btn-outline-success' : isSelected(selection.starfield), 
-					'btn-outline-secondary': !isSelected(selection.starfield)}" 
-					(mouseenter)="popupHelper.mouseEnter(selection.starfield)" 
+					'btn-outline-success' : isSelected(selection.treeMapProjects), 
+					'btn-outline-secondary': !isSelected(selection.treeMapProjects)}" 
+					(mouseenter)="popupHelper.mouseEnter(selection.treeMapProjects)" 
 					(mouseleave)="popupHelper.mouseLeave()"
-				(click)="switchTo(selection.starfield)">
-			<div class="justify-content-center w-100 h-100">
-				<div *ngIf="!isSelected(selection.starfield)" class="ml-1 d-inline-flex flex-wrap" style="line-height: 1;">
-					<span style="color: var(--color-success)">
-						<span>&#x2605;</span><span>&#x2605;</span><span>&#x2605;</span>
-					</span>
-					<span style="color: #5A5423;">
-						<span>&#x2605;</span><span>&#x2605;</span><span>&#x2605;</span>
-					</span>
-					<span style="color: var(--color-error)">
-						<span>&#x2605;</span><span>&#x2605;</span>
-					</span>
-				</div>
-				<div *ngIf="isSelected(selection.starfield)" class="ml-1 d-inline-flex flex-wrap w-100" style="line-height: 1;">
-					<span>&#x2605;</span><span>&#x2605;</span><span>&#x2605;</span>
-					<span>&#x2605;</span><span>&#x2605;</span><span>&#x2605;</span>
-					<span>&#x2605;</span><span>&#x2605;</span>
-				</div>
+					(click)="switchTo(selection.treeMapProjects)">
+		<!-- 	The ngx-charts-tree-map make a translate(10, 10),
+				therefore, the class 'host-treemap-projects' operates a translate -->
+		<div class="host-treemap-projects">
+			<app-treemap-projects 
+				width="71px" height="71px" 
+				[buttonOrChart]="'button'"
+				[active]="false"></app-treemap-projects>
+		</div>
+	</button>
+
+	<a class="flipProjectsFilter" href="javascript:;" (click)="flip()">
+		<div class="d-flex justify-content-end m-1" 
+			*ngIf="(!(treemapProjectsFilter) && (projectService.allProjectsIsLoaded$|async) && (isSelected(selection.treeMapProjects)))">
+			<div class="p-0 m-0 panelDeveloperBase">
 			</div>
-		</button>
+			<div class="p-0 panelDeveloperArrowRight">
+				<span class="p-0">&#x25B6;</span>
+			</div>
+		</div>
+	</a>
+
+	<a class="flipProjectsFilter" href="javascript:;" (click)="flip()">
+		<div class="d-flex justify-content-end m-2" 
+			*ngIf="((treemapProjectsFilter) && (projectService.allProjectsIsLoaded$|async) && (isSelected(selection.treeMapProjects)))">
+			<div class="p-0 panelDeveloperArrowLeft">
+				<span class="p-0">&#9664;</span>
+			</div>
+			<div class="p-0 m-0 panelDeveloperBase">
+			</div>
+		</div>
+	</a>
+
+	<button id="treeMap-skills" class="btn rounded treeMap-skills"
+			[ngClass]="{
+					'btn-outline-success' : isSelected(selection.treeMapSkills), 
+					'btn-outline-secondary': !isSelected(selection.treeMapSkills)}" 
+					(mouseenter)="popupHelper.mouseEnter(selection.treeMapSkills)" 
+					(mouseleave)="popupHelper.mouseLeave()"
+					(click)="switchTo(selection.treeMapSkills)">
+
+				<svg class="treeMapButton">
+						<rect x="6" y="6" class="rectTreeMap" style="fill:#3D8131" />
+						<rect x="21" y="6" class="rectTreeMap" style="fill:#3D8131" />
+						<rect x="36" y="6" class="rectTreeMap" style="fill:#329338"  /> 
+						<rect x="6" y="21" class="rectTreeMap" style="fill:#3D8131" />
+						<rect x="21" y="21" class="rectTreeMap" style="fill:#3D8131" />
+						<rect x="36" y="21" class="rectTreeMap" style="fill:#5E4A1C"  />
+						<rect x="6" y="36" class="rectTreeMap" style="fill:#74250E" />
+						<rect x="21" y="36" class="rectTreeMap" style="fill:#7F1307" />
+						<rect x="36" y="36" class="rectTreeMap" style="fill:#8B0000"  />
+				</svg>
+	</button>
+
+	<button id="starfield" class="btn rounded starfield"
+		[ngClass]="{
+				'btn-outline-success' : isSelected(selection.starfield), 
+				'btn-outline-secondary': !isSelected(selection.starfield)}" 
+				(mouseenter)="popupHelper.mouseEnter(selection.starfield)" 
+				(mouseleave)="popupHelper.mouseLeave()"
+			(click)="switchTo(selection.starfield)">
+		<div class="justify-content-center w-100 h-100">
+			<div *ngIf="!isSelected(selection.starfield)" class="ml-1 d-inline-flex flex-wrap" style="line-height: 1;">
+				<span style="color: var(--color-success)">
+					<span>&#x2605;</span><span>&#x2605;</span><span>&#x2605;</span>
+				</span>
+				<span style="color: #5A5423;">
+					<span>&#x2605;</span><span>&#x2605;</span><span>&#x2605;</span>
+				</span>
+				<span style="color: var(--color-error)">
+					<span>&#x2605;</span><span>&#x2605;</span>
+				</span>
+			</div>
+			<div *ngIf="isSelected(selection.starfield)" class="ml-1 d-inline-flex flex-wrap w-100" style="line-height: 1;">
+				<span>&#x2605;</span><span>&#x2605;</span><span>&#x2605;</span>
+				<span>&#x2605;</span><span>&#x2605;</span><span>&#x2605;</span>
+				<span>&#x2605;</span><span>&#x2605;</span>
+			</div>
+		</div>
+	</button>
+
+	<button id="pie" class="btn rounded pie"
+			[ngClass]="{
+					'btn-outline-success' : isSelected(selection.currentSummary), 
+					'btn-outline-secondary': !isSelected(selection.currentSummary)}" 
+				(mouseenter)="popupHelper.mouseEnter(selection.currentSummary)" 
+				(mouseleave)="popupHelper.mouseLeave()"
+				(click)="switchTo(selection.currentSummary)">
+				<div class="pie-minimized">
+					<app-pie-chart
+						[radius]=200
+						[active]=false
+						[pie]=pieIdentifier.currentMinimized>
+					</app-pie-chart>
+			</div>
+	</button>
+
+	<button id="technicalDate" class="btn rounded technicalDate"
+			[ngClass]="{
+					'btn-outline-success' : isSelected(selection.technicalDate), 
+					'btn-outline-secondary': !isSelected(selection.technicalDate)}" 
+				(mouseenter)="popupHelper.mouseEnter(selection.technicalDate)" 
+				(mouseleave)="popupHelper.mouseLeave()"
+				(click)="switchTo(selection.technicalDate)">
+		<em class="fas fa-calendar-alt"></em>
+	</button>
 
 </div>
 

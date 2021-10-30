@@ -5,7 +5,7 @@
 	<div id="setup" *ngIf="connectionIsNeeded()">
 		<app-connect-user></app-connect-user>
 	</div>
-	<div class="mainDashboard" *ngIf="this.authService.isConnected()">
+	<div id="mainDashboard" *ngIf="this.authService.isConnected()">
 		<app-fitzhi-dashboard></app-fitzhi-dashboard>
 	</div>
 </ng-template>
