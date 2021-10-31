@@ -15,7 +15,7 @@ describe('StarfieldHeaderComponent', () => {
 	let starfieldService: StarfieldService;
 	let spyNext: jasmine.Spy;
 	let spyPrevious: jasmine.Spy;
-	
+
 	beforeEach(async () => {
 		await TestBed.configureTestingModule({
 			declarations: [ StarfieldHeaderComponent ],

@@ -5,6 +5,6 @@
  */
 export class DashboardConstants {
 
-    public static MAX_NUMBER_SKILLS_IN_DIAGRAM = 10;
+	public static MAX_NUMBER_SKILLS_IN_DIAGRAM = 10;
 
 }

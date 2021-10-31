@@ -209,7 +209,7 @@ describe('StarfieldService', () => {
 		expect(next.getFullYear()).toBe(2021);
 		expect(next.getMonth()).toBe(9);
 	});
-	
+
 	it('should evaluate correctly the next month for the 30/11/2021 (Be aware that month are evaluated from 0 to 11).', () => {
 		const next = service.nextMonth(new Date(2021, 11, 30));
 		expect(next.getFullYear()).toBe(2022);
@@ -237,7 +237,8 @@ describe('StarfieldService', () => {
 		expect(service.nextMonthIsCurrentMonth(previous)).toBeTrue();
 	});
 
-	it('should consider (OF COURSE) that the current date is not a possible candidate for being the NEXT month (Today cannot be tomorrow).', () => {
+	it('should consider (OF COURSE) that the current date is not a possible candidate for being the ' +
+		'NEXT month (Today cannot be tomorrow).', () => {
 		expect(service.previousMonthIsCurrentMonth(new Date())).toBeFalse();
 	});
 

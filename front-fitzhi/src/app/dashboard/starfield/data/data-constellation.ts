@@ -4,9 +4,9 @@
  */
 export class DataConstellation {
 
-    constructor(
-        public idSkill: number, 
-        public starsNumber: number, 
-        public starsNumberWithExternal: number) {}
+	constructor(
+		public idSkill: number,
+		public starsNumber: number,
+		public starsNumberWithExternal: number) {}
 
 }

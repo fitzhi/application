@@ -18,7 +18,7 @@ export class StarfieldHeaderComponent extends BaseDirective implements OnInit, O
 
 	public previousMonthAvailable = false;
 
-	constructor(public starfieldService: StarfieldService) { 
+	constructor(public starfieldService: StarfieldService) {
 		super();
 	}
 

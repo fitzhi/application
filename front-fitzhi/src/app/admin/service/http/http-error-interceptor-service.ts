@@ -57,7 +57,7 @@ export class HttpErrorInterceptorService implements HttpInterceptor {
 							errorMessage = 'Error: ' + apiError.message;
 							setTimeout(() => messageService.error(errorMessage), 0);
 						}
-						
+
 						if (traceOn()) {
 							console.groupCollapsed ('Error stacktrace');
 							console.log(response.error);

@@ -222,7 +222,7 @@ export class StarfieldService {
 	 * switch the state of the previous button.
 	 * @param state the new state for the **PREVIOUS** button
 	 */
-	 switchActiveStatePrevious(state: boolean) {
+	switchActiveStatePrevious(state: boolean) {
 		this.previousSubject$.next(state);
 	}
 
@@ -237,7 +237,6 @@ export class StarfieldService {
 			this.switchActiveStatePrevious(true);
 			return;
 		}
-		
 
 		const date = new Date(this.selectedMonth.year, this.selectedMonth.month, 1);
 		date.setDate(0);
@@ -270,7 +269,7 @@ export class StarfieldService {
 	/**
 	 * Retrieve the active state for the previous month.
 	 */
-	 public retrieveActiveStateNext() {
+	public retrieveActiveStateNext() {
 
 		// We do not load the data for the actual month from the server.
 		// We process 'live' the constellations with the actual staff
@@ -312,7 +311,7 @@ export class StarfieldService {
 	 * @returns the next month
 	 */
 	public nextMonth(currentMonth: Date): Date {
-		if (currentMonth.getMonth() == 11) {
+		if (currentMonth.getMonth() === 11) {
 			return new Date(currentMonth.getFullYear() + 1, 0, 1);
 		} else {
 			return new Date(currentMonth.getFullYear(), currentMonth.getMonth() + 1, 1);
@@ -334,7 +333,7 @@ export class StarfieldService {
 	 * @param month the given month
 	 * @returns **TRUE** if the given month is located one month after today, **FALSE** otherwise
 	 */
-	 public previousMonthIsCurrentMonth(month: Date) {
+	public previousMonthIsCurrentMonth(month: Date) {
 		const previous = this.previousMonth(month);
 		return ( (new Date().getFullYear() === previous.getFullYear()) && (new Date().getMonth() === previous.getMonth()));
 	}
@@ -351,7 +350,7 @@ export class StarfieldService {
 
 	/**
 	 * Set the context of the starfield to the previous constellation
-	 * 
+	 *
 	 * *A previous constellation cannot be processed from the actual staff.
 	 * If this scenario was possible, it would mean that the future already exists on the server.*
 	 */
@@ -374,7 +373,7 @@ export class StarfieldService {
 	/**
 	 * Set the context of the starfield to the previous constellation
 	 */
-	 public broadcastNextConstellations() {
+	public broadcastNextConstellations() {
 
 		if (traceOn()) {
 			console.log ('Display the next constellations after %s', this.selectedMonth.toString());
