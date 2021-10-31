@@ -1,16 +1,15 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { trace } from 'console';
 import { NOT_FOUND } from 'http-status-codes';
 import { BehaviorSubject, EMPTY } from 'rxjs';
 import { catchError, take } from 'rxjs/operators';
 import { Collaborator } from 'src/app/data/collaborator';
 import { traceOn } from 'src/app/global';
-import { MessageService } from 'src/app/interaction/message/message.service';
 import { BackendSetupService } from 'src/app/service/backend-setup/backend-setup.service';
 import { DashboardColor } from 'src/app/service/dashboard/dashboard-color';
 import { StaffListService } from 'src/app/service/staff-list-service/staff-list.service';
 import { Constellation } from '../data/constellation';
+import { DataConstellation } from '../data/data-constellation';
 import { Star } from '../data/star';
 import { StarfieldFilter } from '../data/starfield-filter';
 import { StarfieldMonth } from '../data/starfield-month';
@@ -43,12 +42,21 @@ export class StarfieldService {
 
 	private nextSubject$ = new BehaviorSubject<boolean>(false);
 
+	private nextDataConstellations: DataConstellation[] = [];
+
 	/**
 	 * This observable reflects the fact that the button "next" should be active or not.
 	 */
 	public next$ = this.nextSubject$.asObservable();
 
 	private previousSubject$ = new BehaviorSubject<boolean>(false);
+
+	private previousDataConstellations: DataConstellation[] = [];
+
+	/**
+	 * The current data constellations.
+	 */
+	private dataConstellations: DataConstellation[] = [];
 
 	/**
 	 * This observable reflects the fact that the button "next" should be active or not.
@@ -69,7 +77,6 @@ export class StarfieldService {
 	constructor(
 		private staffListService: StaffListService,
 		private backendSetupService: BackendSetupService,
-		private messageService: MessageService,
 		private httpClient: HttpClient) { }
 
 	/**
@@ -165,6 +172,25 @@ export class StarfieldService {
 				}
 			}
 		});
+		return this.fillColor(constellations);
+	}
+
+	/**
+	 * Generate the UI constellations from the data loaded from the backend server.
+	 * @returns the generated generations
+	 */
+	public generateConstellations(): Constellation[] {
+		const constellations = [];
+		this.dataConstellations.forEach(data => constellations.push(new Constellation(data.idSkill, data.starsNumber)));
+		return this.fillColor(constellations);
+	}
+
+	/**
+	 * Fill the colors of the constellations
+	 * @param constellations the given constellations
+	 * @returns the colored constellations
+	 */
+	private fillColor(constellations: Constellation[]) {
 		for (let i = 0; i < constellations.length; i++) {
 			constellations[i].backgroundColor = 'white';
 			constellations[i].color = DashboardColor.rgb(i, constellations.length - 1);
@@ -204,6 +230,15 @@ export class StarfieldService {
 	 * Retrieve the active state for the previous month.
 	 */
 	public retrieveActiveStatePrevious() {
+
+		// We do not load the data for the actual month from the server.
+		// We process 'live' the constellations with the actual staff
+		if (this.previousMonthIsCurrentMonth(new Date(this.selectedMonth.year, this.selectedMonth.month, 1))) {
+			this.switchActiveStatePrevious(true);
+			return;
+		}
+		
+
 		const date = new Date(this.selectedMonth.year, this.selectedMonth.month, 1);
 		date.setDate(0);
 
@@ -215,7 +250,7 @@ export class StarfieldService {
 			console.log ('Retrieving constellations for %d/%d', month, year);
 		}
 		this.httpClient
-			.get<Constellation[]>(`${this.backendSetupService.url()}/staff/constellation/${year}/${month}`)
+			.get<DataConstellation[]>(`${this.backendSetupService.url()}/staff/constellation/${year}/${month}`)
 			.pipe(
 				take(1),
 				catchError(error => {
@@ -225,8 +260,9 @@ export class StarfieldService {
 					return EMPTY;
 				})
 			).subscribe({
-				next: constellations => {
+				next: dataConstellations => {
 					this.switchActiveStatePrevious(true);
+					this.previousDataConstellations = dataConstellations;
 				}
 			});
 	}
@@ -235,6 +271,13 @@ export class StarfieldService {
 	 * Retrieve the active state for the previous month.
 	 */
 	 public retrieveActiveStateNext() {
+
+		// We do not load the data for the actual month from the server.
+		// We process 'live' the constellations with the actual staff
+		if (this.nextMonthIsCurrentMonth(new Date(this.selectedMonth.year, this.selectedMonth.month, 1))) {
+			this.switchActiveStateNext(true);
+			return;
+		}
 
 		const nextMonth = this.nextMonth(new Date(this.selectedMonth.year, this.selectedMonth.month, 1));
 
@@ -246,7 +289,7 @@ export class StarfieldService {
 			console.log ('Retrieving constellations for %d/%d', month, year);
 		}
 		this.httpClient
-			.get<Constellation[]>(`${this.backendSetupService.url()}/staff/constellation/${year}/${month}`)
+			.get<DataConstellation[]>(`${this.backendSetupService.url()}/staff/constellation/${year}/${month}`)
 			.pipe(
 				take(1),
 				catchError(error => {
@@ -256,12 +299,18 @@ export class StarfieldService {
 					return EMPTY;
 				})
 			).subscribe({
-				next: constellations => {
+				next: dataConstellations => {
 					this.switchActiveStateNext(true);
+					this.nextDataConstellations = dataConstellations;
 				}
 			});
 	}
 
+	/**
+	 * Calculate the next month following the current month.
+	 * @param currentMonth the given month
+	 * @returns the next month
+	 */
 	public nextMonth(currentMonth: Date): Date {
 		if (currentMonth.getMonth() == 11) {
 			return new Date(currentMonth.getFullYear() + 1, 0, 1);
@@ -269,5 +318,87 @@ export class StarfieldService {
 			return new Date(currentMonth.getFullYear(), currentMonth.getMonth() + 1, 1);
 		}
 	}
-	
+
+	/**
+	 * Test if the NEXT month of the given month is the CURRENT month.
+	 * @param month the given month
+	 * @returns **TRUE** if the given month is located one month before today, **FALSE** otherwise
+	 */
+	public nextMonthIsCurrentMonth(month: Date) {
+		const next = this.nextMonth(month);
+		return ( (new Date().getFullYear() === next.getFullYear()) && (new Date().getMonth() === next.getMonth()));
+	}
+
+	/**
+	 * Test if the PREVIOUS month of the given month is the CURRENT month.
+	 * @param month the given month
+	 * @returns **TRUE** if the given month is located one month after today, **FALSE** otherwise
+	 */
+	 public previousMonthIsCurrentMonth(month: Date) {
+		const previous = this.previousMonth(month);
+		return ( (new Date().getFullYear() === previous.getFullYear()) && (new Date().getMonth() === previous.getMonth()));
+	}
+
+	/**
+	 * Calculate the previous month following the given month.
+	 * @param currentMonth the given month
+	 * @returns the next month
+	 */
+	public previousMonth(month: Date): Date {
+		month.setDate(0);
+		return new Date(month.getFullYear(), month.getMonth(), 1);
+	}
+
+	/**
+	 * Set the context of the starfield to the previous constellation
+	 * 
+	 * *A previous constellation cannot be processed from the actual staff.
+	 * If this scenario was possible, it would mean that the future already exists on the server.*
+	 */
+	public broadcastPreviousConstellations() {
+		this.dataConstellations = this.previousDataConstellations;
+		const constellations = this.generateConstellations();
+		this.assembleTheStars(constellations);
+
+		this.switchActiveStateNext(false);
+		this.switchActiveStatePrevious(false);
+
+		const current = this.previousMonth(new Date(this.selectedMonth.year, this.selectedMonth.month, 1));
+		this.selectedMonth.year = current.getFullYear();
+		this.selectedMonth.month = current.getMonth();
+
+		this.retrieveActiveStateNext();
+		this.retrieveActiveStatePrevious();
+	}
+
+	/**
+	 * Set the context of the starfield to the previous constellation
+	 */
+	 public broadcastNextConstellations() {
+
+		if (traceOn()) {
+			console.log ('Display the next constellations after %s', this.selectedMonth.toString());
+		}
+		if (this.nextMonthIsCurrentMonth(this.selectedMonth.firstDateOfMonth())) {
+			// Generate the stars from the staff collection.
+			this.generateAndBroadcastConstellations();
+		} else {
+			// Generate the stars from the loaded data.
+			this.dataConstellations = this.nextDataConstellations;
+			const constellations = this.generateConstellations();
+			this.assembleTheStars(constellations);
+		}
+
+		this.switchActiveStateNext(false);
+		this.switchActiveStatePrevious(false);
+
+		const current = this.nextMonth(new Date(this.selectedMonth.year, this.selectedMonth.month, 1));
+		this.selectedMonth.year = current.getFullYear();
+		this.selectedMonth.month = current.getMonth();
+
+		this.retrieveActiveStateNext();
+		this.retrieveActiveStatePrevious();
+	}
+
+
 }

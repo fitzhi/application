@@ -13,7 +13,6 @@ import { FitzhiDashboardPopupHelper } from './fitzhi-dashboard-popup-helper';
 import { selection } from './selection';
 import { PieDashboardService } from './service/pie-dashboard.service';
 import { SkylineService } from './skyline/service/skyline.service';
-import { Constellation } from './starfield/data/constellation';
 import { StarfieldService } from './starfield/service/starfield.service';
 
 @Component({

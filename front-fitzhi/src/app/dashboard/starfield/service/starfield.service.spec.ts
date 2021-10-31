@@ -144,8 +144,10 @@ describe('StarfieldService', () => {
 	});
 
 	it('should be able to retrieve the constellations of the PREVIOUS month and therefore activate the PREVIOUS button.', done => {
+		service.selectedMonth.year = 1969;
+		service.selectedMonth.month = 7;
 		service.retrieveActiveStatePrevious();
-		const req = httpTestingController.expectOne('TEST_URL/api/staff/constellation/2021/9');
+		const req = httpTestingController.expectOne('TEST_URL/api/staff/constellation/1969/7');
 		expect(req.request.method).toBe('GET');
 		req.flush([]);
 		service.previous$.subscribe({
@@ -156,9 +158,29 @@ describe('StarfieldService', () => {
 		});
 	});
 
-	it('should handle the lack of constellations for the PREVIOUS month.', done => {
+	it('should NOT call the backend server to retrieve the PREVIOUS constellations if the PREVIOUS month is the ACTUAL month.', done => {
+		const next = service.nextMonth(new Date());
+		service.selectedMonth.year = next.getFullYear();
+		service.selectedMonth.month = next.getMonth();
+
+		const year = new Date().getFullYear();
+		const month = new Date().getMonth() + 1;
+
 		service.retrieveActiveStatePrevious();
-		const req = httpTestingController.expectOne('TEST_URL/api/staff/constellation/2021/9');
+		const req = httpTestingController.expectNone(`TEST_URL/api/staff/constellation/${year}/${month}`);
+		service.previous$.subscribe({
+			next: doneAndOk => {
+				expect(doneAndOk).toBe(true);
+				done();
+			}
+		});
+	});
+
+	it('should handle the lack of constellations for the PREVIOUS month.', done => {
+		service.selectedMonth.year = 1969;
+		service.selectedMonth.month = 7;
+		service.retrieveActiveStatePrevious();
+		const req = httpTestingController.expectOne('TEST_URL/api/staff/constellation/1969/7');
 		expect(req.request.method).toBe('GET');
 		const error = new ErrorEvent('error');
 		req.error(
@@ -176,12 +198,17 @@ describe('StarfieldService', () => {
 		});
 	});
 
-	it('should evaluate correctly the next month for the 30/10/2021.', () => {
+	it('should evaluate correctly the NEXT month for the 30/10/2021.', () => {
 		const next = service.nextMonth(new Date(2021, 10, 30));
 		expect(next.getFullYear()).toBe(2021);
 		expect(next.getMonth()).toBe(11);
 	});
 
+	it('should evaluate correctly the PREVIOUS month for the 30/10/2021.', () => {
+		const next = service.previousMonth(new Date(2021, 10, 30));
+		expect(next.getFullYear()).toBe(2021);
+		expect(next.getMonth()).toBe(9);
+	});
 	
 	it('should evaluate correctly the next month for the 30/11/2021 (Be aware that month are evaluated from 0 to 11).', () => {
 		const next = service.nextMonth(new Date(2021, 11, 30));
@@ -189,10 +216,41 @@ describe('StarfieldService', () => {
 		expect(next.getMonth()).toBe(0);
 	});
 
+	it('should evaluate correctly the PREVIOUS month for the 25/02/2021 (Be aware that month are evaluated from 0 to 11).', () => {
+		const next = service.previousMonth(new Date(2021, 1, 25));
+		expect(next.getFullYear()).toBe(2021);
+		expect(next.getMonth()).toBe(0);
+	});
+
+	it('should evaluate correctly the PREVIOUS month for the 25/01/2021 (Be aware that month are evaluated from 0 to 11).', () => {
+		const next = service.previousMonth(new Date(2021, 0, 25));
+		expect(next.getFullYear()).toBe(2020);
+		expect(next.getMonth()).toBe(11);
+	});
+
+	it('should consider (OF COURSE) that the current date is not a possible candidate for being the PREVIOUS month (Today cannot be yesterday).', () => {
+		expect(service.nextMonthIsCurrentMonth(new Date())).toBeFalse();
+	});
+
+	it('should accept the PREVIOUS month as being the BEST candidate to be the PREVIOUS month.', () => {
+		const previous = service.previousMonth(new Date());
+		expect(service.nextMonthIsCurrentMonth(previous)).toBeTrue();
+	});
+
+	it('should consider (OF COURSE) that the current date is not a possible candidate for being the NEXT month (Today cannot be tomorrow).', () => {
+		expect(service.previousMonthIsCurrentMonth(new Date())).toBeFalse();
+	});
+
+	it('should accept the NEXT month as being the BEST candidate to be the NEXT month.', () => {
+		const next = service.nextMonth(new Date());
+		expect(service.previousMonthIsCurrentMonth(next)).toBeTrue();
+	});
 
 	it('should be able to retrieve the constellations of the NEXT month, and therefore activate the NEXT button.', done => {
+		service.selectedMonth.year = 1969;
+		service.selectedMonth.month = 5;
 		service.retrieveActiveStateNext();
-		const req = httpTestingController.expectOne('TEST_URL/api/staff/constellation/2021/11');
+		const req = httpTestingController.expectOne('TEST_URL/api/staff/constellation/1969/7');
 		expect(req.request.method).toBe('GET');
 		req.flush([]);
 		service.next$.subscribe({
@@ -204,8 +262,10 @@ describe('StarfieldService', () => {
 	});
 
 	it('should handle the lack of constellations for the NEXT month.', done => {
+		service.selectedMonth.year = 1969;
+		service.selectedMonth.month = 5;
 		service.retrieveActiveStateNext();
-		const req = httpTestingController.expectOne('TEST_URL/api/staff/constellation/2021/11');
+		const req = httpTestingController.expectOne('TEST_URL/api/staff/constellation/1969/7');
 		expect(req.request.method).toBe('GET');
 		const error = new ErrorEvent('error');
 		req.error(
@@ -218,6 +278,25 @@ describe('StarfieldService', () => {
 		service.next$.subscribe({
 			next: doneAndOk => {
 				expect(doneAndOk).toBe(false);
+				done();
+			}
+		});
+	});
+
+	it('should NOT call the backend server to retrieve the NEXT constellations if the NEXT month is the ACTUAL month.', done => {
+		// We set the selected month to the previous month.
+		const previous = service.previousMonth(new Date());
+		service.selectedMonth.year = previous.getFullYear();
+		service.selectedMonth.month = previous.getMonth();
+
+		const year = new Date().getFullYear();
+		const month = new Date().getMonth() + 1;
+
+		service.retrieveActiveStateNext();
+		const req = httpTestingController.expectNone(`TEST_URL/api/staff/constellation/${year}/${month}`);
+		service.next$.subscribe({
+			next: doneAndOk => {
+				expect(doneAndOk).toBe(true);
 				done();
 			}
 		});
