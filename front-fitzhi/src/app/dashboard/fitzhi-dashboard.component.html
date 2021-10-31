@@ -1,7 +1,7 @@
 
 <angular-popper placement="left" target="#skyline" *ngIf="popupHelper.isButtonActivated(selection.skyline) && !hasSelectedADashboard()">
 	<div content class="help">
-		<h4 class="help-title">Display Skyline history</h4>
+		<h4 class="help-title">Skyline history</h4>
 		<div class="help-content">
 			<p>
 				The history of your portfolio will be replayed on this panel with an animated histogram.  
@@ -28,7 +28,7 @@
 
 <angular-popper placement="left" target="#treeMap-skills" *ngIf="popupHelper.isButtonActivated(selection.treeMapSkills) && !hasSelectedADashboard()">
 	<div content class="help">
-		<h4 class="help-title">Display ecosystem staff coverage</h4>
+		<h4 class="help-title">Ecosystem coverage</h4>
 		<div class="help-content">
 			<p>
 				This Treemap chart represents the skills coverage of your portfolio.
@@ -45,7 +45,7 @@
 <angular-popper placement="left" target="#treeMap-projects" 
 *ngIf="popupHelper.isButtonActivated(selection.treeMapProjects) && !hasSelectedADashboard()">
 	<div content class="help">
-		<h4 class="help-title">Display projects patchwork</h4>
+		<h4 class="help-title">Projects patchwork</h4>
 		<div class="help-content">
 			<p> 
 				This graphic represents the patchwork of projects. 
@@ -87,7 +87,7 @@
 
 <angular-popper placement="left" target="#pie" *ngIf="popupHelper.isButtonActivated(selection.currentSummary) && !hasSelectedADashboard()">
 	<div content class="help">
-		<h4 class="help-title">Display Pie dashboard</h4>
+		<h4 class="help-title">Pie dashboard</h4>
 		<div class="help-content">
 			<p>
 				This sector diagram summarizes on a single PIE, the quality of the portfolio on the 3 metrics :
@@ -106,7 +106,7 @@
 		<h4 class="help-title">Technical datation of portfolio</h4>
 		<div class="help-content">
 			<p>
-				You will find on this dashboard the technical datation of your portfolio, and each project as well.
+				You will find on this dashboard the technical datation of your portfolio, and for each project as well.
 			</p>
 			<p>
 				Each project in Fitzhì has an &laquo; historic datation &raquo; and a &laquo; technical &raquo; one.
@@ -119,14 +119,19 @@
 
 <angular-popper placement="left" target="#starfield" *ngIf="popupHelper.isButtonActivated(selection.starfield) && !hasSelectedADashboard()">
 	<div content class="help">
-		<h4 class="help-title">Summary dashboard for last year</h4>
+		<h4 class="help-title">Stars and tribes</h4>
 		<div class="help-content">
 			<p>
-				You must monitor your IT assets over time. Here, you'll find a snapshot of your portfolio for last year.
+				This graph summarizes the level of overall expertise of the teams by skill. 
+				It brings together the constellations of skills.
 			</p>
 			<p>
-				As you don't have any history in Fitzhi yet, no snapshot from last year is available.<br/>
-				<em>Good for us. We don't have yet developed this feature!</em>
+				A constellation in fact, represents the number of units of skills registered for a skill.
+				Each &#x2605; represents a &laquo; unit of skill &raquo;, e.g., a Java expert (5 &#x2605;) brings 5 ​​units to the count, when  one novice developer (1 &#x2605;) brings one.
+			</p>
+			<p>
+				This snapshot can be considered as the potential energy of your IT : the ability to do. 
+				Fitzhì save one snapshot of this KPI per month in order to follow up this ability over time.
 			</p>
 		</div>
 	</div>

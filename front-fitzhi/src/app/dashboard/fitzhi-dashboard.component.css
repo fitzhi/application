@@ -146,23 +146,6 @@ button.pie  div.pie-minimized {
   margin: 0 auto;
 }
 
-div.camera {
-	width: 300px;
-	margin: 40vh auto;
-	transform: translateY(-50%);
-	text-align: center;
-	font-size: 22px;
-	border-radius: 5px;
-	border-style: solid;
-	border-width: 1px;
-	border-color: lightgrey;
-	padding: 20px;
-}
-
-i.camera {
-	font-size: 60px;
-}
-
 .vertical-nav {
 	min-width: var(--sidebar-width);
 	width: var(--sidebar-width);
