@@ -1,4 +1,5 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
+import { BehaviorSubject } from 'rxjs';
 import { BaseDirective } from 'src/app/base/base-directive.directive';
 import { traceOn } from 'src/app/global';
 import { StarfieldService } from '../service/starfield.service';
@@ -12,7 +13,12 @@ export class StarfieldHeaderComponent extends BaseDirective implements OnInit, O
 
 	public displayHelp = false;
 
-	public today = new Date();
+	private todaySubject$ = new BehaviorSubject<Date>(new Date())
+	
+	/**
+	 * Month to be displayed.
+	 */
+	public today$ = this.todaySubject$.asObservable();
 
 	public nextMonthAvailable = false;
 
@@ -45,6 +51,7 @@ export class StarfieldHeaderComponent extends BaseDirective implements OnInit, O
 				console.log ('next Month from %s', this.starfieldService.selectedMonth.toString());
 			}
 			this.starfieldService.broadcastNextConstellations();
+			this.todaySubject$.next(this.starfieldService.selectedMonth.firstDateOfMonth());
 		}
 	}
 
@@ -54,6 +61,7 @@ export class StarfieldHeaderComponent extends BaseDirective implements OnInit, O
 				console.log ('previous Month for %s', this.starfieldService.selectedMonth.toString());
 			}
 			this.starfieldService.broadcastPreviousConstellations();
+			this.todaySubject$.next(this.starfieldService.selectedMonth.firstDateOfMonth());
 		}
 	}
 

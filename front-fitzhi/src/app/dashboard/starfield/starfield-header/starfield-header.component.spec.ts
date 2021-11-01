@@ -3,6 +3,7 @@ import { ComponentFixture, fakeAsync, TestBed, tick } from '@angular/core/testin
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatDialogModule } from '@angular/material/dialog';
 import { By } from '@angular/platform-browser';
+import { ControlledRisingSkylineModule } from 'controlled-rising-skyline';
 import { MessageBoxService } from 'src/app/interaction/message-box/service/message-box.service';
 import { FileService } from 'src/app/service/file.service';
 import { StaffService } from 'src/app/tabs-staff/service/staff.service';
@@ -75,5 +76,50 @@ describe('StarfieldHeaderComponent', () => {
 		expect(document.getElementById('btPrevious').classList.value).toBe('px-2 button-direction');
 		done();
 	});
+
+	it('should handle a click on the NEXT button. The selected month should be displayed on the header.', fakeAsync(() => {
+		component.nextMonthAvailable = true;
+
+		// This selected month should be displayed on header.
+		starfieldService.selectedMonth.year = 2020;
+		starfieldService.selectedMonth.month = 10;
+
+		const spy = spyOn(starfieldService, 'broadcastNextConstellations').and.returnValue(null);
+		const btNext = fixture.debugElement.query(By.css('#btNext'));
+		btNext.triggerEventHandler('click', null);
+		tick();
+		fixture.detectChanges();
+		expect(spy).toHaveBeenCalled();
+		const selectedMonth = fixture.debugElement.query(By.css('#selectedMonth'));
+		// We add 1 to display the month because the month in IS is inside the range of 0/11.
+		expect(selectedMonth.nativeElement.innerText).toBe('11/2020');
+	}));
+
+	it('should handle a click on the PREVIOUS button. The selected month should be displayed on the header.', fakeAsync(() => {
+		component.previousMonthAvailable = true;
+
+		// This selected month should be displayed on header.
+		starfieldService.selectedMonth.year = 2020;
+		starfieldService.selectedMonth.month = 10;
+
+		const spy = spyOn(starfieldService, 'broadcastPreviousConstellations').and.returnValue(null);
+		const btNext = fixture.debugElement.query(By.css('#btPrevious'));
+		btNext.triggerEventHandler('click', null);
+		tick();
+		fixture.detectChanges();
+		expect(spy).toHaveBeenCalled();
+		const selectedMonth = fixture.debugElement.query(By.css('#selectedMonth'));
+		// We add 1 to display the month because the month in IS is inside the range of 0/11.
+		expect(selectedMonth.nativeElement.innerText).toBe('11/2020');
+	}));
+
+	it('should display by default the current date on the header.', fakeAsync(() => {
+		const today = new Date();
+		const month = today.getMonth() + 1;
+		const year = today.getFullYear();
+		const selectedMonth = fixture.debugElement.query(By.css('#selectedMonth'));
+		// We add 1 to display the month because the month in IS is inside the range of 0/11.
+		expect(selectedMonth.nativeElement.innerText).toBe(`${month}/${year}`);
+	}));
 
 });

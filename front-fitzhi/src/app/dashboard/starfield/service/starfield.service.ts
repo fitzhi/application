@@ -87,7 +87,12 @@ export class StarfieldService {
 		if (traceOn()) {
 			console.log ('External filter is %s', this.filter.external);
 		}
-		this.generateAndBroadcastConstellations();
+		if ((new Date().getFullYear() === this.selectedMonth.year) && (new Date().getMonth() === this.selectedMonth.month)) {
+			this.generateAndBroadcastConstellations();
+		} else {
+			const constellations = this.generateConstellations();
+			this.assembleTheStars(constellations);
+		}
 	}
 
 	/**
@@ -181,7 +186,11 @@ export class StarfieldService {
 	 */
 	public generateConstellations(): Constellation[] {
 		const constellations = [];
-		this.dataConstellations.forEach(data => constellations.push(new Constellation(data.idSkill, data.starsNumber)));
+		if (this.filter.external) {
+			this.dataConstellations.forEach(data => constellations.push(new Constellation(data.idSkill, data.starsNumberWithExternal)));
+		} else {
+			this.dataConstellations.forEach(data => constellations.push(new Constellation(data.idSkill, data.starsNumber)));
+		}
 		return this.fillColor(constellations);
 	}
 

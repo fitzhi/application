@@ -48,7 +48,7 @@ export class StarfieldContentComponent extends BaseDirective implements OnInit, 
 			})
 		);
 		if (traceOn()) {
-			console.log ('Actual month display %d/%d', this.starfieldService.selectedMonth.month, this.starfieldService.selectedMonth.year);
+			console.log ('Actual month display %s', this.starfieldService.selectedMonth.toString());
 		}
 	}
 
