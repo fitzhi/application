@@ -87,7 +87,7 @@
 
 <angular-popper placement="left" target="#pie" *ngIf="popupHelper.isButtonActivated(selection.currentSummary) && !hasSelectedADashboard()">
 	<div content class="help">
-		<h4 class="help-title">Pie dashboard</h4>
+		<h4 class="help-title">Composite Pie</h4>
 		<div class="help-content">
 			<p>
 				This sector diagram summarizes on a single PIE, the quality of the portfolio on the 3 metrics :
@@ -309,17 +309,17 @@
 			</div>
 
 			<div class="pie">
-						<app-pie-chart
-								[radius]=150
-								[active]=true
-								[legend]=true
-								[pie]=pieIdentifier.current>
-						</app-pie-chart>
-				</div>
+				<app-pie-chart
+					[radius]=150
+					[active]=true
+					[legend]=true
+					[pie]=pieIdentifier.current>
+				</app-pie-chart>
+			</div>
 
-				<div class="pie-projects">
-						<app-pie-projects></app-pie-projects>
-				</div>
+			<div class="pie-projects">
+				<app-pie-projects></app-pie-projects>
+			</div>
 
 		</div>
 

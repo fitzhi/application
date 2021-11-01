@@ -54,7 +54,7 @@ div.pie-projects {
 	height: 100%;
 }
 
-@media screen and (max-width: 1024px) {
+@media screen and (max-width: 1280px) {
 	div.pie-projects {
 		width: 0;
 		visibility: hidden;
@@ -65,9 +65,9 @@ div.pie-projects {
 	}
 }
 
-@media screen and (min-width: 1024px) {
+@media screen and (min-width: 1280px) {
 	div.pie-projects {
-		width: 200px;
+		width: 300px;
 		visibility: visible;
 	}
 	div.pie-legend {
