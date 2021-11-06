@@ -33,9 +33,10 @@ RUN mkdir fitzhi; \
 	mkdir spoq; \
 	cd spoq; \
 	tar xvf ../spoq.zip; \
-	cd ..
+	cd ..; \
+	echo "export DOCKER_FITZHI_BUILDTIME=#buildingTime" >> ~/.bashrc
 
 WORKDIR /fitzhi/deploy/backend-fitzhi
 
-# CMD service nginx start && java -Xmx1g -jar fitzhi.jar --spring.profiles.active=HTTP > ../out.txt
+CMD ./start-fitzhi.sh 
 EXPOSE 80

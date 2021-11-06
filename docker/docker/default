@@ -38,11 +38,13 @@ server {
 		chunked_transfer_encoding off;
 	}
 
-	location /sonar {
+	location ~ ^/sonar/(.+) {
+		# We rewrite and remove the sonar directory in the path.
+        rewrite ^/sonar/(.+)$ /$1 break;
 		# Mac OS & Windows
 		# To access the Sonar server deployed on the actual host where this Fitzhì container is running.
 		# host.docker.internal is mapped to the host IP
-proxy_pass http://host.docker.internal:9000/sonar;
+proxy_pass http://host.docker.internal:9000;
 
 		proxy_set_header Host $http_host;
 		proxy_set_header X-Real-IP $remote_addr;
