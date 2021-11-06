@@ -1,4 +1,4 @@
-#!/bin/badocker sh
+#!/bin/bash
 
 if [ ${urlSonarServer} ] && [ ${urlSonarServer} != "" ]
 then
