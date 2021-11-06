@@ -4,6 +4,7 @@ import com.fitzhi.bean.ProjectHandler;
 import com.fitzhi.exception.ApplicationException;
 
 import org.junit.Assert;
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,6 +26,13 @@ public class ProjectHandlerActiveProjectsTest {
 	@Autowired
 	ProjectHandler projectHandler;
 		
+	@Before
+	public void before() throws Exception {
+		// We force to remove the project Marignan that might have been added by a previous test.
+		// There is currently no clear answer to the use case
+		projectHandler.removeProject(1515);
+	}
+
 	@Test
 	public void activeProjects() throws ApplicationException {
 
