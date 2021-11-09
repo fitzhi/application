@@ -68,7 +68,7 @@ describe('FitzhiDashboardComponent initialization', () => {
 	});
 
 	it('should be created without any error', () => {
-		component.selected = selection.none;
+		component.selected = selection.summary;
 		fixture.detectChanges();
 		expect(component).toBeTruthy();
 		expect(document.getElementById('container-skyline')).toBeNull();

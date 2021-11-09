@@ -2,7 +2,7 @@
  * Available buttons to display various global summaries.
  */
 export const selection  = {
-	none: 0,
+	summary: 0,
 	technicalDate: 1,
 	starfield: 2,
 	currentSummary: 3,

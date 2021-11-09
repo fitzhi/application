@@ -29,7 +29,7 @@ export class FitzhiDashboardComponent extends BaseDirective implements OnInit, O
 	/**
 	 * Selected button. End-user has clicked on it.
 	 */
-	public selected = this.selection.none;
+	public selected = this.selection.summary;
 
 	public pieIdentifier = {
 		lastMonth: 1,
@@ -139,7 +139,7 @@ export class FitzhiDashboardComponent extends BaseDirective implements OnInit, O
 	 * Return **TRUE** if the user has selected a type of dashboard, **FALSE** otherwise.
 	 */
 	hasSelectedADashboard(): boolean {
-		return (this.selected !== this.selection.none);
+		return (this.selected !== this.selection.summary);
 	}
 
 	flip() {
