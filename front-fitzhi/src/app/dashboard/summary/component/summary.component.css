@@ -8,16 +8,31 @@
 
 }
 
-#logo {
-	font-size: 420px;
+
+#summaries {
+	display: flex;
+	width: 100%;
+}
+
+#logo, #small-logo {
 	background: -webkit-linear-gradient(var(--color-selected), var(--color-error));
 	background-clip: text;
 	-webkit-background-clip: text;
 	-webkit-text-fill-color: transparent;
+}
 
+#logo {
+	font-size: 420px;
 	margin: 40vh auto;
 	transform: translateY(-50%);
-	
 	width: 450px;
-	/* height: 450px; */
+}
+
+#small-logo {
+	font-size: 100px;
+}
+
+div.summary {
+	width: 150px;
+	height: 150px;
 }
