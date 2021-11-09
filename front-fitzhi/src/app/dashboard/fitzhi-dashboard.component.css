@@ -74,20 +74,6 @@ div.pie-projects {
 		visibility: visible;
 	}
 }
-
-#summary {
-	font-size: 420px;
-	background: -webkit-linear-gradient(var(--color-selected), var(--color-error));
-	background-clip: text;
-	-webkit-background-clip: text;
-	-webkit-text-fill-color: transparent;
-
-	margin: 40vh auto;
-	transform: translateY(-50%);
-	
-	width: 450px;
-	height: 450px;
-}
  
 div.styline-icon {
 	width: var(--sidebar-button-width);

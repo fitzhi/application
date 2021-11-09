@@ -125,6 +125,7 @@ import { TableProjectsFilterComponent } from './tabs-project/table-projects-filt
 import { StarfieldComponent } from './dashboard/starfield/starfield.component';
 import { StarfieldHeaderComponent } from './dashboard/starfield/starfield-header/starfield-header.component';
 import { StarfieldContentComponent } from './dashboard/starfield/starfield-content/starfield-content.component';
+import { SummaryComponent } from './dashboard/summary/component/summary.component';
 
 @NgModule({
 	declarations: [
@@ -202,7 +203,8 @@ import { StarfieldContentComponent } from './dashboard/starfield/starfield-conte
 		TableProjectsFilterComponent,
 		StarfieldComponent,
 		StarfieldHeaderComponent,
-		StarfieldContentComponent
+		StarfieldContentComponent,
+  SummaryComponent
 	],
 	imports: [
 		BsDropdownModule.forRoot(),
