@@ -88,7 +88,7 @@ export class AuditGraphicBadgeComponent extends BaseDirective implements OnInit,
 						}
 					}
 				})
-			)
+			);
 		}
 
 		if (!this.editable) {

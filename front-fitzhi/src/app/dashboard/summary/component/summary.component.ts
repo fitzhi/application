@@ -17,7 +17,7 @@ export class SummaryComponent extends BaseDirective implements OnInit, OnDestroy
 
 	constructor(
 		public summaryService: SummaryService,
-		public projectService: ProjectService) { 
+		public projectService: ProjectService) {
 			super();
 		}
 
@@ -35,7 +35,7 @@ export class SummaryComponent extends BaseDirective implements OnInit, OnDestroy
 		this.subscriptions.add(
 			this.summaryService.generalAverage$.subscribe({
 				next: evaluation => this.project.auditEvaluation = Math.floor(evaluation * 10)
-			})
+			});
 		)
 	}
 

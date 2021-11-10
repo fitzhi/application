@@ -41,7 +41,7 @@ describe('DashboardService.calculateGeneralAverage', () => {
 		p.mapSkills.set(2, new ProjectSkill(2, 200, 2000));
 		p.active = true;
 		projectService.allProjects.push(p);
-		
+
 		const spy = spyOn(projectService, 'globalEvaluation').and.returnValues(5);
 		const result = service.calculateGeneralAverage();
 		expect(result).toBe(5);
@@ -54,7 +54,7 @@ describe('DashboardService.calculateGeneralAverage', () => {
 		p.mapSkills.set(1, new ProjectSkill(1, 100, 1000));
 		p.active = true;
 		projectService.allProjects.push(p);
-		
+
 		p = new Project (2, 'the Two');
 		p.mapSkills = new Map();
 		p.mapSkills.set(2, new ProjectSkill(2, 100, 1000));

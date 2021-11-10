@@ -21,7 +21,7 @@ export class TreemapProjectsChartComponent extends BaseDirective implements OnIn
 	 *
 	 * If this chart is hosted on a button, neither label, nor value has to be writen on the chart.
 	 */
-	 @Input() buttonOrChart = 'chart';
+	@Input() buttonOrChart = 'chart';
 
 	/**
 	 * The treemap chart is clickable, or not...
@@ -97,7 +97,7 @@ export class TreemapProjectsChartComponent extends BaseDirective implements OnIn
 	/**
 	 * No label for the button chart.
 	 * @param tile the active tile
-	 * @returns 
+	 * @returns
 	 */
 	noLabel(tile) {
 		return '';
@@ -105,7 +105,7 @@ export class TreemapProjectsChartComponent extends BaseDirective implements OnIn
 
 	/**
 	 * @param tile the current tile
-	 * @returns 
+	 * @returns
 	 */
 	labelFormatting(tile) {
 		return `<p>${(tile.label)}</p>`;
@@ -114,17 +114,17 @@ export class TreemapProjectsChartComponent extends BaseDirective implements OnIn
 	/**
 	 * No value for the button chart.
 	 * @param tile the active tile
-	 * @returns 
+	 * @returns
 	 */
-	 noValue(value) {
+	noValue(value) {
 		return '';
 	}
 
 	/**
 	 * @param tile the value to be drawn
-	 * @returns 
+	 * @returns
 	 */
-	 public valueFormatting(value) {
+	public valueFormatting(value) {
 		return value.toLocaleString() + ' lines';
 	}
 
@@ -134,11 +134,11 @@ export class TreemapProjectsChartComponent extends BaseDirective implements OnIn
 	public isChart() {
 		return (this.buttonOrChart === 'chart');
 	}
-	
+
 	/**
 	 * @returns **true** if the chart is a button.
 	 */
-	 public isButton() {
+	public isButton() {
 		return (this.buttonOrChart === 'button');
 	}
 

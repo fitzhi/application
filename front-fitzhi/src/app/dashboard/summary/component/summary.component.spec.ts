@@ -47,7 +47,7 @@ describe('SummaryComponent', () => {
 	];
 
 	@Component({
-		selector: 'test-host-component',
+		selector: 'app-test-host-component',
 		template: `	<div style="width: 800px; height: 800px; top: 0; bottom: 0; left: 0; right: 0; position: fixed; background-color: transparent;">
 						<app-summary></app-summary>
 					</div>`
@@ -58,10 +58,10 @@ describe('SummaryComponent', () => {
 
 	beforeEach(async () => {
 		await TestBed.configureTestingModule({
-			declarations: [ SummaryComponent, TestHostComponent, AuditGraphicBadgeComponent, 
+			declarations: [ SummaryComponent, TestHostComponent, AuditGraphicBadgeComponent,
 				TreemapProjectsContainerComponent, TreemapProjectsChartComponent,
 				TreemapProjectsChartComponent ],
-			providers: [ SummaryService, DashboardService, ReferentialService, CinematicService,  
+			providers: [ SummaryService, DashboardService, ReferentialService, CinematicService,
 				TreemapProjectsService],
 			imports: [ HttpClientTestingModule, MatDialogModule, RouterTestingModule, NgxChartsModule,
 				BrowserAnimationsModule ]
@@ -100,7 +100,7 @@ describe('SummaryComponent', () => {
 				expect(fixture.debugElement.query(By.css('#small-logo'))).toBeDefined();
 				done();
 			}
-		})
+		});
 	});
 
 	it('should display the general average badge.', done => {
@@ -118,7 +118,7 @@ describe('SummaryComponent', () => {
 				expect(spy).toHaveBeenCalled();
 				done();
 			}
-		})
+		});
 	});
 
 });

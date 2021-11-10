@@ -12,7 +12,7 @@ export class SummaryService {
 	private summary = new SummarySubjects();
 
 	private summarySubject$ = new BehaviorSubject<SummarySubjects>(this.summary);
-	
+
 	private generalAverageSubject$ = new BehaviorSubject<number>(0);
 
 	public generalAverage$ = this.generalAverageSubject$.asObservable();

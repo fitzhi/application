@@ -13,8 +13,8 @@ export class StarfieldHeaderComponent extends BaseDirective implements OnInit, O
 
 	public displayHelp = false;
 
-	private todaySubject$ = new BehaviorSubject<Date>(new Date())
-	
+	private todaySubject$ = new BehaviorSubject<Date>(new Date());
+
 	/**
 	 * Month to be displayed.
 	 */
