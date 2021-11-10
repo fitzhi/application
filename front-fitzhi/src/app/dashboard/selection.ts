@@ -9,4 +9,5 @@ export const selection  = {
 	treeMapSkills: 4,
 	skyline: 5,
 	treeMapProjects: 6,
+	generalAverage: 7,
 };
