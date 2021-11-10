@@ -17,6 +17,13 @@ import { TreemapProjectsService } from '../treemap-projects-service/treemap-proj
 export class TreemapProjectsChartComponent extends BaseDirective implements OnInit, OnDestroy {
 
 	/**
+	 * Will this treemap be used as a button inside the navbar, or as a chart inside the dashboard container ?
+	 *
+	 * If this chart is hosted on a button, neither label, nor value has to be writen on the chart.
+	 */
+	 @Input() buttonOrChart = 'chart';
+
+	/**
 	 * The treemap chart is clickable, or not...
 	 */
 	@Input() active = true;
@@ -48,9 +55,7 @@ export class TreemapProjectsChartComponent extends BaseDirective implements OnIn
 	loadDistribution() {
 		this.subscriptions.add(
 			this.treemapProjectsService.selectedProjects$.subscribe({
-				next: idProjects => {
-					this.loadChart(idProjects);
-				}
+				next: idProjects => this.loadChart(idProjects)
 			})
 		);
 	}
@@ -89,12 +94,52 @@ export class TreemapProjectsChartComponent extends BaseDirective implements OnIn
 		}
 	}
 
+	/**
+	 * No label for the button chart.
+	 * @param tile the active tile
+	 * @returns 
+	 */
+	noLabel(tile) {
+		return '';
+	}
+
+	/**
+	 * @param tile the current tile
+	 * @returns 
+	 */
 	labelFormatting(tile) {
 		return `<p>${(tile.label)}</p>`;
 	}
 
-	public valueFormatting(value) {
-		return value.toLocaleString() + ' lines'; // <p style="display: none"></p>`; // value + 'lines'; // `<p>${(tile.label)}</p>`;
+	/**
+	 * No value for the button chart.
+	 * @param tile the active tile
+	 * @returns 
+	 */
+	 noValue(value) {
+		return '';
+	}
+
+	/**
+	 * @param tile the value to be drawn
+	 * @returns 
+	 */
+	 public valueFormatting(value) {
+		return value.toLocaleString() + ' lines';
+	}
+
+	/**
+	 * @returns **true** if the chart is a chart.
+	 */
+	public isChart() {
+		return (this.buttonOrChart === 'chart');
+	}
+	
+	/**
+	 * @returns **true** if the chart is a button.
+	 */
+	 public isButton() {
+		return (this.buttonOrChart === 'button');
 	}
 
 	ngOnDestroy() {

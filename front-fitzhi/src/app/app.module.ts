@@ -204,7 +204,7 @@ import { SummaryComponent } from './dashboard/summary/component/summary.componen
 		StarfieldComponent,
 		StarfieldHeaderComponent,
 		StarfieldContentComponent,
-  SummaryComponent
+  		SummaryComponent
 	],
 	imports: [
 		BsDropdownModule.forRoot(),

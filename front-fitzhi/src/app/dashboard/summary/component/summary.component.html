@@ -1,11 +1,23 @@
 <div id="logo" *ngIf="(summaryService.summary$|async).noData()">质</div>
 <div id="summaries" *ngIf="!(summaryService.summary$|async).noData()">
-    <div class="summary" id="small-logo">质</div>
-    <div class="summary" id="general-average">
+	<div class="summary border m-1" id="small-logo">质</div>
+	<div class="summary border m-1 position-relative" id="general-average">
 		<app-audit-graphic-badge 
 			[editable]=false 
-            [project]=project
-			[id]=id >
-        </app-audit-graphic-badge>
-    </div>
+			[project]=project
+			[id]=1 >
+		</app-audit-graphic-badge>
+
+		<div class="position-absolute" style="width: 100px; height: 100px; bottom: 0; right: 0;">
+			<div class="host-treemap-projects">
+				<app-treemap-projects 
+					width="100px" 
+					height="100px" 
+					[buttonOrChart]="'button'"
+					[active]="false">
+				</app-treemap-projects>
+			</div>
+	
+		</div>
+	</div>
 </div>
