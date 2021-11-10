@@ -81,7 +81,7 @@ describe('SummaryComponent', () => {
 
 		fixture.detectChanges();
 	});
-/*
+
 	it('should display the main logo at startup.', () => {
 		expect(component).toBeTruthy();
 		expect(fixture.debugElement.query(By.css('#logo'))).toBeDefined();
@@ -102,7 +102,7 @@ describe('SummaryComponent', () => {
 			}
 		})
 	});
-*/
+
 	it('should display the general average badge.', done => {
 		const treemapProjectsService  = TestBed.inject(TreemapProjectsService);
 		treemapProjectsService.informSelectedProjects([1, 2, 3]);
