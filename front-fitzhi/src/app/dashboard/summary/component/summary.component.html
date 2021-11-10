@@ -1,4 +1,7 @@
 <div id="logo" *ngIf="(summaryService.summary$|async).noData()">质</div>
 <div id="summaries" *ngIf="!(summaryService.summary$|async).noData()">
     <div class="summary" id="small-logo">质</div>
+    <div class="summary" id="general-average">
+        {{(summaryService.generalAverage$|async)}}
+    </div>
 </div>

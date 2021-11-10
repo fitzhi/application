@@ -263,18 +263,6 @@ export class DashboardService {
 
 		const distribution = [];
 
-		function sizeOfProject(project: Project) {
-			if (project.mapSkills.size === 0) {
-				return 0;
-			}
-
-			return Array.from(project.mapSkills.values())
-				.map(pj => pj.totalFilesSize)
-				.reduce(function (a, b) {
-					return a + b;
-				});
-		}
-
 		if (traceOn()) {
 			console.groupCollapsed('Global evaluation for each project :');
 			this.projectService.allProjects
@@ -290,7 +278,7 @@ export class DashboardService {
 				distribution.push({
 					id: project.id,
 					name: project.name,
-					value: sizeOfProject(project),
+					value: this.sizeOfProject(project),
 					color: this.projectService.getRiskColor(this.projectService.globalEvaluation(project))
 				});
 			});
@@ -298,5 +286,36 @@ export class DashboardService {
 		return distribution;
 	}
 
+	/**
+	 * Compute the general average of the Fitzhi portfolio.
+	 */
+	public calculateGeneralAverage(): number {
+
+		let totalSize = 0;
+		let averageTimesSize = 0;
+
+		this.projectService.allProjects
+			.filter((project: Project) => project.active)
+			.forEach(project => {
+				const evaluation = this.projectService.globalEvaluation(project);
+				if (!isNaN(evaluation)) {
+					totalSize += this.sizeOfProject(project);
+					averageTimesSize += this.sizeOfProject(project) * evaluation;
+				}
+			});
+
+		return 10 - averageTimesSize / totalSize;
+	}
+
+	sizeOfProject(project: Project) {
+		if (project.mapSkills.size === 0) {
+			return 0;
+		}
+		return Array.from(project.mapSkills.values())
+			.map(pj => pj.totalFilesSize)
+			.reduce(function (a, b) {
+				return a + b;
+			});
+	}
 }
 

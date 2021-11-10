@@ -1,7 +1,12 @@
+import { HttpClientTestingModule, HttpTestingController } from '@angular/common/http/testing';
 import { Component } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { MatDialogModule } from '@angular/material/dialog';
 import { By } from '@angular/platform-browser';
 import { doesNotReject } from 'assert';
+import { CinematicService } from 'src/app/service/cinematic.service';
+import { DashboardService } from 'src/app/service/dashboard/dashboard.service';
+import { ReferentialService } from 'src/app/service/referential/referential.service';
 import { SummaryService } from '../service/summary.service';
 
 import { SummaryComponent } from './summary.component';
@@ -22,7 +27,9 @@ describe('SummaryComponent', () => {
 
 	beforeEach(async () => {
 		await TestBed.configureTestingModule({
-			declarations: [ SummaryComponent, TestHostComponent ]
+			declarations: [ SummaryComponent, TestHostComponent ],
+			providers: [ SummaryService, DashboardService, ReferentialService, CinematicService ],
+			imports: [ HttpClientTestingModule, MatDialogModule ]
 		})
 		.compileComponents();
 	});
@@ -41,17 +48,28 @@ describe('SummaryComponent', () => {
 	});
 
 	it('show the small logo when the first summary is loaded.', done => {
-		expect(component).toBeTruthy();
 		fixture.detectChanges();
 		const service = TestBed.inject(SummaryService);
-		service.showOverallAverage();
+		service.showGeneralAverage();
 		fixture.detectChanges();
 		service.summary$.subscribe({
 			next: sum => {
-				console.log ('nope', sum);
 				expect(fixture.debugElement.query(By.css('#logo'))).toBeNull();
 				expect(fixture.debugElement.query(By.css('#summaries'))).toBeDefined();
 				expect(fixture.debugElement.query(By.css('#small-logo'))).toBeDefined();
+				done();
+			}
+		})
+	});
+
+	it('should display the general average panel.', done => {
+		fixture.detectChanges();
+		const service = TestBed.inject(SummaryService);
+		service.showGeneralAverage();
+		fixture.detectChanges();
+		service.summary$.subscribe({
+			next: sum => {
+				expect(fixture.debugElement.query(By.css('#general-average'))).toBeDefined();
 				done();
 			}
 		})
