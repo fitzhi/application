@@ -16,9 +16,9 @@ getTestBed().initTestEnvironment(
 );
 // Then we find all the tests
 
-const context = require.context('./', true, /\.spec\.ts$/);
+// const context = require.context('./', true, /\.spec\.ts$/);
 // const context = require.context('./', true,  /summary\.component\.spec\.ts$/);
-// const context = require.context('./', true,  /dashboard-generationRVB\.service\.spec\.ts$/);
+const context = require.context('./', true,  /dashboard\.service\.calculateGeneralAverage\.spec\.ts$/);
 // const context = require.context('./', true,  /starfield\.service\.spec\.ts$/);
 // const context = require.context('./', true,  /starfield-broadcastConstellations\.service\.spec\.ts$/);
 // const context = require.context('./', true,  /starfield-header-ngInit\.component\.spec\.ts$/);
