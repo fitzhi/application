@@ -63,9 +63,7 @@ export class AuditGraphicBadgeComponent extends BaseDirective implements OnInit,
 	styleSize: any;
 
 	constructor(
-		public projectService: ProjectService,
-		private referentialService: ReferentialService,
-		private cinematicService: CinematicService) { super(); }
+		public projectService: ProjectService) { super(); }
 
 	ngOnInit() {
 		this.styleSize = { 'width': this.width + 'px',  'height': + this.height + 'px' };
@@ -78,19 +76,19 @@ export class AuditGraphicBadgeComponent extends BaseDirective implements OnInit,
 			}
 
 			// 1) The project has to be loaded.
-			this.projectService.projectLoaded$
-				.pipe(take(1))
-				.subscribe ({
+			this.subscriptions.add(
+				this.projectService.projectLoaded$.subscribe ({
 					next: doneAndOk => {
 						if (doneAndOk) {
 							// We colorize the Arc and Text after the UI event loop to avoid a transparent arc ('for an unknwon reason' (shame on me)).
 							setTimeout(() => {
-								this.drawAuditArc();
 								this.drawAuditText();
+								this.drawAuditArc();
 							}, 0);
 						}
 					}
-				});
+				})
+			)
 		}
 
 		if (!this.editable) {

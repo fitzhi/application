@@ -18,17 +18,28 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { MatPaginatorModule } from '@angular/material/paginator';
 import { MatGridListModule } from '@angular/material/grid-list';
 import { MatFormFieldModule } from '@angular/material/form-field';
+import { ProjectService } from 'src/app/service/project/project.service';
+import { Project } from 'src/app/data/project';
+import { By } from '@angular/platform-browser';
 
-describe('AuditGraphicBadgeComponent', () => {
+describe('AuditGraphicBadgeComponent in readonly mode', () => {
 	let component: TestHostComponent;
 	let fixture: ComponentFixture<TestHostComponent>;
+	let projectService: ProjectService;
 
 	@Component({
 		selector: 'app-host-component',
-		template: '<app-audit-graphic-badge [id]=1 [evaluation]=50 [editable]=true></app-audit-graphic-badge>'
+		template: `	<div style="width: 100px; height: 100px">
+						<app-audit-graphic-badge [id]=1 [project]=project [editable]=false>
+						</app-audit-graphic-badge>
+					</div>`
 	})
 
 	class TestHostComponent {
+		public project = new Project(1, 'One');
+		constructor() {
+			this.project.auditEvaluation = 50;
+		}
 	}
 
 	beforeEach(waitForAsync(() => {
@@ -52,11 +63,16 @@ describe('AuditGraphicBadgeComponent', () => {
 		referentialService.legends.push (risk);
 		fixture = TestBed.createComponent(TestHostComponent);
 		component = fixture.componentInstance;
+		projectService = TestBed.inject(ProjectService);
 		fixture.detectChanges();
 	});
 
-	it('should create', () => {
+	it('should create and draw the badge IN READONLY mode.', () => {
 		expect(component).toBeTruthy();
+		const badgeReadOnly = fixture.debugElement.query(By.css('#readOnlyBadge'));
+		expect(badgeReadOnly).toBeDefined();
+		const editableBadge = fixture.debugElement.query(By.css('#editableBadge'));
+		expect(editableBadge).toBeNull();
 	});
 
 });
