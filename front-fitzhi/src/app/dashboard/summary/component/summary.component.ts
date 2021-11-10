@@ -20,7 +20,7 @@ export class SummaryComponent extends BaseDirective implements OnInit, OnDestroy
 	/**
 	 * Helper handler the display or not of the poppup.
 	 */
-	 public popupHelper = new FitzhiDashboardPopupHelper();
+	public popupHelper = new FitzhiDashboardPopupHelper();
 
 	constructor(
 		public summaryService: SummaryService,
