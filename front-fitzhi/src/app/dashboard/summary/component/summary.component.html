@@ -8,10 +8,10 @@
 			[id]=selection.generalAverage >
 		</app-audit-graphic-badge>
 
-		<div class="position-absolute" style="width: 100px; height: 100px; bottom: 0; right: 0;">
-			<div class="host-treemap-projects"
-				(mouseenter)="popupHelper.mouseEnter(selection.generalAverage)" 
-				(mouseleave)="popupHelper.mouseLeave()">
+		<div class="position-absolute" style="width: 100px; height: 100px; bottom: 0; right: 0;"		
+			(mouseenter)="popupHelper.mouseEnter(selection.generalAverage)" 
+			(mouseleave)="popupHelper.mouseLeave()">
+			<div class="host-treemap-projects">
 				<app-treemap-projects 
 					width="100px" 
 					height="100px" 
@@ -23,12 +23,12 @@
 	</div>
 </div>
 
-<angular-popper placement="bottom" target="#general-average" *ngIf="hasGeneralAverage()" >
+<angular-popper id="help-general-average" placement="bottom" target="#general-average" *ngIf="hasGeneralAverage()" >
 	<div content class="help">
 		<h4 class="help-title">general average</h4>
 		<div class="help-content">
 			<p>
-				This note aggregates the general average for the portfolio
+				This score corresponds to the general average of your portfolio.
 			</p>
 		</div>
 	</div>
