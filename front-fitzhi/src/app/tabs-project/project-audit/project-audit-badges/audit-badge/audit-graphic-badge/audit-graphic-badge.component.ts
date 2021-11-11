@@ -1,14 +1,9 @@
-import { Component, OnInit, Input, AfterViewInit, Output, EventEmitter, OnDestroy } from '@angular/core';
+import { AfterViewInit, Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angular/core';
+import { BaseDirective } from 'src/app/base/base-directive.directive';
+import { Project } from 'src/app/data/project';
+import { traceOn } from 'src/app/global';
 import { ProjectService } from 'src/app/service/project/project.service';
 import { TopicEvaluation } from '../../topic-evaluation';
-import { Project } from 'src/app/data/project';
-import { BaseDirective } from 'src/app/base/base-directive.directive';
-import { BehaviorSubject } from 'rxjs';
-import { CinematicService } from 'src/app/service/cinematic.service';
-import { Constants } from 'src/app/constants';
-import { take } from 'rxjs/operators';
-import { ReferentialService } from 'src/app/service/referential/referential.service';
-import { traceOn } from 'src/app/global';
 
 @Component({
 	selector: 'app-audit-graphic-badge',
@@ -179,7 +174,7 @@ export class AuditGraphicBadgeComponent extends BaseDirective implements OnInit,
 		}
 
 		if (!this.editable) {
-			htmlElement.setAttribute('x', '40');
+			htmlElement.setAttribute('x', (this.evaluation === 100) ? '27' : '35');
 			htmlElement.setAttribute('y', '70');
 			htmlElement.textContent = '' + this.evaluation;
 		} else {
