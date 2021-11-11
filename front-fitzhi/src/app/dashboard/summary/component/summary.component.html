@@ -25,11 +25,21 @@
 
 <angular-popper id="help-general-average" placement="bottom" target="#general-average" *ngIf="hasGeneralAverage()" >
 	<div content class="help">
-		<h4 class="help-title">general average</h4>
+		<h4 class="help-title">General average</h4>
 		<div class="help-content">
+			<br/>
 			<p>
-				This score corresponds to the general average of your portfolio.
+				This score corresponds to the weighted average of your portfolio.
 			</p>
+			<p>
+				Each project has a score, and a weight corresponding to its size.
+				The score is calculated with 3 critera, if they are reachable.
+			</p>
+			<ul>
+				<li>The Staff coverage</li>
+				<li>The Sonar evaluation</li>
+				<li>The Audit report</li>
+			</ul>
 		</div>
 	</div>
 </angular-popper>	
