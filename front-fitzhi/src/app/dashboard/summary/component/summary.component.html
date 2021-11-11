@@ -1,6 +1,8 @@
 <div id="logo" *ngIf="(summaryService.summary$|async).noData()">质</div>
 <div id="summaries" *ngIf="!(summaryService.summary$|async).noData()">
-	<div class="summary border m-1" id="small-logo">质</div>
+	<div class="summary border m-1">
+		<div id="small-logo">质</div>
+	</div>
 	<div class="summary border m-1 position-relative" id="general-average">
 		<app-audit-graphic-badge 
 			[editable]=false 

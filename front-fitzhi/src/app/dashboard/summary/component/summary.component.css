@@ -30,7 +30,8 @@
 
 #small-logo {
 	font-size: 200px;
-	margin-left: 40px;
+	margin: 20px auto;
+	width: 200px; 
 }
 
 div.summary {

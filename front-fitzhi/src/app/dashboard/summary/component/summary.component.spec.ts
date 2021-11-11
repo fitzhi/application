@@ -7,6 +7,7 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { RouterTestingModule } from '@angular/router/testing';
 import { NgxChartsModule } from '@swimlane/ngx-charts';
 import { NgxPopper } from 'angular-popper';
+import { ExpectedConditions } from 'protractor';
 import { RiskLegend } from 'src/app/data/riskLegend';
 import { CinematicService } from 'src/app/service/cinematic.service';
 import { DashboardService } from 'src/app/service/dashboard/dashboard.service';
@@ -93,8 +94,10 @@ describe('SummaryComponent', () => {
 
 	it('show the small logo when the first summary is loaded.', done => {
 		const service = TestBed.inject(SummaryService);
+		const spy = spyOn(dashboardService, 'calculateGeneralAverage').and.returnValue(1);
 		service.showGeneralAverage();
 		fixture.detectChanges();
+		expect(spy).toHaveBeenCalled();
 		service.summary$.subscribe({
 			next: sum => {
 				expect(fixture.debugElement.query(By.css('#logo'))).toBeNull();
