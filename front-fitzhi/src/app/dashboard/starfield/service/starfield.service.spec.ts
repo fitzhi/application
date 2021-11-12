@@ -1,8 +1,6 @@
 import { HttpClientTestingModule, HttpTestingController } from '@angular/common/http/testing';
-import { ComponentFixtureAutoDetect, TestBed } from '@angular/core/testing';
+import { TestBed } from '@angular/core/testing';
 import { MatDialogModule } from '@angular/material/dialog';
-import { disconnect } from 'process';
-import { take } from 'rxjs/operators';
 import { Collaborator } from 'src/app/data/collaborator';
 import { Experience } from 'src/app/data/experience';
 import { MessageBoxService } from 'src/app/interaction/message-box/service/message-box.service';

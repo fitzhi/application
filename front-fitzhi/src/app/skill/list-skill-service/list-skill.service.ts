@@ -69,7 +69,7 @@ export class ListSkillService {
 		if (traceOn()) {
 			console.log('Direct access for : ' + id);
 		}
-		return this.skillService.get(id).pipe(tap(
+		return this.skillService.get$(id).pipe(tap(
 			(skill: Skill) => {
 				if (traceOn()) {
 					console.log('Direct access for : ' + id);

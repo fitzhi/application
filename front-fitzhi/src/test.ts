@@ -40,6 +40,6 @@ const context = require.context('./', true, /\.spec\.ts$/);
 // const context = require.context('./', true,  /table-projects-filter-1\.component\.spec\.ts$/);
 // const context = require.context('./', true,  /table-projects-filter-2\.component\.spec\.ts$/);
 // const context = require.context('./', true,  /treemap-projects\.service\.spec\.ts$/);
-// const context = require.context('./', true,  /dashboard\.service\.processSkillDistributionFilesSize\.spec\.ts$/);
+// const context = require.context('./', true,  /skill-lookup\.service\.spec\.ts$/);
 // And load the modules.
 context.keys().map(context);
