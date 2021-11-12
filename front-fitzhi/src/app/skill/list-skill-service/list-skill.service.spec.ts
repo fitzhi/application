@@ -1,7 +1,7 @@
-import { TestBed, inject } from '@angular/core/testing';
-
-import { ListSkillService } from './list-skill.service';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
+import { inject, TestBed } from '@angular/core/testing';
+import { ListSkillService } from './list-skill.service';
+
 
 describe('ListSkillService', () => {
 	beforeEach(() => {

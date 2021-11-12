@@ -10,7 +10,7 @@
 				Skill
 			</th>
 			<td mat-cell class="col_string" *matCellDef="let skill">
-				<a [routerLink]="['/skill', skill.id]">{{skill.title}}</a>
+				<a id="idSkill-{{skill.id}}" [routerLink]="['/skill', skill.id]">{{skill.title}}</a>
 			</td>
 		</ng-container>
 
@@ -20,7 +20,7 @@
 				<span alt="Grey *" class="star-grey" *ngFor="let a of fakeArray4"> &#x2605;</span>
 			</th>
 			<td mat-cell class="col_number" *matCellDef="let skill">
-				<a (click)="listStaff(skill.title, 1)" href="javascript:;">
+				<a id="count_1_star-{{skill.id}}" (click)="listStaff(skill.title, 1)" href="javascript:;">
 						{{skill.count_1_star}}
 				</a>
 			</td>
@@ -32,7 +32,7 @@
 				<span alt="Grey *" class="star-grey" *ngFor="let a of fakeArray3"> &#x2605;</span>
 			</th>
 			<td mat-cell class="col_number"  *matCellDef="let skill">
-				<a (click)="listStaff(skill.title, 2)" href="javascript:;">
+				<a id="count_2_star-{{skill.id}}" (click)="listStaff(skill.title, 2)" href="javascript:;">
 						{{skill.count_2_star}}
 				</a>
 			</td>
@@ -44,7 +44,7 @@
 				<span alt="Grey *" class="star-grey" *ngFor="let a of fakeArray2"> &#x2605;</span>
 			</th>
 			<td mat-cell class="col_number" *matCellDef="let skill">
-				<a (click)="listStaff(skill.title, 3)" href="javascript:;">
+				<a id="count_3_star-{{skill.id}}" (click)="listStaff(skill.title, 3)" href="javascript:;">
 						{{skill.count_3_star}}
 				</a>
 			</td>
@@ -56,7 +56,7 @@
 				<span alt="Grey *" class="star-grey"> &#x2605;</span>
 			</th>
 			<td mat-cell class="col_number" *matCellDef="let skill">
-				<a (click)="listStaff(skill.title, 4)" href="javascript:;">
+				<a id="count_4_star-{{skill.id}}" (click)="listStaff(skill.title, 4)" href="javascript:;">
 						{{skill.count_4_star}}
 				</a>
 			</td>
@@ -67,7 +67,7 @@
 				<span alt="Grey *" class="star-green" *ngFor="let a of fakeArray5"> &#x2605;</span>
 		 </th>
 			<td mat-cell class="col_number"  *matCellDef="let skill">
-				<a (click)="listStaff(skill.title, 5)" href="javascript:;">
+				<a id="count_5_star-{{skill.id}}" (click)="listStaff(skill.title, 5)" href="javascript:;">
 						{{skill.count_5_star}}
 				</a>
 			</td>

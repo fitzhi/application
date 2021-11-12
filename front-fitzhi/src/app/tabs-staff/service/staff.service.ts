@@ -32,10 +32,7 @@ export class StaffService {
 	 */
 	public collaborator: Collaborator;
 
-	/**	 * @param idStaff the staff identifier.
-	 * @param idProject the project identifier to add.
-	 * @returns an observable emetting the staff record updated or an empty staff if any error occurs.
-
+	/**
 	 * Observable to a map containig the count of staff members aggregated by skill & level (i.e. experience)
 	 */
 	public peopleCountExperience$ = new Subject<Map<string, number>>();
