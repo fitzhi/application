@@ -89,9 +89,9 @@ describe('skillService', () => {
 		req.flush([]);
 
 		service.loadSkills();
-		
+
 		service.allSkillsLoaded$.pipe(take(1)).subscribe({
-			next: doneAndOk => expect(doneAndOk).toBeTrue(),			
+			next: doneAndOk => expect(doneAndOk).toBeTrue(),
 			complete: () =>	done()
 		});
 	});

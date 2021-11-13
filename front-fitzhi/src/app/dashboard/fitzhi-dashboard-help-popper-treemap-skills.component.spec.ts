@@ -71,7 +71,7 @@ describe('FitzhiDashboardComponent', () => {
 	});
 
 	it('should display the help popup message with the optimal number of developers loaded from server.', () => {
-		expect(component).toBeTruthy();		
+		expect(component).toBeTruthy();
 		expect(document.getElementById('table-settings')).not.toBeNull();
 		expect(document.getElementById('setting-0')).toBeDefined();
 		expect(document.getElementById('setting-0').innerText).toBe('1515');

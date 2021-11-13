@@ -72,7 +72,7 @@ export class FitzhiDashboardComponent extends BaseDirective implements OnInit, O
 	treemapProjectsFilter = false;
 
 	counter = Array;
-	
+
 	constructor(
 		public httpClient: HttpClient,
 		public projectService: ProjectService,

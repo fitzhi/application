@@ -169,7 +169,7 @@ export class SkillService extends InternalService {
 	}
 
 	/**
-	 * **HTTP GET** a skill identified by the given id from the back-end server. 
+	 * **HTTP GET** a skill identified by the given id from the back-end server.
 	 * The method throw a **404** error if this identifier is not found.
 	 */
 	get$(id: number): Observable<Skill> {
