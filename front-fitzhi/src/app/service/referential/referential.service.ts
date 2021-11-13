@@ -32,7 +32,7 @@ export class ReferentialService {
 	 * This array contains the optimal number of developers
 	 * expected to work in the company, starting from a specific level.
 	 *
-	 * This array contains 5 entries correcting to 5 level
+	 * This array contains 5 entries corresponding to 5 levels.
 	 */
 	public optimalStaffNumberPerMoOfCode: number[] = [];
 

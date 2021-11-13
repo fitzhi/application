@@ -100,13 +100,14 @@ export class DashboardService {
 	 * Process the skill distribution depending on the total of files size by skill.
 	 * @param includeExternal if it's **true**, all staff members are included in the analysis, otherwise only interns
 	 * @param minimumLevel the minimum level required to be included in the analysis. if the level is equal to 1, all levels (*) are involved
+	 * @param statTypes the type of statistics to process
 	 */
 	public processSkillDistribution(includeExternal: boolean, minimumLevel: number, statTypes: StatTypes): any[] {
 
-		// Count the number of projects group by skills;
+		// Count the number of projects group by skill;
 		const aggregationProjects = this.aggregateProjectsBySkills();
 
-		// Calculate the number of staff group by skills
+		// Calculate the number of staff members, group by skill.
 		const aggregationStaff = this.countStaffBySkills(includeExternal, minimumLevel);
 
 		if (statTypes === StatTypes.FilesSize) {
@@ -176,7 +177,7 @@ export class DashboardService {
 			const title = this.skillService.title(Number(projectAggregation.idSkill));
 			const size = Math.round((projectAggregation.sumTotalFilesSize * 100 / sumAllTotalFilesSize));
 			//
-			// The skill proves to have file with signifant sizes
+			// The skill proves to have files with significative sizes.
 			//
 			const staffCount = (aggregationStaff[projectAggregation.idSkill]) ? aggregationStaff[projectAggregation.idSkill] : 0;
 			if (size > 0) {

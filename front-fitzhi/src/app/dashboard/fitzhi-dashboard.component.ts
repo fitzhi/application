@@ -8,6 +8,7 @@ import { Constants } from 'src/app/constants';
 import { ProjectService } from 'src/app/service/project/project.service';
 import { FitzhiSettings } from '../data/FitzhiSettings';
 import { traceOn } from '../global';
+import { ReferentialService } from '../service/referential/referential.service';
 import { FilteredProject } from '../tabs-project/table-projects-filter/filtered-project';
 import { FitzhiDashboardPopupHelper } from './fitzhi-dashboard-popup-helper';
 import { selection } from './selection';
@@ -70,9 +71,12 @@ export class FitzhiDashboardComponent extends BaseDirective implements OnInit, O
 
 	treemapProjectsFilter = false;
 
+	counter = Array;
+	
 	constructor(
 		public httpClient: HttpClient,
 		public projectService: ProjectService,
+		public referentialService: ReferentialService,
 		public skylineService: SkylineService,
 		public controlledRisingSkylineService: ControlledRisingSkylineService,
 		public starfieldService: StarfieldService,

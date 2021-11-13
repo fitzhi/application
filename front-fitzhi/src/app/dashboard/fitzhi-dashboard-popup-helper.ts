@@ -29,7 +29,7 @@ export class FitzhiDashboardPopupHelper {
 	 * We've to hide the associated help-bubble.
 	 */
 	public mouseLeave() {
-			this.activated = this.selection.summary;
+		this.activated = this.selection.summary;
 	}
 
 	/**

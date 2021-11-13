@@ -96,7 +96,7 @@ describe('skillService', () => {
 		});
 	});
 
-	it('should retrieve the id of a skill from its title.', done => {
+	it('should retrieve the id of a skill from its title.', () => {
 		service.allSkills = [];
 		service.allSkills.push(new Skill(1, 'one'));
 		service.allSkills.push(new Skill(2, 'two'));

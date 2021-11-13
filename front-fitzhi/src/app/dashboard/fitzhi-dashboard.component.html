@@ -30,7 +30,7 @@
 	<div content class="help">
 		<h4 class="help-title">Ecosystem coverage</h4>
 		<div class="help-content">
-			<p>
+			<p class="text-justify">
 				This Treemap chart represents the skills coverage of your portfolio.
 				It compares the volume of code registered by your applications, and the active teams available, and able to maintain them.
 				<br/>
@@ -38,6 +38,31 @@
 			<p>
 				This chart aims to answer the question : <em>Are my development teams sufficient to maintain the portfolio&nbsp;?</em>
 			</p>
+			<p class="text-justify">
+				The table below shows the parameters that define the optimal technical headcount per megabytes of code.
+				These parameters are defined on the server.
+			</p>
+			<div class="w-100 d-flex justify-content-center">
+				<table *ngIf="(referentialService.referentialLoaded$|async)" id="table-settings" class="table table-bordered" style='width: 300px;'>
+					<thead class="thead-light">
+					  <tr>
+						<th scope="col" class="p-1 text-right">Optimal staff number<br/>per MO of code</th>
+						<th scope="col" class="p-1 text-center align-middle">Level</th>
+					  </tr>
+					</thead>
+					<tbody>
+					  <tr *ngFor="let setting of referentialService.optimalStaffNumberPerMoOfCode; index as id" >
+						<td id="setting-{{id}}" class="p-0 align-middle text-center">{{setting}}</td>
+						<td class="p-0 align-middle text-center">
+							<div *ngFor="let star of counter(id+1); index as idStar" 
+								class="py-1 d-inline-flex flex-wrap" >
+								<span class="star" id="star-{{idStar}}">&#x2605;</span>
+							</div>
+						</td>
+					  </tr>
+					</tbody>
+				</table>			
+			</div>
 		</div>
 	</div>
 </angular-popper>        
