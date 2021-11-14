@@ -13,6 +13,7 @@ import { MatSliderModule } from '@angular/material/slider';
 import { MatTableModule } from '@angular/material/table';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { RouterTestingModule } from '@angular/router/testing';
+import { doesNotReject } from 'assert';
 import { Project } from 'src/app/data/project';
 import { RiskLegend } from 'src/app/data/riskLegend';
 import { CinematicService } from 'src/app/service/cinematic.service';
@@ -21,7 +22,7 @@ import { ReferentialService } from 'src/app/service/referential/referential.serv
 import { AuditGraphicBadgeComponent } from './audit-graphic-badge.component';
 
 
-describe('AuditGraphicBadgeComponent in readonly mode', () => {
+describe('AuditGraphicBadgeComponent', () => {
 	let component: TestHostComponent;
 	let fixture: ComponentFixture<TestHostComponent>;
 	let projectService: ProjectService;
@@ -34,7 +35,11 @@ describe('AuditGraphicBadgeComponent in readonly mode', () => {
 							</app-audit-graphic-badge>
 						</div>
 						<div style="width: 100px; height: 100px">
-							<app-audit-graphic-badge [id]=2 [project]=p2 [editable]=false>
+							<app-audit-graphic-badge [id]=2 [evaluation]=40 [editable]=false>
+							</app-audit-graphic-badge>
+						</div>
+						<div style="width: 100px; height: 100px">
+							<app-audit-graphic-badge [id]=3 [editable]=false>
 							</app-audit-graphic-badge>
 						</div>
 					</div>`
@@ -42,10 +47,8 @@ describe('AuditGraphicBadgeComponent in readonly mode', () => {
 
 	class TestHostComponent {
 		public p1 = new Project(1, 'One');
-		public p2 = new Project(2, 'Two');
 		constructor() {
-			this.p1.auditEvaluation = 99;
-			this.p2.auditEvaluation = 100;
+			this.p1.auditEvaluation = 50;
 		}
 	}
 
@@ -58,24 +61,28 @@ describe('AuditGraphicBadgeComponent in readonly mode', () => {
 				ReactiveFormsModule, MatSliderModule, MatInputModule, MatDialogModule,
 				RouterTestingModule.withRoutes([])]
 
-		})
-			.compileComponents();
+		}).compileComponents();
 	}));
 
 	beforeEach(() => {
 		const referentialService: ReferentialService = TestBed.inject(ReferentialService);
-		const risk = new RiskLegend();
-		risk.level = 5;
-		risk.color = 'blue';
-		referentialService.legends.push (risk);
+		referentialService.legends.push (new RiskLegend(4, 'green'));
+		referentialService.legends.push (new RiskLegend(5, 'blue'));
+		referentialService.legends.push (new RiskLegend(6, 'pink'));
 		fixture = TestBed.createComponent(TestHostComponent);
 		component = fixture.componentInstance;
 		projectService = TestBed.inject(ProjectService);
+		
+		projectService.project = new Project(3, 'three');
+		projectService.project.auditEvaluation = 60;
+		projectService.projectLoaded$.next(true);
+
 		fixture.detectChanges();
 	});
 
-	it('should display 2 different badges.', () => {
+	it('should display successfully 3 different kind of badges.', done => {
 		expect(component).toBeTruthy();
+		done();
 	});
 
 });

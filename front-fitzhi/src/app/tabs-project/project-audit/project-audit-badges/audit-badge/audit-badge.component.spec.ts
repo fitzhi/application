@@ -29,7 +29,7 @@ describe('AuditBadgeComponent', () => {
 		selector: 'app-host-component',
 		template: `<div style="width: 400px; height: 400px; margin: 20px">
 						<app-audit-badge
-							[id]="id"
+							[id]="1"
 							[evaluation]="evaluation"
 							[weight]="weight"
 							[title]="title">

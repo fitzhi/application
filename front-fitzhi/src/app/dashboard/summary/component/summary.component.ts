@@ -15,7 +15,7 @@ export class SummaryComponent extends BaseDirective implements OnInit, OnDestroy
 
 	public selection = selection;
 
-	public project = new Project(17891789, 'global Project');
+	public projectsEvaluation = 0;
 
 	/**
 	 * Helper handler the display or not of the poppup.
@@ -41,7 +41,7 @@ export class SummaryComponent extends BaseDirective implements OnInit, OnDestroy
 
 		this.subscriptions.add(
 			this.summaryService.generalAverage$.subscribe({
-				next: evaluation => this.project.auditEvaluation = Math.floor(evaluation * 10)
+				next: evaluation => this.projectsEvaluation = Math.floor(evaluation * 10)
 			})
 		);
 	}

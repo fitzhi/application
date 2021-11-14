@@ -6,7 +6,7 @@
 	<div class="summary border m-1 position-relative" id="general-average">
 		<app-audit-graphic-badge 
 			[editable]=false 
-			[project]=project
+			[evaluation]=projectsEvaluation
 			[id]=selection.generalAverage >
 		</app-audit-graphic-badge>
 
@@ -23,6 +23,8 @@
 			</div>
 		</div>
 	</div>
+
+
 </div>
 
 <angular-popper id="help-general-average" placement="bottom" target="#general-average" *ngIf="hasGeneralAverage()" >
