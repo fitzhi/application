@@ -217,24 +217,20 @@
 	</a>
 
 	<button id="treeMap-skills" class="btn rounded treeMap-skills"
-			[ngClass]="{
-					'btn-outline-success' : isSelected(selection.treeMapSkills), 
-					'btn-outline-secondary': !isSelected(selection.treeMapSkills)}" 
-					(mouseenter)="popupHelper.mouseEnter(selection.treeMapSkills)" 
-					(mouseleave)="popupHelper.mouseLeave()"
-					(click)="switchTo(selection.treeMapSkills)">
+		*ngIf="(staffListService.allStaffLoaded$|async) && (projectService.allProjectsIsLoaded$|async)"
+		[ngClass]="{
+			'btn-outline-success' : isSelected(selection.treeMapSkills), 
+			'btn-outline-secondary': !isSelected(selection.treeMapSkills)}" 
+		(mouseenter)="popupHelper.mouseEnter(selection.treeMapSkills)" 
+		(mouseleave)="popupHelper.mouseLeave()"
+		(click)="switchTo(selection.treeMapSkills)">
 
-				<svg class="treeMapButton">
-						<rect x="6" y="6" class="rectTreeMap" style="fill:#3D8131" />
-						<rect x="21" y="6" class="rectTreeMap" style="fill:#3D8131" />
-						<rect x="36" y="6" class="rectTreeMap" style="fill:#329338"  /> 
-						<rect x="6" y="21" class="rectTreeMap" style="fill:#3D8131" />
-						<rect x="21" y="21" class="rectTreeMap" style="fill:#3D8131" />
-						<rect x="36" y="21" class="rectTreeMap" style="fill:#5E4A1C"  />
-						<rect x="6" y="36" class="rectTreeMap" style="fill:#74250E" />
-						<rect x="21" y="36" class="rectTreeMap" style="fill:#7F1307" />
-						<rect x="36" y="36" class="rectTreeMap" style="fill:#8B0000"  />
-				</svg>
+		<div style="margin-top: -6px; margin-left: -6px; width: 70px; height: 70px">
+			<app-treemap-skills-chart
+				[buttonOrChart]="'button'"
+				[active]=false>
+			</app-treemap-skills-chart>
+		</div>
 	</button>
 
 	<button id="starfield" class="btn rounded starfield"

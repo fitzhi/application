@@ -143,9 +143,9 @@ button.pie  div.pie-minimized {
 	box-shadow: 3px 3px 10px rgba(0, 0, 0, 0.1);
 }
 
-svg.treeMapButton {
-	width: 60px;
-	height: 60px;
+button.treeMapSkillsCoverageButton {
+	width: 100px;
+	height: 100px;
 }
 
 rect.rectTreeMap {
