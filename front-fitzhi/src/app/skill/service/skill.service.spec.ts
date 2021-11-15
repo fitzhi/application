@@ -35,9 +35,9 @@ describe('skillService', () => {
 		service = TestBed.inject(SkillService);
 
 		httpTestingController = TestBed.inject(HttpTestingController);
-		
+
 		backendSetupService = TestBed.inject(BackendSetupService);
-		backendSetupService.saveUrl('TEST_URL');
+		backendSetupService.saveUrl('URL_OF_SERVER');
 		fixture.detectChanges();
 	});
 
@@ -100,7 +100,7 @@ describe('skillService', () => {
 
 	it('should load the skills from the backend server.', done => {
 
-		const req = httpTestingController.expectOne('TEST_URL/api/skill');
+		const req = httpTestingController.expectOne('URL_OF_SERVER/api/skill');
 		expect(req.request.method).toBe('GET');
 		req.flush([]);
 
