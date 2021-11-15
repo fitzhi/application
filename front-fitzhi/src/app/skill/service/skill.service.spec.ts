@@ -1,5 +1,6 @@
 import { HttpClientTestingModule, HttpTestingController } from '@angular/common/http/testing';
-import { TestBed } from '@angular/core/testing';
+import { Component } from '@angular/core';
+import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { of } from 'rxjs';
 import { take } from 'rxjs/operators';
 import { Skill } from 'src/app/data/skill';
@@ -8,21 +9,36 @@ import { SkillService } from './skill.service';
 
 
 describe('skillService', () => {
+	let component: DummyComponent;
+	let fixture: ComponentFixture<DummyComponent>;
 	let service: SkillService;
 	let httpTestingController: HttpTestingController;
+	let backendSetupService: BackendSetupService;
 
+	@Component({
+		selector: 'app-dummy-component',
+		template: `<div></div>`
+	})
+	class DummyComponent {
+	}
+	
 	beforeEach(() => {
 		TestBed.configureTestingModule({
 			providers: [SkillService, BackendSetupService],
 			imports: [HttpClientTestingModule],
 			declarations: []
 		});
+
+		fixture = TestBed.createComponent(DummyComponent);
+		component = fixture.componentInstance;
+
 		service = TestBed.inject(SkillService);
 
 		httpTestingController = TestBed.inject(HttpTestingController);
-		const backendSetupService = TestBed.inject(BackendSetupService);
+		
+		backendSetupService = TestBed.inject(BackendSetupService);
 		backendSetupService.saveUrl('TEST_URL');
-
+		fixture.detectChanges();
 	});
 
 	it('should be simply created without error.', () => {
