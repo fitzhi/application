@@ -15,6 +15,8 @@ import { DynamicPieChartModule } from 'dynamic-pie-chart';
 import { RisingSkylineService } from 'rising-skyline';
 import { CinematicService } from 'src/app/service/cinematic.service';
 import { ReferentialService } from 'src/app/service/referential/referential.service';
+import { ProjectService } from '../service/project/project.service';
+import { StaffListService } from '../service/staff-list-service/staff-list.service';
 import { TagifyStarsComponent } from '../tabs-staff/staff-experience/tagify-stars/tagify-stars.component';
 import { FitzhiDashboardComponent } from './fitzhi-dashboard.component';
 import { PieChartComponent } from './pie-chart/pie-chart.component';
@@ -36,6 +38,8 @@ describe('FitzhiDashboardComponent', () => {
 	let component: FitzhiDashboardComponent;
 	let fixture: ComponentFixture<FitzhiDashboardComponent>;
 	let referentialService: ReferentialService;
+	let projectService: ProjectService;
+	let staffListService: StaffListService;
 
 	beforeEach(waitForAsync(() => {
 		TestBed.configureTestingModule({
@@ -47,7 +51,7 @@ describe('FitzhiDashboardComponent', () => {
 				NgxChartsModule, BrowserAnimationsModule, MatCheckboxModule, RouterTestingModule, DynamicPieChartModule,
 				NgxPopper],
 			providers: [ReferentialService, CinematicService, ControlledRisingSkylineService, RisingSkylineService,
-				DatePipe]
+				ProjectService, StaffListService, DatePipe]
 
 		})
 		.compileComponents();
@@ -82,11 +86,12 @@ describe('FitzhiDashboardComponent', () => {
 
 	});
 
-	it('should not display the table inside the popup if the referential are not yet loaded.', () => {
+	it('should not display the table inside the popup if the referential are not yet loaded.', done => {
 		referentialService.referentialLoaded$.next(false);
 		fixture.detectChanges();
 		expect(document.getElementById('table-settings')).toBeNull();
 		expect(document.getElementById('setting-0')).toBeNull();
+		done();
 	});
 
 });

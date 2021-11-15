@@ -1,6 +1,6 @@
 import { Component, Input, OnDestroy, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
-import { BaseDirective } from 'src/app/base/base-directive.directive';
+import { TreemapChartDirective } from 'src/app/base/treemap-chart-directive.directive';
 import { Constants } from 'src/app/constants';
 import { traceOn } from 'src/app/global';
 import { CinematicService } from 'src/app/service/cinematic.service';
@@ -14,14 +14,7 @@ import { TreemapProjectsService } from '../treemap-projects-service/treemap-proj
 	templateUrl: './treemap-projects-chart.component.html',
 	styleUrls: ['./treemap-projects-chart.component.css']
 })
-export class TreemapProjectsChartComponent extends BaseDirective implements OnInit, OnDestroy {
-
-	/**
-	 * Will this treemap be used as a button inside the navbar, or as a chart inside the dashboard container ?
-	 *
-	 * If this chart is hosted on a button, neither label, nor value has to be writen on the chart.
-	 */
-	@Input() buttonOrChart = 'chart';
+export class TreemapProjectsChartComponent extends TreemapChartDirective implements OnInit, OnDestroy {
 
 	/**
 	 * The treemap chart is clickable, or not...
@@ -95,15 +88,6 @@ export class TreemapProjectsChartComponent extends BaseDirective implements OnIn
 	}
 
 	/**
-	 * No label for the button chart.
-	 * @param tile the active tile
-	 * @returns
-	 */
-	noLabel(tile) {
-		return '';
-	}
-
-	/**
 	 * @param tile the current tile
 	 * @returns
 	 */
@@ -112,34 +96,11 @@ export class TreemapProjectsChartComponent extends BaseDirective implements OnIn
 	}
 
 	/**
-	 * No value for the button chart.
-	 * @param tile the active tile
-	 * @returns
-	 */
-	noValue(value) {
-		return '';
-	}
-
-	/**
 	 * @param tile the value to be drawn
 	 * @returns
 	 */
 	public valueFormatting(value) {
 		return value.toLocaleString() + ' lines';
-	}
-
-	/**
-	 * @returns **true** if the chart is a chart.
-	 */
-	public isChart() {
-		return (this.buttonOrChart === 'chart');
-	}
-
-	/**
-	 * @returns **true** if the chart is a button.
-	 */
-	public isButton() {
-		return (this.buttonOrChart === 'button');
 	}
 
 	ngOnDestroy() {

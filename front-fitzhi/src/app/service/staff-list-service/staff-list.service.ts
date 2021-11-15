@@ -28,6 +28,18 @@ export class StaffListService {
 	public allStaff: Collaborator[] = [];
 
 	/**
+	 * This *boolean* represents the fact that the whole staff collection has been loaded;
+	 */
+	private allStaffLoaded = false;
+	
+	private allStaffLoadedSubject$ = new BehaviorSubject<boolean>(this.allStaffLoaded);
+	/**
+	 * This observable informs the application that the whole staff collection is loaded
+	 * and available in the array allStaff[].
+	 */
+	public allStaffLoaded$ = this.allStaffLoadedSubject$.asObservable();
+
+	/**
 	 * Constructor.
 	 * @param staffService service un charge of accessing the backend to retrive the staff members.
 	 */
@@ -101,6 +113,10 @@ export class StaffListService {
 		}
 		this.allStaff = staff;
 		this.allStaff$.next(this.allStaff);
+		if (!this.allStaffLoaded) {
+			this.allStaffLoaded = true;
+			this.informStaffLoaded();
+		}
 	}
 
 	/**
@@ -248,4 +264,10 @@ export class StaffListService {
 		return this.allStaff.findIndex(staff => (staff.idStaff === idStaff));
 	}
 
+	/**
+	 * Inform the system that the staff collection is loaded.
+	 */
+	informStaffLoaded() {
+		this.allStaffLoadedSubject$.next(true);
+	}
 }

@@ -30,6 +30,7 @@ describe('ProjectSunburstComponent filled with data', () => {
 	let projectService: ProjectService;
 	let backendSetupService: BackendSetupService;
 	let cinematicService: CinematicService;
+	let sunburstCinematicService: SunburstCinematicService;
 
 	beforeEach(waitForAsync(() => {
 		const testConf: TestModuleMetadata =  {
@@ -55,8 +56,8 @@ describe('ProjectSunburstComponent filled with data', () => {
 		backendSetupService = TestBed.inject(BackendSetupService);
 		backendSetupService.saveUrl('HOST_URL');
 
-
 		cinematicService = TestBed.inject(CinematicService);
+		sunburstCinematicService = TestBed.inject(SunburstCinematicService);
 
 	});
 
@@ -84,26 +85,29 @@ describe('ProjectSunburstComponent filled with data', () => {
 		component.activeContext = PreviewContext.SUNBURST_READY;
 		fixture.detectChanges();
 
+
 		setTimeout(() => {
 			projectService.projectLoaded$.next(true);
 
 			const sunburstCacheService = TestBed.inject(SunburstCacheService);
 			sunburstCacheService.saveResponse(data);
 
-			const sunburstCinematicService = TestBed.inject(SunburstCinematicService);
 			sunburstCinematicService.refreshChart$.next(true);
+
+			setTimeout(() => {
+				sunburstCinematicService.refreshChart$.subscribe({
+					next: doneAndOk => {
+						expect(component).toBeTruthy();
+						component.hidePreviousSunburstChartDetector();
+						const sunburstViz = fixture.debugElement.nativeElement.querySelector('.sunburst-viz');
+						expect(sunburstViz).toBeTruthy();
+						expect(sunburstViz.style.display).toBe('none');
+						done();	
+					}
+				});
+			}, 100);
+	
 		}, 0);
-
-		setTimeout(() => {
-			expect(component).toBeTruthy();
-			component.hidePreviousSunburstChartDetector();
-			const sunburstViz = fixture.debugElement.nativeElement.querySelector('.sunburst-viz');
-			expect(sunburstViz).toBeTruthy();
-			expect(sunburstViz.style.display).toBe('none');
-			done();
-		}, 100);
-
-
 	});
 
 

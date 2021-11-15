@@ -2,6 +2,7 @@ import { Component, OnDestroy, OnInit } from '@angular/core';
 import { BaseDirective } from 'src/app/base/base-directive.directive';
 import { Project } from 'src/app/data/project';
 import { ProjectService } from 'src/app/service/project/project.service';
+import { StaffListService } from 'src/app/service/staff-list-service/staff-list.service';
 import { FitzhiDashboardPopupHelper } from '../../fitzhi-dashboard-popup-helper';
 import { selection } from '../../selection';
 import { SummaryService } from '../service/summary.service';
@@ -24,6 +25,7 @@ export class SummaryComponent extends BaseDirective implements OnInit, OnDestroy
 
 	constructor(
 		public summaryService: SummaryService,
+		public staffListService: StaffListService,
 		public projectService: ProjectService) {
 			super();
 		}

@@ -1,5 +1,6 @@
 <div id="logo" *ngIf="(summaryService.summary$|async).noData()">质</div>
-<div id="summaries" *ngIf="!(summaryService.summary$|async).noData()">
+<div id="summaries" 
+	*ngIf="!(summaryService.summary$|async).noData()">
 	<div class="summary border m-1">
 		<div id="small-logo">质</div>
 	</div>
@@ -10,7 +11,7 @@
 			[id]=selection.generalAverage >
 		</app-audit-graphic-badge>
 
-		<div class="position-absolute" style="width: 100px; height: 100px; bottom: 0; right: 0;"		
+		<div class="position-absolute" style="width: 100px; height: 100px; bottom: 0; right: 0;"	
 			(mouseenter)="popupHelper.mouseEnter(selection.generalAverage)" 
 			(mouseleave)="popupHelper.mouseLeave()">
 			<div class="host-treemap-projects">
@@ -18,16 +19,36 @@
 					width="100px" 
 					height="100px" 
 					[buttonOrChart]="'button'"
-					[active]="false">
+					[active]=false>
 				</app-treemap-projects>
 			</div>
 		</div>
 	</div>
 
+	<div class="summary border m-1 position-relative" id="skills-coverage"
+		*ngIf="(staffListService.allStaffLoaded$|async) && (projectService.allProjectsIsLoaded$|async)">
+		<app-audit-graphic-badge 
+			[editable]=false 
+			[evaluation]=20
+			[id]=selection.treeMapSkills >
+		</app-audit-graphic-badge>
+
+		<div class="position-absolute" 
+			*ngIf="projectService.allProjectsIsLoaded$|async"
+			style="width: 100px; height: 100px; bottom: 0; right: 0;"		
+			(mouseenter)="popupHelper.mouseEnter(selection.generalAverage)" 
+			(mouseleave)="popupHelper.mouseLeave()">
+			<app-treemap-skills-chart 
+				[buttonOrChart]="'button'"
+				[active]=false>
+			</app-treemap-skills-chart>
+		</div>
+	</div>
 
 </div>
 
-<angular-popper id="help-general-average" placement="bottom" target="#general-average" *ngIf="hasGeneralAverage()" >
+<angular-popper id="help-general-average" placement="bottom" target="#general-average" 
+	*ngIf="(staffListService.allStaffLoaded$|async) && (projectService.allProjectsIsLoaded$|async) && hasGeneralAverage()">
 	<div content class="help">
 		<h4 class="help-title">General average</h4>
 		<div class="help-content">

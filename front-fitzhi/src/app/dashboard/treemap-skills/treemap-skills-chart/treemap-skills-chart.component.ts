@@ -1,8 +1,8 @@
-import { Component, Input, OnDestroy, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { EMPTY } from 'rxjs';
 import { switchMap } from 'rxjs/operators';
-import { BaseDirective } from 'src/app/base/base-directive.directive';
+import { TreemapChartDirective } from 'src/app/base/treemap-chart-directive.directive';
 import { Constants } from 'src/app/constants';
 import { traceOn } from 'src/app/global';
 import { CinematicService } from 'src/app/service/cinematic.service';
@@ -19,16 +19,10 @@ import { TreemapSkillsService } from '../treemap-skills-service/treemap-skills.s
 	templateUrl: './treemap-skills-chart.component.html',
 	styleUrls: ['./treemap-skills-chart.component.css']
 })
-export class TreemapSkillsChartComponent extends BaseDirective implements OnInit, OnDestroy {
+export class TreemapSkillsChartComponent extends TreemapChartDirective implements OnInit, OnDestroy {
 
-	/**
-	 * The treemap chart is clickable, or not...
-	 */
-	@Input() active = true;
 
 	distribution: any[];
-
-	view: any[];
 
 	gradient = false;
 
