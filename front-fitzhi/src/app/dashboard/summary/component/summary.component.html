@@ -29,7 +29,7 @@
 		*ngIf="(staffListService.allStaffLoaded$|async) && (projectService.allProjectsIsLoaded$|async)">
 		<app-audit-graphic-badge 
 			[editable]=false 
-			[evaluation]=20
+			[evaluation]=dashboardService.globalScoreSkillDistribution()
 			[id]=selection.treeMapSkills >
 		</app-audit-graphic-badge>
 

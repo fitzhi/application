@@ -21,6 +21,11 @@ import { DashboardConstants } from './dashboard-constants';
 })
 export class DashboardService {
 
+	/**
+	 * We evaluate the skills coverage score only once per session.
+	 */
+	private skillsCoverageScore = -1;
+
 	constructor(
 		private skillService: SkillService,
 		private referentialService: ReferentialService,
@@ -105,18 +110,59 @@ export class DashboardService {
 	public processSkillDistribution(includeExternal: boolean, minimumLevel: number, statTypes: StatTypes): any[] {
 
 		// Count the number of projects group by skill;
-		const aggregationProjects = this.aggregateProjectsBySkills();
+		const aggregationSkills = this.aggregateProjectsBySkills();
 
 		// Calculate the number of staff members, group by skill.
 		const aggregationStaff = this.countStaffBySkills(includeExternal, minimumLevel);
 
 		if (statTypes === StatTypes.FilesSize) {
-			return this.processSkillDistributionFilesSize(minimumLevel, aggregationProjects, aggregationStaff);
+			return this.processSkillDistributionFilesSize(minimumLevel, aggregationSkills, aggregationStaff);
 		}
 		if (statTypes === StatTypes.NumberOfFiles) {
-			return this.processSkillDistributionNumberOfFiles(minimumLevel, aggregationProjects, aggregationStaff);
+			return this.processSkillDistributionNumberOfFiles(minimumLevel, aggregationSkills, aggregationStaff);
 		}
 		throw new Error('Unknown type of statistics ' + statTypes);
+	}
+
+
+	/**
+	 * Evaluation the global skill coverage score for the portfolio.
+	 * @returns the resulting score
+	 */
+	public globalScoreSkillDistribution(statTypes: StatTypes = StatTypes.FilesSize): number {
+
+		// We calculate the score only once per session
+		if (this.skillsCoverageScore != -1) {
+			return this.skillsCoverageScore;
+		}
+
+		// Count the number of projects group by skill;
+		const aggregationSkills = this.aggregateProjectsBySkills();
+
+		// Calculate the number of staff members, group by skill.
+		const aggregationStaff = this.countStaffBySkills(false, 0);
+
+		if (statTypes === StatTypes.NumberOfFiles) {
+			throw new Error("Not implemented yet");
+		}
+
+		const sumAllTotalFilesSize = _.sumBy(aggregationSkills, 'sumTotalFilesSize');
+		
+		let score = 0;
+		aggregationSkills.forEach(skillData => {
+			// relative size of the skill inside the portfolio.
+			const size = Math.round((skillData.sumTotalFilesSize * 100 / sumAllTotalFilesSize));
+			
+			// The skill proves to have files with significative sizes.
+			const countStaff = (aggregationStaff[skillData.idSkill]) ? aggregationStaff[skillData.idSkill] : 0;
+			if (countStaff > 0) {
+				const rate = Math.max(
+					1 - countStaff / (skillData.sumTotalFilesSize * this.referentialService.optimalStaffNumberPerMoOfCode[0] / 1000000), 0);		
+				score += rate;
+}
+		})
+		this.skillsCoverageScore  = Math.round(score * 100);
+		return this.skillsCoverageScore;
 	}
 
 	/**
@@ -157,18 +203,18 @@ export class DashboardService {
 	 * - _Do we have enough skilled developers in Java?_
 	 *
 	 * @param minimumLevel the starting level required in the skill
-	 * @param aggregationProjects the projects data
+	 * @param skillsData the skills data
 	 * @param aggregationStaff the set of developers filtered on the minimum level
 	 * @returns the tiles ready to be drawn in the treeMap chart
 	 */
-	processSkillDistributionFilesSize(minimumLevel: number, aggregationProjects: SkillProjectsAggregation[], aggregationStaff: any) {
+	processSkillDistributionFilesSize(minimumLevel: number, skillsData: SkillProjectsAggregation[], aggregationStaff: any) {
 
-		const sumAllTotalFilesSize = _.sumBy(aggregationProjects, 'sumTotalFilesSize');
+		const sumAllTotalFilesSize = _.sumBy(skillsData, 'sumTotalFilesSize');
 		if (traceOn()) {
 			console.log ('processSkillDistributionFilesSize(%d, ...) -> %d', minimumLevel, sumAllTotalFilesSize);
 		}
 
-		const sortedRepo = _.sortBy(aggregationProjects, [function (o) { return -o.sumTotalFilesSize; }]);
+		const sortedRepo = _.sortBy(skillsData, [function (o) { return -o.sumTotalFilesSize; }]);
 		const aggregateData = this.aggregateRestOfData(sortedRepo);
 
 		const tiles = [];
