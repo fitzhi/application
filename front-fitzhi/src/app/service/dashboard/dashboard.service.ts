@@ -354,7 +354,12 @@ export class DashboardService {
 		return 10 - averageTimesSize / totalSize;
 	}
 
+	/**
+	 * @param project the given project
+	 * @returns the size of project
+	 */
 	sizeOfProject(project: Project) {
+		console.log ('nope');
 		if (project.mapSkills.size === 0) {
 			return 0;
 		}
