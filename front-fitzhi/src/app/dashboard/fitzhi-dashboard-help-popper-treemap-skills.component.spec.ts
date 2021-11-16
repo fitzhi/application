@@ -15,6 +15,7 @@ import { DynamicPieChartModule } from 'dynamic-pie-chart';
 import { RisingSkylineService } from 'rising-skyline';
 import { CinematicService } from 'src/app/service/cinematic.service';
 import { ReferentialService } from 'src/app/service/referential/referential.service';
+import { DashboardService } from '../service/dashboard/dashboard.service';
 import { ProjectService } from '../service/project/project.service';
 import { StaffListService } from '../service/staff-list-service/staff-list.service';
 import { TagifyStarsComponent } from '../tabs-staff/staff-experience/tagify-stars/tagify-stars.component';
@@ -23,7 +24,6 @@ import { PieChartComponent } from './pie-chart/pie-chart.component';
 import { PieLegendComponent } from './pie-legend/pie-legend.component';
 import { PieProjectsComponent } from './pie-projects/pie-projects.component';
 import { selection } from './selection';
-import { PieDashboardService } from './service/pie-dashboard.service';
 import { SkylineComponent } from './skyline/component/skyline.component';
 import { SkylineIconComponent } from './skyline/skyline-icon/skyline-icon.component';
 import { SummaryComponent } from './summary/component/summary.component';
@@ -32,14 +32,15 @@ import { TreemapProjectsContainerComponent } from './treemap-projects/treemap-pr
 import { TreemapSkillsChartComponent } from './treemap-skills/treemap-skills-chart/treemap-skills-chart.component';
 import { TreemapSkillsComponent } from './treemap-skills/treemap-skills-container/treemap-skills.component';
 import { TreemapHeaderComponent } from './treemap-skills/treemap-skills-header/treemap-skills-header.component';
-
+import { TreemapSkillsService } from './treemap-skills/treemap-skills-service/treemap-skills.service';
+import { MOCK_PROJECTS_DISTRIBUTION }  from './mock-projects-distribution.spec';
+import { MOCK_SKILLS_DISTRIBUTION }  from './mock-skills-distribution.spec';
 
 describe('FitzhiDashboardComponent', () => {
 	let component: FitzhiDashboardComponent;
 	let fixture: ComponentFixture<FitzhiDashboardComponent>;
 	let referentialService: ReferentialService;
-	let projectService: ProjectService;
-	let staffListService: StaffListService;
+	let dashboardService: DashboardService;
 
 	beforeEach(waitForAsync(() => {
 		TestBed.configureTestingModule({
@@ -61,8 +62,20 @@ describe('FitzhiDashboardComponent', () => {
 	beforeEach(() => {
 		fixture = TestBed.createComponent(FitzhiDashboardComponent);
 		component = fixture.componentInstance;
-		component.selected = selection.summary;
-		component.popupHelper.mouseEnter(selection.treeMapSkills);
+
+		const staffListService = TestBed.inject(StaffListService);
+		staffListService.informStaffLoaded();
+		const projectService = TestBed.inject(ProjectService);
+		projectService.allProjectsIsLoaded$.next(true);
+		
+		dashboardService = TestBed.inject(DashboardService);
+		spyOn(dashboardService, 'processSkillDistribution').and.returnValue(MOCK_SKILLS_DISTRIBUTION);
+		spyOn(dashboardService, 'processProjectsDistribution').and.returnValue(MOCK_PROJECTS_DISTRIBUTION);
+
+		const treeMapService = TestBed.inject(TreemapSkillsService);
+		treeMapService.filterUpdated$.next(true);
+		fixture.detectChanges();
+
 		referentialService = TestBed.inject(ReferentialService);
 		referentialService.optimalStaffNumberPerMoOfCode = [];
 		referentialService.optimalStaffNumberPerMoOfCode.push(1515);
@@ -71,6 +84,9 @@ describe('FitzhiDashboardComponent', () => {
 		referentialService.optimalStaffNumberPerMoOfCode.push(1815);
 		referentialService.optimalStaffNumberPerMoOfCode.push(1871);
 		referentialService.referentialLoaded$.next(true);
+
+		component.selected = selection.summary;
+		component.popupHelper.mouseEnter(selection.treeMapSkills);
 		fixture.detectChanges();
 	});
 
@@ -83,7 +99,6 @@ describe('FitzhiDashboardComponent', () => {
 		expect(document.getElementById('setting-2').innerText).toBe('1805');
 		expect(document.getElementById('setting-3').innerText).toBe('1815');
 		expect(document.getElementById('setting-4').innerText).toBe('1871');
-
 	});
 
 	it('should not display the table inside the popup if the referential are not yet loaded.', done => {

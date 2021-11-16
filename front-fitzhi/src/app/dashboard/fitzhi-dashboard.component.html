@@ -42,8 +42,10 @@
 				The table below shows the parameters that define the optimal technical headcount per megabytes of code.
 				These parameters are defined on the server.
 			</p>
-			<div class="w-100 d-flex justify-content-center">
-				<table *ngIf="(referentialService.referentialLoaded$|async)" id="table-settings" class="table table-bordered" style='width: 300px;'>
+
+			<div *ngIf="(referentialService.referentialLoaded$|async)" class="w-100 d-flex justify-content-center">
+				<table  id="table-settings" class="table table-bordered" style="width: 300px;">
+
 					<thead class="thead-light">
 					  <tr>
 						<th scope="col" class="p-1 text-right">Optimal developers count<br/>per MO of code</th>

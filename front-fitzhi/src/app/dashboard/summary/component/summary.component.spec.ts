@@ -20,6 +20,8 @@ import { TreemapProjectsService } from '../../treemap-projects/treemap-projects-
 import { TreemapSkillsChartComponent } from '../../treemap-skills/treemap-skills-chart/treemap-skills-chart.component';
 import { SummaryService } from '../service/summary.service';
 import { SummaryComponent } from './summary.component';
+import { MOCK_PROJECTS_DISTRIBUTION }  from '../../mock-projects-distribution.spec';
+import { MOCK_SKILLS_DISTRIBUTION }  from '../../mock-skills-distribution.spec';
 
 
 describe('SummaryComponent', () => {
@@ -28,48 +30,6 @@ describe('SummaryComponent', () => {
 	let dashboardService: DashboardService;
 	let projectService: ProjectService;
 	let staffListService: StaffListService;
-
-	const MOCK_PROJECTS_DISTRIBUTION = [
-		{
-			id: 1,
-			name: 'Spring',
-			value: '76000',
-			color: '#28a745'
-		},
-		{
-			id: 2,
-			name: 'Fitzhi',
-			value: '32300',
-			color: '#486E2A'
-		},
-		{
-			id: 3,
-			name: 'Small',
-			value: '10000',
-			color: 'darkred'
-		}
-	];
-
-	const MOCK_SKILLS_DISTRIBUTION = [
-		{
-			id: 1,
-			name: 'Java',
-			value: '45000',
-			color: 'pink'
-		},
-		{
-			id: 2,
-			name: '.Net',
-			value: '32000',
-			color: 'red'
-		},
-		{
-			id: 3,
-			name: 'Typescript',
-			value: '20000',
-			color: 'blue'
-		}
-	];
 
 	@Component({
 		selector: 'app-test-host-component',
