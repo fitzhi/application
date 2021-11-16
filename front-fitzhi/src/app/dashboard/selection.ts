@@ -10,4 +10,5 @@ export const selection  = {
 	skyline: 5,
 	treeMapProjects: 6,
 	generalAverage: 7,
+	skillsCoverageScore: 8,
 };

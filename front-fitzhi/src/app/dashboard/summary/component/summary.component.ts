@@ -50,9 +50,20 @@ export class SummaryComponent extends BaseDirective implements OnInit, OnDestroy
 		);
 	}
 
+	/**
+	 * @returns **true** if the mouse is moving over the general average panel.
+	 */
 	hasGeneralAverage() {
 		return (this.popupHelper.isButtonActivated(selection.generalAverage));
 	}
+
+	/**
+	 * @returns **true** if the mouse is moving over the skills coverage panel.
+	 */
+	 hasSkillsCoverageScore() {
+		return (this.popupHelper.isButtonActivated(selection.skillsCoverageScore));
+	}
+	
 
 	ngOnDestroy() {
 		super.ngOnDestroy();

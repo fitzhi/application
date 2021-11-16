@@ -34,9 +34,8 @@
 		</app-audit-graphic-badge>
 
 		<div class="position-absolute" 
-			*ngIf="projectService.allProjectsIsLoaded$|async"
 			style="width: 100px; height: 100px; bottom: 0; right: 0;"		
-			(mouseenter)="popupHelper.mouseEnter(selection.generalAverage)" 
+			(mouseenter)="popupHelper.mouseEnter(selection.skillsCoverageScore)" 
 			(mouseleave)="popupHelper.mouseLeave()">
 			<app-treemap-skills-chart 
 				[buttonOrChart]="'button'"
@@ -50,7 +49,7 @@
 <angular-popper id="help-general-average" placement="bottom" target="#general-average" 
 	*ngIf="(staffListService.allStaffLoaded$|async) && (projectService.allProjectsIsLoaded$|async) && hasGeneralAverage()">
 	<div content class="help">
-		<h4 class="help-title">General average</h4>
+		<h4 class="help-title">Global projects score</h4>
 		<div class="help-content">
 			<br/>
 			<p>
@@ -58,13 +57,31 @@
 			</p>
 			<p>
 				Each project has a score, and a weight corresponding to its size.
-				The score is calculated with 3 critera, if they are reachable.
+				The score is calculated with 3 critera, if they are applicable.
 			</p>
 			<ul>
 				<li>The Staff coverage</li>
 				<li>The Sonar evaluation</li>
 				<li>The Audit report</li>
 			</ul>
+		</div>
+	</div>
+</angular-popper>	
+
+<angular-popper id="help-skills-coverage" placement="bottom" target="#skills-coverage" 
+	*ngIf="(staffListService.allStaffLoaded$|async) && (projectService.allProjectsIsLoaded$|async) && hasSkillsCoverageScore()">
+	<div content class="help">
+		<h4 class="help-title">Skills coverage score</h4>
+		<div class="help-content">
+			<br/>
+			<p>
+				This score corresponds to the coverage of skills for the portfolio.
+			</p>
+			<p class="text-justify">
+				The optimal distribution of teams is configured in the application. 
+				A score of <strong>100</strong> corresponds to the perfect match of the teams on all the key skills of the portfolio 
+				(Java, C #, .Net, JavaScript, TypeScript...)
+			</p>
 		</div>
 	</div>
 </angular-popper>	
