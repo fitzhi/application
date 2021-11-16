@@ -11,6 +11,10 @@
 			[id]=selection.generalAverage >
 		</app-audit-graphic-badge>
 
+		<div class="position-absolute" style="top: 8px; right: 8px; font-size: 22px;">
+			<em class="fas glyphicon fa-users-cog"></em>
+		</div>
+
 		<div class="position-absolute" style="width: 100px; height: 100px; bottom: 0; right: 0;"	
 			(mouseenter)="popupHelper.mouseEnter(selection.generalAverage)" 
 			(mouseleave)="popupHelper.mouseLeave()">
@@ -32,6 +36,10 @@
 			[evaluation]=dashboardService.globalScoreSkillDistribution()
 			[id]=selection.treeMapSkills >
 		</app-audit-graphic-badge>
+
+		<div class="position-absolute" style="top: 8px; right: 8px; font-size: 22px;">
+			<em class="fas glyphicon fa-graduation-cap"></em>
+		</div>
 
 		<div class="position-absolute" 
 			style="width: 100px; height: 100px; bottom: 0; right: 0;"		
