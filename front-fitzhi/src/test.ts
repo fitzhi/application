@@ -39,7 +39,7 @@ const context = require.context('./', true, /\.spec\.ts$/);
 // const context = require.context('./', true,  /treemap-projects-chart\.component\.spec\.ts$/);
 // const context = require.context('./', true,  /project-sunburst-with-data\.component\.spec\.ts$/);
 // const context = require.context('./', true,  /fitzhi-dashboard-help-popper-treemap-skills\.component\.spec\.ts$/);
-// const context = require.context('./', true,  /fitzhi-dashboard\.skyline\.treemap\.component\.spec\.ts$/);
-// const context = require.context('./', true,  /skill\.service\.spec\.ts$/);
+// const context = require.context('./', true,  /dashboardService-testingComponentFor-colorTile\.component\.spec\.ts$/);
+// const context = require.context('./', true,  /dashboard\.service\.globalScoreSkillDistribution\.spec\.ts$/);
 // And load the modules.
 context.keys().map(context);

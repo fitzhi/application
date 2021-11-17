@@ -24,7 +24,7 @@ export class DashboardService {
 	/**
 	 * We evaluate the skills coverage score only once per session.
 	 */
-	private skillsCoverageScore = -1;
+	skillsCoverageScore = -1;
 
 	constructor(
 		private skillService: SkillService,
@@ -54,6 +54,14 @@ export class DashboardService {
 			}))
 			.value();
 
+		if (traceOn()) {
+			console.groupCollapsed('Sum of the projects volume group by skill');
+			aggregation.forEach(element => {
+				console.log (element);			
+			});
+			console.groupEnd();
+		}
+			
 		return aggregation;
 	}
 
@@ -156,10 +164,13 @@ export class DashboardService {
 			// The skill proves to have files with significative sizes.
 			const countStaff = (aggregationStaff[skillData.idSkill]) ? aggregationStaff[skillData.idSkill] : 0;
 			if (countStaff > 0) {
-				const rate = Math.max(
-					1 - countStaff / (skillData.sumTotalFilesSize * this.referentialService.optimalStaffNumberPerMoOfCode[0] / 1000000), 0);		
-				score += rate;
-}
+				const rate = Math.min(
+					countStaff /  ( skillData.sumTotalFilesSize * this.referentialService.optimalStaffNumberPerMoOfCode[0]/ 1000000 ), 1);
+				if (traceOn()) {
+					console.log (`skill ${skillData.idSkill} has been rated ${rate}. Its weight is ${size}%.`);
+				}
+				score += rate * skillData.sumTotalFilesSize / sumAllTotalFilesSize;
+			}
 		})
 		this.skillsCoverageScore  = Math.round(score * 100);
 		return this.skillsCoverageScore;
@@ -288,6 +299,9 @@ export class DashboardService {
 	colorTile(minimumLevel: number, sumTotalFilesSize: number, countStaff: any): string {
 
 		// The rate might be negative if we exceed the perfection. Is perfection is possible ? The answer is NO.
+		// There is a consistency issue betweek the scale of the skills coverage evaluation and the scale of colors.
+		// The perfect evaluation is 1 (100%)
+		// The color is linked to the risk level and therefore the perfection is 0.
 		const rate = Math.max(
 			1 - countStaff / (sumTotalFilesSize * this.referentialService.optimalStaffNumberPerMoOfCode[minimumLevel - 1] / 1000000), 0);
 		const indexColor = Math.round(rate * 10);
@@ -359,7 +373,7 @@ export class DashboardService {
 	 * @returns the size of project
 	 */
 	sizeOfProject(project: Project) {
-		console.log ('nope');
+
 		if (project.mapSkills.size === 0) {
 			return 0;
 		}

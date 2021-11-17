@@ -1,0 +1,20 @@
+[
+	{
+		"idSkill": 1,
+		"sumNumberOfFiles": 10,
+		"sumTotalFilesSize": 1000000
+
+	},
+	{
+		"idSkill": 2,
+		"sumNumberOfFiles": 10,
+		"sumTotalFilesSize": 1000000
+
+	},
+	{
+		"idSkill": 3,
+		"sumNumberOfFiles": 10,
+		"sumTotalFilesSize": 1000000
+
+	}
+]
