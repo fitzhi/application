@@ -60,10 +60,9 @@ export class SummaryComponent extends BaseDirective implements OnInit, OnDestroy
 	/**
 	 * @returns **true** if the mouse is moving over the skills coverage panel.
 	 */
-	 hasSkillsCoverageScore() {
+	hasSkillsCoverageScore() {
 		return (this.popupHelper.isButtonActivated(selection.skillsCoverageScore));
 	}
-	
 
 	ngOnDestroy() {
 		super.ngOnDestroy();

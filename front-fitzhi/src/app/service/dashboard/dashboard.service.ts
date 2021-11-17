@@ -57,11 +57,11 @@ export class DashboardService {
 		if (traceOn()) {
 			console.groupCollapsed('Sum of the projects volume group by skill');
 			aggregation.forEach(element => {
-				console.log (element);			
+				console.log (element);
 			});
 			console.groupEnd();
 		}
-			
+
 		return aggregation;
 	}
 
@@ -140,7 +140,7 @@ export class DashboardService {
 	public globalScoreSkillDistribution(statTypes: StatTypes = StatTypes.FilesSize): number {
 
 		// We calculate the score only once per session
-		if (this.skillsCoverageScore != -1) {
+		if (this.skillsCoverageScore !== -1) {
 			return this.skillsCoverageScore;
 		}
 
@@ -151,27 +151,27 @@ export class DashboardService {
 		const aggregationStaff = this.countStaffBySkills(false, 0);
 
 		if (statTypes === StatTypes.NumberOfFiles) {
-			throw new Error("Not implemented yet");
+			throw new Error('Not implemented yet');
 		}
 
 		const sumAllTotalFilesSize = _.sumBy(aggregationSkills, 'sumTotalFilesSize');
-		
+
 		let score = 0;
 		aggregationSkills.forEach(skillData => {
 			// relative size of the skill inside the portfolio.
 			const size = Math.round((skillData.sumTotalFilesSize * 100 / sumAllTotalFilesSize));
-			
+
 			// The skill proves to have files with significative sizes.
 			const countStaff = (aggregationStaff[skillData.idSkill]) ? aggregationStaff[skillData.idSkill] : 0;
 			if (countStaff > 0) {
 				const rate = Math.min(
-					countStaff /  ( skillData.sumTotalFilesSize * this.referentialService.optimalStaffNumberPerMoOfCode[0]/ 1000000 ), 1);
+					countStaff /  ( skillData.sumTotalFilesSize * this.referentialService.optimalStaffNumberPerMoOfCode[0] / 1000000 ), 1);
 				if (traceOn()) {
 					console.log (`skill ${skillData.idSkill} has been rated ${rate}. Its weight is ${size}%.`);
 				}
 				score += rate * skillData.sumTotalFilesSize / sumAllTotalFilesSize;
 			}
-		})
+		});
 		this.skillsCoverageScore  = Math.round(score * 100);
 		return this.skillsCoverageScore;
 	}

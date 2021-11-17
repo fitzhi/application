@@ -72,7 +72,7 @@ describe('AuditGraphicBadgeComponent', () => {
 		fixture = TestBed.createComponent(TestHostComponent);
 		component = fixture.componentInstance;
 		projectService = TestBed.inject(ProjectService);
-		
+
 		projectService.project = new Project(3, 'three');
 		projectService.project.auditEvaluation = 60;
 		projectService.projectLoaded$.next(true);

@@ -59,9 +59,9 @@ describe('DashboardService.globalScoreSkillsDistribution()', () => {
 	it('calculation for atheFitzhi repository which contains only one perfect skill.', () => {
 
 		const spySkills = spyOn(service, 'aggregateProjectsBySkills')
-			.and.returnValue([new SkillProjectsAggregation("1", 1, 1000000)]);
+			.and.returnValue([new SkillProjectsAggregation('1', 1, 1000000)]);
 		const spyStaff = spyOn(service, 'countStaffBySkills')
-			.and.returnValue({ "1": 4 });
+			.and.returnValue({ '1': 4 });
 
 		const referentialService = TestBed.inject(ReferentialService);
 		referentialService.optimalStaffNumberPerMoOfCode[0] = 4;

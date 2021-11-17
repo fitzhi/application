@@ -31,7 +31,7 @@ export class StaffListService {
 	 * This *boolean* represents the fact that the whole staff collection has been loaded;
 	 */
 	private allStaffLoaded = false;
-	
+
 	private allStaffLoadedSubject$ = new BehaviorSubject<boolean>(this.allStaffLoaded);
 	/**
 	 * This observable informs the application that the whole staff collection is loaded

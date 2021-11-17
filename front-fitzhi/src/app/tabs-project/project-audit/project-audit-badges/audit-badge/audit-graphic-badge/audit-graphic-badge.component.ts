@@ -130,7 +130,7 @@ export class AuditGraphicBadgeComponent extends BaseDirective implements OnInit,
 	 * Draw the **read only** badge for the given evaluation.
 	 * @param evaluation the evaluation to be displayed in the graphic
 	 */
-	 private drawNonEditableBadge (evaluation: number) {
+	private drawNonEditableBadge (evaluation: number) {
 		this.drawAuditArc(evaluation);
 		this.drawAuditText(evaluation);
 	}

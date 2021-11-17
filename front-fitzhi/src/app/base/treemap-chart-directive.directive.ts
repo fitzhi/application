@@ -9,16 +9,16 @@ export class TreemapChartDirective extends BaseDirective implements OnDestroy {
 	 *
 	 * If this chart is hosted on a button, neither label, nor value has to be writen on the chart.
 	 */
-	 @Input() buttonOrChart = 'chart';
+	@Input() buttonOrChart = 'chart';
 
 	/**
 	 * The treemap chart is clickable, or not...
 	 */
-	 @Input() active = true;
+	@Input() active = true;
 
-	 constructor() { super(); }
+	constructor() { super(); }
 
-	 /**
+	/**
 	 * @returns **true** if the chart is a chart.
 	 */
 	public isChart() {

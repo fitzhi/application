@@ -33,10 +33,10 @@ import { TreemapSkillsChartComponent } from './treemap-skills/treemap-skills-cha
 import { TreemapSkillsComponent } from './treemap-skills/treemap-skills-container/treemap-skills.component';
 import { TreemapHeaderComponent } from './treemap-skills/treemap-skills-header/treemap-skills-header.component';
 import { TreemapSkillsService } from './treemap-skills/treemap-skills-service/treemap-skills.service';
-import { MOCK_PROJECTS_DISTRIBUTION }  from './mock-projects-distribution.spec';
-import { MOCK_SKILLS_DISTRIBUTION }  from './mock-skills-distribution.spec';
+import { MOCK_PROJECTS_DISTRIBUTION } from './mock-projects-distribution.spec';
+import { MOCK_SKILLS_DISTRIBUTION } from './mock-skills-distribution.spec';
 
-describe('FitzhiDashboardComponent', () => {
+describe('FitzhiDashboardCompone@nt', () => {
 	let component: FitzhiDashboardComponent;
 	let fixture: ComponentFixture<FitzhiDashboardComponent>;
 	let referentialService: ReferentialService;
@@ -67,7 +67,7 @@ describe('FitzhiDashboardComponent', () => {
 		staffListService.informStaffLoaded();
 		const projectService = TestBed.inject(ProjectService);
 		projectService.allProjectsIsLoaded$.next(true);
-		
+
 		dashboardService = TestBed.inject(DashboardService);
 		spyOn(dashboardService, 'processSkillDistribution').and.returnValue(MOCK_SKILLS_DISTRIBUTION);
 		spyOn(dashboardService, 'processProjectsDistribution').and.returnValue(MOCK_PROJECTS_DISTRIBUTION);

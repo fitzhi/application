@@ -34,12 +34,12 @@ describe('DashboardService', () => {
 
 	it('calculate without error the size of an empty project.', () => {
 		const emptyProject = new Project (1890, 'Empty one');
-		expect(service.sizeOfProject(emptyProject)).toBe(0)
+		expect(service.sizeOfProject(emptyProject)).toBe(0);
 	});
 
 	it('calculate the size of the Fitzhi project.', () => {
 		console.log (project);
-		expect(service.sizeOfProject(project)).toBe(2748096)
+		expect(service.sizeOfProject(project)).toBe(2748096);
 	});
 
 });

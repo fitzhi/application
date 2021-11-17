@@ -20,8 +20,8 @@ import { TreemapProjectsService } from '../../treemap-projects/treemap-projects-
 import { TreemapSkillsChartComponent } from '../../treemap-skills/treemap-skills-chart/treemap-skills-chart.component';
 import { SummaryService } from '../service/summary.service';
 import { SummaryComponent } from './summary.component';
-import { MOCK_PROJECTS_DISTRIBUTION }  from '../../mock-projects-distribution.spec';
-import { MOCK_SKILLS_DISTRIBUTION }  from '../../mock-skills-distribution.spec';
+import { MOCK_PROJECTS_DISTRIBUTION } from '../../mock-projects-distribution.spec';
+import { MOCK_SKILLS_DISTRIBUTION } from '../../mock-skills-distribution.spec';
 
 
 describe('SummaryComponent', () => {
@@ -119,8 +119,7 @@ describe('SummaryComponent', () => {
 
 	it('should display an help-popup when the mouse moves over the widget.', done => {
 
-		let help = fixture.debugElement.query(By.css('#help-general-average'));
-		expect(help).toBeNull();
+		expect(fixture.debugElement.query(By.css('#help-general-average'))).toBeNull();
 
 		spyOn(dashboardService, 'processProjectsDistribution').and.returnValue(MOCK_PROJECTS_DISTRIBUTION);
 		spyOn(dashboardService, 'processSkillDistribution').and.returnValue(MOCK_SKILLS_DISTRIBUTION);
@@ -134,8 +133,7 @@ describe('SummaryComponent', () => {
 				const score = fixture.debugElement.query(By.css('#general-average')).nativeElement;
 				score.dispatchEvent(new Event('mouseenter'));
 				fixture.detectChanges();
-				help = fixture.debugElement.query(By.css('#help-general-average'));
-				expect(help).toBeDefined();``
+				expect(fixture.debugElement.query(By.css('#help-general-average'))).toBeDefined();
 				done();
 			}
 		});

@@ -21,7 +21,7 @@ describe('skillService', () => {
 	})
 	class DummyComponent {
 	}
-	
+
 	beforeEach(() => {
 		TestBed.configureTestingModule({
 			providers: [SkillService, BackendSetupService],

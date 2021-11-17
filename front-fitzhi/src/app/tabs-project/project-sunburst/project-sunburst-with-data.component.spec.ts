@@ -72,7 +72,6 @@ describe('ProjectSunburstComponent filled with data', () => {
 			const sunburstCacheService = TestBed.inject(SunburstCacheService);
 			sunburstCacheService.saveResponse(data);
 
-			const sunburstCinematicService = TestBed.inject(SunburstCinematicService);
 			sunburstCinematicService.refreshChart$.next(true);
 		}, 0);
 
@@ -102,11 +101,10 @@ describe('ProjectSunburstComponent filled with data', () => {
 						const sunburstViz = fixture.debugElement.nativeElement.querySelector('.sunburst-viz');
 						expect(sunburstViz).toBeTruthy();
 						expect(sunburstViz.style.display).toBe('none');
-						done();	
+						done();
 					}
 				});
 			}, 100);
-	
 		}, 0);
 	});
 
