@@ -13,7 +13,6 @@ describe('skillService', () => {
 	let fixture: ComponentFixture<DummyComponent>;
 	let service: SkillService;
 	let httpTestingController: HttpTestingController;
-	let backendSetupService: BackendSetupService;
 
 	@Component({
 		selector: 'app-dummy-component',
@@ -73,7 +72,7 @@ describe('skillService', () => {
 		const spyCreateSkill = spyOn(service, 'createSkill$');
 
 		// We mock the Skill update
-		const spyUpdateSkill = spyOn(service, 'updateSkill$')
+		spyOn(service, 'updateSkill$')
 			.and.callThrough()
 			.and.returnValue(of(new Skill(1789, 'A revolutionaly skill')));
 
