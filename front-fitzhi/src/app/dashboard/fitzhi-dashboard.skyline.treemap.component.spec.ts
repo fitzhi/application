@@ -66,7 +66,7 @@ describe('FitzhiDashboardComponent initialization', () => {
 		spyOn(dashboardService, 'processProjectsDistribution').and.returnValue(MOCK_PROJECTS_DISTRIBUTION);
 
 		fixture.detectChanges();
-
+	});
 
 	it('should be created without any error', () => {
 		component.selected = selection.summary;
