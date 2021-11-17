@@ -36,8 +36,7 @@ describe('skillService', () => {
 
 		httpTestingController = TestBed.inject(HttpTestingController);
 
-		backendSetupService = TestBed.inject(BackendSetupService);
-		backendSetupService.saveUrl('URL_OF_SERVER');
+		localStorage.setItem('backendUrl', 'URL_OF_SERVER');
 		fixture.detectChanges();
 	});
 
