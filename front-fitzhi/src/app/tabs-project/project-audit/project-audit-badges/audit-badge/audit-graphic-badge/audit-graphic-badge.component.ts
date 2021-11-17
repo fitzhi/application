@@ -95,7 +95,9 @@ export class AuditGraphicBadgeComponent extends BaseDirective implements OnInit,
 				console.log ('Displaying the graphic badge in non-editable mode');
 			}
 			if (this.project) {
-				this.drawBadge(this.project.auditEvaluation);
+				if (this.project.auditEvaluation > 0) {
+					this.drawBadge(this.project.auditEvaluation);
+				}
 			} else {
 				if (this.evaluation) {
 					this.drawBadge(this.evaluation);
