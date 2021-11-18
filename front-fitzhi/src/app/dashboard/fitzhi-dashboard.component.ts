@@ -122,7 +122,7 @@ export class FitzhiDashboardComponent extends BaseDirective implements OnInit, O
 	}
 
 	/**
-	 * Switch to a summary.
+	 * Switch to a dashboard panel.
 	 * @param clickedselection the new Selected button
 	 */
 	switchTo(clickedselection: number) {

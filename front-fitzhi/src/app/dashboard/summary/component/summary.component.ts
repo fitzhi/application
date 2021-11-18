@@ -1,4 +1,4 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, EventEmitter, OnDestroy, OnInit, Output } from '@angular/core';
 import { BaseDirective } from 'src/app/base/base-directive.directive';
 import { Project } from 'src/app/data/project';
 import { DashboardService } from 'src/app/service/dashboard/dashboard.service';
@@ -14,6 +14,12 @@ import { SummaryService } from '../service/summary.service';
 	styleUrls: ['./summary.component.css']
 })
 export class SummaryComponent extends BaseDirective implements OnInit, OnDestroy {
+
+
+	/**
+	 * The component has to emit an event if the user clicks on a summary.
+	 */
+	 @Output() messengerSelectedSummary = new EventEmitter<number>();
 
 	public selection = selection;
 
@@ -62,6 +68,14 @@ export class SummaryComponent extends BaseDirective implements OnInit, OnDestroy
 	 */
 	hasSkillsCoverageScore() {
 		return (this.popupHelper.isButtonActivated(selection.skillsCoverageScore));
+	}
+
+	/**
+	 * Switch the current selection to the given identifier.
+	 * @param selection the identifier of the panel dashboard to display
+	 */
+	switchTo(selection: number) {
+		this.messengerSelectedSummary.emit(selection);
 	}
 
 	ngOnDestroy() {

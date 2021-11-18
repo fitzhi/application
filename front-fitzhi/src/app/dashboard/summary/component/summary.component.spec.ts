@@ -22,6 +22,7 @@ import { SummaryService } from '../service/summary.service';
 import { SummaryComponent } from './summary.component';
 import { MOCK_PROJECTS_DISTRIBUTION } from '../../mock-projects-distribution.spec';
 import { MOCK_SKILLS_DISTRIBUTION } from '../../mock-skills-distribution.spec';
+import { selection } from '../../selection';
 
 
 describe('SummaryComponent', () => {
@@ -30,15 +31,21 @@ describe('SummaryComponent', () => {
 	let dashboardService: DashboardService;
 	let projectService: ProjectService;
 	let staffListService: StaffListService;
+	let service: SummaryService;
 
 	@Component({
 		selector: 'app-test-host-component',
 		template: `	<div style="width: 800px; height: 800px; top: 0; bottom: 0; left: 0; right: 0; position: fixed; background-color: transparent;">
-						<app-summary></app-summary>
+						<app-summary (messengerSelectedSummary)="switchTo($event)"></app-summary>
 					</div>`
 	})
+
 	class TestHostComponent {
 		@ViewChild(SummaryComponent) summary: SummaryComponent;
+
+		switchTo(selection: number) {
+			console.log ('Received selection', selection);
+		}
 	}
 
 	beforeEach(async () => {
@@ -59,6 +66,8 @@ describe('SummaryComponent', () => {
 		component = fixture.componentInstance;
 		dashboardService = TestBed.inject(DashboardService);
 
+		service = TestBed.inject(SummaryService);
+
 		const referentialService = TestBed.inject(ReferentialService);
 		referentialService.legends.push(new RiskLegend(4, 'green'));
 		referentialService.referentialLoaded$.next(true);
@@ -69,7 +78,17 @@ describe('SummaryComponent', () => {
 		staffListService = TestBed.inject(StaffListService);
 		staffListService.informStaffLoaded();
 		fixture.detectChanges();
+		
 	});
+
+	function loadTheCharts(generalAverage: number) {
+		spyOn(dashboardService, 'processProjectsDistribution').and.returnValue(MOCK_PROJECTS_DISTRIBUTION);
+		spyOn(dashboardService, 'processSkillDistribution').and.returnValue(MOCK_SKILLS_DISTRIBUTION);
+		const spy = spyOn(dashboardService, 'calculateGeneralAverage').and.returnValue(generalAverage);
+		service.showGeneralAverage();
+		fixture.detectChanges();
+		return spy;
+	}
 
 	it('should display the main logo at startup.', () => {
 		expect(component).toBeTruthy();
@@ -79,12 +98,9 @@ describe('SummaryComponent', () => {
 	});
 
 	it('show the small logo when the first summary is loaded.', done => {
-		const service = TestBed.inject(SummaryService);
-		spyOn(dashboardService, 'processProjectsDistribution').and.returnValue(MOCK_PROJECTS_DISTRIBUTION);
-		spyOn(dashboardService, 'processSkillDistribution').and.returnValue(MOCK_SKILLS_DISTRIBUTION);
-		const spy = spyOn(dashboardService, 'calculateGeneralAverage').and.returnValue(1);
-		service.showGeneralAverage();
-		fixture.detectChanges();
+
+		const spy = loadTheCharts(1);
+
 		expect(spy).toHaveBeenCalled();
 		service.summary$.subscribe({
 			next: sum => {
@@ -101,12 +117,8 @@ describe('SummaryComponent', () => {
 		treemapProjectsService.informSelectedProjects([1, 2, 3]);
 		staffListService.informStaffLoaded();
 		projectService.allProjectsIsLoaded$.next(true);
-		spyOn(dashboardService, 'processProjectsDistribution').and.returnValue(MOCK_PROJECTS_DISTRIBUTION);
-		spyOn(dashboardService, 'processSkillDistribution').and.returnValue(MOCK_SKILLS_DISTRIBUTION);
-		const spy = spyOn(dashboardService, 'calculateGeneralAverage').and.returnValue(6);
-		const service = TestBed.inject(SummaryService);
-		service.showGeneralAverage();
-		fixture.detectChanges();
+
+		const spy = loadTheCharts(6);
 
 		service.summary$.subscribe({
 			next: sum => {
@@ -121,12 +133,7 @@ describe('SummaryComponent', () => {
 
 		expect(fixture.debugElement.query(By.css('#help-general-average'))).toBeNull();
 
-		spyOn(dashboardService, 'processProjectsDistribution').and.returnValue(MOCK_PROJECTS_DISTRIBUTION);
-		spyOn(dashboardService, 'processSkillDistribution').and.returnValue(MOCK_SKILLS_DISTRIBUTION);
-		const spy = spyOn(dashboardService, 'calculateGeneralAverage').and.returnValue(3);
-		const service = TestBed.inject(SummaryService);
-		service.showGeneralAverage();
-		fixture.detectChanges();
+		loadTheCharts(3);
 
 		service.summary$.subscribe({
 			next: sum => {
@@ -148,4 +155,44 @@ describe('SummaryComponent', () => {
 
 		expect(help).toBeDefined();
 	});
+
+
+	it('should switch to the skills coverage chart if the user clicks on its thumbnail.', done => {
+
+		loadTheCharts(3);
+
+		const spy = spyOn(component.summary, 'switchTo').and.callThrough();
+		const spyComponentParent = spyOn(component, 'switchTo').withArgs(selection.treeMapSkills).and.callThrough();
+		
+		service.summary$.subscribe({
+			next: sum => {
+				const thumbnail = fixture.debugElement.query(By.css('#thumbnail-treeMapSkills'));
+				thumbnail.triggerEventHandler('click', null);
+				fixture.detectChanges();
+				expect(spy).toHaveBeenCalled();
+				expect(spyComponentParent).toHaveBeenCalled();
+				done();
+			}
+		});
+	});
+
+	it('should switch to the treemap projects chart if the user clicks on its thumbnail.', done => {
+
+		loadTheCharts(8);
+
+		const spy = spyOn(component.summary, 'switchTo').and.callThrough();
+		const spyComponentParent = spyOn(component, 'switchTo').withArgs(selection.treeMapProjects).and.callThrough();
+		
+		service.summary$.subscribe({
+			next: sum => {
+				const thumbnail = fixture.debugElement.query(By.css('#thumbnail-treeMapProjects'));
+				thumbnail.triggerEventHandler('click', null);
+				fixture.detectChanges();
+				expect(spy).toHaveBeenCalled();
+				expect(spyComponentParent).toHaveBeenCalled();
+				done();
+			}
+		});
+	});
+
 });

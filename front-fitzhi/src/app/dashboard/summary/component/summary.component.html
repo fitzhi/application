@@ -15,9 +15,10 @@
 			<em class="fas glyphicon fa-users-cog"></em>
 		</div>
 
-		<div class="position-absolute" style="width: 100px; height: 100px; bottom: 0; right: 0;"	
+		<div id="thumbnail-treeMapProjects" class="position-absolute" style="width: 100px; height: 100px; bottom: 0; right: 0;"	
 			(mouseenter)="popupHelper.mouseEnter(selection.generalAverage)" 
-			(mouseleave)="popupHelper.mouseLeave()">
+			(mouseleave)="popupHelper.mouseLeave()"
+			(click)="switchTo(selection.treeMapProjects)" >
 			<div class="host-treemap-projects">
 				<app-treemap-projects 
 					width="100px" 
@@ -41,10 +42,11 @@
 			<em class="fas glyphicon fa-graduation-cap"></em>
 		</div>
 
-		<div class="position-absolute" 
+		<div id="thumbnail-treeMapSkills" class="position-absolute" 
 			style="width: 100px; height: 100px; bottom: 0; right: 0;"		
 			(mouseenter)="popupHelper.mouseEnter(selection.skillsCoverageScore)" 
-			(mouseleave)="popupHelper.mouseLeave()">
+			(mouseleave)="popupHelper.mouseLeave()"
+			(click)="switchTo(selection.treeMapSkills)" >
 			<app-treemap-skills-chart 
 				[buttonOrChart]="'button'"
 				[active]=false>
