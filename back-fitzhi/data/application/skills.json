@@ -150,5 +150,13 @@
 			"detectionType": "0",
 			"pattern": ".sh$"
 		}
+	},
+	"25": {
+		"id": 25,
+		"title": "Docker",
+		"detectionTemplate": {
+			"detectionType": "0",
+			"pattern": "Dockerfile$"
+		}
 	}
 }
