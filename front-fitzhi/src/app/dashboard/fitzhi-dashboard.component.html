@@ -69,8 +69,8 @@
 	</div>
 </angular-popper>        
 
-<angular-popper placement="left" target="#treeMap-projects" 
-*ngIf="popupHelper.isButtonActivated(selection.treeMapProjects) && !hasSelectedADashboard()">
+<angular-popper placement="left" target="#treeMap-projects"
+	*ngIf="popupHelper.isButtonActivated(selection.treeMapProjects) && !hasSelectedADashboard()">
 	<div content class="help">
 		<h4 class="help-title">Projects patchwork</h4>
 		<div class="help-content">
@@ -324,7 +324,7 @@
 		</div>
 
 		<div class="dashboard" *ngIf="isSelected(selection.summary)">
-			<app-summary></app-summary>
+			<app-summary (messengerSelectedSummary)="switchTo($event)"></app-summary>
 		</div>
 
 		<div class="dashboard-pie" *ngIf="isSelected(selection.currentSummary) && (projectService.allProjectsIsLoaded$|async)">
