@@ -61,7 +61,7 @@ describe('StarfieldService', () => {
 		staffListService = TestBed.inject(StaffListService);
 		httpTestingController = TestBed.inject(HttpTestingController);
 		const backendSetupService = TestBed.inject(BackendSetupService);
-		backendSetupService.saveUrl('TEST_URL');
+		backendSetupService.saveUrl('URL_OF_SERVER');
 	});
 
 	it('should be successfully created.', () => {
@@ -145,7 +145,7 @@ describe('StarfieldService', () => {
 		service.selectedMonth.year = 1969;
 		service.selectedMonth.month = 7;
 		service.retrieveActiveStatePrevious();
-		const req = httpTestingController.expectOne('TEST_URL/api/staff/constellation/1969/7');
+		const req = httpTestingController.expectOne('URL_OF_SERVER/api/staff/constellation/1969/7');
 		expect(req.request.method).toBe('GET');
 		req.flush([]);
 		service.previous$.subscribe({
@@ -165,7 +165,7 @@ describe('StarfieldService', () => {
 		const month = new Date().getMonth() + 1;
 
 		service.retrieveActiveStatePrevious();
-		const req = httpTestingController.expectNone(`TEST_URL/api/staff/constellation/${year}/${month}`);
+		const req = httpTestingController.expectNone(`URL_OF_SERVER/api/staff/constellation/${year}/${month}`);
 		service.previous$.subscribe({
 			next: doneAndOk => {
 				expect(doneAndOk).toBe(true);
@@ -178,7 +178,7 @@ describe('StarfieldService', () => {
 		service.selectedMonth.year = 1969;
 		service.selectedMonth.month = 7;
 		service.retrieveActiveStatePrevious();
-		const req = httpTestingController.expectOne('TEST_URL/api/staff/constellation/1969/7');
+		const req = httpTestingController.expectOne('URL_OF_SERVER/api/staff/constellation/1969/7');
 		expect(req.request.method).toBe('GET');
 		const error = new ErrorEvent('error');
 		req.error(
@@ -249,7 +249,7 @@ describe('StarfieldService', () => {
 		service.selectedMonth.year = 1969;
 		service.selectedMonth.month = 5;
 		service.retrieveActiveStateNext();
-		const req = httpTestingController.expectOne('TEST_URL/api/staff/constellation/1969/7');
+		const req = httpTestingController.expectOne('URL_OF_SERVER/api/staff/constellation/1969/7');
 		expect(req.request.method).toBe('GET');
 		req.flush([]);
 		service.next$.subscribe({
@@ -264,7 +264,7 @@ describe('StarfieldService', () => {
 		service.selectedMonth.year = 1969;
 		service.selectedMonth.month = 5;
 		service.retrieveActiveStateNext();
-		const req = httpTestingController.expectOne('TEST_URL/api/staff/constellation/1969/7');
+		const req = httpTestingController.expectOne('URL_OF_SERVER/api/staff/constellation/1969/7');
 		expect(req.request.method).toBe('GET');
 		const error = new ErrorEvent('error');
 		req.error(
@@ -292,7 +292,7 @@ describe('StarfieldService', () => {
 		const month = new Date().getMonth() + 1;
 
 		service.retrieveActiveStateNext();
-		const req = httpTestingController.expectNone(`TEST_URL/api/staff/constellation/${year}/${month}`);
+		const req = httpTestingController.expectNone(`URL_OF_SERVER/api/staff/constellation/${year}/${month}`);
 		service.next$.subscribe({
 			next: doneAndOk => {
 				expect(doneAndOk).toBe(true);

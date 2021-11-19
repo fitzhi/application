@@ -24,7 +24,7 @@ describe('skillService', () => {
 
 		httpTestingController = TestBed.inject(HttpTestingController);
 		const backendSetupService = TestBed.inject(BackendSetupService);
-		backendSetupService.saveUrl('TEST_URL');
+		backendSetupService.saveUrl('URL_OF_SERVER');
 
 		service.lookup$('one').pipe(take(1)).subscribe({
 			next: skill => {
@@ -33,12 +33,8 @@ describe('skillService', () => {
 				done();
 			}
 		});
-/*
-		const req2 = httpTestingController.expectOne('TEST_URL/api/skill');
-		expect(req2.request.method).toBe('GET');
-		req2.flush([]);
-*/
-		const req1 = httpTestingController.expectOne('TEST_URL/api/skill/name/one');
+
+		const req1 = httpTestingController.expectOne('URL_OF_SERVER/api/skill/name/one');
 		expect(req1.request.method).toBe('GET');
 		req1.flush(new Skill(1, 'one'));
 

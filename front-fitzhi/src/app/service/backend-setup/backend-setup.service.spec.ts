@@ -24,24 +24,24 @@ describe('BackendSetupService', () => {
 
 	it ('should handle a successfull connection', () => {
 
-		service.isVeryFirstConnection$('TEST_URL').subscribe(firstConnection => {
+		service.isVeryFirstConnection$('URL_OF_SERVER').subscribe(firstConnection => {
 			expect(firstConnection.connected).toBeTruthy();
 			expect(firstConnection.validUrl).toBeNull();
 		});
 
-		const req = httpMock.expectOne('TEST_URL/api/admin/isVeryFirstConnection');
+		const req = httpMock.expectOne('URL_OF_SERVER/api/admin/isVeryFirstConnection');
 		expect(req.request.method).toBe('GET');
 		req.flush(('true'));
 	});
 
 	it ('should handle a "302 FOUND" response', () => {
 
-		service.isVeryFirstConnection$('TEST_URL').subscribe(firstConnection => {
+		service.isVeryFirstConnection$('URL_OF_SERVER').subscribe(firstConnection => {
 			expect(firstConnection.connected).toBeFalsy();
 			expect(firstConnection.validUrl).toBe(null);
 		});
 
-		const response = httpMock.expectOne('TEST_URL/api/admin/isVeryFirstConnection');
+		const response = httpMock.expectOne('URL_OF_SERVER/api/admin/isVeryFirstConnection');
 		expect(response.request.method).toBe('GET');
 		response.error(<any>{}, {
 			status: 302,

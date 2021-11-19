@@ -60,7 +60,7 @@ describe('StarfieldService.broadcastCollections()', () => {
 		staffListService = TestBed.inject(StaffListService);
 		httpTestingController = TestBed.inject(HttpTestingController);
 		const backendSetupService = TestBed.inject(BackendSetupService);
-		backendSetupService.saveUrl('TEST_URL');
+		backendSetupService.saveUrl('URL_OF_SERVER');
 	});
 
 	it('should broadcast the NEXT constellations from the server.', done => {
