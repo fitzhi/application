@@ -66,7 +66,7 @@ else
 mvn clean install -Dmaven.test.skip=true
 fi
 
-cp target/fitzhi.jar ../$dir/backend-fitzhi/fitzhi.jar
+cp target/fitzhi-1.6-SNAPSHOT.jar ../$dir/backend-fitzhi/fitzhi-1.6-SNAPSHOT.jar
 cp target/application.properties ../$dir/backend-fitzhi/application.properties
 cp target/logback-spring.xml ../$dir/backend-fitzhi/logback-spring.xml
 

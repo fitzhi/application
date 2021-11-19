@@ -27,4 +27,4 @@ fi
 
 service nginx start 
 
-java -Xmx1g -jar fitzhi.jar --spring.profiles.active=HTTP > out.txt
+java -Xmx1g -jar fitzhi-1.6-SNAPSHOT.jar.jar --spring.profiles.active=HTTP > out.txt
