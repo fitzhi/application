@@ -158,5 +158,13 @@
 			"detectionType": "0",
 			"pattern": "Dockerfile$"
 		}
+	},
+	"26": {
+		"id": 26,
+		"title": "Gradle",
+		"detectionTemplate": {
+			"detectionType": "0",
+			"pattern": ".gradle$"
+		}
 	}
 }
