@@ -37,6 +37,6 @@ docker run --name fitzhi \
 #-e "urlSonarServer=http://192.168.1.155:9000" \
 #-e "login=c1574b8a8ca259d527d7c8d1d630e6322f2b0455" \
 #-v fitzhi-data:/fitzhi/deploy/ \
-#-p 80:80 -ti --rm fitzhi/application:1.6 /bin/bash
+#-p 80:80 -ti --rm fitzhi/application:1.6-SNAPSHOT /bin/bash
 
 
