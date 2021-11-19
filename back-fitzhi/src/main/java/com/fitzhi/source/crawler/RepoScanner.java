@@ -29,6 +29,7 @@ import org.eclipse.jgit.errors.CorruptObjectException;
 import org.eclipse.jgit.lib.Ref;
 import org.eclipse.jgit.lib.Repository;
 import org.eclipse.jgit.revwalk.RevCommit;
+import org.eclipse.jgit.revwalk.RevWalk;
 import org.eclipse.jgit.transport.FetchConnection;
 
 /**
@@ -36,7 +37,7 @@ import org.eclipse.jgit.transport.FetchConnection;
  * Source repository scanner.
  * </p>
  * <p>
- * <font color="red">This interface unfortunately has an adherence with <b>GIT</b></font>
+ * This interface unfortunately has an adherence with <strong>GIT</strong>
  * </p>
  * <p>
  * Future releases should unplugged this link.
@@ -48,9 +49,7 @@ public interface RepoScanner {
 	/**
 	 * <p>Load the repository from the internal cache.</p>
 	 * <p>
-	 * <font color="coral">
 	 * This method load the repository from cache <b>AND</b> update the ghosts list as well if any new staff member has been created. 
-	 * </font>
 	 * </p>
 	 * @param project the current active project.
 	 * @return the repository commit entries if a previous parsing has been saved, or {@code null} if none exists.
@@ -85,14 +84,12 @@ public interface RepoScanner {
 	 * Create the directory which will host the local repository.
 	 * </p>
 	 * 
-	 * <p>
 	 * The current implementation in {@link GitCrawler} will provide 2 solutions :
 	 * <ul>
-	 * <li> a temporary directory if the setting {@code gitcrawler.repositories.location} is empty</i>
-	 * <li>a permanent directory inside the given path given in {@code gitcrawler.repositories.location}</i>
+	 * <li> a temporary directory if the setting {@code gitcrawler.repositories.location} is empty</li>
+	 * <li>a permanent directory inside the given path given in {@code gitcrawler.repositories.location}</li>
 	 * </ul>
-	 * </p>
-	 * 
+	 *
 	 * @param project  the actual project
 	 * @param settings the connection settings <i>(these settings are given for
 	 *                 trace only support)</i>
@@ -117,11 +114,11 @@ public interface RepoScanner {
 	 * <p>
 	 * Parse all changes from the repository history and generate (or update) the commits collection analysis.
 	 * <p>
-	 * <b><font color="red">BE CAUTIOUS : This method has an unsatisfying adherence with GIT</font></b>
+	 * <strong>BE CAUTIOUS : This method has an unsatisfying adherence with GIT</strong>
 	 * </p>
 	 * @param project the given project 
 	 * @param analysis the analysis container to complete. This analysis hosts the  collection of all changes detected on the passed repository.
-	 * @param repository the <b><font color="red">GIT</font></b> repository.
+	 * @param repository the <strong>GIT</strong> repository.
 	 * @throws ApplicationException thrown by the crawling operation.
 	 */
 	void fillRepositoryAnalysis(Project project, RepositoryAnalysis analysis,  Repository repository) throws ApplicationException;
@@ -136,7 +133,7 @@ public interface RepoScanner {
 	 * </ul>
 	 * &nbsp;
 	 * @param project the given project 
-	 * @param repository the <b><font color="red">GIT</font></b> repository.
+	 * @param repository the <strong>GIT</strong> repository.
 	 * @return the {@link RepositoryAnalysis analysis} extracted from the repository. 
 	 * <p>This analysis contains the  collection of all changes detected on the passed repository.</p>
 	 * @throws ApplicationException thrown by the crawling operation.
@@ -148,10 +145,9 @@ public interface RepoScanner {
 	 * Finalize the loading of the changes.<br/>bra
 	 * Useless entries will be removed.
 	 * </P>
-	 * <p><font color="red">
 	 * Some GIT rename operations might not be detected <i>(when <u>simultaneously</u> the path and the content of the file are changed</i>).<br/>
 	 * We remove useless entries if the file does not exist anymore on file system.
-	 * </font></p>
+	 * 
 	 * @param sourceLocation the directory where the sources are located.
 	 * @param analysis the analysis generated from the collection.
 	 * @throws IOException if any IO exception occurs during the finalization.
@@ -161,7 +157,8 @@ public interface RepoScanner {
 	/**
 	 * <p>
 	 * Filter the collection of changes to the eligible pathnames.<br/>
-	 * Theses pathnames must match the patterns declared by the settings <b>patternsCleanup<b> in your <b>application.properties</b> file.
+	 * Theses pathnames must match the patterns declared by the settings <strong>patternsCleanup</strong>
+	 * in your <strong>application.properties</strong> file.
 	 * </p>
 	 * @param analysis the repository analysis.
 	 */
@@ -236,8 +233,8 @@ public interface RepoScanner {
 	 * This container hosts the complete list of changes detected during the crawling repository
 	 * @param commit the actual commit revision evaluated
 	 * @param finalFilePathname the final file pathname as it appears now, on the local repository
+	 * @param diffFormatter Difference formatter which will be used to count the number of added, and deleted, lines
 	 * @param de the Diff entry to be taken in account for the pathname
-	 * @param diffFormater Difference formatter which will be used to count the number of added, and deleted, lines
 	 * @param parserVelocity tracker which is following the velocity of the parser 
 	 * @throws ApplicationException throw if any problem occurs, most probably an {@link IOException} or an {@link CorruptObjectException}
 	 */
@@ -273,7 +270,7 @@ public interface RepoScanner {
 
 	/**
 	 * <p>
-	 * This method is an ASYNCHRONOUS wrapper from the method {@link #generate(Project)}
+	 * This method is an ASYNCHRONOUS wrapper from the method {@link #generate(Project, SettingsGeneration)}
 	 * </p>
 	 * <p>
 	 * <b>
@@ -315,7 +312,7 @@ public interface RepoScanner {
 	 * <p>
 	 * Select the list of paths (the shortest possible) containing dependency keywords such as {@code jquery}, {@code bootstrap}...<br/>
 	 * The resulting list is kept inside the repositoryAnalysis container ({@link RepositoryAnalysis#getPathsCandidate()}.<br/>
-	 * The crawler will verify in {@link #retrieveRootPath(List)} 
+	 * The crawler will verify in {@link #retrieveRootPath(RepositoryAnalysis)} 
 	 * if a sub-directory in the parent tree can be excluded from the analysis.<br/>
 	 * </p>
 	 * @param analysis the current repository container analysis.
@@ -325,14 +322,16 @@ public interface RepoScanner {
 
 	/**
 	 * <p>
-	 * Retrieve the root directory on each dependency pathnames where exclusion can start.</br>
+	 * Retrieve the root directory on each dependency pathnames where exclusion can start.
+	 * </p>
+	 * <p>
 	 * e.g. a pathname like {@code src/main/javascript/app/component/jquery/src/internal-js-.js} 
 	 * will become {@code src/main/javascript/app/component/jquery}<br/><br/>
-	 * <font color="red">IMPORTANT : The method tests also that ALL files on each directory are identified as dependencies</font><br/>
-	 * This method will fill the dependencies collection {@link Project#getDependencies()} in the Project.
+	 * IMPORTANT : The method tests also that ALL files on each directory are identified as dependencies
+	 * <br/>
+	 * This method will fill the dependencies collection in the Project.
 	 * </p>
 	 * @param analysis the current repository container analysis.
-	 * @param pathnames collection of pathnames which contains an external dependency keyword such as {@code jquery} or {@code bootstrap} 
 	 * throws {@link IOException} if any IOExceptio occurs.
 	 */
 	void retrieveRootPath (RepositoryAnalysis analysis) throws IOException;
@@ -383,18 +382,17 @@ public interface RepoScanner {
 	 * <em>
 	 * The corresponding implementation with GIT should be {@code synchronized} due to the fact that {@link RevWalk} is not thread safe
 	 * </em>
-	 * @see https://archive.eclipse.org/jgit/docs/jgit-2.0.0.201206130900-r/apidocs/org/eclipse/jgit/revwalk/RevWalk.html
+	 * @see "https://archive.eclipse.org/jgit/docs/jgit-2.0.0.201206130900-r/apidocs/org/eclipse/jgit/revwalk/RevWalk.html"
 	 * 
 	 * @param project the current projett
 	 * @param repository the project repository
-	 * @param filePath the file Path
+	 * @param filepath the file Path
 	 */
 	List<RevCommit> fileGitHistory(Project project, Repository repository, String filepath) throws ApplicationException;
 
 	/**
-	 * retrieve the first commit registered for the given repository.
-	 * @param the "porcelain" API to interact with the git repository
-	 * @return the first commit
+	 * Initialize the woorkspace starting from the first commit registered for the given repository.
+	 * @param git the "porcelain" API to interact with the git repository
 	 */
 	RevCommit initialCommit(Git git) throws ApplicationException;
 

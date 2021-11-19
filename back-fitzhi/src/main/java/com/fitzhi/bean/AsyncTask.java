@@ -59,7 +59,7 @@ public interface AsyncTask {
 	
 	/**
 	 * Log a message for a running task.<br/>
-	 * <font color="chocolate">The Log message will obtain an error code equal to -1</font>
+	 * The Log message will obtain an error code equal to -1.
 	 * @param operation type of operation concerned
 	 * @param title the title related to the identifier
 	 * @param id the given identifier <i>(which might be a project, a staff or anything else)</i>
@@ -92,7 +92,7 @@ public interface AsyncTask {
 	void completeTask (String operation, String title, int id) throws ApplicationException;
 	
 	/**
-	 * Complete the current task <font color="red">ON AN ERROR</font>
+	 * Complete the current task ON AN ERROR
 	 * @param operation type of operation recorded
 	 * @param title title related to the id
 	 * @param id identifier of the entity

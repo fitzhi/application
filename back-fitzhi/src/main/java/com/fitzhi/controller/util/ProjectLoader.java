@@ -20,14 +20,14 @@ import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
 
 /**
- * <p>This class is an utility class in charge of loading the project</p>
- * <font color="red"><p>
+ * <p>
+ * This class is an utility class in charge of loading the project
  * At this level of implementation, we do not create a specific bean just to deliver this feature.<br/>
  * Therefore, this class will be initialized directly during the <code>@PostConstruct</code> init method.<br/>
  * e.g. {@link com.fitzhi.controller.ProjectController#init() }
- * </p></font>
+ * </p>
+ * 
  * @author Fr&eacute;d&eacute;ric VIDAL
- *
  */
 @Slf4j
 public class ProjectLoader {
@@ -56,7 +56,7 @@ public class ProjectLoader {
 	 * @param <T> The class of instance which will be sent within the envelop of the ResponseEntity
 	 * @param idProject project identifier
 	 * @param t the object to be sent back inside the ResponseEntit.
-	 * @param response the response to be returned to the front if the search is unsuccessful.<br/>
+	 * @param refResponse the response to be returned to the front if the search is unsuccessful.<br/>
 	 * 			<b>This parameter is not final. This method might change its value.</b>
 	 * @return the retrieved project, or {@code null} if none's found.
 	 */

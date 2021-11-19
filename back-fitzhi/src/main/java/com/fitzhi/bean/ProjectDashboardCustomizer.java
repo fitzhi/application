@@ -40,15 +40,16 @@ public interface ProjectDashboardCustomizer {
 
 	/**
 	 * <p>
-	 * Take in account a new created staff into the repository collection of a given project.<br/>
-	 * This new user should have been detected before as an unknown contributor.</br>
+	 * Take in account a new created staff into the repository collection of a given project.
+	 * This new user should have been detected before as an unknown contributor.
 	 * The goal of this method is to propagate his creation, if necessary, 
 	 * and to affect his definitive identifier {@code idStaff} 
 	 * into the source code item {@link Operation#idStaff operations}.
 	 * </p>
 	 * <p>
-	 * <font color="chocolate">The default implementation is {@code synchronized} 
-	 * to avoid conflicts when multiple staff member are taken in account simultaneously.</font>
+	 * The default implementation is {@code synchronized} 
+	 * to avoid conflicts when multiple staff member are taken in account simultaneously.
+	 * 
 	 * </p>
 	 * @param project the given project
 	 * @param staff the new staff member created

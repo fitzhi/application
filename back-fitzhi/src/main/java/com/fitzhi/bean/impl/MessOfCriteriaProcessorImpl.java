@@ -109,37 +109,37 @@ public class MessOfCriteriaProcessorImpl implements RiskProcessor {
      * Evaluate the level of risk on all entries in the repository from the staff/level point of view.<br/>
      * The scale of risks contains 10 levels x+ 1 problem: <br/>
      * <ul>
-     * 		<li>0 : All commits of all sources have been submitted by developers still active in the staff team.</li><br/>
+     * 		<li>0 : All commits of all sources have been submitted by developers still active in the staff team.</li>
      * 
      * 		<li> 1 : <b>90% of all commits</b> have been made by active developers in the staff team.<br/>
      * 				 <i>NB : It's the calculated mean on all sources in the directory.</i><br/>
-     * 				 <b><u>AND</u></b> <b>the last commits</b> have been submitted by them.</li><br/>
+     * 				 <b><u>AND</u></b> <b>the last commits</b> have been submitted by them.</li>
      * 
      * 		<li> 2 : <b>80% of all commits</b> have been made by active developers in the staff team.<br/>
      * 				 <i>NB : It's the calculated mean of all sources in the directory.</i><br/>
-     * 				 <b><u>AND</u></b> <b>the last commits</b> have been submitted by them.</li><br/>
+     * 				 <b><u>AND</u></b> <b>the last commits</b> have been submitted by them.</li>
      * 
      * 		<li> 3 : <b>80% of all commits</b> have been made by active developers in the staff team. 
-     * 					Some of source files are only covered at <b>50%</b></li><br/>
+     * 					Some of source files are only covered at <b>50%</b></li>
      * 
-     * 		<li> 4 : <b>80% of all commits</b> have been made by active developers in the staff team.<br/><br/>
+     * 		<li> 4 : <b>80% of all commits</b> have been made by active developers in the staff team.
      * 
-     * 		<li> 5 : <b>60% of all commits</b> have been made by active developers in the staff team.</li><br/><br/>
+     * 		<li> 5 : <b>60% of all commits</b> have been made by active developers in the staff team.</li>
      * 
      * 		<li> 6 : <b>60% of all commits</b> have been made by active developers in the staff team.<br/> 
-     * 				 AND there are some file(s)  in this directory, without remaining active developers.<br/><br/>
+     * 				 AND there are some file(s)  in this directory, without remaining active developers.
      * 
-     * 		<li> 7 : <b>33% of all commits</b> have been submitted by active developers in the staff team.</li><br/>
+     * 		<li> 7 : <b>33% of all commits</b> have been submitted by active developers in the staff team.</li>
      * 
-     * 		<li> 8 : <b>20%</b> have been made by active developers in the staff team.</li></b><br/>
+     * 		<li> 8 : <strong>20%</Strong> have been made by active developers in the staff team.</li>
      * 
      * 		<li> 9 : <b>10%</b> have been made by active developers in the staff team.
-     * 				 <b><u>AND</u></b> none of them have submitted the most recent commits on the source files.</li><br/>
+     * 				 <b><u>AND</u></b> none of them have submitted the most recent commits on the source files.</li>
      * 
      * 		<li>10 : It's no more a risk. It is a problem. None of the current developers in the company have worked on the source files.</li>
      * </ul>
 	 * @param repository the repository retrieved and parsed from the source control tool (i.e. GIT, SVN...).
-	 * @param data repository data prepared for the Sunburst chart 
+	 * @param sunburstData repository data prepared for the Sunburst chart 
 	 */
 	public void evaluateTheRisk(
 			final CommitRepository repository, 

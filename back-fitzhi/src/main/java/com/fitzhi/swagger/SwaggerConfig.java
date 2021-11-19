@@ -19,7 +19,8 @@ import springfox.documentation.swagger2.annotations.EnableSwagger2;
  * <p>
  * Springfox-swagger configuration.
  * </p>
- * @see http://localhost:8080/swagger-ui/index.html
+ * 
+ * @see "http://localhost:8080/swagger-ui/index.html"
  * 
  * @author Fr&eacute;d&eacute;ric VIDAL
  */

@@ -11,10 +11,8 @@ import lombok.EqualsAndHashCode;
  * This class is regularly passed to the front-end in order to inform of the progression of the treatment.
  * </p> 
  * <p>
- * <font color="chocolate">
  * Be aware that the {@code equals} function has been overridden. The member variable {@code logTime} has been evicted from the comparison. <br/>
  * This tweak has been implemented for testing reason... :-(
- * </font>
  * </p>
  * 
  * @author Fr&eacute;d&eacute;ric VIDAL
@@ -55,7 +53,7 @@ public @Data class ActivityLog  {
 	/**
 	 * <ul>
 	 * <li>
-	 * {@code true} if the task has been completed <font color="red">WITH AN EXCEPTION</font>
+	 * {@code true} if the task has been completed WITH AN EXCEPTION
 	 * </li>
 	 * <li>
 	 * {@code false} otherwise.

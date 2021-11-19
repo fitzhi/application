@@ -21,7 +21,7 @@ public interface Administration {
 	
 	
 	/**
-	 * Keep the footprint of the very first access in Tixhì.</br>
+	 * Keep the footprint of the very first access in Fitzhi.
 	 * This method is invoked after the creation of the administrative user.
 	 * @throws ApplicationException thrown if an IO problem occurs during the operation.
 	 */

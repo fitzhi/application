@@ -110,14 +110,12 @@ public interface CommitRepository {
 	int numberOfFiles(int idStaff);
 	
 	/**
-	 * @return A set which contains the developers/contributors retrieved in the version control but unrecognized during the parsing process.<br/>
-	 * <p>
 	 * This set contains : 
 	 * <ul>
 	 * <li>either unknown developers, who must be declared inside the application (staff Form)</li>
 	 * <li>or particular nicknames setup by current developers.</li>
 	 * </ul>
-	 * </p> 
+	 * @return A set which contains the developers/contributors retrieved in the version control but unrecognized during the parsing process.<br/>
 	 */
 	Set<String> unknownContributors();
 
@@ -147,7 +145,7 @@ public interface CommitRepository {
 
 	/**
 	 * <p>
-	 * Parse & extract the contributor's data for the given staff member.
+	 * Parse and extract the contributor's data for the given staff member.
 	 * </p>
 	 * @param staff the given staff member.
 	 * @return the contributor object summarizing his participation in the project, 
@@ -159,7 +157,7 @@ public interface CommitRepository {
 	
 	/**
 	 * <p>
-	 * Parse & extract the contributor's data for the given ghost.
+	 * Parse and extract the contributor's data for the given ghost.
 	 * </p>
 	 * @param author the given author.
 	 * @return the contributor object summarizing his participation in the project, 

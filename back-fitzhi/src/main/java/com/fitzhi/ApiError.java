@@ -63,7 +63,6 @@ public @Data class ApiError {
 	 * Public construction of an ApiError.
 	 * 
 	 * @param status  HTTP status
-	 * @param message error message
 	 * @param ex      exception thrown
 	 */
 	public ApiError(HttpStatus status, Throwable ex) {

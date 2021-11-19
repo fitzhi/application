@@ -10,7 +10,7 @@ import lombok.EqualsAndHashCode;
  * This object represents a skill detected in a project.
  * </p>
  * <p>
- * <font color="red">The declared method {@code equals} is limited to the property {@code idSkill}.</font>
+ * The declared method {@code equals} is limited to the property {@code idSkill}.
  * </p>
  * @author Fr&eacute;d&eacute;ric VIDAL
  */

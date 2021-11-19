@@ -46,8 +46,8 @@ public interface StaffHandler extends DataSaverLifeCycle {
 	/**
 	 * Add a new technical employee inside the company.
 	 * 
-	 * @param isStaff : identified of this new employee
-	 * @param staff   : Staff instance representing this employee
+	 * @param idStaff the staff identifier of this new employee
+	 * @param staff the Staff instance representing this employee
 	 * @return the previous staff member associated with this idStaff, or null if
 	 *         there was no mapping for this id.
 	 */
@@ -56,7 +56,7 @@ public interface StaffHandler extends DataSaverLifeCycle {
 	/**
 	 * Remove a staff member from the personal.
 	 * 
-	 * @param ifStaff : identifier of the employee to be deleted.
+	 * @param idStaff : identifier of the employee to be deleted.
 	 * @return the staff member just deleted, or {@code null} if none exists.
 	 */
 	Staff removeStaff(final int idStaff);
@@ -90,6 +90,8 @@ public interface StaffHandler extends DataSaverLifeCycle {
 	 * Lookup for staff members responding to a polymorphous criteria.<br/>
 	 * For this release, 2 scenarios are implemented regarding the content of this
 	 * criteria : <br/>
+	 * </p>
+	 * 
 	 * <ul>
 	 * <li>The author email has a corresponding staff member with the same
 	 * email.</li>
@@ -101,7 +103,7 @@ public interface StaffHandler extends DataSaverLifeCycle {
 	 * to user fullname (first + last), or (last + first).
 	 * </li>
 	 * </ul>
-	 * </p>
+	 *
 	 * <br/>
 	 * @param author polymorphous author used to search for a staff member
 	 * @return the <i>first</i> staff corresponding to the criteria, or {@code NULL} if none's found
@@ -123,7 +125,7 @@ public interface StaffHandler extends DataSaverLifeCycle {
 	 * Retrieve the staff member corresponding to the given identifier, if any.
 	 * </p>
 	 * <p>
-	 * if this staff member does not exist (any more), then the exception {@ling NotFoundException} is thrown.
+	 * if this staff member does not exist (any more), then the exception {@link NotFoundException} is thrown.
 	 * </p>
 	 * 
 	 * @param idStaff the staff identifier.
@@ -179,11 +181,11 @@ public interface StaffHandler extends DataSaverLifeCycle {
 	 * Retrieve the contributors list for the given project.
 	 * </p>
 	 * 
-	 * @param project the project identifier.
+	 * @param idProject the project identifier.
 	 * @return the list of contributors, which might be empty (but not
 	 *         <code>null</code>)
 	 */
-	List<Contributor> getContributors(int projectId);
+	List<Contributor> getContributors(int idProject);
 
 	/**
 	 * @param idStaff the staff identifier
@@ -193,22 +195,22 @@ public interface StaffHandler extends DataSaverLifeCycle {
 	String getFullname(int idStaff);
 
 	/**
-	 * @param ifStaff the passed staff identifier
+	 * @param idStaff the passed staff identifier
 	 * @return {@code true} if a project exists for this project identifier,
 	 *         {@code false} otherwise
 	 */
 	boolean containsStaffMember(int idStaff);
 
 	/**
-	 * Validate the given staff member.
 	 * <p>
-	 * Validation rules migt be :
+	 * Validate the given staff member.
+	 * </p>
+	 * Validation rules might be :
 	 * <ul>
 	 * <li>This given staff does not yet exist <em>for the update
 	 * operation</em></li>
 	 * <li>The same {@code login} already exists in the workforce.</li>
 	 * </ul>
-	 * </p>
 	 * 
 	 * @param staff the member of workforce to control before creation, or
 	 *              modification
@@ -384,7 +386,7 @@ public interface StaffHandler extends DataSaverLifeCycle {
 
 	/**
 	 * <p>
-	 * Process & Update the active status based on the history of missions executed
+	 * Process and Update the active status based on the history of missions executed
 	 * by the given staff member.
 	 * </p>
 	 * <p>
@@ -401,12 +403,12 @@ public interface StaffHandler extends DataSaverLifeCycle {
 	void processActiveStatus(Staff staff);
 
 	/**
-	 * </p>
-	 * <b>Force</b> the value of the activity state for a developer.
+	 * <p>
+	 * <strong>Force</strong> the value of the activity state for a developer.
 	 * </p>
 	 * <p>
-	 * In opposition to the method {@link StaffHandler#processActiveStatus(Staff)
-	 * processActiveStatus} which processes & updates the {@code active} field based
+	 * In opposition to the method {@link StaffHandler#processActiveStatus(Staff)}
+	 * processActiveStatus} which processes and updates the {@code active} field based
 	 * on the activity of this staff member, and <b>on his activity only</b>, this
 	 * method forces this value by an end-user decision.
 	 * </p>

@@ -142,8 +142,9 @@ public class ProjectSonarController {
 	}
 
 	/**
-	 * Add or update the Sonar evaluation of a Sonar project
-	 * @param param
+	 * Add or update the Sonar evaluation of a Sonar project.
+	 * @param idProject the project identifier
+	 * @param sonarKey the Sonar key
 	 * @return {@code TRUE} if the operation succeeded, {@code FALSE} otherwise.
 	 */
 	@ResponseBody

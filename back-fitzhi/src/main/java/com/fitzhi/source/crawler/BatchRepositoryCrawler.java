@@ -2,6 +2,7 @@ package com.fitzhi.source.crawler;
 
 import com.fitzhi.ApplicationReadyListener;
 import com.fitzhi.exception.ApplicationException;
+import com.fitzhi.scheduling.ScheduledTasks;
 import com.fitzhi.source.crawler.git.BatchGitCrawler;
 
 /**
@@ -14,7 +15,7 @@ import com.fitzhi.source.crawler.git.BatchGitCrawler;
  *  in an asynchronous mode for each project eligible.
  * </p>
  * @see ApplicationReadyListener
- * @see ScheduledCodeAnalysis
+ * @see ScheduledTasks
  * @author Fr&eacute;d&eacute;ric VIDAL
  */
 public interface BatchRepositoryCrawler {

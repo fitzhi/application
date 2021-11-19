@@ -32,10 +32,11 @@ public class FitzhiWebMvcConfigurer implements WebMvcConfigurer {
 	
 	/**
 	 * <p>
-	 * In order to resolve <code>${...}</code> placeholders in <bean> definitions or <code>@Value</code> annotations using properties from a PropertySource, 
-	 * one must register a <code>PropertySourcesPlaceholderConfigurer</code>.<br/> 
-	 * This happens automatically when using <context:property-placeholder> in XML, but must be explicitly registered using a static code>@Bean</code> method 
-	 * when using <code>@Configuration</code> classes. 
+	 * In order to resolve <code>${...}</code> placeholders in &laquo; bean &raquo; definitions or <code>@Value</code> annotations 
+	 * using properties from a PropertySource, one must register a {@code PropertySourcesPlaceholderConfigurer}.
+	 * This happens automatically when using &laquo; context:property-placeholder &raquo; in XML, 
+	 * but must be explicitly registered using a static {@code @Bean} method 
+	 * when using {@code @Configuration} classes. 
 	 * </p>
 	 * @return an instance of PropertySourcesPlaceholderConfigurer
 	 */

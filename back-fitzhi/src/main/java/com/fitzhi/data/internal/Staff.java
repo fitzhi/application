@@ -29,7 +29,7 @@ import lombok.Data;
  * This object represents also the login/pass associated to each collaborator
  * inside the company.
  * </p>
- * <img style="width:400px" src="https://fitzhi.com/class-diagram-staff.png"></img>
+ * <img style="width:400px" src="https://fitzhi.com/class-diagram-staff.png" alt="Diagram of the class Staff"/>
  * 
  * @author Fr&eacute;d&eacute;ric VIDAL
  */
@@ -57,7 +57,7 @@ public @Data class Staff implements UserDetails {
 	/**
 	 * <p>Staff member is still active or remove from the active staff list.</p>
 	 * This state is processed based on the activity of the developer since {@link StaffHandlerImpl#inactivityDelay} days,
-	 * <font color="blue">unless the {@link Staff#forceActiveState} is set to {@code true}.</font>
+	 * unless the {@link Staff#forceActiveState} is set to {@code true}.
 	 */
 	private boolean active = true;
 		
@@ -68,7 +68,7 @@ public @Data class Staff implements UserDetails {
 	private LocalDate dateInactive;
 
 	/**
-	 * Staff member application filename & type (Word, PDF...)
+	 * Staff member application filename and type (Word, PDF...)
 	 */
 	private String application;
 	private int typeOfApplication;
@@ -85,7 +85,7 @@ public @Data class Staff implements UserDetails {
 	private List<Mission> missions;
 
 	/**
-	 * The collaborator's list of skills & levels.
+	 * The collaborator's list of skills and levels.
 	 */
 	private List<Experience> experiences;
 

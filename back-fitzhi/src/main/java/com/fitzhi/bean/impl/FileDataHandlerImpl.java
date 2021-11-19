@@ -559,8 +559,8 @@ public class FileDataHandlerImpl implements DataHandler {
 	 * repository.
 	 * </p>
 	 * <p>
-	 * <font color="chocolate">We use java IO API to validate that the given path is
-	 * effectively a directory.</font>
+	 * We use java IO API to validate that the given path is
+	 * effectively a directory.
 	 * </p>
 	 * 
 	 * @param project  the current project whose repository is analyzed.

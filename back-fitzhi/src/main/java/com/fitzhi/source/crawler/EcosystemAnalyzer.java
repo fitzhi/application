@@ -19,13 +19,11 @@ import com.fitzhi.exception.ApplicationException;
 import com.fitzhi.source.crawler.javaparser.ExperienceParser;
 
 /**
- * <p>
  * Interface in charge of analysis the repository in order 
  * <ul>
  * <li>to update the ecosystem associated with the project,</li>
  * <li>to update the experiences of developers involed in the project</li>
  * </ul>
- * </p>
  *
  * @author Fr&eacute;d&eacute;ric VIDAL
  *

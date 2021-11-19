@@ -25,7 +25,7 @@ import lombok.Data;
  * <p>
  * This class represents a project in the application.
  * </p> 
- * <img style="width:400px" SRC="https://fitzhi.com/class-diagram-project.png"></img>
+ * <img style="width:400px" src="https://fitzhi.com/class-diagram-project.png" alt="Diagram of the class project"/>
  * @author Fr&eacute;d&eacute;ric VIDAL
  */
 public @Data class Project implements Serializable {
@@ -180,7 +180,7 @@ public @Data class Project implements Serializable {
 	}
 	
 	/**
-	 * <p>Copy constructor of {@link Project}</code></p>
+	 * <p>Copy constructor of {@link Project}</p>
 	 * <p>This construction exists only for one purpose.<br/>
 	 * It is used by the {@link ShuffleService} to shuffle the projects information and prevent any unintentional serialization.
 	 * </p>
@@ -292,10 +292,8 @@ public @Data class Project implements Serializable {
 	 * <li>the repository location is empty</li>
 	 * </ul>
 	 * <p>
-	 * <font color="red">
 	 * <strong>WARNING</strong> : To be absolutely and completely empty, the reference of this project {@code idProject} 
 	 * has not to be involved in a mission for any staff member.
-	 * </font>
 	 * </p>
 	 * @return {@code true} if the project is empty, otherwise {@code false}
 	 * @see StaffHandler#isProjectReferenced(int)

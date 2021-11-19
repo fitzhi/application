@@ -55,7 +55,7 @@ public @Data class AuditTopic implements Serializable {
 
 	/**
 	 * AuditTopic constructor with some default values (such as the weight equal to <b>5</b>).
-	 * @param key identifier of the sonar project entry.
+	 * @param idTopic identifier of the sonar project entry.
 	 */
 	public AuditTopic(int idTopic) {
 		this(idTopic, 0, 5, null);
@@ -63,7 +63,7 @@ public @Data class AuditTopic implements Serializable {
 	
 	/**
 	 * AuditTopic constructor.
-	 * @param key identifier of the sonar project entry.
+	 * @param idTopic identifier of the sonar project entry.
 	 * @param evaluation the audit evaluation given by an expert.
 	 * @param weight of topic note inside the global audit evaluation.
 	 */
@@ -73,7 +73,7 @@ public @Data class AuditTopic implements Serializable {
 	
 	/**
 	 * AuditTopic constructor.
-	 * @param key identifier of the sonar project entry.
+	 * @param idTopic identifier of the sonar project entry.
 	 * @param evaluation the audit evaluation given by an expert.
 	 * @param weight of topic note inside the global audit evaluation.
 	 * @param report executive summary

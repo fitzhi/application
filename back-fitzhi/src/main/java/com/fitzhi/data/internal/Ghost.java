@@ -9,15 +9,15 @@ import lombok.Data;
 
 /**
  * <p>
- * Ghost identified in the repository.<br/>
- * Ghost are unregistered committers in the repository.<br/>
- * System failed to retrieve the read developer behind a {@link #pseudo pseudo}.<br/>
+ * Ghost identified in the repository.
+ * Ghost are unregistered committers in the repository.
+ * System failed to retrieve the read developer behind a {@link #pseudo pseudo}.
+ * </p>
  * A ghost can be 
  * <ul>
  * <li>{@link #technical technical}</li>
  * <li>{@link #idStaff associate to a staff identifier}</li>
  * </ul>
- * </p>
  * 
  * @author Fr&eacute;d&eacute;ric VIDAL
  */
@@ -65,12 +65,12 @@ public @Data class Ghost implements Serializable, GitMetrics {
 	private LocalDate lastCommit;
 	
 	/**
-	 * @return number of commit submitted by a developer inside the project.
+	 * the number of commit submitted by a developer inside the project.
 	 */
 	private int numberOfCommits;
 	
 	/**
-	 * @return number of files modifier by a developer inside the project.
+	 * the number of files modified by a developer inside the project.
 	 */
 	private int numberOfFiles;
 

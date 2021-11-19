@@ -156,11 +156,10 @@ public class StaffController {
 
 	/**
 	 * <p>
-	 * Update the staff member identified by the given {@link Staff#getIdStaff() idStaff}
+	 * Update the staff member identified by the given Staff identifier.
 	 * </p>
 	 * @param idStaff the staff identifier. The staff identifier is hosted in the URL in accordance with the Rest naming conventions
 	 * @param staff the staff to update. This staff is hosted inside the body of the {@code PUT} Medhod.
-	 * @return an empty content for an update request
 	 */
 	@ApiOperation(value = "Update an existing developer.")
 	@PutMapping("/{idStaff}")
@@ -333,7 +332,6 @@ public class StaffController {
 	/**
 	 * Delete the staff member corresponding to the identifier.
 	 * @param idStaff the Staff member identifier candidate for deletion
-	 * @return an empty HTTP response after the deletion.
 	 */
 	@ResponseBody
 	@ApiOperation(value = "Remove a developer from the company staff.")
@@ -359,10 +357,10 @@ public class StaffController {
 	 * <p>
 	 * Add an {@link Experience experience} to a staff member.
 	 * </p>
-	 * @param param
-	 *            the body of the post containing an instance of {@link StaffController.ParamStaffSkill}
-	 *            in JSON format
-	 * @return
+	 * @param idStaff the Staff identifier
+	 * @param experience the experience to be updated
+	 * 
+	 * @return {@code true} if the update succeeds, {@code false} otherwise
 	 */
 	@ResponseBody
 	@ApiOperation(value = "Add an experience to a developer.", notes = "An experience is a skill and a level.")
@@ -390,11 +388,10 @@ public class StaffController {
 	}
 	
 	/**
-	 * Add an experience to a staff member
-	 * @param param
-	 *            the body of the post containing an instance of {@link StaffController.ParamStaffSkill}
-	 *            in JSON format
-	 * @return
+	 * Add an experience to a staff member.
+	 * @param idStaff the staff identifier
+	 * @param idSkill the skill identifier
+	 * @return {@code true} if the removal succeeds, {@code false} otherwise
 	 */
 	@ResponseBody
 	@ApiOperation(value = "Remove a skill from a developer.")
@@ -590,7 +587,7 @@ public class StaffController {
 	 * Revoke the participation of staff member from a project.
 	 * </p>
 	 * <p>
-	 * <i>Associated HTTP verb is {@code 'delete'}
+	 * <em>Associated HTTP verb is {@code 'delete'}</em>
 	 * </p>
 	 * @param idProject the given Project identifier
 	 * @param idStaff the given Staff identifier

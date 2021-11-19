@@ -24,16 +24,17 @@ import lombok.Data;
 
 /**
  * <p> 
- * The class hosts the intermediate data gathered from the analysis of the repository.<br/>
+ * The class hosts the intermediate data gathered from the analysis of the repository.
+ * </p>
+ *
  * Multiple sets are updated and available in this container :
  * <ul>
- * <li>{@link RepositoryAnalysis#changes} of {@link SourceControlChanges}, list of changes detected in the repository.</i>
- * <li>{@link RepositoryAnalysis#pathsModified }, list of paths detected as having been modified in the history of the repository.</i>
+ * <li>{@link RepositoryAnalysis#changes} of {@link SourceControlChanges}, list of changes detected in the repository.</li>
+ * <li>{@link RepositoryAnalysis#pathsModified }, list of paths detected as having been modified in the history of the repository.</li>
  * <li>{@link RepositoryAnalysis#pathsAdded }, list of paths detected as having been ONLY ADDED in the history of the repository.</li>
  * </ul>
- * </p>
+ * 
  * @author Fr&eacute;d&eacute;ric VIDAL
- *
  */
 @Data
 public class RepositoryAnalysis {
@@ -124,7 +125,9 @@ public class RepositoryAnalysis {
 	}
 	
 	/**
-	 * <p><big><b>Why do we keep a set of paths modified ?</b></big></p>
+	 * <p>
+	 * <strong>Why do we keep a set of paths modified ?</strong>
+	 * /p>
 	 * We keep the paths which have been modified in order to retrieve by subtraction from the complete list, 
 	 * the paths which only have be added without modification. <br/>
 	 * The resulting list will contain good candidates for external dependencies, irrelevant for the analysis.
@@ -136,7 +139,7 @@ public class RepositoryAnalysis {
 
 	/**
 	 * Save the given path as a modified path.
-	 * @see {@link #getPathsModified()}
+	 * @see RepositoryAnalysis#getPathsModified()
 	 */
 	public void keepPathModified(String path) {
 		pathsModified.add(path);
@@ -404,7 +407,7 @@ public class RepositoryAnalysis {
 	/**
 	 * Gather the identified contributors with their personal statistics, such as
 	 * <ul>
-	 * <li>the date of their first & last commit</li>
+	 * <li>the date of their first and last commit</li>
 	 * <li>the number of files impacted</li>
 	 * <li>the number of commits submitted</li>
 	 * </ul>
@@ -459,7 +462,7 @@ public class RepositoryAnalysis {
 	 * Cleanup the pathnames of the changes collection.<br/>
 	 * e.g. <code>/src/main/java/java/util/List.java</code> will be treated like <code>java/util/List.java</code>
 	 * </p>
-	 * @param analysis the repository analysis.
+	 * @param projectDashboardCustomizer the repository analysis.
 	 */
 	public void cleanupPaths(ProjectDashboardCustomizer projectDashboardCustomizer) {
 		

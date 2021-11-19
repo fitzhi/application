@@ -19,7 +19,7 @@ import com.fitzhi.data.internal.Staff;
 import com.fitzhi.exception.ApplicationException;
 
 /**
- * Interface in charge of saving & loading data.
+ * Interface in charge of saving and loading data.
  * @author Fr&eacute;d&eacute;ric VIDAL
  */
 public interface DataHandler {
@@ -83,7 +83,7 @@ public interface DataHandler {
 
 	/**
 	 * <p>
-	 * Save the source control changes loaded from the repository for cache & debug purpose.
+	 * Save the source control changes loaded from the repository for cache and debug purpose.
 	 * </p>
 	 * <p><i>Due to the DEBUG purpose of this file, the output format will <b>CSV</b></i>.</p>
 	 * @param project project whose changes have to be serialized in CSV
@@ -188,7 +188,7 @@ public interface DataHandler {
 	 * This building will be part of the skyline.
 	 * </p>
 	 * @param project the project whose building have to be serialized in CSV and saved on the filesytem.
-	 * @param ProjectBuilding the generated building to be saved
+	 * @param building the generated building to be saved
 	 * @throws ApplicationException thrown if an exception occurs during the loading process, mot probably an {@link java.io.IOException}
 	 */
 	void saveProjectBuilding(Project project, ProjectBuilding building) throws ApplicationException;
@@ -242,7 +242,7 @@ public interface DataHandler {
 	List<String> loadRepositoryDirectories (Project project) throws ApplicationException;
 	
 	/**
-	 * Generate the file path for pathnames of a given type of {@link PathType path}
+	 * Generate the file path for pathnames of a given type of {@link PathsType path}
 	 * 
 	 * @param project the current project
 	 * @param pathsType type of paths which will be saved on file system  

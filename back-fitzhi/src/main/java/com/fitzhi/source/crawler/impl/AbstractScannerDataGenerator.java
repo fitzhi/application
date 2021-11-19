@@ -149,7 +149,7 @@ public abstract class AbstractScannerDataGenerator implements RepoScanner {
 
 	/**
 	 * For this first testing version. The risk will be randomly estimated.
-	 * @param all or part of the source directories
+	 * @param sunburstData all or part of the source directories
 	 */
 	public void evaluateTheRisk(final DataChart sunburstData) {
 		if (sunburstData.hasUnknownRiskLevel()) {

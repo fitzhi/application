@@ -71,7 +71,7 @@ public class PropectDashboardCustomizerImpl implements ProjectDashboardCustomize
 	public DataHandler dataSaver;
 	
 	/**
-	 * Declared here to operate  {@link StaffHandler#lookup(String)}.
+	 * Declared here to operate  {@link StaffHandler#lookup(com.fitzhi.data.internal.Author)}
 	 */
 	@Autowired
 	public StaffHandler staffHandler;

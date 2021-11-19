@@ -58,7 +58,7 @@ public interface RiskProcessor {
 	 * Fill the risk for this location if no risk has been affected yet.
 	 * </p>
 	 * A location without source files, cannot get a calculated risk level.
-	 * @param data data previewed location prepared for the sunburst chart 
+	 * @param location data previewed location prepared for the sunburst chart 
 	 * @return the calculated level of risk
 	 */
 	int meanTheRisk(DataChart location);

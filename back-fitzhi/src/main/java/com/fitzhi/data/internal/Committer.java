@@ -3,6 +3,7 @@ package com.fitzhi.data.internal;
 import java.time.LocalDate;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fitzhi.bean.ProjectHandler;
 import com.fitzhi.data.external.Action;
 
 import lombok.Data;
@@ -56,19 +57,17 @@ public @Data class Committer {
 	private LocalDate lastCommit;
 	
 	/**
-	 * @return number of commit submitted by a developer inside the project.
+	 * The number of commit submitted by a developer inside the project.
 	 */
 	private int numberOfCommits;
 	
 	/**
-	 * @return number of files modifier by a developer inside the project.
+	 * the number of files modified by a developer inside the project.
 	 */
 	private int numberOfFiles;
 
 	/**
-	 * Type of action executed in
-	 * {@link com.fitzhi.bean.ProjectHandler#saveGhosts(int, Committer[])} for this
-	 * entry
+	 * Type of action executed.
 	 */
 	private Action action;
 
@@ -189,9 +188,7 @@ public @Data class Committer {
 	}
 
 	/**
-	 * @return the action
-	 * Type of action executed in
-	 * {@link com.fitzhi.bean.ProjectHandler#saveGhosts(int, Committer[])} for this entry
+	 * @return the type of executed action
 	 */
 	public Action getAction() {
 		return action;

@@ -144,7 +144,6 @@ public class RiskCommitAndDevActiveProcessorImpl implements RiskProcessor {
 	 * Evaluate the level of risk on all entries in the repository from the
 	 * staff/level point of view.
 	 * </p>
-	 * <p>
 	 * This implementation will compute the proportion of commits executed by active developers regarding the total number of commits.<br/>
 	 * 11 levels of risks are inferred from this proportion.
 	 * <ul>
@@ -152,14 +151,12 @@ public class RiskCommitAndDevActiveProcessorImpl implements RiskProcessor {
 	 * the level of risk is 10. This is a problem</li> 
 	 * <li>x% of commits have been made on this directory by active developers. Level is ceil(1-X%)</li> 
 	 * </ul>
-	 * </p>
 	 * <p>
 	 * The range of risks start a 0 and ends at 10. It presents 11 steps.<br/>
 	 * </p>
 	 * <p>
-	 * <font color="darkOrange">
 	 * If there is no commit on this directory, the level of risk is set to -1.
-	 * </font></br>
+	 * </p>
 	 * @param repository the repository retrieved and parsed from the source control
 	 *                   tool (i.e. GIT, SVN...).
 	 * @param data       repository data prepared to be displayed by the Sunburst
@@ -210,7 +207,7 @@ public class RiskCommitAndDevActiveProcessorImpl implements RiskProcessor {
 	 * <i>This method is public for testing purpose.</i>
 	 * 
 	 * @param dir   directory where the commits have been executed.
-	 * @param data  location data (containing the relative location, the risks &
+	 * @param data  location data (containing the relative location, the risks and
 	 *              colors, and its children)
 	 * @param stats the list containing a statistic entry for each class file
 	 */
@@ -255,7 +252,7 @@ public class RiskCommitAndDevActiveProcessorImpl implements RiskProcessor {
 	 * @param baseDir    the direction to be scanned.
 	 * @param repository the repository retrieved and parsed from the source control
 	 *                   tool (i.e. GIT, SVN...).
-	 * @param data       repository data prepared to be displayed by the Sunburst
+	 * @param sunburstData repository data prepared to be displayed by the Sunburst
 	 *                   chart. At this point, this is a working draft.
 	 * @param stats      the list containing a statistic entry for each class file
 	 */

@@ -29,7 +29,7 @@ import lombok.extern.slf4j.Slf4j;
  * <br/>
  * </p>
  * <p>
- * <i>This is the first & basic implementation for the Commit repository</i>.
+ * <i>This is the first and basic implementation for the Commit repository</i>.
  * </p>
  * @author Fr&eacute;d&eacute;ric VIDAL
  */
@@ -119,10 +119,9 @@ public class BasicCommitRepository implements CommitRepository {
 	 * Extract the data.
 	 * 
 	 * <p>
-	 * <font color="darkRed">In theory, the function should never return a {@code null}, 
+	 * In theory, the function should never return a {@code null}, 
 	 * but it appears that this case occurs. Therefore, we put a warning to trace this case and track the issue.
 	 * <em>Most probably a filter on files eligibility is the origin of this detect.</em>
-	 * </font>
 	 * </p>
 	 * 
 	 * @param <R> the returned classname which implements the interface {@link GitMetrics}

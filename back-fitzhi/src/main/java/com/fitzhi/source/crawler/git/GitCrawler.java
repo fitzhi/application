@@ -238,8 +238,7 @@ public class GitCrawler extends AbstractScannerDataGenerator {
 	 * whole repository), before working, or filtering on it. The generation will be
 	 * slower, but the chart will be faster to filter.</li>
 	 * </ul>
-	 * <font color="darkGreen"><b>Our recommendation is to setup this property to
-	 * {@code true}.</b></font>
+	 * <strong>Our recommendation is to setup this property to {@code true}.</strong>
 	 * </p>
 	 */
 	@Value("${prefilterEligibility}")

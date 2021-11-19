@@ -56,7 +56,7 @@ public @Data class SourceControlChanges {
 
 	/**
 	 * @return the a set containing all file paths detected during the source crawl.
-	 * @see {@link Map#keySet()}
+	 * @see Map#keySet()
 	 */
 	public Set<String> keySet() {
 		return changes.keySet();
