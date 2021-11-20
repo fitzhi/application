@@ -1,6 +1,7 @@
 import { HttpClientTestingModule, HttpTestingController } from '@angular/common/http/testing';
 import { Component } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { Mock } from 'protractor/built/driverProviders';
 import { of } from 'rxjs';
 import { take } from 'rxjs/operators';
 import { Skill } from 'src/app/data/skill';
@@ -13,6 +14,7 @@ describe('skillService', () => {
 	let fixture: ComponentFixture<DummyComponent>;
 	let service: SkillService;
 	let httpTestingController: HttpTestingController;
+	let backendSetupService: BackendSetupService;
 
 	@Component({
 		selector: 'app-dummy-component',
@@ -22,8 +24,9 @@ describe('skillService', () => {
 	}
 
 	beforeEach(() => {
+		localStorage.clear();
 		TestBed.configureTestingModule({
-			providers: [SkillService, BackendSetupService],
+			providers: [BackendSetupService, SkillService],
 			imports: [HttpClientTestingModule],
 			declarations: []
 		});
@@ -35,7 +38,6 @@ describe('skillService', () => {
 
 		httpTestingController = TestBed.inject(HttpTestingController);
 
-		localStorage.setItem('backendUrl', 'URL_OF_SERVER');
 		fixture.detectChanges();
 	});
 
@@ -98,16 +100,22 @@ describe('skillService', () => {
 
 	it('should load the skills from the backend server.', done => {
 
+		backendSetupService = TestBed.inject(BackendSetupService);
+		spyOn(backendSetupService, 'url').and.returnValue('URL_OF_SERVER/api');
+
+		service.loadSkills();
+
 		const req = httpTestingController.expectOne('URL_OF_SERVER/api/skill');
 		expect(req.request.method).toBe('GET');
 		req.flush([]);
-
-		service.loadSkills();
 
 		service.allSkillsLoaded$.pipe(take(1)).subscribe({
 			next: doneAndOk => expect(doneAndOk).toBeTrue(),
 			complete: () =>	done()
 		});
+
+		httpTestingController.verify();
+
 	});
 
 	it('should retrieve the id of a skill from its title.', () => {

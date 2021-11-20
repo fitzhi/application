@@ -71,7 +71,7 @@ export class SkillService extends InternalService {
 	loadSkills() {
 
 		if (traceOn()) {
-			this.log(`Fetching all skills on URL ${this.backendSetupService.url()}/skill/all`);
+			this.log(`Fetching all skills on URL ${this.backendSetupService.url()}/skill`);
 		}
 		this.httpClient
 			.get<Skill[]>(this.backendSetupService.url() + '/skill')
