@@ -60,7 +60,7 @@ jobs:
       run: mvn clean package -DskipTests
     - name: Test with maven
       run: mvn install
-    - name: Deploy the snapshot in central
+    - name: Deploy the snapshot in central on the Ubuntu environment
       run: |
-        ls ~/.m2
-        cat ~/.m2/setttings.xml
+        mvn -s central/settings-central.xml -X
+      if: (matrix.os == 'ubuntu-latest')
