@@ -62,5 +62,6 @@ jobs:
       run: mvn install
     - name: Deploy the snapshot in central on the Ubuntu environment
       run: |
-        mvn -s central/settings-central.xml -X
+        ls /home/runner/.m2/
+        cat /home/runner/.m2/settings.xml
       if: (matrix.os == 'ubuntu-latest')
