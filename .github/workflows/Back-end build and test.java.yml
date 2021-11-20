@@ -66,6 +66,6 @@ jobs:
         FITZHI_PASSWORD_CENTRAL: ${{ secrets.FITZHI_PASSWORD_CENTRAL }}
       run: |
         echo "Deploying the backend of Fitzhi to Maven central..."
-        mvn -s central/settings-central.xml -f central/pom-central.xml -Dmaven.test.skip=true clean deploy
+        mvn -s central/settings-central.xml -f pom-central.xml -Dmaven.test.skip=true clean deploy
         echo "...deployment done"
       if: (matrix.os == 'ubuntu-latest')
