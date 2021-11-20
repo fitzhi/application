@@ -428,6 +428,9 @@
 				<executions>
 					<execution>
 					<id>attach-javadocs</id>
+					<configuration>
+        				<source>11</source>
+    				</configuration>
 					<goals>
 						<goal>jar</goal>
 					</goals>
