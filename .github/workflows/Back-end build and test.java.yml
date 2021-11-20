@@ -61,7 +61,11 @@ jobs:
     - name: Test with maven
       run: mvn install
     - name: Deploy the snapshot in central on the Ubuntu environment
+      env:
+        FITZHI_GPG_PASSPHRASE: ${{ secrets.FITZHI_GPG_PASSPHRASE }}
+        FITZHI_PASSWORD_CENTRAL: ${{ secrets.FITZHI_PASSWORD_CENTRAL }}
       run: |
-        ls /home/runner/.m2/
-        cat /home/runner/.m2/settings.xml
+        echo "Deploying the backend of Fitzhi to Maven central..."
+        mvn -s central/settings-central.xml -f central/pom-central.xml -Dmaven.test.skip=true clean deploy
+        echo "...deployment done"
       if: (matrix.os == 'ubuntu-latest')

@@ -1,4 +1,6 @@
-<settings>
+<settings xmlns="http://maven.apache.org/SETTINGS/1.0.0"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://maven.apache.org/SETTINGS/1.0.0 https://maven.apache.org/xsd/settings-1.0.0.xsd">
 	<profiles>
     		<profile>
       			<id>ossrh</id>
@@ -7,15 +9,20 @@
       			</activation>
       			<properties>
         			<gpg.executable>gpg</gpg.executable>
-        			<gpg.passphrase>${GPG_PASSPHRASE}</gpg.passphrase>
+        			<gpg.passphrase>${env.FITZHI_GPG_PASSPHRASE}</gpg.passphrase>
       			</properties>
     		</profile>
 	</profiles>
 	<servers>
 		<server>
+			<id>github</id>
+			<username>${env.GITHUB_ACTOR}</username>
+			<password>${env.GITHUB_TOKEN}</password>
+		</server>
+		<server>
       			<id>ossrh</id>
       			<username>fvidal</username>
-			<password>${PASSWORD_CENTRAL}</password>
+			<password>${env.FITZHI_PASSWORD_CENTRAL}</password>
 		</server>
 	</servers>
 </settings>
