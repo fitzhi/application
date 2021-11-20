@@ -270,10 +270,10 @@
 
 		<!-- Swagger installation -->
 		<dependency>
-        	<groupId>io.springfox</groupId>
-        	<artifactId>springfox-boot-starter</artifactId>
-        	<version>${springfox.version}</version>
-    	</dependency>
+			<groupId>io.springfox</groupId>
+			<artifactId>springfox-boot-starter</artifactId>
+			<version>${springfox.version}</version>
+		</dependency>
 		<dependency>
 			<groupId>io.springfox</groupId>
 			<artifactId>springfox-swagger-ui</artifactId>
@@ -424,18 +424,18 @@
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-javadoc-plugin</artifactId>
+				<configuration>
+					<source>11</source>
+				</configuration>
 				<version>2.9.1</version>
-				<executions>
-					<execution>
-					<id>attach-javadocs</id>
-					<configuration>
-        				<source>11</source>
-    				</configuration>
 					<goals>
-						<goal>jar</goal>
+						<executions>
+							<execution>
+								<id>attach-javadocs</id>
+								<goal>jar</goal>
+							</execution>
+						</executions>
 					</goals>
-					</execution>
-				</executions>
 			</plugin>
 
 			<plugin>
