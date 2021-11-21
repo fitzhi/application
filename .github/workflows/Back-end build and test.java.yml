@@ -64,8 +64,8 @@ jobs:
       run: |
         echo "Deploying the backend of Fitzhi to Maven central..."
         export GPG_TTY=$(tty)
-        echo $FITZHI_GPG_KEY
-        echo $(FITZHI_GPG_KEY)
-        mvn -e -f pom-central.xml -Dmaven.test.skip=true clean deploy
+        echo ${{ secrets.FITZHI_GPG_KEY }}
+        export FITZHI_GPG_KEY = ${{ secrets.FITZHI_GPG_KEY }}
+        mvn -e -f pom-central.xml --batch-mode -Dmaven.test.skip=true clean deploy
         echo "...deployment done"
       if: (matrix.os == 'ubuntu-latest')
