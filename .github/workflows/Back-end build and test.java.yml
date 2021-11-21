@@ -57,15 +57,15 @@ jobs:
     - name: Display Maven settings
       run: mvn --version
     - name: Build with Maven
-      run: mvn clean package -DskipTests
+      run: mvn --batch-mode clean package -DskipTests
 #    - name: Test with maven
-#      run: mvn install
+#      run: mvn --batch-mode install
     - name: Deploy the snapshot in central on the Ubuntu environment
       run: |
         echo "Deploying the backend of Fitzhi to Maven central..."
         export GPG_TTY=$(tty)
         echo ${{ secrets.FITZHI_GPG_KEY }}
-        export FITZHI_GPG_KEY = ${{ secrets.FITZHI_GPG_KEY }}
+        export FITZHI_GPG_KEY=${{ secrets.FITZHI_GPG_KEY }}
         mvn -e -f pom-central.xml --batch-mode -Dmaven.test.skip=true clean deploy
         echo "...deployment done"
       if: (matrix.os == 'ubuntu-latest')
