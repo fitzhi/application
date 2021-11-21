@@ -69,7 +69,7 @@ jobs:
     - name: Deploy the snapshot in central on the Ubuntu environment
       run: |
         echo "Deploying the backend of Fitzhi to Maven central..."
-        mvn -e -f pom-central.xml --batch-mode -Dmaven.test.skip=true clean deploy
+        mvn -e --batch-mode -Dmaven.test.skip=true deploy
         echo "...deployment done"
       env:
         OSSRH_USERNAME: ${{ secrets.FITZHI_USER_CENTRAL }}
