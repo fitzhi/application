@@ -1,6 +1,7 @@
 # This workflow will build an Angular project with npm.
 
 name: Java CI with Maven
+name: import_gpg
 
 on:
   push:
