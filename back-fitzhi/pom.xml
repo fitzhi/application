@@ -420,6 +420,7 @@
 				<version>1.5</version>
 				<configuration>
 					<useAgent>true</useAgent>
+    				<passphrase>${env.FITZHI_GPG_PASSPHRASE}</passphrase>
 					<gpgArguments>
 						  <arg>--batch</arg>
 						  <arg>--pinentry-mode</arg>
