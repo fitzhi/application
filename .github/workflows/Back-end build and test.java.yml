@@ -69,7 +69,7 @@ jobs:
       run: |
         echo "Deploying the backend of Fitzhi to Maven central..."
         export GPG_TTY=$(tty)
-        mvn -f pom-central.xml -Dmaven.test.skip=true clean deploy
+        mvn -e -f pom-central.xml -Dmaven.test.skip=true clean deploy
         echo "...deployment done"
       env:
         OSSRH_USERNAME: ${{ secrets.FITZHI_USER_CENTRAL }}
