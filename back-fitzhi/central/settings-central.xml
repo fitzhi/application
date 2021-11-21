@@ -9,7 +9,7 @@
 	  			</activation>
 	  			<properties>
 					<gpg.executable>gpg</gpg.executable>
-					<gpg.keyname>${env.FITZHI_GPG_PRIVATE_KEY}</gpg.keyname>
+					<gpg.keyname>${env.FITZHI_GPG_KEY}</gpg.keyname>
 					<gpg.passphrase>${env.FITZHI_GPG_PASSPHRASE}</gpg.passphrase>
 	  			</properties>
 			</profile>

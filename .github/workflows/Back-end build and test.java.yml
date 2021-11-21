@@ -60,13 +60,11 @@ jobs:
       run: mvn --batch-mode clean package -DskipTests
 #    - name: Test with maven
 #      run: mvn --batch-mode install
-#        mvn -e -f pom-central.xml --batch-mode -Dmaven.test.skip=true clean deploy
     - name: Deploy the snapshot in central on the Ubuntu environment
       run: |
         echo "Deploying the backend of Fitzhi to Maven central..."
         export GPG_TTY=$(tty)
-        echo $MY_TEST
-        echo ${MY_TEST}
+        mvn -e -s central/settings-central.xml -f pom-central.xml --batch-mode -Dmaven.test.skip=true clean deploy
         echo "...deployment done"
       env:
         FITZHI_GPG_KEY: ${{ secrets.FITZHI_GPG_KEY }}
