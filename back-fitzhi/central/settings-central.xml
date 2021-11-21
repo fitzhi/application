@@ -2,16 +2,17 @@
   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
   xsi:schemaLocation="http://maven.apache.org/SETTINGS/1.0.0 https://maven.apache.org/xsd/settings-1.0.0.xsd">
 	<profiles>
-    		<profile>
-      			<id>ossrh</id>
-      			<activation>
-        			<activeByDefault>true</activeByDefault>
-      			</activation>
-      			<properties>
-        			<gpg.executable>gpg</gpg.executable>
-        			<gpg.passphrase>${env.FITZHI_GPG_PASSPHRASE}</gpg.passphrase>
-      			</properties>
-    		</profile>
+			<profile>
+	  			<id>ossrh</id>
+	  			<activation>
+					<activeByDefault>true</activeByDefault>
+	  			</activation>
+	  			<properties>
+					<gpg.executable>gpg</gpg.executable>
+					<gpg.keyname>${env.FITZHI_GPG_PRIVATE_KEY}</gpg.passphrase>
+					<gpg.passphrase>${env.FITZHI_GPG_PASSPHRASE}</gpg.passphrase>
+	  			</properties>
+			</profile>
 	</profiles>
 	<servers>
 		<server>
@@ -20,9 +21,9 @@
 			<password>${env.GITHUB_TOKEN}</password>
 		</server>
 		<server>
-      			<id>ossrh</id>
-      			<username>fvidal</username>
-			<password>${env.FITZHI_PASSWORD_CENTRAL}</password>
+	  			<id>ossrh</id>
+	  			<username>${env.FITZHI_USER_CENTRAL}</username>
+				<password>${env.FITZHI_PASSWORD_CENTRAL}</password>
 		</server>
 	</servers>
 </settings>

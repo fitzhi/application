@@ -3,76 +3,67 @@
 name: Java CI with Maven
 
 on:
-  push:
-    branches: [ master, release-1.6 ]
-  pull_request:
-    branches: [ master ]
+	push:
+		branches: [ master, release-1.6 ]
+	pull_request:
+		branches: [ master ]
 env:
-  LANG: "fr_FR.UTF-8"
+	LANG: "fr_FR.UTF-8"
 jobs:
-  build:
-    runs-on: ${{ matrix.os }}
-    strategy:
-        matrix:
-            os: [ubuntu-latest, macOS-latest, windows-latest]
-    defaults:
-      run:
-        working-directory: ./back-fitzhi
-    steps:
-    - uses: actions/checkout@v2
-    - name: "Setup locale settings on the Ubuntu instance for fr_FR.UTF8"
-      run: |
-          sudo locale-gen fr_FR.UTF-8
-          sudo update-locale LANG=fr_FR.UTF-8
-      if: (matrix.os == 'ubuntu-latest')
-    - name: "Testing locale settings"
-      run: sudo locale
-      if: (matrix.os == 'ubuntu-latest') || (matrix.os == 'macOS-latest')
-    - name: "Simple Test for macOS"
-      run: sudo locale -a
-      if: (matrix.os == 'macOS-latest')
-    - name: "create directories for the repositories"
-      run: |
-            mkdir ../git_repo_for_test
-            ls ../git_repo_for_test
-    - name: Download the testing repositories
-      run: |
-        echo "Cloning the first-test repository"
-        cd ../git_repo_for_test/
-        git clone https://github.com/frvidal/first-test
-        ls -R first-test
-        echo "Cloning the application repository"
-        git clone https://github.com/fitzhi/application
-        ls -R application
-        echo "Cloning the Mocking & test application"
-        git clone https://github.com/fitzhi/mock-repo-with-branches-for-dev-and-testing-purposes
-        ls -R mock-repo-with-branches-for-dev-and-testing-purposes
-        echo "Cloning the repo-test-number-of-lines application"
-        git clone https://github.com/fitzhi/repo-test-number-of-lines
-        ls -R repo-test-number-of-lines
-    - name: Set up JDK 11
-      uses: actions/setup-java@v1
-      with:
-        java-version: 11
-        server-id: ossrh # Value of the distributionManagement/repository/id field of the pom.xml
-        server-username: OSSRH_USERNAME # env variable for username in deploy
-        server-password: OSSRH_TOKEN # env variable for token in deploy
-        gpg-private-key: ${{ secrets.FITZHI_GPG_PRIVATE_KEY }} # Value of the GPG private key to import
-        gpg-passphrase: MAVEN_GPG_PASSPHRASE # env variable for GPG private key passphrase
-    - name: Display Maven settings
-      run: mvn --version
-    - name: Build with Maven
-      run: mvn clean package -DskipTests
+	build:
+		runs-on: ${{ matrix.os }}
+		strategy:
+				matrix:
+						os: [ubuntu-latest, macOS-latest, windows-latest]
+		defaults:
+			run:
+				working-directory: ./back-fitzhi
+		steps:
+		- uses: actions/checkout@v2
+		- name: "Setup locale settings on the Ubuntu instance for fr_FR.UTF8"
+			run: |
+					sudo locale-gen fr_FR.UTF-8
+					sudo update-locale LANG=fr_FR.UTF-8
+			if: (matrix.os == 'ubuntu-latest')
+		- name: "Testing locale settings"
+			run: sudo locale
+			if: (matrix.os == 'ubuntu-latest') || (matrix.os == 'macOS-latest')
+		- name: "Simple Test for macOS"
+			run: sudo locale -a
+			if: (matrix.os == 'macOS-latest')
+		- name: "create directories for the repositories"
+			run: |
+						mkdir ../git_repo_for_test
+						ls ../git_repo_for_test
+		- name: Download the testing repositories
+			run: |
+				echo "Cloning the first-test repository"
+				cd ../git_repo_for_test/
+				git clone https://github.com/frvidal/first-test
+				ls -R first-test
+				echo "Cloning the application repository"
+				git clone https://github.com/fitzhi/application
+				ls -R application
+				echo "Cloning the Mocking & test application"
+				git clone https://github.com/fitzhi/mock-repo-with-branches-for-dev-and-testing-purposes
+				ls -R mock-repo-with-branches-for-dev-and-testing-purposes
+				echo "Cloning the repo-test-number-of-lines application"
+				git clone https://github.com/fitzhi/repo-test-number-of-lines
+				ls -R repo-test-number-of-lines
+		- name: Set up JDK 11
+			uses: actions/setup-java@v1
+			with:
+				java-version: 11
+		- name: Display Maven settings
+			run: mvn --version
+		- name: Build with Maven
+			run: mvn clean package -DskipTests
 #    - name: Test with maven
 #      run: mvn install
-    - name: Deploy the snapshot in central on the Ubuntu environment
-      run: |
-        echo "Deploying the backend of Fitzhi to Maven central..."
-        export GPG_TTY=$(tty)
-        mvn -e -f pom-central.xml -Dmaven.test.skip=true clean package deploy
-        echo "...deployment done"
-      env:
-        OSSRH_USERNAME: ${{ secrets.FITZHI_USER_CENTRAL }}
-        OSSRH_TOKEN: ${{ secrets.FITZHI_PASSWORD_CENTRAL}}
-        MAVEN_GPG_PASSPHRASE: ${{ secrets.FITZHI_GPG_PASSPHRASE }}
-      if: (matrix.os == 'ubuntu-latest')
+		- name: Deploy the snapshot in central on the Ubuntu environment
+			run: |
+				echo "Deploying the backend of Fitzhi to Maven central..."
+				export GPG_TTY=$(tty)
+				mvn -e -s central/settings-central.xml -f pom-central.xml -Dmaven.test.skip=true clean deploy
+				echo "...deployment done"
+			if: (matrix.os == 'ubuntu-latest')
