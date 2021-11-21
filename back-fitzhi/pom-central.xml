@@ -378,7 +378,6 @@
 						<goals>
 							<goal>copy-resources</goal>
 						</goals>
-
 						<configuration>
 							<outputDirectory>${basedir}/target</outputDirectory>
 							<resources>
@@ -401,7 +400,6 @@
 				<version>1.5</version>
 				<configuration>
 				    <useAgent>true</useAgent>
-					<keyname>48A7501283129BCA5F327755A5F741F08CDABB71</keyname>
     				<passphrase>${env.FITZHI_GPG_PASSPHRASE}</passphrase>
 					<gpgArguments>
       					<arg>--batch</arg>
