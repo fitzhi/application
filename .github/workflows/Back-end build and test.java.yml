@@ -70,6 +70,7 @@ jobs:
     - name: Deploy the snapshot in central on the Ubuntu environment
       run: |
         echo "Deploying the backend of Fitzhi to Maven central..."
+        ls /home/runner/.gnupg
         gpg --list-keys
         echo "...deployment done"
       env:
