@@ -55,8 +55,8 @@ jobs:
       with:
         java-version: 11
         server-id: ossrh # Value of the distributionManagement/repository/id field of the pom.xml
-        server-username: ${{ secrets.FITZHI_USER_CENTRAL }} # env variable for username in deploy
-        server-password: ${{ secrets.FITZHI_PASSWORD_CENTRAL }} # env variable for token in deploy
+        server-username: OSSRH_USERNAME # env variable for username in deploy
+        server-password: OSSRH_TOKEN # env variable for token in deploy
         gpg-private-key: ${{ secrets.FITZHI_GPG_PRIVATE_KEY }} # Value of the GPG private key to import
         gpg-passphrase: ${{ secrets.FITZHI_GPG_PASSPHRASE }} # env variable for GPG private key passphrase
     - name: Display Maven settings
@@ -72,6 +72,7 @@ jobs:
         mvn -e -f pom-central.xml --batch-mode -Dmaven.test.skip=true clean deploy
         echo "...deployment done"
       env:
-        FITZHI_GPG_KEY: ${{ secrets.FITZHI_GPG_KEY }}
+        OSSRH_USERNAME: ${{ secrets.FITZHI_USER_CENTRAL }}
+        OSSRH_TOKEN: ${{ secrets.FITZHI_PASSWORD_CENTRAL }}
         FITZHI_GPG_PASSPHRASE: ${{ secrets.FITZHI_GPG_PASSPHRASE }}
       if: (matrix.os == 'ubuntu-latest')
