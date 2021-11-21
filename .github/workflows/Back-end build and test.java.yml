@@ -63,9 +63,8 @@ jobs:
       run: mvn --version
     - name: Build with Maven
       run: mvn --batch-mode clean package -DskipTests
-#    - name: Test with maven
-#      run: mvn --batch-mode install
-#        export GPG_TTY=$(tty)
+    - name: Test with maven
+      run: mvn --batch-mode test
     - name: Deploy the snapshot in central on the Ubuntu environment
       run: |
         echo "Deploying the backend of Fitzhi to Maven central..."
