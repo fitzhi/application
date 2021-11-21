@@ -1,6 +1,6 @@
 # This workflow will build an Angular project with npm.
 
-name: Java_CI_with_Maven
+name: Java CI with Maven
 
 on:
   push:
@@ -66,11 +66,11 @@ jobs:
     - name: Test with maven
       run: mvn install
     - name: Import GPG key
-        uses: crazy-max/ghaction-import-gpg@v4
-        with:
-          gpg_private_key: ${{ secrets.FITZHI_GPG_PRIVATE_KEY }}
-          passphrase: ${{ secrets.FITZHI_GPG_PASSPHRASE }}
-        if: (matrix.os == 'ubuntu-latest')
+      uses: crazy-max/ghaction-import-gpg@v4
+      with:
+        gpg_private_key: ${{ secrets.FITZHI_GPG_PRIVATE_KEY }}
+        passphrase: ${{ secrets.FITZHI_GPG_PASSPHRASE }}
+      if: (matrix.os == 'ubuntu-latest')
     - name: Deploy the snapshot in central on the Ubuntu environment
       run: |
         echo "Deploying the backend of Fitzhi to Maven central..."
