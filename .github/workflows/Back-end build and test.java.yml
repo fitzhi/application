@@ -68,7 +68,7 @@ jobs:
     - name: Deploy the snapshot in central on the Ubuntu environment
       run: |
         echo "Deploying the backend of Fitzhi to Maven central..."
-        mvn -e --batch-mode -Dmaven.test.skip=true deploy
+        mvn -P profileWithGPGSigning -e --batch-mode -Dmaven.test.skip=true deploy
         echo "...deployment done"
       env:
         OSSRH_USERNAME: ${{ secrets.FITZHI_USER_CENTRAL }}
