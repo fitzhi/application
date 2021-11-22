@@ -4,11 +4,21 @@
 	http://maven.apache.org/maven-v4_0_0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>com.fitzhi</groupId>
-	<artifactId>fitzhi</artifactId>
+	<artifactId>application</artifactId>
 	<packaging>jar</packaging>
 	<version>${VERSION_FITZHI}</version>
 	<name>Backend Fitzhì</name>
-	<url>http://maven.apache.org</url>
+
+	<description>
+		This library is the the backend for the Fitzhì solution.
+		Fitzhì aims to gather all technical data regarding your application portfolio into ONE single portal. 
+		Fitzhì provides also analysis and assessments at the project scope, but its main target is the portfolio. 
+		The main ambition is to provide a global, and dynamic vision of the technical risk for your IT.
+		The dream functionality for Fitzhì should be the ONE single dashboard, one Single Point Point Of Quality, 
+		available for the CTO, or CIO, and ready to resume in one second, one view, the current situation and the historic trend.
+	</description>
+	<url>https://www.fitzhi.com</url>
+
 	<properties>
 		<jdk.version>11</jdk.version>
 		<spring.version>5.1.14.RELEASE</spring.version>
@@ -48,7 +58,7 @@
 			<id>default</id>
 			<!-- this profile is active by default -->
 			<activation>
-	            <activeByDefault>true</activeByDefault>
+				<activeByDefault>true</activeByDefault>
 			</activation>
 			<!-- We disable the signing of archives in default mode. -->
 			<build>
@@ -489,5 +499,29 @@
 		</plugins>
 
 	</build>
+
+
+	<developers>
+		<developer>
+			<id>fvidal</id>
+			<name>Frédéric VIDAL</name>
+			<email>frederic.vidal@fitzhi.com</email>
+			<url>https://stackoverflow.com/users/11827274/fr%c3%a9d%c3%a9ric-vidal</url>
+			<organization>FITZHI</organization>
+			<organizationUrl>https://www.fitzhi.com</organizationUrl>
+			<roles>
+				<role>architect</role>
+				<role>developer</role>
+			</roles>
+			<timezone>+1</timezone>
+		</developer>
+  	</developers>
+	
+	<scm>
+		<url>https://github.com/fitzhi/application</url>
+		<connection>scm:git:ssh://git@github.com/fitzhi/application.git</connection>
+		<developerConnection>scm:git:ssh://git@github.com/fitzhi/application.git</developerConnection>
+	</scm>
+
 </project>
 
