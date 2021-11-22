@@ -6,7 +6,7 @@
 	<groupId>com.fitzhi</groupId>
 	<artifactId>fitzhi</artifactId>
 	<packaging>jar</packaging>
-	<version>1.6-SNAPSHOT</version>
+	<version>${VERSION_FITZHI}</version>
 	<name>Backend Fitzhì</name>
 	<url>http://maven.apache.org</url>
 	<properties>
@@ -50,7 +50,7 @@
 			<activation>
 	            <activeByDefault>true</activeByDefault>
 			</activation>
-			<!-- We disable thnature of archives in default mode -->
+			<!-- We disable the signing of archives in default mode. -->
 			<build>
 				<plugins>
 					<plugin>

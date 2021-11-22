@@ -21,8 +21,10 @@ do
 	esac
 done
 
-echo "Initializing the Fitzhì backend"
+export VERSION_FITZHI=`cat back-fitzhi/VERSION_FITZHI`
+echo "Initializing the Fitzhì backend for the release ${VERSION_FITZHI}"
 echo " The setup will erase & override previous installation if the FORCE mode is on"
+
 
 if [ $test = "Y" ]
 then 
