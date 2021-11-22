@@ -16,9 +16,8 @@ import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 
-import com.fitzhi.Global;
-import com.fitzhi.source.crawler.RepoScanner;
 import com.fitzhi.ApplicationRuntimeException;
+import com.fitzhi.Global;
 
 import org.apache.commons.lang3.StringUtils;
 

@@ -8,7 +8,6 @@ import java.util.Optional;
 import javax.validation.constraints.NotNull;
 
 import com.fitzhi.data.internal.Experience;
-import com.fitzhi.data.internal.ExperienceDetectionTemplate;
 import com.fitzhi.data.internal.FilesStats;
 import com.fitzhi.data.internal.Ghost;
 import com.fitzhi.data.internal.Library;
@@ -17,7 +16,6 @@ import com.fitzhi.data.internal.ProjectSkill;
 import com.fitzhi.data.internal.ProjectSonarMetricValue;
 import com.fitzhi.data.internal.SonarEvaluation;
 import com.fitzhi.data.internal.SonarProject;
-import com.fitzhi.data.internal.Staff;
 import com.fitzhi.data.internal.StaffExperienceTemplate;
 import com.fitzhi.data.source.CommitHistory;
 import com.fitzhi.data.source.Contributor;

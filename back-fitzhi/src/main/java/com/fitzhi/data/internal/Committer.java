@@ -3,7 +3,6 @@ package com.fitzhi.data.internal;
 import java.time.LocalDate;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
-import com.fitzhi.bean.ProjectHandler;
 import com.fitzhi.data.external.Action;
 
 import lombok.Data;
