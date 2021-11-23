@@ -43,8 +43,8 @@ describe('SummaryComponent', () => {
 	class TestHostComponent {
 		@ViewChild(SummaryComponent) summary: SummaryComponent;
 
-		switchTo(selection: number) {
-			console.log ('Received selection', selection);
+		switchTo(sel: number) {
+			console.log ('Received selection', sel);
 		}
 	}
 
@@ -78,7 +78,7 @@ describe('SummaryComponent', () => {
 		staffListService = TestBed.inject(StaffListService);
 		staffListService.informStaffLoaded();
 		fixture.detectChanges();
-		
+
 	});
 
 	function loadTheCharts(generalAverage: number) {
@@ -163,7 +163,7 @@ describe('SummaryComponent', () => {
 
 		const spy = spyOn(component.summary, 'switchTo').and.callThrough();
 		const spyComponentParent = spyOn(component, 'switchTo').withArgs(selection.treeMapSkills).and.callThrough();
-		
+
 		service.summary$.subscribe({
 			next: sum => {
 				const thumbnail = fixture.debugElement.query(By.css('#thumbnail-treeMapSkills'));
@@ -182,7 +182,7 @@ describe('SummaryComponent', () => {
 
 		const spy = spyOn(component.summary, 'switchTo').and.callThrough();
 		const spyComponentParent = spyOn(component, 'switchTo').withArgs(selection.treeMapProjects).and.callThrough();
-		
+
 		service.summary$.subscribe({
 			next: sum => {
 				const thumbnail = fixture.debugElement.query(By.css('#thumbnail-treeMapProjects'));

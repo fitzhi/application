@@ -19,7 +19,7 @@ export class SummaryComponent extends BaseDirective implements OnInit, OnDestroy
 	/**
 	 * The component has to emit an event if the user clicks on a summary.
 	 */
-	 @Output() messengerSelectedSummary = new EventEmitter<number>();
+	@Output() messengerSelectedSummary = new EventEmitter<number>();
 
 	public selection = selection;
 
@@ -72,10 +72,10 @@ export class SummaryComponent extends BaseDirective implements OnInit, OnDestroy
 
 	/**
 	 * Switch the current selection to the given identifier.
-	 * @param selection the identifier of the panel dashboard to display
+	 * @param selectionId the identifier of the panel dashboard to display
 	 */
-	switchTo(selection: number) {
-		this.messengerSelectedSummary.emit(selection);
+	switchTo(selectionId: number) {
+		this.messengerSelectedSummary.emit(selectionId);
 	}
 
 	ngOnDestroy() {
