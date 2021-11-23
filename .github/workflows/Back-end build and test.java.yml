@@ -68,6 +68,10 @@ jobs:
       if: (matrix.os == 'ubuntu-latest')
     - name: Test with maven
       run: mvn --batch-mode test
+    - name: Extract branch name
+      shell: bash
+      run: echo "##[set-output name=branch;]$(echo ${GITHUB_REF##*/})"
+      id: extract_branch    
     - name: Deploy the snapshot in central on the Ubuntu environment
       run: |
         echo "Deploying the backend of Fitzhi to Maven central..."
@@ -78,4 +82,4 @@ jobs:
         OSSRH_USERNAME: ${{ secrets.FITZHI_USER_CENTRAL }}
         OSSRH_TOKEN: ${{ secrets.FITZHI_PASSWORD_CENTRAL }}
         FITZHI_GPG_PASSPHRASE: ${{ secrets.FITZHI_GPG_PASSPHRASE }}
-      if: (matrix.os == 'ubuntu-latest') && (branches != 'release-1.6')
+      if: (matrix.os == 'ubuntu-latest') && (steps.extract_branch.branch != 'release-1.6')
