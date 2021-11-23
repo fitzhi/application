@@ -36,7 +36,7 @@ export class TabsStaffListService {
 
 	constructor(
 		private staffService: StaffService,
-		// SkillService is declared here to pass some tests. Some déclaration are mad in the SkillService construction
+		// SkillService is declared here to pass some tests. Some declarations are mad in the SkillService construction
 		private skillService: SkillService,
 		private messageService: MessageService) {
 

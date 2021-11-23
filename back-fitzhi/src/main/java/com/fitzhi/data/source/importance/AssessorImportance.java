@@ -5,13 +5,14 @@ import com.fitzhi.exception.ApplicationException;
 
 /**
  * <p>
- * This interface give access to the technical importance of a source file.<br/>
+ * This interface give access to the technical importance of a source file.
+ * </p>
  * This importance relies on :
  * <ul>
  * <li>the size of a file</li>
  * <li>the complexity</li>
  * <li>any another criteria coming soon on a theater near you</li>
- * </p>
+ * </ul>
  * @author Fr&eacute;d&eacute;ric VIDAL
  *
  */

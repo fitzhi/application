@@ -1,24 +1,23 @@
 package com.fitzhi.source.crawler.git;
 
+import static com.fitzhi.Error.CODE_BRANCH_DOES_NOT_EXIST;
 import static com.fitzhi.Error.CODE_CANNOT_CREATE_DIRECTORY;
 import static com.fitzhi.Error.CODE_FILE_CONNECTION_SETTINGS_NOFOUND;
+import static com.fitzhi.Error.CODE_GIT_ERROR;
 import static com.fitzhi.Error.CODE_IO_ERROR;
 import static com.fitzhi.Error.CODE_IO_EXCEPTION;
 import static com.fitzhi.Error.CODE_PARSING_SOURCE_CODE;
 import static com.fitzhi.Error.CODE_PROJECT_CANNOT_RETRIEVE_INITIAL_COMMIT;
+import static com.fitzhi.Error.CODE_UNDEFINED;
 import static com.fitzhi.Error.CODE_UNEXPECTED_VALUE_PARAMETER;
-import static com.fitzhi.Error.CODE_BRANCH_DOES_NOT_EXIST;
-import static com.fitzhi.Error.CODE_GIT_ERROR;
-
+import static com.fitzhi.Error.MESSAGE_BRANCH_DOES_NOT_EXIST;
 import static com.fitzhi.Error.MESSAGE_CANNOT_CREATE_DIRECTORY;
 import static com.fitzhi.Error.MESSAGE_FILE_CONNECTION_SETTINGS_NOFOUND;
+import static com.fitzhi.Error.MESSAGE_GIT_ERROR;
 import static com.fitzhi.Error.MESSAGE_IO_ERROR;
 import static com.fitzhi.Error.MESSAGE_PARSING_SOURCE_CODE;
 import static com.fitzhi.Error.MESSAGE_PROJECT_CANNOT_RETRIEVE_INITIAL_COMMIT;
 import static com.fitzhi.Error.MESSAGE_UNEXPECTED_VALUE_PARAMETER;
-import static com.fitzhi.Error.MESSAGE_BRANCH_DOES_NOT_EXIST;
-import static com.fitzhi.Error.MESSAGE_GIT_ERROR;
-
 import static com.fitzhi.Error.getStackTrace;
 import static com.fitzhi.Global.DASHBOARD_GENERATION;
 import static com.fitzhi.Global.INTERNAL_FILE_SEPARATORCHAR;
@@ -70,6 +69,7 @@ import com.fitzhi.bean.SkylineProcessor;
 import com.fitzhi.bean.StaffHandler;
 import com.fitzhi.bean.impl.RiskCommitAndDevActiveProcessorImpl.StatActivity;
 import com.fitzhi.controller.in.SettingsGeneration;
+import com.fitzhi.data.GhostsListFactory;
 import com.fitzhi.data.encryption.DataEncryption;
 import com.fitzhi.data.internal.Author;
 import com.fitzhi.data.internal.Ecosystem;
@@ -97,6 +97,7 @@ import com.google.gson.Gson;
 
 import org.eclipse.jgit.api.Git;
 import org.eclipse.jgit.api.errors.GitAPIException;
+import org.eclipse.jgit.api.errors.JGitInternalException;
 import org.eclipse.jgit.diff.DiffConfig;
 import org.eclipse.jgit.diff.DiffEntry;
 import org.eclipse.jgit.diff.DiffEntry.ChangeType;
@@ -104,6 +105,7 @@ import org.eclipse.jgit.diff.DiffFormatter;
 import org.eclipse.jgit.diff.Edit;
 import org.eclipse.jgit.diff.RawTextComparator;
 import org.eclipse.jgit.errors.CorruptObjectException;
+import org.eclipse.jgit.errors.MissingObjectException;
 import org.eclipse.jgit.lib.Config;
 import org.eclipse.jgit.lib.Constants;
 import org.eclipse.jgit.lib.ObjectReader;
@@ -236,8 +238,7 @@ public class GitCrawler extends AbstractScannerDataGenerator {
 	 * whole repository), before working, or filtering on it. The generation will be
 	 * slower, but the chart will be faster to filter.</li>
 	 * </ul>
-	 * <font color="darkGreen"><b>Our recommendation is to setup this property to
-	 * {@code true}.</b></font>
+	 * <strong>Our recommendation is to setup this property to {@code true}.</strong>
 	 * </p>
 	 */
 	@Value("${prefilterEligibility}")
@@ -327,6 +328,11 @@ public class GitCrawler extends AbstractScannerDataGenerator {
 	 * Initialization of the Google JSON parser.
 	 */
 	Gson gson = new Gson();
+
+	/**
+	 * To avoid any conflict during the GIT operations.
+	 */
+	public final Object locker = new Object();
 
 	/**
 	 * GitScanner constructor.
@@ -624,7 +630,7 @@ public class GitCrawler extends AbstractScannerDataGenerator {
 	}
 
 	@Override
-	public List<RevCommit> fileGitHistory(Project project, Repository repository, String filePath)
+	public synchronized List<RevCommit> fileGitHistory(Project project, Repository repository, String filePath)
 			throws ApplicationException {
 
 		if (log.isDebugEnabled()) {
@@ -637,18 +643,23 @@ public class GitCrawler extends AbstractScannerDataGenerator {
 
 			rw.setTreeFilter(getFollowFilter(repository, filePath));
 
-			try {
-				rw.markStart(rw.parseCommit(repository.resolve(Constants.HEAD)));
-			} catch (final Exception e) {
-				String stackTrace = Stream.of(e.getStackTrace()).map(StackTraceElement::toString)
-						.collect(Collectors.joining("\n"));
-				log.error(stackTrace);
-				throw new ApplicationException(CODE_PARSING_SOURCE_CODE, MESSAGE_PARSING_SOURCE_CODE, e);
-			}
+			rw.markStart(rw.parseCommit(repository.resolve(Constants.HEAD)));
 
 			for (RevCommit c : rw) {
 				commits.add(c);
 			}
+
+		} catch (MissingObjectException moe) {
+			// We skip this file, and we DO NOT ABORT the process.
+			if (log.isWarnEnabled()) {
+				log.warn(String.format("Skipping file %s.", filePath));
+				String stackTrace = getStackTrace(moe);
+				log.warn(stackTrace);
+			}
+			return commits;
+		} catch (final Exception e) {
+			log.error("exception", e);
+			throw new ApplicationException(CODE_PARSING_SOURCE_CODE, MESSAGE_PARSING_SOURCE_CODE, e);
 		}
 		return commits;
 	}
@@ -679,10 +690,19 @@ public class GitCrawler extends AbstractScannerDataGenerator {
 				CanonicalTreeParser newTreeIter = new CanonicalTreeParser();
 				newTreeIter.reset(reader, to.getTree().getId());
 	
-				List<DiffEntry> diffs = (filter != null) ?
-					git.diff().setNewTree(newTreeIter).setOldTree(oldTreeIter).setPathFilter(filter).call() :             
-					git.diff().setNewTree(newTreeIter).setOldTree(oldTreeIter).call();             
-				
+				//
+				// We catch this error for some HUGE repositories (such as kubernetes in my sample projects)
+				//
+				List<DiffEntry> diffs = null;
+				try {
+					diffs = (filter != null) ?
+						git.diff().setNewTree(newTreeIter).setOldTree(oldTreeIter).setPathFilter(filter).call() :             
+						git.diff().setNewTree(newTreeIter).setOldTree(oldTreeIter).call();             
+				} catch (final OutOfMemoryError oome) {
+					log.error(pathname, oome);
+					return null;
+				}
+
 				if  (diffs.size() == 0) {
 					return null;
 				}
@@ -714,6 +734,15 @@ public class GitCrawler extends AbstractScannerDataGenerator {
 				}
 				
 				return entry;
+			} catch (final CorruptObjectException | JGitInternalException | MissingObjectException gte) {
+				// The clone retrieved database possibly corrupted.
+				// We do not abort the generation for this scenario
+				// We just skip this file in the audit.
+				if (log.isWarnEnabled()) {
+					log.warn(String.format("%s handling for %s", gte.getClass().getName(), pathname));
+					log.warn(getStackTrace(gte));
+				}
+				return null;
 			} catch (final Exception e) {
 				log.error(pathname);
 				log.error(getStackTrace(e));
@@ -721,6 +750,7 @@ public class GitCrawler extends AbstractScannerDataGenerator {
 			}
 		}
 	}
+	
 	@Override
 	public RepositoryAnalysis retrieveRepositoryAnalysis(Project project, Repository repository) throws ApplicationException {
 
@@ -813,7 +843,7 @@ public class GitCrawler extends AbstractScannerDataGenerator {
 
 				RevCommit[] tabCommits = chronoCommits.toArray(new RevCommit[0]);
 
-				for (int i=0; i < tabCommits.length;  i++) {
+				for (int i = 0; i < tabCommits.length;  i++) {
 					
 					RevCommit previousCommit = (i == tabCommits.length - 1) ? firstCommit :  tabCommits[i+1];
 					try (ObjectReader reader = repository.newObjectReader()) {
@@ -854,11 +884,10 @@ public class GitCrawler extends AbstractScannerDataGenerator {
 						}
 
 					} catch (final Exception e) {
-						String stackTrace = Stream
-							.of(e.getStackTrace())
-							.map(StackTraceElement::toString)
-							.collect(Collectors.joining("\n"));
-						log.error(stackTrace);
+						log.error("Internal error", e);
+						if (e.getCause() != null) {
+							log.error("Internal cause", e.getCause());
+						}
 						throw new ApplicationException(CODE_PARSING_SOURCE_CODE, String.format(MESSAGE_PARSING_SOURCE_CODE, finalFilePathName), e);
 					}
 				}
@@ -1091,7 +1120,7 @@ public class GitCrawler extends AbstractScannerDataGenerator {
 	public void filterEligible(RepositoryAnalysis analysis) {
 
 		analysis.setChanges(new SourceControlChanges(
-				analysis.getChanges().entrySet().stream().filter(map -> isEligible(map.getKey()))
+				analysis.getChanges().entrySet().parallelStream().filter(map -> isEligible(map.getKey()))
 						.collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue))));
 
 		// Entries non filtered
@@ -1145,11 +1174,14 @@ public class GitCrawler extends AbstractScannerDataGenerator {
 					.filter(pseudo -> (staffHandler.lookup(new Author(pseudo)) == null)) 
 					.collect(Collectors.toSet()));
 
+
 			//
 			// We update the ghosts list, in the project with the up-to-date list of of
 			// ghosts.
 			//
-			projectHandler.integrateGhosts(project.getId(), repository.unknownContributors());
+			projectHandler.integrateGhosts(
+				project.getId(), 
+				GhostsListFactory.getInstance(repository));
 
 			return repository;
 		} else {
@@ -1261,6 +1293,11 @@ public class GitCrawler extends AbstractScannerDataGenerator {
 			// We update the ghosts contributors.
 			repositoryOfCommit.setUnknownContributors(unknownContributors);
 
+			//
+			// We save the unknown contributors into the "contributing ghosts" collection.
+			//
+			projectHandler.integrateGhosts(project.getId(), GhostsListFactory.getInstance(repositoryOfCommit));
+
 			// We generate & save the skyline history for this project.
 			this.generateAndSaveSkyline(project, analysis);
 
@@ -1290,7 +1327,7 @@ public class GitCrawler extends AbstractScannerDataGenerator {
 	/**
 	 * <p>
 	 * This method is taking in account the staff, or the ghost, who has contributed
-	 * in the repository.
+	 * to the project.
 	 * </p>
 	 * 
 	 * @param project             the given project
@@ -1305,11 +1342,6 @@ public class GitCrawler extends AbstractScannerDataGenerator {
 		// We update the staff identifier on each change entry.
 		//
 		this.updateStaff(project, analysis, unknownContributors);
-
-		//
-		// We save the unknown contributors into the "contributing ghosts" collection.
-		//
-		projectHandler.integrateGhosts(project.getId(), unknownContributors);
 
 		//
 		// Retrieving the list of contributors involved in the project.
@@ -1369,7 +1401,6 @@ public class GitCrawler extends AbstractScannerDataGenerator {
 					.append(Global.LN);
 			log.debug(sb.toString());
 		}
-
 	}
 
 	/**
@@ -1393,32 +1424,46 @@ public class GitCrawler extends AbstractScannerDataGenerator {
 	@Override
 	@Async
 	public void generateAsync(final Project project, final SettingsGeneration settings) throws ApplicationException {
-		boolean failed = false;
+
 		try {
 			tasks.addTask(DASHBOARD_GENERATION, "project", project.getId());
 			generate(project, settings);
+			success(project);
 		} catch (ApplicationException ae) {
-			tasks.logMessage(DASHBOARD_GENERATION, "project", project.getId(), ae.errorCode, ae.errorMessage, NO_PROGRESSION);
-			failed = true;
+			fail(project, ae.errorCode, ae.errorMessage);
 			throw ae;
 		} catch (GitAPIException | IOException e) {
-			log.error(e.getMessage());
-			tasks.logMessage(DASHBOARD_GENERATION, "project", project.getId(), 666, e.getLocalizedMessage(), NO_PROGRESSION);
-			failed = true;
+			log.error(String.format("generateAsync for (%d, %s)", project.getId(), project.getName()),e);
+			fail(project, CODE_UNDEFINED, e.getLocalizedMessage());
 			throw new ApplicationException(
 				CODE_GIT_ERROR, 
 				MessageFormat.format(MESSAGE_GIT_ERROR, project.getId(), project.getName()), 
 				e);
-		} finally {
-			try {
-				if (!failed) {
-					tasks.completeTask(DASHBOARD_GENERATION, "project", project.getId());
-				} else {
-					tasks.completeTaskOnError(DASHBOARD_GENERATION, "project", project.getId());
-				}
-			} catch (ApplicationException e) {
-				log.error(Error.getStackTrace(e));
-			}
+		}
+	}
+
+	/**
+	 * The operation has completed in an error state.
+	 * @param project the current given project
+	 */
+	private void fail(Project project, int errorCode, String errorMessage) {
+		try {
+			tasks.logMessage(DASHBOARD_GENERATION, "project", project.getId(), errorCode, errorMessage, NO_PROGRESSION);
+			tasks.completeTaskOnError(DASHBOARD_GENERATION, "project", project.getId());
+		} catch (ApplicationException e) {
+			log.error("completeTask in error", e);
+		}
+	}
+
+	/**
+	 * The operation has completed successfully.
+	 * @param project the current given project
+	 */
+	private void success(Project project) {
+		try {
+			tasks.completeTask(DASHBOARD_GENERATION, "project", project.getId());
+		} catch (ApplicationException e) {
+			log.error("completeTask in error", e);
 		}
 	}
 
@@ -1679,13 +1724,15 @@ public class GitCrawler extends AbstractScannerDataGenerator {
 
 	}
 
-	private void manageAuthorWithGhostsList(Project project, RepositoryAnalysis analysis, Set<String> unknownContributors, String author) {
+	@Override
+	public void manageAuthorWithGhostsList(Project project, RepositoryAnalysis analysis, Set<String> unknownContributors, String author) {
 
 		// The use case behind these lines :
 		// A ghost has been linked through the Angular ghost form with the pseudo of an existing staff member.
 		// This ghost corresponds to this pseudo.
 		// So we update for this author the analysis data
-		Optional<Ghost> oGhost = project.getGhosts().stream()
+		Optional<Ghost> oGhost = project.getGhosts()
+			.stream()
 			.filter(g -> !g.isTechnical())
 			.filter(g -> g.getIdStaff() > 0)
 			.filter(g -> author.equalsIgnoreCase(g.getPseudo()))
@@ -1711,7 +1758,7 @@ public class GitCrawler extends AbstractScannerDataGenerator {
 		} else {
 			// It's a new ghost
 			if (log.isDebugEnabled()) {
-				log.debug(String.format("Adding the ghost : %s", author));
+				log.debug(String.format("Adding the new ghost : %s", author));
 			}
 			unknownContributors.add(author);
 		}

@@ -6,7 +6,7 @@ import { MessageBoxService } from 'src/app/interaction/message-box/service/messa
 import { BackendSetupService } from 'src/app/service/backend-setup/backend-setup.service';
 import { CinematicService } from 'src/app/service/cinematic.service';
 import { ProjectService } from 'src/app/service/project/project.service';
-import { ReferentialService } from 'src/app/service/referential.service';
+import { ReferentialService } from 'src/app/service/referential/referential.service';
 
 import { SsewatcherService } from './ssewatcher.service';
 

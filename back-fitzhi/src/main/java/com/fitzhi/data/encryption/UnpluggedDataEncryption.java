@@ -16,9 +16,7 @@ import com.fitzhi.exception.ApplicationException;
 
 /**
  * <p>
- * <font color="red">
  * This data en(de)cryption class is unplugged, until the installation of a key store in Fitzhì
- * </font>
  * </p>
  */
 public class UnpluggedDataEncryption {
@@ -68,7 +66,7 @@ public class UnpluggedDataEncryption {
 
     /**
      * Encrypt the given plain text.
-     * @param plainText the plain text to be encrypted
+     * @param plaintext the plain text to be encrypted
      * @return the encrypted plain text
      * @throws ApplicationException thrown if the encryption fails
      */

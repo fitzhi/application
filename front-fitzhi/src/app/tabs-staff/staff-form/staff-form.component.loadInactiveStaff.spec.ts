@@ -1,7 +1,7 @@
 import { ComponentFixture, TestBed, tick, TestModuleMetadata, waitForAsync } from '@angular/core/testing';
 
 import { StaffFormComponent } from './staff-form.component';
-import { ReferentialService } from 'src/app/service/referential.service';
+import { ReferentialService } from 'src/app/service/referential/referential.service';
 import { Profile } from '../../data/profile';
 import { InitTest } from 'src/app/test/init-test';
 import { RouterTestingModule } from '@angular/router/testing';

@@ -1,7 +1,7 @@
 import { Component, OnInit, Input, ViewChild, OnDestroy, AfterViewInit } from '@angular/core';
 import { MatSort } from '@angular/material/sort';
 import { Unknown } from '../../../../data/unknown';
-import { BaseComponent } from 'src/app/base/base.component';
+import { BaseDirective } from 'src/app/base/base-directive.directive';
 import { ProjectGhostsDataSource } from '../project-ghosts-data-source';
 import { MatPaginator } from '@angular/material/paginator';
 import { Collaborator } from 'src/app/data/collaborator';
@@ -21,7 +21,7 @@ import { MatTable } from '@angular/material/table';
 	templateUrl: './table-ghosts.component.html',
 	styleUrls: ['./table-ghosts.component.css']
 })
-export class TableGhostsComponent extends BaseComponent implements OnInit, OnDestroy, AfterViewInit {
+export class TableGhostsComponent extends BaseDirective implements OnInit, OnDestroy, AfterViewInit {
 
 	/**
 	 * Datasource observable.
@@ -50,8 +50,8 @@ export class TableGhostsComponent extends BaseComponent implements OnInit, OnDes
 	 */
 	@ViewChild('table', { static: true }) table: MatTable<Unknown>;
 
-	public editableColumns: string[] = ['pseudo', 'login', 'technical', 'firstname', 'lastname', 'active', 'external', 'creation'];
-	public enhancedColumns: string[] = ['pseudo', 'login', 'fullName', 'technical'];
+	public editableColumns: string[] = ['pseudo', 'lastCommit', 'numberOfCommits', 'numberOfFiles', 'login', 'technical', 'firstname', 'lastname', 'active', 'external', 'creation'];
+	public enhancedColumns: string[] = ['pseudo', 'lastCommit', 'numberOfCommits', 'numberOfFiles', 'login', 'fullName', 'technical'];
 
 	/**
 	 * List of all developpers existing in the application.

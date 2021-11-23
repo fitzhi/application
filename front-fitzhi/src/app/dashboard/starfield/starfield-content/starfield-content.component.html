@@ -1,0 +1,16 @@
+<angular-popper placement="top" target="#star-{{indexHighlighted}}" *ngIf="skillPopupDisplay">
+	<div content id="detail-skill" class="help">
+		<h3 class="help-title">{{activeSkill.title}}</h3>
+		<p>{{activeStar.countSkillLevels}} skills units has been detected in the staff experiences.</p>
+	</div>
+</angular-popper>
+
+<div class="m-4">
+	<div *ngFor="let star of starfieldService.stars$|async; index as id" 
+		(mouseenter)="mouseEnter(star, id)" 
+		(mouseleave)="mouseLeave()"
+		class="d-inline-flex flex-wrap p-1"
+		[style]="style(star)">
+		<span class="star" id="star-{{id}}">&#x2605;</span>
+	</div>	
+</div>

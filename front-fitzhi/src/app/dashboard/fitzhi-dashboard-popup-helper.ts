@@ -12,7 +12,7 @@ export class FitzhiDashboardPopupHelper {
 	 *
 	 * We uese this property to handle the help bubble display.
 	 */
-	public activated = this.selection.none;
+	public activated = this.selection.summary;
 
 	/**
 	 * Save the button activated in order to display the associated help-bubble.
@@ -29,7 +29,7 @@ export class FitzhiDashboardPopupHelper {
 	 * We've to hide the associated help-bubble.
 	 */
 	public mouseLeave() {
-			this.activated = this.selection.none;
+		this.activated = this.selection.summary;
 	}
 
 	/**

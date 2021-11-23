@@ -8,7 +8,7 @@ import { NgxChartsModule } from '@swimlane/ngx-charts';
 import { CinematicService } from 'src/app/service/cinematic.service';
 import { DashboardService } from 'src/app/service/dashboard/dashboard.service';
 import { ProjectService } from 'src/app/service/project/project.service';
-import { ReferentialService } from 'src/app/service/referential.service';
+import { ReferentialService } from 'src/app/service/referential/referential.service';
 import { FitzhiDashboardComponent } from '../../fitzhi-dashboard.component';
 import { TreemapProjectsChartComponent } from '../treemap-projects-chart/treemap-projects-chart.component';
 import { TreemapProjectsContainerComponent } from './treemap-projects-container.component';
@@ -44,7 +44,7 @@ describe('TreemapProjectsContainerComponent', () => {
 
 	@Component({
 		selector: 'app-host-component',
-		template: `<div><app-treemap-projects width="300px" height="200px" ></app-treemap-projects></div>`
+		template: `<div style="position:fixed; top: 0; right: 0; top: 0"><app-treemap-projects></app-treemap-projects></div>`
 	})
 	class TestHostComponent {
 		@HostBinding('style.--sidebar-width')

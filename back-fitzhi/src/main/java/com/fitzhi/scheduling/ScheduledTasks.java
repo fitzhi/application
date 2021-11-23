@@ -1,6 +1,13 @@
 package com.fitzhi.scheduling;
 
+import java.time.LocalDate;
+import java.util.Calendar;
+
+import com.fitzhi.Global;
+import com.fitzhi.bean.AsyncTask;
+import com.fitzhi.bean.DataHandler;
 import com.fitzhi.bean.ProjectHandler;
+import com.fitzhi.bean.StaffHandler;
 import com.fitzhi.source.crawler.BatchRepositoryCrawler;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,15 +20,13 @@ import lombok.extern.slf4j.Slf4j;
 
 /**
  * This class is a scheduler in charge of the execution of the global code analysis in batch mode.
- * This scheduler is configured with the cron settings {@code cron.code.analysis} declared in the {@code application.properties} file. 
+ * This scheduler is configured with the cron settings {@code cron.code.analysis}, {@code cron.experiences.detection} and
+ * {@code cron.constellations.generation} declared in the {@code application.properties} file. 
  */
 @EnableScheduling
 @Slf4j
 @Component
 public class ScheduledTasks {
-
-	@Autowired
-	BatchRepositoryCrawler batchRepoScanner;
 
 	@Value("${cron.code.analysis}")
 	private String cronCodeAnalysis;
@@ -29,8 +34,29 @@ public class ScheduledTasks {
 	@Value("${cron.experiences.detection}")
 	private String cronExperiencesDetection;
 
+	@Value("${cron.tasks.report}")
+	private String cronTasksReport;
+
+	@Autowired
+	BatchRepositoryCrawler batchRepoScanner;
+
 	@Autowired
 	ProjectHandler projectHandler;
+
+	@Autowired
+	StaffHandler staffHandler;
+
+	@Autowired
+	DataHandler dataHandler;
+
+	@Autowired
+	AsyncTask asyncTask;
+
+	/**
+	 * Current minute of the execution of the medthiod {@link #tasksReport}.
+	 * This property is used in a work-around 
+	 */
+	int minute = -1;
 
 	@Scheduled(cron = "${cron.code.analysis}")
 	public void codeAnalysis() {
@@ -54,6 +80,47 @@ public class ScheduledTasks {
 			projectHandler.updateStaffSkillLevel(projectHandler.processGlobalExperiences());
 			if (log.isInfoEnabled()) {
 				log.info("Peacefully terminate the experiences detection.");
+			}
+		} catch (Exception e) {
+			log.error(e.getMessage(), e);
+		}
+	}
+
+	/**
+	 * <p>
+	 * <strong>MONTHLY</strong> generation of the skills constellations.
+	 * </p>
+	 * This method is daily invoked to ensure that this generation is effectively processed,
+	 * but the generation will be processed only once per month.
+	 */
+	@Scheduled(cron = "${cron.constellations.generation}")
+	public void constellationsGeneration() {
+		try {
+			LocalDate month = LocalDate.now();
+			if (!dataHandler.hasAlreadySavedSkillsConstellations(month)) {
+				if (log.isInfoEnabled()) {
+					log.info(String.format("Starting the generation of the constellations for month %d/%d.", 
+						month.getMonthValue(), month.getYear()));
+				}
+				staffHandler.saveCurrentConstellations();
+				if (log.isInfoEnabled()) {
+					log.info("Peacefully terminate the generation of the constellations.");
+				}
+			}
+		} catch (Exception e) {
+			log.error(e.getMessage(), e);
+		}
+	}
+
+	@Scheduled(cron = "${cron.tasks.report}")
+	public void tasksReport() {
+		try {
+			// For an unknown, this method is executed multiple times when the cron is equal to '* 0/5 * * * ?'
+			if (minute != Calendar.getInstance().get(Calendar.MINUTE)) {
+				minute = Calendar.getInstance().get(Calendar.MINUTE);
+				if (log.isInfoEnabled()) {
+					log.info(Global.LN + "Current active tasks :" + Global.LN + asyncTask.trace() + Global.LN);
+				}
 			}
 		} catch (Exception e) {
 			log.error(e.getMessage(), e);

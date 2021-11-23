@@ -1,19 +1,20 @@
-import { TestBed, TestModuleMetadata } from '@angular/core/testing';
-
-import { DashboardService } from './dashboard.service';
-import { SkillService } from '../../skill/service/skill.service';
-import { ProjectService } from '../project/project.service';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
-import { StaffService } from '../../tabs-staff/service/staff.service';
+import { TestBed, TestModuleMetadata } from '@angular/core/testing';
 import { MatDialogModule } from '@angular/material/dialog';
-import { ReferentialService } from '../referential.service';
-import { SkillProjectsAggregation } from './skill-projects-aggregration';
+import { SkillService } from '../../skill/service/skill.service';
+import { StaffService } from '../../tabs-staff/service/staff.service';
 import { CinematicService } from '../cinematic.service';
+import { ProjectService } from '../project/project.service';
+import { ReferentialService } from '../referential/referential.service';
+import { DashboardConstants } from './dashboard-constants';
+import { DashboardService } from './dashboard.service';
+import { SkillProjectsAggregation } from './skill-projects-aggregration';
+
 describe('DashboardService', () => {
 
 	function generateSkillProjectsAggregation(): SkillProjectsAggregation[] {
 		const aggregations = [];
-		for (let i = 0; i < DashboardService.MAX_NUMBER_SKILLS_IN_DIAGRAM; i++) {
+		for (let i = 0; i < DashboardConstants.MAX_NUMBER_SKILLS_IN_DIAGRAM; i++) {
 			aggregations.push(new SkillProjectsAggregation(String(i), 100, 100));
 		}
 		return aggregations;
@@ -41,12 +42,12 @@ describe('DashboardService', () => {
 		expect(service).toBeDefined();
 
 		const aggregations = generateSkillProjectsAggregation();
-		expect(DashboardService.MAX_NUMBER_SKILLS_IN_DIAGRAM).toBe(aggregations.length);
+		expect(DashboardConstants.MAX_NUMBER_SKILLS_IN_DIAGRAM).toBe(aggregations.length);
 
 		aggregations.splice(1, 1);
 
 		const resultingAggregations = service.aggregateRestOfData(aggregations);
-		expect(DashboardService.MAX_NUMBER_SKILLS_IN_DIAGRAM - 1).toEqual(resultingAggregations.length);
+		expect(DashboardConstants.MAX_NUMBER_SKILLS_IN_DIAGRAM - 1).toEqual(resultingAggregations.length);
 		expect(100).toEqual(resultingAggregations[0].sumNumberOfFiles);
 
 	});
@@ -59,15 +60,15 @@ describe('DashboardService', () => {
 		//
 		// We add 2 SkillProjectsAggregation
 		//
-		expect(DashboardService.MAX_NUMBER_SKILLS_IN_DIAGRAM).toBe(aggregations.length);
-		aggregations.push(new SkillProjectsAggregation(String(DashboardService.MAX_NUMBER_SKILLS_IN_DIAGRAM), 100, 100));
-		aggregations.push(new SkillProjectsAggregation(String(DashboardService.MAX_NUMBER_SKILLS_IN_DIAGRAM + 1), 100, 100));
+		expect(DashboardConstants.MAX_NUMBER_SKILLS_IN_DIAGRAM).toBe(aggregations.length);
+		aggregations.push(new SkillProjectsAggregation(String(DashboardConstants.MAX_NUMBER_SKILLS_IN_DIAGRAM), 100, 100));
+		aggregations.push(new SkillProjectsAggregation(String(DashboardConstants.MAX_NUMBER_SKILLS_IN_DIAGRAM + 1), 100, 100));
 
 		const resultingAggregations = service.aggregateRestOfData(aggregations);
-		expect(DashboardService.MAX_NUMBER_SKILLS_IN_DIAGRAM).toEqual(resultingAggregations.length);
+		expect(DashboardConstants.MAX_NUMBER_SKILLS_IN_DIAGRAM).toEqual(resultingAggregations.length);
 		expect(100).toEqual(resultingAggregations[0].sumNumberOfFiles);
-		expect(300).toEqual(resultingAggregations[DashboardService.MAX_NUMBER_SKILLS_IN_DIAGRAM - 1].sumNumberOfFiles);
-		expect(300).toEqual(resultingAggregations[DashboardService.MAX_NUMBER_SKILLS_IN_DIAGRAM - 1].sumTotalFilesSize);
+		expect(300).toEqual(resultingAggregations[DashboardConstants.MAX_NUMBER_SKILLS_IN_DIAGRAM - 1].sumNumberOfFiles);
+		expect(300).toEqual(resultingAggregations[DashboardConstants.MAX_NUMBER_SKILLS_IN_DIAGRAM - 1].sumTotalFilesSize);
 	});
 
 

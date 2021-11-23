@@ -1,9 +1,9 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { take } from 'rxjs/operators';
-import { BaseComponent } from 'src/app/base/base.component';
+import { BaseDirective } from 'src/app/base/base-directive.directive';
 import { MessageService } from 'src/app/interaction/message/message.service';
 import { ProjectService } from 'src/app/service/project/project.service';
-import { ReferentialService } from 'src/app/service/referential.service';
+import { ReferentialService } from 'src/app/service/referential/referential.service';
 import { ProjectAuditService } from '../service/project-audit.service';
 import { Topic } from './topic';
 
@@ -12,7 +12,7 @@ import { Topic } from './topic';
 	templateUrl: './table-categories.component.html',
 	styleUrls: ['./table-categories.component.css']
 })
-export class TableCategoriesComponent extends BaseComponent implements OnInit, OnDestroy {
+export class TableCategoriesComponent extends BaseDirective implements OnInit, OnDestroy {
 
 	public categoryColumns: string[] = ['select', 'title'];
 

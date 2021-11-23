@@ -7,6 +7,8 @@ import java.util.Map;
 import java.util.Set;
 
 import com.fitzhi.bean.StaffHandler;
+import com.fitzhi.data.internal.Author;
+import com.fitzhi.data.internal.Ghost;
 import com.fitzhi.data.internal.Staff;
 
 
@@ -108,14 +110,12 @@ public interface CommitRepository {
 	int numberOfFiles(int idStaff);
 	
 	/**
-	 * @return A set which contains the developers/contributors retrieved in the version control but unrecognized during the parsing process.<br/>
-	 * <p>
 	 * This set contains : 
 	 * <ul>
 	 * <li>either unknown developers, who must be declared inside the application (staff Form)</li>
 	 * <li>or particular nicknames setup by current developers.</li>
 	 * </ul>
-	 * </p> 
+	 * @return A set which contains the developers/contributors retrieved in the version control but unrecognized during the parsing process.<br/>
 	 */
 	Set<String> unknownContributors();
 
@@ -145,20 +145,28 @@ public interface CommitRepository {
 
 	/**
 	 * <p>
-	 * Parse & extract the contributor's data for the given staff member.
-	 * </p>
-	 * <p>
-	 * <font color="darkRed">In theory, the function should never return a {@code null}, 
-	 * but it appears that this case occurs. Therefore, we put a warning to trace this case and track the issue.
-	 * </font>
+	 * Parse and extract the contributor's data for the given staff member.
 	 * </p>
 	 * @param staff the given staff member.
 	 * @return the contributor object summarizing his participation in the project, 
 	 * {@code null} if not data was found for the given staff member.<br/>
 	 * 
+	 * @see BasicCommitRepository#extract(Object, java.util.function.BiFunction, java.util.function.Function)
 	 */
-	Contributor extractContribution(Staff staff);
+	Contributor extractStaffMetrics(Staff staff);
 	
+	/**
+	 * <p>
+	 * Parse and extract the contributor's data for the given ghost.
+	 * </p>
+	 * @param author the given author.
+	 * @return the contributor object summarizing his participation in the project, 
+	 * {@code null} if no data was found for the given author.<br/>
+	 * 
+	 * @see BasicCommitRepository#extract(Object, java.util.function.BiFunction, java.util.function.Function)
+	 */
+	Ghost extractGhostMetrics(Author author);
+
 	/**
 	 * Dump the content of the repository.
 	 */

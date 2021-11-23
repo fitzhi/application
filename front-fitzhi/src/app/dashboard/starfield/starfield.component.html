@@ -1,0 +1,20 @@
+<div class="starfield">
+	<app-starfield-header></app-starfield-header>
+	<app-starfield-content></app-starfield-content>
+	<div id="help" class="container-help w-100 position-absolute" *ngIf="starfieldService.helpPanelVisible$|async">
+		<div class="help w-100 h-100">
+			<div id="logoInfo" style="display: inline-flex">
+				<em class="fas fa-info info mt-2 ml-2"></em>
+				<div class="p-2 mt-3 ml-4 mr-3 justify-content w-100 text-justify" style="line-height: 1.4;">
+					We call this view &laquo; stars and tribes &raquo;.
+					Each &#x2605; represents what we call a &laquo; unit of skill &raquo;. 
+					e.g., a Java expert 5 &#x2605; brings 5 ​​units to the count, the equivalent of 5 novice developers 1 &#x2605;.
+					This reserve can grow up either by hiring a new developer, or by improving your actual staff.
+					<br/>
+					This snapshot can be considered as the potential energy of your IT : the ability to do.
+					Fitzhì save one snapshot of this KPI per month in order to follow up this ability over time.
+				</div>
+			</div>
+		</div>
+	</div>
+</div>

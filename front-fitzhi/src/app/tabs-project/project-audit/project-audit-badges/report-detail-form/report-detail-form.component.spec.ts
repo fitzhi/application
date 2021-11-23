@@ -6,7 +6,7 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MatInputModule } from '@angular/material/input';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
-import { ReferentialService } from 'src/app/service/referential.service';
+import { ReferentialService } from 'src/app/service/referential/referential.service';
 import { BehaviorSubject } from 'rxjs';
 import { Project } from 'src/app/data/project';
 import { Component } from '@angular/core';

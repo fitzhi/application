@@ -5,6 +5,8 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
+
 
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -64,7 +66,7 @@ public class ProjectControllerContributorsInShuffleModeTest {
 	@WithMockUser
 	public void testloadContributors() throws Exception {
 
-		Staff staff = staffHandler.getStaff().get(ID_STAFF);
+		Staff staff = staffHandler.getStaff(ID_STAFF);
 		
 		List<Contributor> contributors = new ArrayList<>();
 		contributors.add(new Contributor(ID_STAFF, LocalDate.now(), LocalDate.now(), 100, 200));
@@ -72,6 +74,7 @@ public class ProjectControllerContributorsInShuffleModeTest {
 
 		MvcResult result = this.mvc.perform(get("/api/project/666/contributors"))
 			.andExpect(status().isOk())
+			.andDo(print())
 			.andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
 			.andExpect(jsonPath("$.idProject").value(666))
 			.andExpect(jsonPath("$.contributors[0].idStaff").value(ID_STAFF))

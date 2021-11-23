@@ -11,7 +11,6 @@
     </div>
     <div *ngFor="let auditDetail of (projectAuditService.auditDetails$ | async)" class="containerOneThumbnail">
         <div *ngIf="reportDetailChosen(auditDetail)">
-            nipe
             <app-report-detail-form
                 [title]="legendTopics[auditDetail.idTopic]"
                 [idTopic]="auditDetail.idTopic">

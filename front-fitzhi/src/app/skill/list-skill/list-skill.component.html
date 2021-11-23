@@ -1,79 +1,79 @@
 <div id="skillsList">
 
-  <table mat-table matSort #table
-      [dataSource]="dataSource"  
-      class="mat-elevation-z8" 
-      summary="List of skills">
+	<table mat-table matSort #table
+			[dataSource]="dataSource"  
+			class="mat-elevation-z8" 
+			summary="List of skills">
 
-    <ng-container matColumnDef="skill">
-      <th id="skill" mat-header-cell *matHeaderCellDef mat-sort-header>
-        Skill
-      </th>
-      <td mat-cell class="col_string" *matCellDef="let skill">
-        <a [routerLink]="['/skill', skill.id]">{{skill.title}}</a>
-      </td>
-    </ng-container>
+		<ng-container matColumnDef="skill">
+			<th id="skill" mat-header-cell *matHeaderCellDef mat-sort-header>
+				Skill
+			</th>
+			<td mat-cell class="col_string" *matCellDef="let skill">
+				<a id="idSkill-{{skill.id}}" [routerLink]="['/skill', skill.id]">{{skill.title}}</a>
+			</td>
+		</ng-container>
 
-    <ng-container matColumnDef="level-1">
-      <th class="level" mat-header-cell *matHeaderCellDef mat-sort-header scope="col">
-          <img alt="Yellow *" class="star" src="./assets/img/yellowStar.png" /> 
-          <img alt="Grey *" class="star" src="./assets/img/greyStar.png" *ngFor="let a of fakeArray4" /> 
-      </th>
-      <td mat-cell class="col_number" *matCellDef="let skill">
-        <a (click)="listStaff(skill.title, 1)" href="javascript:;">
-            {{skill.count_1_star}}
-        </a>
-      </td>
-    </ng-container>
+		<ng-container matColumnDef="level-1">
+			<th class="level" mat-header-cell *matHeaderCellDef mat-sort-header scope="col">
+				<span class="star-green">&#x2605;</span>
+				<span alt="Grey *" class="star-grey" *ngFor="let a of fakeArray4"> &#x2605;</span>
+			</th>
+			<td mat-cell class="col_number" *matCellDef="let skill">
+				<a id="count_1_star-{{skill.id}}" (click)="listStaff(skill.title, 1)" href="javascript:;">
+						{{skill.count_1_star}}
+				</a>
+			</td>
+		</ng-container>
 
-    <ng-container matColumnDef="level-2">
-      <th class="level" mat-header-cell *matHeaderCellDef mat-sort-header  scope="col">
-          <img alt="Yellow *" class="star" src="./assets/img/yellowStar.png" *ngFor="let a of fakeArray2" /> 
-          <img alt="Grey *" class="star" src="./assets/img/greyStar.png" *ngFor="let a of fakeArray3" /> 
-      </th>
-      <td mat-cell class="col_number"  *matCellDef="let skill">
-        <a (click)="listStaff(skill.title, 2)" href="javascript:;">
-            {{skill.count_2_star}}
-        </a>
-      </td>
-    </ng-container>
+		<ng-container matColumnDef="level-2">
+			<th class="level" mat-header-cell *matHeaderCellDef mat-sort-header  scope="col">
+				<span alt="Green *" class="star-green" *ngFor="let a of fakeArray2"> &#x2605;</span>
+				<span alt="Grey *" class="star-grey" *ngFor="let a of fakeArray3"> &#x2605;</span>
+			</th>
+			<td mat-cell class="col_number"  *matCellDef="let skill">
+				<a id="count_2_star-{{skill.id}}" (click)="listStaff(skill.title, 2)" href="javascript:;">
+						{{skill.count_2_star}}
+				</a>
+			</td>
+		</ng-container>
 
-    <ng-container matColumnDef="level-3">
-      <th class="level" mat-header-cell *matHeaderCellDef mat-sort-header scope="col">
-          <img alt="Yellow *" class="star" src="./assets/img/yellowStar.png" *ngFor="let a of fakeArray3" /> 
-          <img alt="Grey *" class="star" src="./assets/img/greyStar.png" *ngFor="let a of fakeArray2" /> 
-      </th>
-      <td mat-cell class="col_number" *matCellDef="let skill">
-        <a (click)="listStaff(skill.title, 3)" href="javascript:;">
-            {{skill.count_3_star}}
-        </a>
-      </td>
-    </ng-container>
+		<ng-container matColumnDef="level-3">
+			<th class="level" mat-header-cell *matHeaderCellDef mat-sort-header scope="col">
+				<span alt="Green *" class="star-green" *ngFor="let a of fakeArray3"> &#x2605;</span>
+				<span alt="Grey *" class="star-grey" *ngFor="let a of fakeArray2"> &#x2605;</span>
+			</th>
+			<td mat-cell class="col_number" *matCellDef="let skill">
+				<a id="count_3_star-{{skill.id}}" (click)="listStaff(skill.title, 3)" href="javascript:;">
+						{{skill.count_3_star}}
+				</a>
+			</td>
+		</ng-container>
 
-    <ng-container matColumnDef="level-4">
-      <th class="level" mat-header-cell *matHeaderCellDef mat-sort-header  scope="col">
-          <img alt="Yellow *" class="star" src="./assets/img/yellowStar.png" *ngFor="let a of fakeArray4" /> 
-          <img alt="Grey *" class="star" src="./assets/img/greyStar.png" />         
-      </th>
-      <td mat-cell class="col_number" *matCellDef="let skill">
-        <a (click)="listStaff(skill.title, 4)" href="javascript:;">
-            {{skill.count_4_star}}
-        </a>
-      </td>
-    </ng-container>
+		<ng-container matColumnDef="level-4">
+			<th class="level" mat-header-cell *matHeaderCellDef mat-sort-header  scope="col">
+				<span alt="Green *" class="star-green" *ngFor="let a of fakeArray4"> &#x2605;</span>
+				<span alt="Grey *" class="star-grey"> &#x2605;</span>
+			</th>
+			<td mat-cell class="col_number" *matCellDef="let skill">
+				<a id="count_4_star-{{skill.id}}" (click)="listStaff(skill.title, 4)" href="javascript:;">
+						{{skill.count_4_star}}
+				</a>
+			</td>
+		</ng-container>
 
-    <ng-container matColumnDef="level-5">
-      <th class="level" mat-header-cell *matHeaderCellDef mat-sort-header  scope="col">
-          <img alt="Yellow *" class="star" src="./assets/img/yellowStar.png" *ngFor="let a of fakeArray5" /> 
-     </th>
-      <td mat-cell class="col_number"  *matCellDef="let skill">
-        <a (click)="listStaff(skill.title, 5)" href="javascript:;">
-            {{skill.count_5_star}}
-        </a>
-      </td>
-    </ng-container>
+		<ng-container matColumnDef="level-5">
+			<th class="level" mat-header-cell *matHeaderCellDef mat-sort-header  scope="col">
+				<span alt="Grey *" class="star-green" *ngFor="let a of fakeArray5"> &#x2605;</span>
+		 </th>
+			<td mat-cell class="col_number"  *matCellDef="let skill">
+				<a id="count_5_star-{{skill.id}}" (click)="listStaff(skill.title, 5)" href="javascript:;">
+						{{skill.count_5_star}}
+				</a>
+			</td>
+		</ng-container>
 
-    <tr mat-header-row *matHeaderRowDef="displayedColumns; sticky: true"></tr>
-    <tr mat-row *matRowDef="let row; columns: displayedColumns;" class="row_any"></tr>
-  </table>
+		<tr mat-header-row *matHeaderRowDef="displayedColumns; sticky: true"></tr>
+		<tr mat-row *matRowDef="let row; columns: displayedColumns;" class="row_any"></tr>
+	</table>
 </div>

@@ -1,10 +1,15 @@
+import { HttpClient, HttpHeaders, HttpResponse } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { BehaviorSubject, Observable, of } from 'rxjs';
-import { take, tap } from 'rxjs/operators';
+import { NOT_MODIFIED } from 'http-status-codes';
+import { BehaviorSubject, EMPTY, Observable, of } from 'rxjs';
+import { catchError, take, tap } from 'rxjs/operators';
+import { Constants } from 'src/app/constants';
 import { Collaborator } from '../../data/collaborator';
 import { Commit } from '../../data/commit';
 import { traceOn } from '../../global';
 import { StaffService } from '../../tabs-staff/service/staff.service';
+import { BackendSetupService } from '../backend-setup/backend-setup.service';
+import { StaffListListenerService } from './staff-list-listener.service';
 
 
 @Injectable({
@@ -23,31 +28,118 @@ export class StaffListService {
 	public allStaff: Collaborator[] = [];
 
 	/**
+	 * This *boolean* represents the fact that the whole staff collection has been loaded;
+	 */
+	private allStaffLoaded = false;
+
+	private allStaffLoadedSubject$ = new BehaviorSubject<boolean>(this.allStaffLoaded);
+	/**
+	 * This observable informs the application that the whole staff collection is loaded
+	 * and available in the array allStaff[].
+	 */
+	public allStaffLoaded$ = this.allStaffLoadedSubject$.asObservable();
+
+	/**
 	 * Constructor.
 	 * @param staffService service un charge of accessing the backend to retrive the staff members.
 	 */
 	constructor(
-		private staffService: StaffService) {
+		private staffService: StaffService,
+		private staffListListenerService: StaffListListenerService,
+		private backendSetupService: BackendSetupService,
+		private httpClient: HttpClient) {
+	}
+
+	/**
+	 * Start the **Staff** loading process.
+	 */
+	startLoadingStaff(): void {
+		this.reloadStaff();
+		this.staffListListenerService.sub = this.staffListListenerService.intervalLoadStaff$.subscribe({
+			next: val => {
+				this.reloadStaff();
+			}
+		});
 	}
 
 	/**
 	 * Load the staff members and store them in the array allStaff.
 	 */
-	loadStaff() {
-		this.staffService.getAll$()
+	reloadStaff() {
+		if (traceOn()) {
+			console.log(`Fetching the staff collection on URL ${this.backendSetupService.url()}/api/staff.`);
+		}
+		let headers = new HttpHeaders();
+		if (this.getEtag()) {
+			headers = headers.append('If-None-Match', this.getEtag());
+		}
+
+		this.httpClient
+			.get<Collaborator[]>(`${this.backendSetupService.url()}/staff`,
+				{
+					headers: headers,
+					responseType: 'json',
+					observe: 'response'
+				})
 			.pipe(
 				take(1),
-				tap(staff => {
-					if (traceOn()) {
-						console.groupCollapsed(this.allStaff.length + ' staff members loaded');
-						this.allStaff.forEach (item => console.log(item.idStaff + ' ' + item.firstName + ' ' + item.lastName));
-						console.groupEnd();
+				catchError(error => {
+					// This is not an error, if the projects collection has not been mofified.
+					// This is is the nominal behavior.
+					if (error.status !== NOT_MODIFIED) {
+						this.staffListListenerService.interruptStaffListener();
 					}
-				}))
-			.subscribe(staff => {
-				this.allStaff = staff;
-				this.allStaff$.next(this.allStaff);
+					return EMPTY;
+				})
+
+			).subscribe({
+				next: response => {
+					this.saveEtag(response);
+					this.takeInAccountStaff(response.body);
+				}
 			});
+	}
+
+	/**
+	 * Take in account the staff list declared in the application.
+	 * @param projects the retrieved staff members
+	 */
+	takeInAccountStaff(staff: Collaborator[]) {
+		if (traceOn()) {
+			console.groupCollapsed('Staff retrieved');
+			staff.forEach(st => console.log(`${st.idStaff} ${st.firstName} ${st.lastName}`));
+			console.table(staff);
+			console.groupEnd();
+		}
+		this.allStaff = staff;
+		this.allStaff$.next(this.allStaff);
+		if (!this.allStaffLoaded) {
+			this.allStaffLoaded = true;
+			this.informStaffLoaded();
+		}
+	}
+
+	/**
+	 * Save the `Etag` header in the session storage.
+	 * @param response the response which contains the Etag header to be saved.
+	 */
+	saveEtag(response: HttpResponse<Collaborator[]>) {
+		sessionStorage.setItem(Constants.ETAG_STAFF, response.headers.get('Etag'));
+		if (traceOn()) {
+			console.log('Etag saved', response.headers.get('Etag'));
+		}
+	}
+
+	/**
+	 * Get the `Etag` header from the session storage.
+	 * @returns the Etag saved in the session storage
+	 */
+	private getEtag(): string {
+		const etag = sessionStorage.getItem(Constants.ETAG_STAFF);
+		if (traceOn()) {
+			console.log('Etag retrieved', etag);
+		}
+		return etag;
 	}
 
 
@@ -89,7 +181,7 @@ export class StaffListService {
 		const staff = this.allStaff.find(collab => collab.idStaff === id);
 		if (!staff) {
 			if (traceOn()) {
-				console.log ('Cannot retrieve the staff member with the identifier %d', id);
+				console.log('Cannot retrieve the staff member with the identifier %d', id);
 			}
 			return null;
 		} else {
@@ -143,8 +235,9 @@ export class StaffListService {
 							latest.dateCommit = mission.lastCommit.toString();
 						}
 					}
-				}});
+				}
 			});
+		});
 		return latest;
 	}
 
@@ -161,7 +254,6 @@ export class StaffListService {
 			.find(collab =>
 				(collab.firstName.replace('-', ' ').toLowerCase() === staff.firstName.toLowerCase()) &&
 				(collab.lastName.replace('-', ' ').toLowerCase() === staff.lastName.toLowerCase()));
-
 	}
 
 	/**
@@ -172,4 +264,10 @@ export class StaffListService {
 		return this.allStaff.findIndex(staff => (staff.idStaff === idStaff));
 	}
 
+	/**
+	 * Inform the system that the staff collection is loaded.
+	 */
+	informStaffLoaded() {
+		this.allStaffLoadedSubject$.next(true);
+	}
 }

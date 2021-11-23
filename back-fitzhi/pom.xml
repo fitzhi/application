@@ -6,9 +6,19 @@
 	<groupId>com.fitzhi</groupId>
 	<artifactId>fitzhi</artifactId>
 	<packaging>jar</packaging>
-	<version>1.5</version>
+	<version>${VERSION_FITZHI}</version>
 	<name>Backend Fitzhì</name>
-	<url>http://maven.apache.org</url>
+
+	<description>
+		This library is the the backend for the Fitzhì solution.
+		Fitzhì aims to gather all technical data regarding your application portfolio into ONE single portal. 
+		Fitzhì provides also analysis and assessments at the project scope, but its main target is the portfolio. 
+		The main ambition is to provide a global, and dynamic vision of the technical risk for your IT.
+		The dream functionality for Fitzhì should be the ONE single dashboard, one Single Point Point Of Quality, 
+		available for the CTO, or CIO, and ready to resume in one second, one view, the current situation and the historic trend.
+	</description>
+	<url>https://www.fitzhi.com</url>
+
 	<properties>
 		<jdk.version>11</jdk.version>
 		<spring.version>5.1.14.RELEASE</spring.version>
@@ -24,10 +34,10 @@
 		<poi.version>5.0.0</poi.version>
 		<itextpdf.version>5.5.13</itextpdf.version>
 		<commons-validator.version>1.7</commons-validator.version>
-		<gson.version>2.8.5</gson.version>
+		<gson.version>2.8.9</gson.version>
 		<jsonpath.version>2.4.0</jsonpath.version>
 		<cglib.version>3.2.10</cglib.version>
-		<jgit.version>5.10.0.202012080955-r</jgit.version>
+		<jgit.version>5.12.0.202106070339-r</jgit.version>
 		<springfox.version>3.0.0</springfox.version>
 		<bypass>N</bypass>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -35,6 +45,42 @@
 		<sonar-plugin.version>3.7.0.1746</sonar-plugin.version>
 		<javaparser.version>3.22.1</javaparser.version>
 	</properties>
+
+	<licenses>
+		<license>
+			<name>GNU AFFERO GENERAL PUBLIC LICENSE, Version 3 (AGPL-3.0)</name>
+			<url>http://opensource.org/licenses/AGPL-3.0</url>
+		</license>
+	</licenses>
+
+	<profiles>
+		<profile>
+			<id>default</id>
+			<!-- this profile is active by default -->
+			<activation>
+				<activeByDefault>true</activeByDefault>
+			</activation>
+			<!-- We disable the signing of archives in default mode. -->
+			<build>
+				<plugins>
+					<plugin>
+						<groupId>org.apache.maven.plugins</groupId>
+						<artifactId>maven-gpg-plugin</artifactId>
+						<version>1.5</version>
+						<executions>
+							<execution>
+								<id>sign-artifacts</id> <!-- here there must be the same identifier as defined in <build><plugins> section -->
+								<phase>none</phase> <!-- this disables plugin -->
+							</execution>
+						</executions>
+					</plugin>
+				</plugins>
+			</build>
+		</profile>
+		<profile>
+			<id>profileWithGPGSigning</id>
+		</profile>
+	</profiles>
 
 	<dependencies>
 
@@ -270,10 +316,10 @@
 
 		<!-- Swagger installation -->
 		<dependency>
-        	<groupId>io.springfox</groupId>
-        	<artifactId>springfox-boot-starter</artifactId>
-        	<version>${springfox.version}</version>
-    	</dependency>
+			<groupId>io.springfox</groupId>
+			<artifactId>springfox-boot-starter</artifactId>
+			<version>${springfox.version}</version>
+		</dependency>
 		<dependency>
 			<groupId>io.springfox</groupId>
 			<artifactId>springfox-swagger-ui</artifactId>
@@ -289,8 +335,18 @@
 
 	</dependencies>
 
+	<distributionManagement>
+		<snapshotRepository>
+			<id>ossrh</id>
+			<url>https://s01.oss.sonatype.org/content/repositories/snapshots</url>
+		</snapshotRepository>
+		<repository>
+			<id>ossrh</id>
+			<url>https://s01.oss.sonatype.org/service/local/staging/deploy/maven2/</url>
+		</repository>
+	</distributionManagement>
+
 	<build>
-		<finalName>fitzhi</finalName>
 		<sourceDirectory>src/main/java</sourceDirectory>
 		<testSourceDirectory>src/test/java</testSourceDirectory>
 		<resources>
@@ -401,16 +457,75 @@
 					</execution>
 				</executions>
 			</plugin>
-			<!--                                                  -->
-			<!--                 PLUGIN MANAGEMENT                -->
+
 			<plugin>
 				<groupId>org.sonarsource.scanner.maven</groupId>
 				<artifactId>sonar-maven-plugin</artifactId>
 				<version>${sonar-plugin.version}</version>
 			</plugin>
 
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-gpg-plugin</artifactId>
+				<version>1.5</version>
+				<configuration>
+					<useAgent>true</useAgent>
+					<passphrase>${env.FITZHI_GPG_PASSPHRASE}</passphrase>
+					<gpgArguments>
+						  <arg>--batch</arg>
+						  <arg>--pinentry-mode</arg>
+						 <arg>loopback</arg>
+					</gpgArguments>
+				</configuration>
+				<executions>
+					<execution>
+						<id>sign-artifacts</id>
+						<phase>verify</phase>
+						<goals>
+							<goal>sign</goal>
+						</goals>
+					</execution>
+				</executions>
+			</plugin>
+
+			<plugin>
+				<groupId>org.sonatype.plugins</groupId>
+				<artifactId>nexus-staging-maven-plugin</artifactId>
+				<version>1.6.7</version>
+				<extensions>true</extensions>
+				<configuration>
+					<serverId>ossrh</serverId>
+					<nexusUrl>https://s01.oss.sonatype.org/</nexusUrl>
+					<autoReleaseAfterClose>true</autoReleaseAfterClose>
+				</configuration>
+			</plugin>
+
 		</plugins>
 
 	</build>
+
+
+	<developers>
+		<developer>
+			<id>fvidal</id>
+			<name>Frédéric VIDAL</name>
+			<email>frederic.vidal@fitzhi.com</email>
+			<url>https://stackoverflow.com/users/11827274/fr%c3%a9d%c3%a9ric-vidal</url>
+			<organization>FITZHI</organization>
+			<organizationUrl>https://www.fitzhi.com</organizationUrl>
+			<roles>
+				<role>architect</role>
+				<role>developer</role>
+			</roles>
+			<timezone>+1</timezone>
+		</developer>
+  	</developers>
+	
+	<scm>
+		<url>https://github.com/fitzhi/application</url>
+		<connection>scm:git:ssh://git@github.com/fitzhi/application.git</connection>
+		<developerConnection>scm:git:ssh://git@github.com/fitzhi/application.git</developerConnection>
+	</scm>
+
 </project>
 

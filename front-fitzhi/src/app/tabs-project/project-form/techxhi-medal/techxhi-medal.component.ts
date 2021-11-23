@@ -1,6 +1,6 @@
 import { Component, OnInit, Input, AfterViewInit, OnDestroy, EventEmitter, Output } from '@angular/core';
-import { ReferentialService } from 'src/app/service/referential.service';
-import { BaseComponent } from 'src/app/base/base.component';
+import { ReferentialService } from 'src/app/service/referential/referential.service';
+import { BaseDirective } from 'src/app/base/base-directive.directive';
 import { Constants } from 'src/app/constants';
 import { take } from 'rxjs/operators';
 import { ProjectService } from 'src/app/service/project/project.service';
@@ -11,7 +11,7 @@ import { CinematicService } from 'src/app/service/cinematic.service';
 	templateUrl: './techxhi-medal.component.html',
 	styleUrls: ['./techxhi-medal.component.css']
 })
-export class TechxhiMedalComponent extends BaseComponent implements OnInit, OnDestroy {
+export class TechxhiMedalComponent extends BaseDirective implements OnInit, OnDestroy {
 
 	/**
 	 * the color of the STAFF risk circle

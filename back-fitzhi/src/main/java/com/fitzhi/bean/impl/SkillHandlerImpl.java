@@ -249,6 +249,6 @@ public class SkillHandlerImpl extends AbstractDataSaverLifeCycleImpl implements 
 			}
 			throw e;
 		}
-	}	
+	}
 	
 }

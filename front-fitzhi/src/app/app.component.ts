@@ -5,12 +5,12 @@ import { ProjectService } from 'src/app/service/project/project.service';
 import { environment } from '../environments/environment';
 import { AuthService } from './admin/service/auth/auth.service';
 import { InstallService } from './admin/service/install/install.service';
-import { BaseComponent } from './base/base.component';
+import { BaseDirective } from './base/base-directive.directive';
 import { Constants } from './constants';
 import { ListCriteria } from './data/listCriteria';
 import { traceOn } from './global';
 import { CinematicService } from './service/cinematic.service';
-import { ReferentialService } from './service/referential.service';
+import { ReferentialService } from './service/referential/referential.service';
 import { SonarService } from './service/sonar.service';
 import { SkillService } from './skill/service/skill.service';
 import { ListProjectsService } from './tabs-project/list-project/list-projects-service/list-projects.service';
@@ -27,7 +27,7 @@ declare var $: any;
 	templateUrl: './app.component.html',
 	styleUrls: ['./app.component.css']
 })
-export class AppComponent extends BaseComponent implements OnInit, AfterViewInit, OnDestroy {
+export class AppComponent extends BaseDirective implements OnInit, AfterViewInit, OnDestroy {
 
 	/**
 	 * The environment

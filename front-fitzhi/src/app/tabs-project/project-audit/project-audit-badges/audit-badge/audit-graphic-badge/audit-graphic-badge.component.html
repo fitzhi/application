@@ -1,11 +1,11 @@
-<div *ngIf="(!editable)" [hidden]="(evaluation === 0)">
+<div id="readOnlyBadge" *ngIf="(!editable)" [hidden]="(evaluation === 0)">
     <svg viewBox="0 0 120 120" [ngStyle]="styleSize">
         <path id="topic-arc-{{id}}" fill="transparent" stroke-width="8" />
         <text id="topic-note-{{id}}" class="evaluation"></text>
     </svg>
 </div>
 
-<div *ngIf="(editable && (projectService.projectLoaded$|async))"
+<div id="editableBadge" *ngIf="(editable && (projectService.projectLoaded$|async))"
         class="graphic-badge" (style)="styleSize">
     <svg>
         <g>
@@ -16,5 +16,4 @@
         </g>
     </svg>
 </div>
-
 

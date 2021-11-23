@@ -1,5 +1,4 @@
 import { TestBed, TestModuleMetadata } from '@angular/core/testing';
-
 import { DashboardService } from './dashboard.service';
 import { SkillService } from '../../skill/service/skill.service';
 import { Collaborator } from 'src/app/data/collaborator';
@@ -8,10 +7,11 @@ import { ProjectService } from '../project/project.service';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { StaffService } from '../../tabs-staff/service/staff.service';
 import { MatDialogModule } from '@angular/material/dialog';
-import { ReferentialService } from '../referential.service';
+import { ReferentialService } from '../referential/referential.service';
 import { StaffListService } from 'src/app/service/staff-list-service/staff-list.service';
 import { Skill } from 'src/app/data/skill';
 import { CinematicService } from '../cinematic.service';
+
 describe('DashboardService', () => {
 
 	beforeEach(async () => {

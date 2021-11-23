@@ -1,7 +1,7 @@
 import { Component, OnInit, Input, OnDestroy } from '@angular/core';
 import { FilenamesDataSource } from './filenames-data-source';
 import { ContributorsDataSource } from './contributors-data-source';
-import { BaseComponent } from '../../../base/base.component';
+import { BaseDirective } from '../../../base/base-directive.directive';
 import { BehaviorSubject } from 'rxjs';
 import { Filename } from 'src/app/data/filename';
 import { MatTableDataSource } from '@angular/material/table';
@@ -12,7 +12,7 @@ import { Contributor } from 'src/app/data/contributor';
 	templateUrl: './node-detail.component.html',
 	styleUrls: ['./node-detail.component.css']
 })
-export class NodeDetailComponent extends BaseComponent implements OnInit, OnDestroy {
+export class NodeDetailComponent extends BaseDirective implements OnInit, OnDestroy {
 
 	@Input() filenames: MatTableDataSource<Filename>;
 

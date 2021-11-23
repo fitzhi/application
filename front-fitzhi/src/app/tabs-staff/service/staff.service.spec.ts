@@ -22,7 +22,7 @@ describe('staffService', () => {
 		service = TestBed.inject(StaffService);
 		httpMock = TestBed.inject(HttpTestingController);
 		const backendSetupService = TestBed.inject(BackendSetupService);
-		localStorage.setItem('backendUrl', 'http://myServerUrl:8080');
+		spyOn(backendSetupService, 'url').and.returnValue('http://myServerUrl:8080/api')
 	});
 
 	it('should be simply created without error', () => {

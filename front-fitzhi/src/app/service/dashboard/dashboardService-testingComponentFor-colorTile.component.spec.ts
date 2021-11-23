@@ -1,21 +1,22 @@
-import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
-import { Component, Input } from '@angular/core';
-import {DashboardService} from './dashboard.service';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
+import { Component } from '@angular/core';
+import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 import { MatDialogModule } from '@angular/material/dialog';
-import { ReferentialService } from '../referential.service';
-import { SkillService } from '../../skill/service/skill.service';
-import { StaffListComponent } from 'src/app/tabs-staff-list/staff-list/staff-list.component';
-import { StaffListService } from 'src/app/service/staff-list-service/staff-list.service';
-import { ProjectService } from '../project/project.service';
-import {dataRiskLegends} from './data-riskLegends';
 import { RiskLegend } from 'src/app/data/riskLegend';
+import { StaffListService } from 'src/app/service/staff-list-service/staff-list.service';
+import { SkillService } from '../../skill/service/skill.service';
 import { CinematicService } from '../cinematic.service';
+import { ProjectService } from '../project/project.service';
+import { ReferentialService } from '../referential/referential.service';
+import { DashboardColor } from './dashboard-color';
+import { DashboardService } from './dashboard.service';
+import { dataRiskLegends } from './data-riskLegends';
 
-describe('DashboardService.colorTile testing', () => {
+describe('DashboardService.colorTile(...)', () => {
 	let component: TestHostComponent;
 	let fixture: ComponentFixture<TestHostComponent>;
 	let dashboardService: DashboardService;
+	let referentialService: ReferentialService;
 
 	@Component({
 		selector: 'app-host-component',
@@ -50,6 +51,15 @@ describe('DashboardService.colorTile testing', () => {
 	}));
 
 	beforeEach(() => {
+		referentialService = TestBed.inject(ReferentialService);
+		console.log (referentialService.optimalStaffNumberPerMoOfCode);
+		referentialService.optimalStaffNumberPerMoOfCode.push(8);
+		referentialService.optimalStaffNumberPerMoOfCode.push(4);
+		referentialService.optimalStaffNumberPerMoOfCode.push(2);
+		referentialService.optimalStaffNumberPerMoOfCode.push(1);
+		referentialService.optimalStaffNumberPerMoOfCode.push(1);
+
+
 		dashboardService = TestBed.inject(DashboardService);
 		expect(dashboardService).toBeDefined();
 
@@ -57,7 +67,10 @@ describe('DashboardService.colorTile testing', () => {
 		component = fixture.componentInstance;
 
 		for (let i = 10; i >= 0; i--) {
-			const color = dashboardService.colorTile(10000000, i * 3);
+			const color = dashboardService.colorTile(
+					1,
+					10000000,
+					i * referentialService.optimalStaffNumberPerMoOfCode[0]);
 			component.colorTiles.push(color);
 		}
 		component.dataRiskLegends = dataRiskLegends;
@@ -65,17 +78,42 @@ describe('DashboardService.colorTile testing', () => {
 
 	});
 
-	it('Execute the creation with a comparison with the legends loaded from the referential', () => {
+	it('should execute the creation with a comparison with the legends loaded from the referential', () => {
 		expect(component).toBeTruthy();
 		expect(component.colorTiles[0]).toEqual(dataRiskLegends[0].color);
 		expect(component.colorTiles[10]).toEqual(dataRiskLegends[10].color);
 	});
 
-	it('Execute a test if we exceed the perfection', () => {
+	it ('should be able to produced the color of perfection', () => {
 		expect(component).toBeTruthy();
-		component.color = dashboardService.colorTile(DashboardService.OPTIMAL_NUMBER_OF_STAFF_PER_1000_K_OF_CODE, 2);
+		// 	--color-selected: #28a745;
+		const color = dashboardService.colorTile(1, 1000000, referentialService.optimalStaffNumberPerMoOfCode[0]);
+		expect(color).toEqual('#28A745');
+	});
+
+	it ('should produce the worst color for the worst project', () => {
+		expect(component).toBeTruthy();
+		const color = dashboardService.colorTile(5, 1000000, 0);
+		expect(color).toEqual('#8B0000');
+	});
+
+	it ('should produce different colors of risk depending on the skill minimum level', () => {
+		expect(component).toBeTruthy();
+
+		// We are not at the perfection level with the input.
+		let color = dashboardService.colorTile(1, 1000000, referentialService.optimalStaffNumberPerMoOfCode[3]);
+		expect(color).not.toEqual('#28A745');
+
+		// We reach the perfection level with the input.
+		color = dashboardService.colorTile(4, 1000000, referentialService.optimalStaffNumberPerMoOfCode[3]);
+		expect(color).toEqual('#28A745');
+	});
+
+	it('should execute a test if we exceed the perfection', () => {
+		expect(component).toBeTruthy();
+		component.color = dashboardService.colorTile(1, referentialService.optimalStaffNumberPerMoOfCode[0], 2);
 		fixture.detectChanges();
-		expect('#1CB745').toEqual(component.color);
+		expect('#28A745').toEqual(component.color);
 	});
 
 });

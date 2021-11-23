@@ -40,5 +40,23 @@
 		"idSkill": "8",
 		"typeCode": "NumberOfLines",
 		"filePattern": ".ts$"
+	},
+	{
+		"idEDT": 6,
+		"idSkill": "23",
+		"typeCode": "NumberOfLines",
+		"filePattern": ".go$"
+	},
+	{
+		"idEDT": 7,
+		"idSkill": "6",
+		"typeCode": "NumberOfLines",
+		"filePattern": ".py$"
+	},
+	{
+		"idEDT": 8,
+		"idSkill": "24",
+		"typeCode": "NumberOfLines",
+		"filePattern": ".sh$"
 	}
 ]

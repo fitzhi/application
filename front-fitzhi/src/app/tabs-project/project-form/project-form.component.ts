@@ -1,26 +1,25 @@
-import { Component, OnInit, Input, OnDestroy, AfterViewInit, EventEmitter, Output, AfterContentInit } from '@angular/core';
-import { FormGroup, FormControl } from '@angular/forms';
+import { AfterViewInit, Component, EventEmitter, Input, OnDestroy, OnInit } from '@angular/core';
+import { FormControl, FormGroup } from '@angular/forms';
 import { Router } from '@angular/router';
-import { take, map, catchError, switchMap, tap } from 'rxjs/operators';
-import { ProjectService } from '../../service/project/project.service';
-import { CinematicService } from '../../service/cinematic.service';
-import { Project } from '../../data/project';
-import { SonarProject } from '../../data/SonarProject';
-import { Constants } from '../../constants';
-import { SkillService } from '../../skill/service/skill.service';
-import { MessageService } from '../../interaction/message/message.service';
-import { BaseComponent } from '../../base/base.component';
-import { Observable, of, BehaviorSubject, EMPTY, pipe } from 'rxjs';
-import { BooleanDTO } from 'src/app/data/external/booleanDTO';
-import { SonarService } from 'src/app/service/sonar.service';
 import Tagify from '@yaireo/tagify';
-import { MessageGravity } from 'src/app/interaction/message/message-gravity';
-import { ReferentialService } from 'src/app/service/referential.service';
+import { BehaviorSubject, EMPTY, Observable, of } from 'rxjs';
+import { catchError, map, switchMap, take, tap } from 'rxjs/operators';
+import { BooleanDTO } from 'src/app/data/external/booleanDTO';
+import { Repository } from 'src/app/data/git/repository';
 import { Skill } from 'src/app/data/skill';
 import { traceOn } from 'src/app/global';
-import { ProjectSkill } from '../../data/project-skill';
+import { MessageGravity } from 'src/app/interaction/message/message-gravity';
 import { GitService } from 'src/app/service/git/git.service';
-import { Repository } from 'src/app/data/git/repository';
+import { ReferentialService } from 'src/app/service/referential/referential.service';
+import { SonarService } from 'src/app/service/sonar.service';
+import { BaseDirective } from '../../base/base-directive.directive';
+import { Constants } from '../../constants';
+import { Project } from '../../data/project';
+import { SonarProject } from '../../data/SonarProject';
+import { MessageService } from '../../interaction/message/message.service';
+import { CinematicService } from '../../service/cinematic.service';
+import { ProjectService } from '../../service/project/project.service';
+import { SkillService } from '../../skill/service/skill.service';
 import { ListProjectsService } from '../list-project/list-projects-service/list-projects.service';
 import { ProjectFormSkillHandler } from './skill/project-form-skill-handler';
 
@@ -32,7 +31,7 @@ import { ProjectFormSkillHandler } from './skill/project-form-skill-handler';
 	templateUrl: './project-form.component.html',
 	styleUrls: ['./project-form.component.css']
 })
-export class ProjectFormComponent extends BaseComponent implements OnInit, AfterViewInit, OnDestroy {
+export class ProjectFormComponent extends BaseDirective implements OnInit, AfterViewInit, OnDestroy {
 
 	/**
 	 * The risk might have changed due to the last dashboard calculation.

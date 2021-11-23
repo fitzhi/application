@@ -1,6 +1,6 @@
 import { Component, OnInit, Input, OnDestroy, AfterViewInit } from '@angular/core';
 import { Project } from 'src/app/data/project';
-import { BaseComponent } from 'src/app/base/base.component';
+import { BaseDirective } from 'src/app/base/base-directive.directive';
 import { SonarService } from 'src/app/service/sonar.service';
 import { Constants } from 'src/app/constants';
 import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
@@ -16,7 +16,7 @@ import { traceOn } from 'src/app/global';
 	templateUrl: './sonar-dashboard.component.html',
 	styleUrls: ['./sonar-dashboard.component.css']
 })
-export class SonarDashboardComponent extends BaseComponent implements OnInit, OnDestroy {
+export class SonarDashboardComponent extends BaseDirective implements OnInit, OnDestroy {
 
 	/**
 	* Observable emitting a PanelSwitchEvent when

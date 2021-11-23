@@ -4,6 +4,8 @@ import static com.fitzhi.Error.CODE_LOGIN_ALREADY_EXIST;
 import static com.fitzhi.Error.CODE_STAFF_NOFOUND;
 import static com.fitzhi.Error.MESSAGE_LOGIN_ALREADY_EXIST;
 import static com.fitzhi.Error.MESSAGE_STAFF_NOFOUND;
+import static com.fitzhi.Error.CODE_MONTH_SKILLS_CONSTELLATION_NOFOUND;
+import static com.fitzhi.Error.MESSAGE_MONTH_SKILLS_CONSTELLATION_NOFOUND;
 import static com.fitzhi.Global.UNKNOWN;
 
 import java.text.MessageFormat;
@@ -13,6 +15,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Comparator;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.NoSuchElementException;
@@ -29,6 +32,7 @@ import com.fitzhi.Error;
 import com.fitzhi.bean.DataHandler;
 import com.fitzhi.bean.StaffHandler;
 import com.fitzhi.data.internal.Author;
+import com.fitzhi.data.internal.Constellation;
 import com.fitzhi.data.internal.Experience;
 import com.fitzhi.data.internal.Mission;
 import com.fitzhi.data.internal.PeopleCountExperienceMap;
@@ -451,7 +455,7 @@ public class StaffHandlerImpl extends AbstractDataSaverLifeCycleImpl implements 
 								project.getName(),
 								contributor.getFirstCommit(), 
 								contributor.getLastCommit(), 
-								contributor.getNumberOfCommitsSubmitted(), 
+								contributor.getNumberOfCommits(), 
 								contributor.getNumberOfFiles(),
 								contributor.getStaffActivitySkill());
 					synchronized (lockDataUpdated) {
@@ -496,7 +500,7 @@ public class StaffHandlerImpl extends AbstractDataSaverLifeCycleImpl implements 
 		mission.setIdStaff(staff.getIdStaff());
 		mission.setFirstCommit(contributor.getFirstCommit());
 		mission.setLastCommit(contributor.getLastCommit());
-		mission.setNumberOfCommits(contributor.getNumberOfCommitsSubmitted());
+		mission.setNumberOfCommits(contributor.getNumberOfCommits());
 		mission.setNumberOfFiles(contributor.getNumberOfFiles());
 		staff.addMission(mission);
 	}
@@ -940,6 +944,45 @@ public class StaffHandlerImpl extends AbstractDataSaverLifeCycleImpl implements 
 				staff.getExperiences().add(new Experience(idSkill, level, level));
 			}
 			this.dataUpdated = true;
+		}
+	}
+	
+	@Override
+	public List<Constellation> loadConstellations(LocalDate month) throws ApplicationException {
+		if (!dataSaver.hasAlreadySavedSkillsConstellations(month)) {
+			throw new NotFoundException(
+				CODE_MONTH_SKILLS_CONSTELLATION_NOFOUND, 
+				MESSAGE_MONTH_SKILLS_CONSTELLATION_NOFOUND,
+				month.getMonthValue(), month.getYear());
+		}
+		return dataSaver.loadSkillsConstellations(month);
+	}
+
+	@Override
+	public void saveCurrentConstellations() throws ApplicationException {
+		LocalDate currentMonth = LocalDate.of(LocalDate.now().getYear(), LocalDate.now().getMonth(), 1);
+		if (!dataSaver.hasAlreadySavedSkillsConstellations(currentMonth)) {
+			Map<Integer, Constellation> constellations = new HashMap<>();
+			for (Staff staff : getStaff().values()) {
+				if (!staff.isActive()) {
+					continue;
+				}
+				for (Experience experience : staff.getExperiences()) {
+					Constellation constellation = constellations.get(experience.getId());
+					if (constellation == null) {
+						constellations.put(
+							experience.getId(),
+							Constellation.of(
+								experience.getId(), 
+								(staff.isExternal() ? 0 : experience.getLevel()), 
+								experience.getLevel()));
+					} else {
+						constellation.setStarsNumber(constellation.getStarsNumber() + (staff.isExternal() ? 0 : experience.getLevel()));
+						constellation.setStarsNumberWithExternal(constellation.getStarsNumberWithExternal() + experience.getLevel());
+					}
+				}
+			}
+			dataSaver.saveSkillsConstellations(currentMonth, List.copyOf(constellations.values()));
 		}
 	}
 

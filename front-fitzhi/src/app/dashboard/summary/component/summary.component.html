@@ -1,0 +1,97 @@
+<div id="logo" *ngIf="(summaryService.summary$|async).noData()">质</div>
+<div id="summaries" 
+	*ngIf="!(summaryService.summary$|async).noData()">
+	<div class="summary border m-1">
+		<div id="small-logo">质</div>
+	</div>
+	<div class="summary border m-1 position-relative" id="general-average">
+		<app-audit-graphic-badge 
+			[editable]=false 
+			[evaluation]=projectsEvaluation
+			[id]=selection.generalAverage >
+		</app-audit-graphic-badge>
+
+		<div class="position-absolute" style="top: 8px; right: 8px; font-size: 22px;">
+			<em class="fas glyphicon fa-users-cog"></em>
+		</div>
+
+		<div id="thumbnail-treeMapProjects" class="position-absolute" style="width: 100px; height: 100px; bottom: 0; right: 0;"	
+			(mouseenter)="popupHelper.mouseEnter(selection.generalAverage)" 
+			(mouseleave)="popupHelper.mouseLeave()"
+			(click)="switchTo(selection.treeMapProjects)" >
+			<div class="host-treemap-projects">
+				<app-treemap-projects 
+					width="100px" 
+					height="100px" 
+					[buttonOrChart]="'button'"
+					[active]=false>
+				</app-treemap-projects>
+			</div>
+		</div>
+	</div>
+
+	<div class="summary border m-1 position-relative" id="skills-coverage"
+		*ngIf="(staffListService.allStaffLoaded$|async) && (projectService.allProjectsIsLoaded$|async)">
+		<app-audit-graphic-badge 
+			[editable]=false 
+			[evaluation]=dashboardService.globalScoreSkillDistribution()
+			[id]=selection.treeMapSkills >
+		</app-audit-graphic-badge>
+
+		<div class="position-absolute" style="top: 8px; right: 8px; font-size: 22px;">
+			<em class="fas glyphicon fa-graduation-cap"></em>
+		</div>
+
+		<div id="thumbnail-treeMapSkills" class="position-absolute" 
+			style="width: 100px; height: 100px; bottom: 0; right: 0;"		
+			(mouseenter)="popupHelper.mouseEnter(selection.skillsCoverageScore)" 
+			(mouseleave)="popupHelper.mouseLeave()"
+			(click)="switchTo(selection.treeMapSkills)" >
+			<app-treemap-skills-chart 
+				[buttonOrChart]="'button'"
+				[active]=false>
+			</app-treemap-skills-chart>
+		</div>
+	</div>
+
+</div>
+
+<angular-popper id="help-general-average" placement="bottom" target="#general-average" 
+	*ngIf="(staffListService.allStaffLoaded$|async) && (projectService.allProjectsIsLoaded$|async) && hasGeneralAverage()">
+	<div content class="help">
+		<h4 class="help-title">Global projects score</h4>
+		<div class="help-content">
+			<br/>
+			<p>
+				This score corresponds to the weighted average of your portfolio.
+			</p>
+			<p>
+				Each project has a score, and a weight corresponding to its size.
+				The score is calculated with 3 critera, if they are applicable.
+			</p>
+			<ul>
+				<li>The Staff coverage</li>
+				<li>The Sonar evaluation</li>
+				<li>The Audit report</li>
+			</ul>
+		</div>
+	</div>
+</angular-popper>	
+
+<angular-popper id="help-skills-coverage" placement="bottom" target="#skills-coverage" 
+	*ngIf="(staffListService.allStaffLoaded$|async) && (projectService.allProjectsIsLoaded$|async) && hasSkillsCoverageScore()">
+	<div content class="help">
+		<h4 class="help-title">Skills coverage score</h4>
+		<div class="help-content">
+			<br/>
+			<p>
+				This score corresponds to the coverage of skills for the portfolio.
+			</p>
+			<p class="text-justify">
+				The optimal distribution of teams is configured in the application. 
+				A score of <strong>100</strong> corresponds to the perfect match of the teams on all the key skills of the portfolio 
+				(Java, C #, .Net, JavaScript, TypeScript...)
+			</p>
+		</div>
+	</div>
+</angular-popper>	

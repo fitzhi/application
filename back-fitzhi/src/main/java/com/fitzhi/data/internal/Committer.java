@@ -1,5 +1,8 @@
 package com.fitzhi.data.internal;
 
+import java.time.LocalDate;
+
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fitzhi.data.external.Action;
 
 import lombok.Data;
@@ -41,9 +44,29 @@ public @Data class Committer {
 	private boolean technical;
 
 	/**
-	 * Type of action executed in
-	 * {@link com.fitzhi.bean.ProjectHandler#saveGhosts(int, Committer[])} for this
-	 * entry
+	 * Date of the first commit.
+	 */
+	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
+	private LocalDate firstCommit;
+
+	/**
+	 * Date of the latest commit.
+	 */
+	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
+	private LocalDate lastCommit;
+	
+	/**
+	 * The number of commit submitted by a developer inside the project.
+	 */
+	private int numberOfCommits;
+	
+	/**
+	 * the number of files modified by a developer inside the project.
+	 */
+	private int numberOfFiles;
+
+	/**
+	 * Type of action executed.
 	 */
 	private Action action;
 
@@ -164,9 +187,7 @@ public @Data class Committer {
 	}
 
 	/**
-	 * @return the action
-	 * Type of action executed in
-	 * {@link com.fitzhi.bean.ProjectHandler#saveGhosts(int, Committer[])} for this entry
+	 * @return the type of executed action
 	 */
 	public Action getAction() {
 		return action;

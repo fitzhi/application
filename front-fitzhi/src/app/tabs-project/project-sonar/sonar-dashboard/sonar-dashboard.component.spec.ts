@@ -9,7 +9,7 @@ import { SonarProject } from 'src/app/data/SonarProject';
 import { MessageBoxService } from 'src/app/interaction/message-box/service/message-box.service';
 import { CinematicService } from 'src/app/service/cinematic.service';
 import { ProjectService } from 'src/app/service/project/project.service';
-import { ReferentialService } from 'src/app/service/referential.service';
+import { ReferentialService } from 'src/app/service/referential/referential.service';
 import { SonarService } from 'src/app/service/sonar.service';
 import { PanelSwitchEvent } from '../sonar-thumbnails/panel-switch-event';
 import { SonarDashboardComponent } from './sonar-dashboard.component';

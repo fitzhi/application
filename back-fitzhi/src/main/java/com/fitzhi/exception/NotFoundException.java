@@ -8,7 +8,7 @@ public class NotFoundException extends ApplicationException {
 	private static final long serialVersionUID = 2615145855180005274L;
 
 	/**
-	 * <p
+	 * <p>
 	 * Initialization of an exception thrown if an entity is not found.
 	 * </p>
 	 * The controller is supposed to return a 404 status code.

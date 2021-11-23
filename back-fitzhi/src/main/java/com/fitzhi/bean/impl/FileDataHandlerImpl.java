@@ -41,11 +41,12 @@ import com.fitzhi.bean.DataHandler;
 import com.fitzhi.bean.ProjectHandler;
 import com.fitzhi.bean.ShuffleService;
 import com.fitzhi.data.internal.Author;
+import com.fitzhi.data.internal.Constellation;
 import com.fitzhi.data.internal.DetectedExperience;
-import com.fitzhi.data.internal.ProjectDetectedExperiences;
 import com.fitzhi.data.internal.Project;
 import com.fitzhi.data.internal.ProjectBuilding;
 import com.fitzhi.data.internal.ProjectBuilding.YearWeek;
+import com.fitzhi.data.internal.ProjectDetectedExperiences;
 import com.fitzhi.data.internal.ProjectFloor;
 import com.fitzhi.data.internal.ProjectLayer;
 import com.fitzhi.data.internal.ProjectLayers;
@@ -130,6 +131,11 @@ public class FileDataHandlerImpl implements DataHandler {
 	 * Directory where the GIT change records are saved.
 	 */
 	private final String savedChanges = "changes-data";
+
+	/**
+	 * Directory where the constellations files are saved.
+	 */
+	private final String constellationsLocation = "constellations-data";
 
 	/**
 	 * Directory where the different pathnames file are stored. 
@@ -353,6 +359,17 @@ public class FileDataHandlerImpl implements DataHandler {
 		return savedChanges + INTERNAL_FILE_SEPARATORCHAR + project.getId() + "-project-detected-experiences.json";
 	}
 
+	/**
+	 * Generate the constellations-year-month.json filename for loading and saving the
+	 * {@link Constellation constellatons} list.
+	 * 
+	 * @param month the year/month associated with the constellations
+	 * @return the filename to be used.
+	 */
+	private String generateConstellationsJsonFilename(LocalDate month) {
+		return constellationsLocation + INTERNAL_FILE_SEPARATORCHAR + String.format("constellations-%d-%d.json", month.getYear(), month.getMonthValue());
+	}
+
 	@Override
 	public void saveChanges(Project project, SourceControlChanges changes) throws ApplicationException {
 
@@ -429,7 +446,7 @@ public class FileDataHandlerImpl implements DataHandler {
 				}
 			}
 		} catch (IOException ioe) {
-			log.error("Internal error", ioe);
+			log.error(String.format("Internal error for project %s", project.getName()) , ioe);
 			throw new ApplicationException(CODE_IO_ERROR, MessageFormat.format(MESSAGE_IO_ERROR, filename), ioe);
 		}
 
@@ -542,8 +559,8 @@ public class FileDataHandlerImpl implements DataHandler {
 	 * repository.
 	 * </p>
 	 * <p>
-	 * <font color="chocolate">We use java IO API to validate that the given path is
-	 * effectively a directory.</font>
+	 * We use java IO API to validate that the given path is
+	 * effectively a directory.
 	 * </p>
 	 * 
 	 * @param project  the current project whose repository is analyzed.
@@ -752,6 +769,55 @@ public class FileDataHandlerImpl implements DataHandler {
 	}
 
 	@Override
+	public boolean hasAlreadySavedSkillsConstellations(LocalDate month) throws ApplicationException {
+		final String filename = generateConstellationsJsonFilename(month);
+		if (log.isDebugEnabled()) {
+			log.debug(String.format("hasAlreadySavedSkillsConstellations(%d, %d)", month.getYear(), month.getMonth()));
+			log.debug(String.format("filename %s", filename));
+		}
+		Path path = rootLocation.resolve(filename);
+		return Files.exists(path);
+	}
+
+	@Override
+	public List<Constellation> loadSkillsConstellations(LocalDate month) throws ApplicationException{
+		final String filename = generateConstellationsJsonFilename(month);
+		if (log.isDebugEnabled()) {
+			log.debug(String.format(LOADING_FILE_S, rootLocation.resolve(filename)));
+		}
+
+		try (FileReader fr = new FileReader(rootLocation.resolve(filename).toFile())) {
+			Type typeListConstellations = new TypeToken<List<Constellation>>() {}.getType();
+			List <Constellation> constellations = gson.fromJson(fr, typeListConstellations);
+			return constellations;
+		} catch (final Exception e) {
+			throw new ApplicationException(CODE_IO_ERROR, MessageFormat.format(MESSAGE_IO_ERROR, filename), e);
+		}
+	}
+
+	@Override
+	public void saveSkillsConstellations(LocalDate month, List<Constellation> constellations) throws ApplicationException {
+		//
+		// As the method-name explains, we create the directory.
+		//
+		createIfNeededDirectory(constellationsLocation);
+
+		final String filename = generateConstellationsJsonFilename(month);
+
+		if (log.isDebugEnabled()) {
+			log.debug(String.format(SAVING_FILE_S, rootLocation.resolve(filename)));
+		}
+
+		try (FileWriter fw = new FileWriter(rootLocation.resolve(filename).toFile())) {
+			fw.write(gson.toJson(constellations));
+		} catch (final Exception e) {
+			throw new ApplicationException(CODE_IO_ERROR, MessageFormat.format(MESSAGE_IO_ERROR, filename), e);
+		}
+		
+	}
+
+	
+	@Override
 	public void saveSkylineLayers(Project project, ProjectLayers layers) throws ApplicationException {
 		//
 		// As the method-name explains, we create the directory.
@@ -938,6 +1004,5 @@ public class FileDataHandlerImpl implements DataHandler {
 			}
 		}
 	}
-
 
 }

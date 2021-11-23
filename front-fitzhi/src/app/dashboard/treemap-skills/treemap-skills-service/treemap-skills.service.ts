@@ -13,6 +13,10 @@ export class TreemapSkillsService {
 
 	public static TAG_LABEL = 'Minimal level :';
 
+	private displaySettingsSubject$ = new BehaviorSubject<boolean>(false);
+
+	public displaySettings$ = this.displaySettingsSubject$.asObservable();
+
 	/**
 	 * Filter necessaries to process the chart.
 	 */
@@ -30,5 +34,9 @@ export class TreemapSkillsService {
 	 */
 	public buildTag(): TagStar {
 		return new TagStar(TreemapSkillsService.TAG_LABEL, this.treemapFilter.level);
+	}
+
+	displaySettings(show: boolean) {
+		this.displaySettingsSubject$.next(show);
 	}
 }

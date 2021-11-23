@@ -1,7 +1,7 @@
 import { TestBed, inject } from '@angular/core/testing';
 
 import { ListProjectsService } from './list-projects.service';
-import { ReferentialService } from '../../../service/referential.service';
+import { ReferentialService } from '../../../service/referential/referential.service';
 import { CinematicService } from '../../../service/cinematic.service';
 import { MessageService } from 'src/app/interaction/message/message.service';
 import { ProjectService } from 'src/app/service/project/project.service';

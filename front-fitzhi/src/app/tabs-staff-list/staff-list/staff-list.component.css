@@ -1,21 +1,21 @@
 :host >>> th#fullname > .mat-sort-header-container  {
-    color: darkblue;
+	color: darkblue;
 }
 
 :host >>> th#level > .mat-sort-header-container  {
-    color: darkblue;
+	color: darkblue;
 }
 
 :host >>> th#isActive > .mat-sort-header-container  {
-    display: flex;
-    justify-content: center;
-    color: darkblue;
+	display: flex;
+	justify-content: center;
+	color: darkblue;
 }
 
 :host >>> th#external > .mat-sort-header-container  {
-    display: flex;
-    justify-content: center;
-    color: darkblue;
+	display: flex;
+	justify-content: center;
+	color: darkblue;
 }
 
 #staffList {
@@ -27,38 +27,38 @@
 }
 
 table {
-    width: 100%;
+	width: 100%;
 }
 
 .mat-header-cell {
-    height: 4em;
+	height: 4em;
 }
 
 .row_any  {
-    height: 2em;
+	height: 2em;
 }
 
 .row_any:hover {
-    height: 2em;
-    border: 1px solid gray;
-    color: blue;
-    cursor: pointer;
+	height: 2em;
+	border: 1px solid gray;
+	color: blue;
+	cursor: pointer;
 }
 
 .col_image {
-    text-align:center;
-    margin-top: 15px;
-    align-content: center;
+	text-align:center;
+	margin-top: 15px;
+	align-content: center;
 }
 
 .contributor_active {
-    background-color: white;
+	background-color: white;
 }
 
 .contributor_inactive {
-    background-color: whitesmoke;
+	background-color: whitesmoke;
 }
 
 .col_string {
-    padding-left: 3px;
+	padding-left: 3px;
 }

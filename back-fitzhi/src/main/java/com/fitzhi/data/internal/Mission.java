@@ -54,12 +54,12 @@ public @Data class Mission implements Serializable {
 	private LocalDate lastCommit;
 	
 	/**
-	 * @return number of commit submitted by a developer inside the project.
+	 * the number of commit submitted by a developer inside the project.
 	 */
 	private int numberOfCommits;
 	
 	/**
-	 * @return number of files modifier by a developer inside the project.
+	 * the number of files modified by a developer inside the project.
 	 */
 	private int numberOfFiles;
 

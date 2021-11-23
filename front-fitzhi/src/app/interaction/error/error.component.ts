@@ -1,7 +1,7 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { Constants } from '../../constants';
 import { ActivatedRoute } from '@angular/router';
-import { BaseComponent } from '../../base/base.component';
+import { BaseDirective } from '../../base/base-directive.directive';
 import { traceOn } from '../../global';
 
 @Component({
@@ -9,7 +9,7 @@ import { traceOn } from '../../global';
 	templateUrl: './error.component.html',
 	styleUrls: ['./error.component.css']
 })
-export class ErrorComponent extends BaseComponent implements OnInit, OnDestroy {
+export class ErrorComponent extends BaseDirective implements OnInit, OnDestroy {
 
 	error: string;
 

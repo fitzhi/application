@@ -174,7 +174,7 @@ public class ProjectController  {
 
 	/**
 	 * <p>
-	 * Update the project identified by the given {@link Project#getId() idProject}
+	 * Update the project identified by the given project identifier.
 	 * </p>
 	 * 
 	 * @param idProject the project identifier. The projet identifier is hosted in the URL in accordance with the Rest naming conventions
@@ -234,11 +234,9 @@ public class ProjectController  {
 	}
 
 	/**
-	 * Delete the project corresponding to the identifier id
+	 * Delete the project corresponding to the identifier identifier.
 	 * 
 	 * @param idProject the searched project identifier
-	 * @return the HTTP Response with the retrieved project, or an empty one if the
-	 *         query failed.
 	 * 
 	 * @throws ApplicationException thrown if an error occurs during the treatment, (most probably due to an {@link IOException})
 	 * @throws NotFoundException thrown if the project to delete does not exist (any more)
@@ -266,9 +264,9 @@ public class ProjectController  {
 
 	/**
 	 * <strong>Inactivate</strong> the project corresponding to the identifier id
+	 * and return an <strong>empty</strong> {@code HTTP} response.
 	 * 
 	 * @param idProject the given project identifier
-	 * @return an <strong>empty</strong> {@code HTTP} response.
 	 * 
 	 * @throws ApplicationException thrown if an error occurs during the treatment, (most probably due to an {@link IOException})
 	 * @throws NotFoundException thrown if the project to inactivate does not exist (any more?)
@@ -288,7 +286,6 @@ public class ProjectController  {
 	 * <strong>Reactivation</strong> the project corresponding to the identifier id
 	 * 
 	 * @param idProject the given project identifier
-	 * @return an <strong>empty</strong> {@code HTTP} response.
 	 * 
 	 * @throws ApplicationException thrown if an error occurs during the treatment, (most probably due to an {@link IOException})
 	 * @throws NotFoundException thrown if the project to reactivate does not exist (any more?)
@@ -386,7 +383,7 @@ public class ProjectController  {
 		}			
 		
 		String[] branches = unfiltered_branches
-								.stream()
+								.parallelStream()
 								.map(Ref::getLeaf)
 								.map(Ref::getName)
 								.filter(s -> s.contains(REF_HEADS))
@@ -424,7 +421,7 @@ public class ProjectController  {
 			if (log.isInfoEnabled()) {
 				log.info("The projects collection is beeing shuffled for confidentiality purpose");
 			}
-			projects.stream().forEach(project -> {
+			projects.parallelStream().forEach(project -> {
 				final Project clone = buildProjectWithoutPassword(project);
 				clone.setName(shuffleService.shuffle(clone.getName()));
 				clone.setUsername(shuffleService.shuffle(clone.getUsername()));
@@ -525,8 +522,8 @@ public class ProjectController  {
 	 * into the Sunburst chart.
 	 * </p>
 	 * 
-	 * @param settings settings for the chart generation <i>(such as a filter on
-	 *                 date, or a staff member)
+	 * @param settings settings for the chart generation <em>(such as a filter on
+	 *                 date, or a staff member)</em>
 	 * @return the Sunburst chart.
 	 */
 	@ResponseBody
@@ -592,7 +589,7 @@ public class ProjectController  {
 
 		ProjectContributors projectContributors = new ProjectContributors(idProject);
 		contributors.stream().forEach(contributor -> {
-			final Staff staff = staffHandler.getStaff().get(contributor.getIdStaff());
+			final Staff staff = staffHandler.lookup(contributor.getIdStaff());
 			if (staff == null) {
 				throw new ApplicationRuntimeException(
 						String.format("No staff member retrieved for the id %d", contributor.getIdStaff()));
@@ -606,7 +603,7 @@ public class ProjectController  {
 					staff.isExternal(), 
 					contributor.getFirstCommit(), 
 					contributor.getLastCommit(),
-					contributor.getNumberOfCommitsSubmitted(), 
+					contributor.getNumberOfCommits(), 
 					contributor.getNumberOfFiles());
 		});
 
@@ -663,14 +660,14 @@ public class ProjectController  {
 	 * <p>
 	 * Generate the sunburst chart. 
 	 * </p>
-	 * <p>
 	 * 
 	 * <ul>
-	 * <li>This method can be invoked many times with the same result. This method is <b>idempotent</b></i></li>
+	 * <li>This method can be invoked many times with the same result. This method is <em><strong>idempotent</strong></em></li>
 	 * <li>This method updates the level of risk for the given project and the missions of the developers involved in its.</li>
 	 * </ul>
 	 * 
-	 * The chosen REST verb is a <b>PATCH</b> with an empty BODY. Only the project ID is necessary.
+	 * <p>
+	 * The chosen REST verb is a <strong>PATCH</strong> with an empty BODY. Only the project ID is necessary.
 	 * </p>
 	 * <p>
 	 * This API entry returns immediatly with an empty response with a {@link HttpStatus#ACCEPTED ACCEPTED 202} status. 

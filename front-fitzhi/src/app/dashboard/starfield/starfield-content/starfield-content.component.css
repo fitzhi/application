@@ -1,0 +1,16 @@
+:host  {
+	
+	display: block;   
+	left: 0;
+
+	width: 100%;
+    height: calc(100% - 80px);
+
+    position: absolute;
+
+    overflow: auto;
+}
+
+span.star {
+    font-size: x-large;
+}

@@ -3,7 +3,7 @@ import { Project } from '../../data/project';
 import { ProjectService } from './project.service';
 import { HttpTestingController, HttpClientTestingModule, TestRequest } from '@angular/common/http/testing';
 import { BackendSetupService } from '../backend-setup/backend-setup.service';
-import { ReferentialService } from '../referential.service';
+import { ReferentialService } from '../referential/referential.service';
 import { SkillService } from '../../skill/service/skill.service';
 import { FileService } from '../file.service';
 import { MessageService } from '../../interaction/message/message.service';
@@ -69,7 +69,6 @@ describe('ProjectService.createNewProject$(...) behavior', () => {
 			next: project => {
 				expect(project.id).toEqual(6);
 				expect(project.name).toEqual('The sixth project');
-
 				done();
 			}
 		});

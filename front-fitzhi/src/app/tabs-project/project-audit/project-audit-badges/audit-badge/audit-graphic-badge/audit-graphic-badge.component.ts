@@ -1,21 +1,16 @@
-import { Component, OnInit, Input, AfterViewInit, Output, EventEmitter, OnDestroy } from '@angular/core';
+import { AfterViewInit, Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angular/core';
+import { BaseDirective } from 'src/app/base/base-directive.directive';
+import { Project } from 'src/app/data/project';
+import { traceOn } from 'src/app/global';
 import { ProjectService } from 'src/app/service/project/project.service';
 import { TopicEvaluation } from '../../topic-evaluation';
-import { Project } from 'src/app/data/project';
-import { BaseComponent } from 'src/app/base/base.component';
-import { BehaviorSubject } from 'rxjs';
-import { CinematicService } from 'src/app/service/cinematic.service';
-import { Constants } from 'src/app/constants';
-import { take } from 'rxjs/operators';
-import { ReferentialService } from 'src/app/service/referential.service';
-import { traceOn } from 'src/app/global';
 
 @Component({
 	selector: 'app-audit-graphic-badge',
 	templateUrl: './audit-graphic-badge.component.html',
 	styleUrls: ['./audit-graphic-badge.component.css']
 })
-export class AuditGraphicBadgeComponent extends BaseComponent implements OnInit, OnDestroy, AfterViewInit {
+export class AuditGraphicBadgeComponent extends BaseDirective implements OnInit, OnDestroy, AfterViewInit {
 
 	/**
 	 * Topic identifier.
@@ -25,7 +20,7 @@ export class AuditGraphicBadgeComponent extends BaseComponent implements OnInit,
 	/**
 	 * Quotation given to this category.
 	 */
-	@Input() evaluation;
+	@Input() evaluation = null;
 
 	/**
 	 * if this boolean is equal to __true__, there will be an input field in the middle of the badge __editable__.
@@ -48,7 +43,7 @@ export class AuditGraphicBadgeComponent extends BaseComponent implements OnInit,
 	@Input() height: number;
 
 	/**
-	 * The messenger throws the new evaluation givent by the end-user after each change.
+	 * The messenger throws the new evaluation given by the end-user after each change.
 	 */
 	@Output() messengerEvaluationChange = new EventEmitter<TopicEvaluation>();
 
@@ -63,9 +58,7 @@ export class AuditGraphicBadgeComponent extends BaseComponent implements OnInit,
 	styleSize: any;
 
 	constructor(
-		public projectService: ProjectService,
-		private referentialService: ReferentialService,
-		private cinematicService: CinematicService) { super(); }
+		public projectService: ProjectService) { super(); }
 
 	ngOnInit() {
 		this.styleSize = { 'width': this.width + 'px',  'height': + this.height + 'px' };
@@ -78,60 +71,77 @@ export class AuditGraphicBadgeComponent extends BaseComponent implements OnInit,
 			}
 
 			// 1) The project has to be loaded.
-			this.projectService.projectLoaded$
-				.pipe(take(1))
-				.subscribe ({
+			this.subscriptions.add(
+				this.projectService.projectLoaded$.subscribe ({
 					next: doneAndOk => {
 						if (doneAndOk) {
 							// We colorize the Arc and Text after the UI event loop to avoid a transparent arc ('for an unknwon reason' (shame on me)).
 							setTimeout(() => {
-								this.drawAuditArc();
-								this.drawAuditText();
+								this.drawAuditText(this.projectService.project.auditEvaluation);
+								this.drawAuditArc(this.projectService.project.auditEvaluation);
 							}, 0);
 						}
 					}
-				});
+				})
+			);
 		}
 
+		// In read-only mode, we scenarios are possible
+		// 1) the component receives a project (as input parameter) and we draw the auditEvaluation of this project
+		// 2) the component receives the evaluation to be written as input parameter
+		// 3) the component listen to the project observable and writes its evaluation
 		if (!this.editable) {
 			if (traceOn()) {
 				console.log ('Displaying the graphic badge in non-editable mode');
 			}
 			if (this.project) {
-				this.drawBadge(this.project);
+				if (this.project.auditEvaluation > 0) {
+					this.drawBadge(this.project.auditEvaluation);
+				}
 			} else {
-				this.subscriptions.add(
-					this.projectService.projectLoaded$.subscribe({
-						next: doneAndOk => {
-							if (doneAndOk) {
-								this.drawBadge(this.projectService.project);
+				if (this.evaluation) {
+					this.drawBadge(this.evaluation);
+				} else {
+					this.subscriptions.add(
+						this.projectService.projectLoaded$.subscribe({
+							next: doneAndOk => {
+								if (doneAndOk) {
+									this.drawBadge(this.projectService.project.auditEvaluation);
+								}
 							}
-						}
-					}));
+						}));
+				}
 			}
 		}
 	}
 
 	/**
-	 * Draw the badge for the given project.
-	 * @param project the given project
+	 * Draw the badge for the given evaluation.
+	 * @param evaluation the evaluation to be displayed in the graphic
 	 */
-	drawBadge(project: Project) {
+	drawBadge(evaluation: number) {
 		//
 		// We postpone the update to avoid an ExpressionChangedAfterItHasBeenCheckedError Warning
 		//
 		setTimeout(() => {
-			this.evaluation = project.auditEvaluation;
-			this.drawNonEditableBadge(project);
+			this.drawNonEditableBadge(evaluation);
 		}, 0);
 	}
 
-	private drawNonEditableBadge (project: Project) {
-		this.drawAuditArc();
-		this.drawAuditText();
+	/**
+	 * Draw the **read only** badge for the given evaluation.
+	 * @param evaluation the evaluation to be displayed in the graphic
+	 */
+	private drawNonEditableBadge (evaluation: number) {
+		this.drawAuditArc(evaluation);
+		this.drawAuditText(evaluation);
 	}
 
-	drawAuditArc() {
+	/**
+	 * Display the arc around the evaluation number.
+	 * @param evaluation the evaluation to be displayed in the graphic
+	 */
+	drawAuditArc(evaluation: number) {
 
 		const angleInRadians = angleInDegrees => (angleInDegrees - 90) * (Math.PI / 180.0);
 
@@ -156,11 +166,11 @@ export class AuditGraphicBadgeComponent extends BaseComponent implements OnInit,
 				return d;
 		};
 
-		const endAngleEvaluation = this.evaluation * 3.6 - 180;
+		const endAngleEvaluation = evaluation * 3.6 - 180;
 		if (endAngleEvaluation === -180) {
 			this.color = 'none';
 		} else {
-			this.color = this.projectService.getEvaluationColor(this.evaluation);
+			this.color = this.projectService.getEvaluationColor(evaluation);
 		}
 		const htmlElement = document.getElementById('topic-arc-' + this.id);
 		if (!htmlElement) {
@@ -173,7 +183,11 @@ export class AuditGraphicBadgeComponent extends BaseComponent implements OnInit,
 
 	}
 
-	drawAuditText() {
+	/**
+	 * Write the evaluation number in the middle of the arc.
+	 * @param evaluation the given evaluation to be displayed
+	 */
+	drawAuditText(evaluation: number) {
 		const htmlElement = document.getElementById('topic-note-' + this.id);
 		if (!htmlElement) {
 			console.error(`Cannot reach topic-note-${this.id}`);
@@ -181,9 +195,9 @@ export class AuditGraphicBadgeComponent extends BaseComponent implements OnInit,
 		}
 
 		if (!this.editable) {
-			htmlElement.setAttribute('x', '40');
+			htmlElement.setAttribute('x', (evaluation === 100) ? '27' : '35');
 			htmlElement.setAttribute('y', '70');
-			htmlElement.textContent = '' + this.evaluation;
+			htmlElement.textContent = '' + evaluation;
 		} else {
 			htmlElement.setAttribute('x', '30');
 			htmlElement.setAttribute('y', '40');
@@ -199,7 +213,7 @@ export class AuditGraphicBadgeComponent extends BaseComponent implements OnInit,
 				this.evaluation = 100;
 			}
 			this.messengerEvaluationChange.emit(new TopicEvaluation(this.id, this.evaluation, 1));
-			this.drawAuditArc();
+			this.drawAuditArc(this.evaluation);
 		}
 	}
 

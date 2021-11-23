@@ -65,7 +65,7 @@ import { MessageBoxComponent } from './interaction/message-box/dialog/message-bo
 import { MessageComponent } from './interaction/message/message.component';
 import { ToolbarComponent } from './interaction/toolbar/toolbar.component';
 import { CinematicService } from './service/cinematic.service';
-import { ReferentialService } from './service/referential.service';
+import { ReferentialService } from './service/referential/referential.service';
 import { ListSkillComponent } from './skill/list-skill/list-skill.component';
 import { SkillComponent } from './skill/skill.component';
 import { ListProjectComponent } from './tabs-project/list-project/list-project.component';
@@ -121,6 +121,11 @@ import { StaffComponent } from './tabs-staff/staff.component';
 import { WelcomeComponent } from './welcome/welcome.component';
 import { TreemapProjectsContainerComponent } from './dashboard/treemap-projects/treemap-projects-container/treemap-projects-container.component';
 import { TreemapProjectsChartComponent } from './dashboard/treemap-projects/treemap-projects-chart/treemap-projects-chart.component';
+import { TableProjectsFilterComponent } from './tabs-project/table-projects-filter/table-projects-filter.component';
+import { StarfieldComponent } from './dashboard/starfield/starfield.component';
+import { StarfieldHeaderComponent } from './dashboard/starfield/starfield-header/starfield-header.component';
+import { StarfieldContentComponent } from './dashboard/starfield/starfield-content/starfield-content.component';
+import { SummaryComponent } from './dashboard/summary/component/summary.component';
 
 @NgModule({
 	declarations: [
@@ -194,7 +199,12 @@ import { TreemapProjectsChartComponent } from './dashboard/treemap-projects/tree
 		SkylineIconComponent,
 		ChartInProgressComponent,
 		TreemapProjectsContainerComponent,
-		TreemapProjectsChartComponent
+		TreemapProjectsChartComponent,
+		TableProjectsFilterComponent,
+		StarfieldComponent,
+		StarfieldHeaderComponent,
+		StarfieldContentComponent,
+		SummaryComponent
 	],
 	imports: [
 		BsDropdownModule.forRoot(),

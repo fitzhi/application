@@ -17,5 +17,4 @@ else
 	exit 1
 fi
 
-./deploy/backend-fitzhi/fitzhi.jar -Xms1024m -Xmx1024m --spring.profiles.active=$1
-
+./deploy/backend-fitzhi/fitzhi-1.6.1.jar --spring.profiles.active=$1

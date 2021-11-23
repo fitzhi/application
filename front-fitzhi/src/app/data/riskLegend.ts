@@ -1,5 +1,5 @@
 /**
- * Clas representing a legend of a risk.
+ * Class representing a legend of a risk.
  */
 export class RiskLegend {
 

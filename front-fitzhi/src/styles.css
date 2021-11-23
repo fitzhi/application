@@ -12,10 +12,15 @@
 	--color-error: darkred;
 	--color-warning: orange;
 	--color-help: lightYellow;
+	--color-disable: grey;
 	
 	/* Height of the top toolbar */
 	--toolbar-height: 65px;
 	--bottom-bar-message-height: 40px;
+
+	/* Height of the filter pane in the treemap Skills component. */
+	--filterTreemapSkillsPane-height: 50px;
+
 }
 
 html {

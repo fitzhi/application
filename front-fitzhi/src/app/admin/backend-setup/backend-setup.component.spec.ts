@@ -1,25 +1,24 @@
-import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
-
-import { BackendSetupComponent } from './backend-setup.component';
-import { BackendSetupService } from '../../service/backend-setup/backend-setup.service';
-import { DebugElement } from '@angular/core';
-import { of, throwError } from 'rxjs';
-import { Observable } from 'rxjs/Observable';
-import { MatGridListModule } from '@angular/material/grid-list';
-import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { ReferentialService } from '../../service/referential.service';
-import { CinematicService } from '../../service/cinematic.service';
-import { MatCheckboxModule } from '@angular/material/checkbox';
-import { MatTableModule } from '@angular/material/table';
-import { MatPaginatorModule } from '@angular/material/paginator';
-import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { HttpClientModule } from '@angular/common/http';
-import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { MatFormFieldModule } from '@angular/material/form-field';
-import { MatInputModule } from '@angular/material/input';
-import { MatSliderModule } from '@angular/material/slider';
+import { HttpClientTestingModule } from '@angular/common/http/testing';
+import { DebugElement } from '@angular/core';
+import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatDialogModule } from '@angular/material/dialog';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatGridListModule } from '@angular/material/grid-list';
+import { MatInputModule } from '@angular/material/input';
+import { MatPaginatorModule } from '@angular/material/paginator';
+import { MatSliderModule } from '@angular/material/slider';
+import { MatTableModule } from '@angular/material/table';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { of, throwError } from 'rxjs';
 import { FirstConnection } from 'src/app/data/first-connection';
+import { BackendSetupService } from '../../service/backend-setup/backend-setup.service';
+import { CinematicService } from '../../service/cinematic.service';
+import { ReferentialService } from '../../service/referential/referential.service';
+import { BackendSetupComponent } from './backend-setup.component';
+
 
 describe('BackendSetupComponent', () => {
 	let component: BackendSetupComponent;

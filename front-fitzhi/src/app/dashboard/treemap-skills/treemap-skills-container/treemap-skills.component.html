@@ -1,28 +1,45 @@
-<div id="host-treemap" class="container" *ngIf="projectService.allProjectsIsLoaded$|async">
-	<div class="host">
-		<div>
-			<app-treemap-skills-header></app-treemap-skills-header>
-			<div style="width: 1000px; height: 500px">
-				<app-treemap-skills-chart></app-treemap-skills-chart>
+<div id="host-treemap" *ngIf="projectService.allProjectsIsLoaded$|async">
+	<app-treemap-skills-header (messengerDisplayHelp)="displayHelp($event)"></app-treemap-skills-header>
+	<div class="content-skills">
+		<div class="treemap-skills">
+			<div class="w-100 p-2 bg-light m-0 description" *ngIf="treemapSkillsService.displaySettings$|async">
+				<p class="m-0" style="font-weight: 700;">
+					Your current settings :
+				</p>
+				<p class="m-0 description">
+					To fullfill the maintenance of the portfolio, your technical staff must contain for each MO of code,
+					<span class="number-star">{{referentialService.optimalStaffNumberPerMoOfCode[0]}}</span>&nbsp;developer(s) of at least a level of (<span class="star">&#x2605;</span>) ,
+					<span class="number-star">{{referentialService.optimalStaffNumberPerMoOfCode[1]}}</span>&nbsp;developer(s) of at least a level of (<span class="star">&#x2605;</span><span class="star">&#x2605;</span>),
+					<span class="number-star">{{referentialService.optimalStaffNumberPerMoOfCode[2]}}</span>&nbsp;developer(s) of at least a level of (<span class="star">&#x2605;</span><span class="star">&#x2605;</span><span class="star">&#x2605;</span>),
+					<span class="number-star">{{referentialService.optimalStaffNumberPerMoOfCode[3]}}</span>&nbsp;developer(s) of at least a level of (<span class="star">&#x2605;</span><span class="star">&#x2605;</span><span class="star">&#x2605;</span><span class="star">&#x2605;</span>) and
+					<span class="number-star">{{referentialService.optimalStaffNumberPerMoOfCode[4]}}</span>&nbsp;developer(s) of at least a level of (<span class="star">&#x2605;</span><span class="star">&#x2605;</span><span class="star">&#x2605;</span><span class="star">&#x2605;</span><span class="star">&#x2605;</span>).
+				</p>
 			</div>
+			<app-treemap-skills-chart></app-treemap-skills-chart>
 		</div>
 		<div class="legend">
-			<div class="gradient"></div>
-			<div>
-				<p class="high sign">+</p>
-				<p class="low sign">-</p>
+			<div class="w-100 h-100 d-flex justify-content-center">
+				<div class="d-flex flex-column">
+					<div class="high sign">+</div>
+					<div class="gradient"></div>
+					<div class="low sign">-</div>
+				</div>
 			</div>
 		</div>
 	</div>
-	<div class="help">
-		<em class="fas fa-info info"></em>
-		<p class="help">
-			This chart represents all skills in proportion to their weight in the registered portfolio.
-			Each tile is filled with a color corresponding to the "staffing" risk on its underlying skills.
-		</p>
-		<ul>
-			<li class="good">A "skill" tile with this color has enough developers to maintain its related projects.</li>
-			<li class="bad">On the contrary, this color proves a lack of developers.</li>
-		</ul>
+	<div id="help" class="container-help" *ngIf="(helpPaneVisible)">
+		<div class="help">
+			<div style="display: inline-flex; padding: 5px;">
+				<em class="fas fa-info info"></em>
+				<span style="padding: 5px;">
+					This chart represents all skills in proportion to their weight in the registered portfolio.
+					Each tile is filled with a color corresponding to the "staffing" risk on its underlying skills.
+				</span>
+			</div>
+			<ul>
+				<li class="good">A "skill" tile with this color has enough developers to maintain its related projects.</li>
+				<li class="bad">On the contrary, this color proves a lack of developers.</li>
+			</ul>
+		</div>
 	</div>
 </div>

@@ -1,7 +1,7 @@
 import { Component, OnInit, OnDestroy, AfterViewInit, ViewChild } from '@angular/core';
 import { PieDashboardService } from '../service/pie-dashboard.service';
 import { Project } from 'src/app/data/project';
-import { BaseComponent } from 'src/app/base/base.component';
+import { BaseDirective } from 'src/app/base/base-directive.directive';
 import { AnalysisTypeSlice } from '../analysis-type-slice';
 import { MatTable, MatTableDataSource } from '@angular/material/table';
 import { MatPaginator, PageEvent } from '@angular/material/paginator';
@@ -17,7 +17,7 @@ import { Form } from 'src/app/service/Form';
 	templateUrl: './pie-projects.component.html',
 	styleUrls: ['./pie-projects.component.css']
 })
-export class PieProjectsComponent extends BaseComponent implements OnDestroy, OnInit, AfterViewInit {
+export class PieProjectsComponent extends BaseDirective implements OnDestroy, OnInit, AfterViewInit {
 
 	/**
 	 * Datasource of the table.
@@ -93,13 +93,6 @@ export class PieProjectsComponent extends BaseComponent implements OnDestroy, On
 	}
 
 	/**
-	 * Removing useless subscriptions.
-	 */
-	ngOnDestroy() {
-		super.ngOnDestroy();
-	}
-
-	/**
 	 * Route the application to the corresponding Project form.
 	 *
 	 * @param id the selected project identifier
@@ -142,6 +135,13 @@ export class PieProjectsComponent extends BaseComponent implements OnDestroy, On
 			console.log ('Project %d is left', id);
 		}
 		document.getElementById('project-' + id).setAttribute('style', 'background-color: ' );
+	}
+
+	/**
+	 * Removing useless subscriptions.
+	 */
+	ngOnDestroy() {
+		super.ngOnDestroy();
 	}
 
 }

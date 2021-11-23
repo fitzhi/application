@@ -9,8 +9,7 @@ import java.text.MessageFormat;
  * <p>
  * This exception is thrown only by the applicaiton REST controllers to inform a client about its process status.
  * </p>
- * <p>Status codes 1xx : 
- * {@link https://httpstatuses.com/102}
+ * <p>Status codes 1xx : https://httpstatuses.com/102
  * </p>
  * @author Fr&eacute;d&eacute;ric VIDAL
  */

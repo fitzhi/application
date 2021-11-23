@@ -24,7 +24,7 @@ public class ApplicationRuntimeException extends RuntimeException {
 	
 	/**
 	 * Main constructor based on an exception.
-	 * @param e the passed exception
+	 * @param errorMessage the passed exception
 	 */
 	public ApplicationRuntimeException (String errorMessage) {
 		super(errorMessage);

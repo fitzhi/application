@@ -1,13 +1,12 @@
 import { Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angular/core';
-import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
+import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { Collaborator } from 'src/app/data/collaborator';
 import { traceOn } from 'src/app/global';
 import { MessageBoxService } from 'src/app/interaction/message-box/service/message-box.service';
-import { MessageService } from 'src/app/interaction/message/message.service';
 import { BackendSetupService } from 'src/app/service/backend-setup/backend-setup.service';
-import { MustMatch } from 'src/app/service/mustmatch';
+import { PasswordConfirmationMustMatchValidator } from 'src/app/service/password-confirmation-must-match-validator';
 import { StaffService } from 'src/app/tabs-staff/service/staff.service';
-import { BaseComponent } from '../../base/base.component';
+import { BaseDirective } from '../../base/base-directive.directive';
 import { InstallService } from '../service/install/install.service';
 
 @Component({
@@ -15,7 +14,7 @@ import { InstallService } from '../service/install/install.service';
 	templateUrl: './register-user.component.html',
 	styleUrls: ['./register-user.component.css']
 })
-export class RegisterUserComponent extends BaseComponent implements OnInit, OnDestroy {
+export class RegisterUserComponent extends BaseDirective implements OnInit, OnDestroy {
 
 	/**
      * We'll send to the parent component (startingSetup) the new user has been created.
@@ -37,25 +36,24 @@ export class RegisterUserComponent extends BaseComponent implements OnInit, OnDe
      */
 	public connectionGroup: FormGroup;
 
-
 	constructor(
-		private formBuilder: FormBuilder,
 		private staffService: StaffService,
 		private backendSetupService: BackendSetupService,
 		private messageBoxService: MessageBoxService,
 		private installService: InstallService,
-		private messageService: MessageService) {
+		private passwordConfirmationMatcher: PasswordConfirmationMustMatchValidator) {
 		super();
 	}
 
 	ngOnInit() {
-		this.connectionGroup = this.formBuilder.group({
-			username: new FormControl('', [Validators.required, Validators.maxLength(16)]),
-			password: new FormControl('', [Validators.required, Validators.minLength(8), Validators.maxLength(16)]),
-			passwordConfirmation: new FormControl('', [Validators.required, Validators.minLength(8), Validators.maxLength(16)]),
-		}, {
-				validator: MustMatch('password', 'passwordConfirmation')
-			});
+		this.connectionGroup = new FormGroup(
+			{
+				username: new FormControl('', [Validators.required, Validators.maxLength(16)]),
+				password: new FormControl('', [Validators.required, Validators.minLength(8), Validators.maxLength(16)]),
+				passwordConfirmation: new FormControl('', [Validators.required, Validators.minLength(8), Validators.maxLength(16)]),
+			},
+			this.passwordConfirmationMatcher.check()
+		);
 	}
 
 	/**

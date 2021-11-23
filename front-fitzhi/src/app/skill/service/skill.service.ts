@@ -23,8 +23,9 @@ export class SkillService extends InternalService {
 	/*
 	 * Are skills loaded or not ?
 	 */
-	private _allSkillsLoaded$  = new BehaviorSubject<boolean>(false);
-	public allSkillsLoaded$  = this._allSkillsLoaded$.asObservable();
+	private allSkillsLoadedSubject$  = new BehaviorSubject<boolean>(false);
+
+	public allSkillsLoaded$  = this.allSkillsLoadedSubject$.asObservable();
 
 	/*
 	 * list of skills filtered.
@@ -70,7 +71,7 @@ export class SkillService extends InternalService {
 	loadSkills() {
 
 		if (traceOn()) {
-			this.log(`Fetching all skills on URL ${this.backendSetupService.url()}/skill/all`);
+			this.log(`Fetching all skills on URL ${this.backendSetupService.url()}/skill`);
 		}
 		this.httpClient
 			.get<Skill[]>(this.backendSetupService.url() + '/skill')
@@ -93,9 +94,9 @@ export class SkillService extends InternalService {
 	 * Set the array containing all skills.
 	 * @param skills the complete list of skills
 	 */
-	private setAllSkills(skills: Skill[]) {
+	public setAllSkills(skills: Skill[]) {
 		this.allSkills = skills;
-		this._allSkillsLoaded$.next(true);
+		this.allSkillsLoadedSubject$.next(true);
 	}
 
 	/**
@@ -164,17 +165,14 @@ export class SkillService extends InternalService {
 	 */
 	public id(title: string): number {
 		const found = this.allSkills.find(skill => skill.title === title);
-		if (!found) {
-			return -1;
-		} else {
-			return found.id;
-		}
+		return (!found)  ?  -1 : found.id;
 	}
 
 	/**
-	 * GET the skill associated to this id from the backend skiller. Will throw a 404 if this id is not found.
+	 * **HTTP GET** a skill identified by the given id from the back-end server.
+	 * The method throw a **404** error if this identifier is not found.
 	 */
-	get(id: number): Observable<Skill> {
+	get$(id: number): Observable<Skill> {
 		const url = this.backendSetupService.url() + '/skill' + '/' + id;
 		if (traceOn()) {
 			console.log('Fetching the skill ' + id + ' on the address ' + url);
@@ -186,10 +184,10 @@ export class SkillService extends InternalService {
 	 * GET the skill associated to the passed name, if any, from the back-end skiller.
 	 * Will throw a 404 if this name is not retrieved.
 	 */
-	lookup(skillTitle: string): Observable<Skill> {
-		const url = this.backendSetupService.url() + '/name/' + skillTitle;
+	lookup$(skillTitle: string): Observable<Skill> {
+		const url = this.backendSetupService.url() + '/skill/name/' + skillTitle;
 		if (traceOn()) {
-			console.log('Fetching the skill title ' + skillTitle + ' on the address ' + url);
+			console.log(`Fetching the skill title ${skillTitle} on the address ${url}.`);
 		}
 		return this.httpClient.get<Skill>(url);
 	}

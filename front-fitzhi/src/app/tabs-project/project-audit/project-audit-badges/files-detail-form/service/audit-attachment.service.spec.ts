@@ -10,7 +10,7 @@ import { MessageBoxService } from 'src/app/interaction/message-box/service/messa
 import { CinematicService } from 'src/app/service/cinematic.service';
 import { FileService } from 'src/app/service/file.service';
 import { ProjectService } from 'src/app/service/project/project.service';
-import { ReferentialService } from 'src/app/service/referential.service';
+import { ReferentialService } from 'src/app/service/referential/referential.service';
 
 import { AuditAttachmentService } from './audit-attachment.service';
 

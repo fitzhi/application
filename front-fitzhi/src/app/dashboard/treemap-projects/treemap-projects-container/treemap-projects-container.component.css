@@ -1,6 +1,18 @@
-div.treemap-projects {
+div.treemap-projects-button {
 	margin-left: auto;
 	margin-right: auto;
 	width: var(--treemap-projects-width);
 	height: var(--treemap-projects-height);
-} 
+}
+
+div.treemap-projects-chart {
+	top: var(--toolbar-height);
+	left: calc(var(--sidebar-width) + var(--treemap-left-offset));
+	right: 0;
+	bottom: 0;
+	padding: 5;
+	position: fixed;
+}
+
+
+

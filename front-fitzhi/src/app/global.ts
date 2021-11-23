@@ -14,4 +14,3 @@ export function traceOn(): boolean {
 	}
 	return environment.debug;
 }
-

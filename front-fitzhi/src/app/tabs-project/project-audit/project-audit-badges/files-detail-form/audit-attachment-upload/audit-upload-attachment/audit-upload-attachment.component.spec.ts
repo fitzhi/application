@@ -2,7 +2,7 @@ import { ComponentFixture, TestBed, TestModuleMetadata, waitForAsync } from '@an
 
 import { AuditUploadAttachmentComponent } from './audit-upload-attachment.component';
 import { CinematicService } from 'src/app/service/cinematic.service';
-import { ReferentialService } from 'src/app/service/referential.service';
+import { ReferentialService } from 'src/app/service/referential/referential.service';
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatTableModule } from '@angular/material/table';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';

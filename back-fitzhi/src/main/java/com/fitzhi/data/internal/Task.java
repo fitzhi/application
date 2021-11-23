@@ -58,7 +58,7 @@ public @Data class Task implements Serializable {
 	/**
 	 * <ul>
 	 * <li>
-	 * {@code true} if the task has been completed <font color="red">WITH AN EXCEPTION</font>
+	 * {@code true} if the task has been completed WITH AN EXCEPTION
 	 * </li>
 	 * <li>
 	 * {@code false} otherwise.

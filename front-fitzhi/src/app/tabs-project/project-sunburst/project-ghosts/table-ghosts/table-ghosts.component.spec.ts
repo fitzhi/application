@@ -80,6 +80,9 @@ describe('TableGhostsComponent', () => {
 						action: '',
 						staffRelated: new Collaborator(),
 						staffRecorded: false,
+						lastCommit: new Date('2021-01-01'),
+						numberOfCommits: 20,
+						numberOfFiles: 42
 					},
 					{
 						idStaff: -1,
@@ -94,6 +97,9 @@ describe('TableGhostsComponent', () => {
 						action: '',
 						staffRelated: new Collaborator(),
 						staffRecorded: false,
+						lastCommit: new Date('2021-12-25'),
+						numberOfCommits: 10,
+						numberOfFiles: 9
 					},
 				],
 				allStaff

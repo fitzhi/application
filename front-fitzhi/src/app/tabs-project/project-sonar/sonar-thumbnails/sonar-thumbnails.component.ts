@@ -1,6 +1,6 @@
 import { Component, OnInit, Input, OnDestroy, Output, EventEmitter } from '@angular/core';
 import { Project } from 'src/app/data/project';
-import { BaseComponent } from 'src/app/base/base.component';
+import { BaseDirective } from 'src/app/base/base-directive.directive';
 import { Constants } from 'src/app/constants';
 import { PanelSwitchEvent } from './panel-switch-event';
 import { SonarProject } from 'src/app/data/SonarProject';
@@ -20,7 +20,7 @@ import { take } from 'rxjs/operators';
 	templateUrl: './sonar-thumbnails.component.html',
 	styleUrls: ['./sonar-thumbnails.component.css']
 })
-export class SonarThumbnailsComponent extends BaseComponent implements OnInit, OnDestroy {
+export class SonarThumbnailsComponent extends BaseDirective implements OnInit, OnDestroy {
 
 	/**
 	 * Observable emitting a PanelSwitchEvent

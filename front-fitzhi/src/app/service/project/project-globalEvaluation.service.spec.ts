@@ -4,7 +4,7 @@ import { TestBed, TestModuleMetadata } from '@angular/core/testing';
 import { MatDialogModule } from '@angular/material/dialog';
 import { Project } from '../../data/project';
 import { CinematicService } from '../cinematic.service';
-import { ReferentialService } from '../referential.service';
+import { ReferentialService } from '../referential/referential.service';
 import { ProjectService } from './project.service';
 
 

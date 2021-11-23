@@ -1,11 +1,24 @@
-<div class="host-chart">
+<div *ngIf="isChart()" class="w-100 h-100">
 	<ngx-charts-tree-map
 		[scheme]="colorScheme"
 		[results]="distribution"
 		[gradient]="gradient"
 		[animations]="animations"
+		[tooltipDisabled]="!active"
 		[labelFormatting]="labelFormatting"
 		[valueFormatting]="valueFormatting"
+		(select)="onSelect($event)">
+	</ngx-charts-tree-map>
+</div>
+<div *ngIf="isButton()" class="w-100 h-100">
+	<ngx-charts-tree-map
+		[scheme]="colorScheme"
+		[results]="distribution"
+		[gradient]="gradient"
+		[animations]="animations"
+		[tooltipDisabled]="!active"
+		[labelFormatting]="noLabel"
+		[valueFormatting]="noValue"
 		(select)="onSelect($event)">
 	</ngx-charts-tree-map>
 </div>

@@ -1,17 +1,16 @@
-/**
- * 
- */
 package com.fitzhi.bean;
 
 import java.io.IOException;
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Map;
 
 import com.fitzhi.bean.impl.FileDataHandlerImpl.PathsType;
+import com.fitzhi.data.internal.Constellation;
 import com.fitzhi.data.internal.DetectedExperience;
-import com.fitzhi.data.internal.ProjectDetectedExperiences;
 import com.fitzhi.data.internal.Project;
 import com.fitzhi.data.internal.ProjectBuilding;
+import com.fitzhi.data.internal.ProjectDetectedExperiences;
 import com.fitzhi.data.internal.ProjectLayers;
 import com.fitzhi.data.internal.RepositoryAnalysis;
 import com.fitzhi.data.internal.Skill;
@@ -20,7 +19,7 @@ import com.fitzhi.data.internal.Staff;
 import com.fitzhi.exception.ApplicationException;
 
 /**
- * Interface in charge of saving & loading data.
+ * Interface in charge of saving and loading data.
  * @author Fr&eacute;d&eacute;ric VIDAL
  */
 public interface DataHandler {
@@ -84,7 +83,7 @@ public interface DataHandler {
 
 	/**
 	 * <p>
-	 * Save the source control changes loaded from the repository for cache & debug purpose.
+	 * Save the source control changes loaded from the repository for cache and debug purpose.
 	 * </p>
 	 * <p><i>Due to the DEBUG purpose of this file, the output format will <b>CSV</b></i>.</p>
 	 * @param project project whose changes have to be serialized in CSV
@@ -189,7 +188,7 @@ public interface DataHandler {
 	 * This building will be part of the skyline.
 	 * </p>
 	 * @param project the project whose building have to be serialized in CSV and saved on the filesytem.
-	 * @param ProjectBuilding the generated building to be saved
+	 * @param building the generated building to be saved
 	 * @throws ApplicationException thrown if an exception occurs during the loading process, mot probably an {@link java.io.IOException}
 	 */
 	void saveProjectBuilding(Project project, ProjectBuilding building) throws ApplicationException;
@@ -243,7 +242,7 @@ public interface DataHandler {
 	List<String> loadRepositoryDirectories (Project project) throws ApplicationException;
 	
 	/**
-	 * Generate the file path for pathnames of a given type of {@link PathType path}
+	 * Generate the file path for pathnames of a given type of {@link PathsType path}
 	 * 
 	 * @param project the current project
 	 * @param pathsType type of paths which will be saved on file system  
@@ -258,4 +257,29 @@ public interface DataHandler {
 	 * @throws ApplicationException thrown if an exception occurs during the remove process, most probably an IOException.
 	 */
 	void removeCrawlerFiles(Project project) throws ApplicationException;
+
+	/**
+	 * Test if a {@link Constellation constellation} has been already saved for the given month.
+	 * @param month the month
+	 * @return {@code true} if the given month has aleady been saved, {@code false} otherwise.
+	 * @throws ApplicationException thrown if any exception occurs during the test, most probably an {@link IOException}.
+	 */
+	boolean hasAlreadySavedSkillsConstellations(LocalDate month) throws ApplicationException;
+	
+	/**
+	 * Save the skills constellations for the given month.
+	 * @param month the saving month
+	 * @param constellations the given list of {@link Constellation constellations}
+	 * @throws ApplicationException thrown if any exception occurs during the saving process, most probably an {@link IOException}.
+	 */
+	void saveSkillsConstellations(LocalDate month, List<Constellation> constellations) throws ApplicationException;
+
+	/**
+	 * Load the skills constellations associated with the given month.
+	 * @param month the month to retrieve in the history
+	 * @return the retrieved list of {@link Constellation constellations}.
+	 * @throws ApplicationException thrown if any exception occurs during the load process, most probably an {@link IOException}.
+	 */
+	List<Constellation> loadSkillsConstellations(LocalDate month) throws ApplicationException;
+
 }

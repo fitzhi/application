@@ -1,5 +1,6 @@
 package com.fitzhi.bean;
 
+import java.io.IOException;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -93,7 +94,7 @@ public interface SkillHandler extends DataSaverLifeCycle {
 	  * Extract the skills detected in the GIT repository of a project.
 	  * @param rootPath local path where the project repository has been cloned
 	  * @param entries history of {@link CommitHistory commits} aggregated for this repository 
-	  * @return a map a {@link ProjectSkill skills} detected in the repository & indexed by skill identifier 
+	  * @return a map a {@link ProjectSkill skills} detected in the repository and indexed by skill identifier 
 	  * @throws ApplicationException if any exception occurs, <i>most probably an IOException</i>
 	  */
 	 Map<Integer, ProjectSkill> extractSkills(String rootPath, List<CommitHistory> entries) throws ApplicationException;
@@ -103,15 +104,12 @@ public interface SkillHandler extends DataSaverLifeCycle {
 	 * Test if the passed skill is detected in the filename.
 	 * </p>
 	 * <p>
-	 * <font color="darkRed">
 	 * This method does not detect any kind of skills, but only skills detected by their filename. 
 	 * If the passed skill has not a {@link SkillDetectorType#FILENAME_DETECTOR_TYPE}, then the method will return {@code false}
-	 * </font>
 	 * </p>
 	 * @param skill the skill candidate to be detected
 	 * @param sourcePath the path of a source file 
 	 * @return {@code true} if this skill is detected, {@code false} otherwise
-	 * @throws ApplicationException exception thrown if any problem occurs (most probably an IOException)
 	 */
 	boolean isSkillDetectedWithFilename(Skill skill, String sourcePath);
 
@@ -126,5 +124,6 @@ public interface SkillHandler extends DataSaverLifeCycle {
 	 * @throws ApplicationException exception thrown if any problem occurs (most probably an IOException)
 	 */
 	boolean checkFilePattern(String filenameDependencies, String rootPath, String sourcePath, String dependency) throws ApplicationException;
+
 
 }

@@ -3,7 +3,7 @@ import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 import { DialogLegendSunburstComponent } from './legend-sunburst.component';
 import { FormsModule } from '@angular/forms';
 import { MatTableModule } from '@angular/material/table';
-import { ReferentialService } from 'src/app/service/referential.service';
+import { ReferentialService } from 'src/app/service/referential/referential.service';
 import { CinematicService } from 'src/app/service/cinematic.service';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 

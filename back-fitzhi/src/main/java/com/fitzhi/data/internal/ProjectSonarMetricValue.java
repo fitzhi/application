@@ -9,7 +9,6 @@ import lombok.Data;
  * <p>
  * This class represents a metric key, its weight in the evaluation of a project, and the value obtained.
  * </p>
- * <p>
  * You might have an instance with these 2 fields
  * <ul>
  * <li>{@code "metric": "bugs"}</li>
@@ -17,7 +16,6 @@ import lombok.Data;
  * <li>{@code "value": 15}</li>
  * </ul>
  * which means the metric note count as 30% in the global note.
- * </p>
  * 
  * @author Fr&eacute;d&eacute;ric VIDAL
  *

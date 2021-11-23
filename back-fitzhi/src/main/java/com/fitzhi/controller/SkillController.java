@@ -176,4 +176,5 @@ public class SkillController {
 		Map<Integer, String> mapDetectionTemplates = this.skillHandler.detectorTypes();
 		return mapDetectionTemplates;
 	}
+
 }

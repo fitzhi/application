@@ -3,7 +3,7 @@ import { Constants } from '../constants';
 import { CinematicService } from '../service/cinematic.service';
 import { Router } from '@angular/router';
 import { TabsStaffListService } from './service/tabs-staff-list.service';
-import { BaseComponent } from '../base/base.component';
+import { BaseDirective } from '../base/base-directive.directive';
 
 @Component({
 	selector: 'app-tabs-staff-list',
@@ -11,7 +11,7 @@ import { BaseComponent } from '../base/base.component';
 	styleUrls: ['./tabs-staff-list.component.css'],
 	encapsulation: ViewEncapsulation.None
 })
-export class TabsStaffListComponent extends BaseComponent implements OnInit, OnDestroy {
+export class TabsStaffListComponent extends BaseDirective implements OnInit, OnDestroy {
 
 	/**
 	 * Tab keys. Each tab has a key.

@@ -1,222 +1,293 @@
+
+<angular-popper placement="left" target="#skyline" *ngIf="popupHelper.isButtonActivated(selection.skyline) && !hasSelectedADashboard()">
+	<div content class="help">
+		<h4 class="help-title">Skyline history</h4>
+		<div class="help-content">
+			<p>
+				The history of your portfolio will be replayed on this panel with an animated histogram.  
+			</p>
+			<p>
+				Each project is represented by a surging bar.
+				And the size of each bar is proportional to the number of lines counted in the project.
+				The color is related to the proportion of developers, still active in your company.
+			</p>
+			<p>
+				We evaluate each project for each week in the history.
+				Each project has a calculated risk level from 0 to 10.
+			</p>
+			<ul>
+				<li>
+					0 : No line in the current project has been developed by an active developer.
+					The project is orphaned by all its creators
+				</li>
+				<li>10 : All lines are covered by a developer who is still present in the teams.</li>
+			</ul>
+		</div>
+	</div>
+</angular-popper>
+
+<angular-popper placement="left" target="#treeMap-skills" *ngIf="popupHelper.isButtonActivated(selection.treeMapSkills) && !hasSelectedADashboard()">
+	<div content class="help">
+		<h4 class="help-title">Ecosystem coverage</h4>
+		<div class="help-content">
+			<p class="text-justify">
+				This Treemap chart represents the skills coverage of your portfolio.
+				It compares the volume of code registered by your applications, and the active teams available, and able to maintain them.
+				<br/>
+			</p>
+			<p>
+				This chart aims to answer the question : <em>Are my development teams sufficient to maintain the portfolio&nbsp;?</em>
+			</p>
+			<p class="text-justify">
+				The table below shows the parameters that define the optimal technical headcount per megabytes of code.
+				These parameters are defined on the server.
+			</p>
+
+			<div *ngIf="(referentialService.referentialLoaded$|async)" class="w-100 d-flex justify-content-center">
+				<table  id="table-settings" class="table table-bordered" style="width: 300px;">
+
+					<thead class="thead-light">
+					  <tr>
+						<th scope="col" class="p-1 text-right">Optimal developers count<br/>per MO of code</th>
+						<th scope="col" class="p-1 text-center align-middle">Level</th>
+					  </tr>
+					</thead>
+					<tbody>
+					  <tr *ngFor="let setting of referentialService.optimalStaffNumberPerMoOfCode; index as id" >
+						<td id="setting-{{id}}" class="p-0 align-middle text-center">{{setting}}</td>
+						<td class="p-0 align-middle text-center">
+							<div *ngFor="let star of counter(id+1); index as idStar" 
+								class="py-1 d-inline-flex flex-wrap" >
+								<span class="star" id="star-{{idStar}}">&#x2605;</span>
+							</div>
+						</td>
+					  </tr>
+					</tbody>
+				</table>			
+			</div>
+		</div>
+	</div>
+</angular-popper>        
+
+<angular-popper placement="left" target="#treeMap-projects"
+	*ngIf="popupHelper.isButtonActivated(selection.treeMapProjects) && !hasSelectedADashboard()">
+	<div content class="help">
+		<h4 class="help-title">Projects patchwork</h4>
+		<div class="help-content">
+			<p> 
+				This graphic represents the patchwork of projects. 
+				Each tile represents a project. The size of which is proportional to the number of lines.
+				The color is representative of the Quality assessment of the project. 
+			</p>
+			<p> 
+				3 criteria are possible:
+			</p>
+			<ul>
+				<li>The Staff coverage</li>
+				<li>The Sonar evaluation</li>
+				<li>The Audit report</li>
+			</ul>
+			<p>
+				The geometric mean of these 3 scores is calculated with the parameters listed below :
+			</p>
+			<table class="evaluationDistributions">
+				<tr class="evaluationDistributions">
+					<td><em class="fas glyphicon fa-user-graduate"></em></td>
+					<td><img src="./assets/img/sonar-selected.png" alt="Sonar" class="logoSonar"/></td>
+					<td><em class="fas fa-brain logoTabLabel"></em></td>
+				</tr>
+				<tr *ngFor="let element of settings.evaluationDistributions; let index = index" class="evaluationDistributions">
+					<td>
+						{{(element.staffEvaluationPercentage) ? element.staffEvaluationPercentage.toString() + '%' : '&empty;'}}
+					</td>
+					<td>
+						{{(element.sonarEvaluationPercentage) ? element.sonarEvaluationPercentage.toString() + '%' : '&empty;'}}
+					</td>
+					<td>
+						{{(element.auditEvaluationPercentage) ? element.auditEvaluationPercentage.toString() + '%' : '&empty;'}}
+					</td>
+				</tr>
+			</table>
+		</div>
+	</div>
+</angular-popper>        
+
+<angular-popper placement="left" target="#pie" *ngIf="popupHelper.isButtonActivated(selection.currentSummary) && !hasSelectedADashboard()">
+	<div content class="help">
+		<h4 class="help-title">Composite Pie</h4>
+		<div class="help-content">
+			<p>
+				This sector diagram summarizes on a single PIE, the quality of the portfolio on the 3 metrics :
+			</p>
+			<ul>
+				<li><strong>the Staff coverage, </strong><em>the coverage of developers who are still active, and have worked on your applications.</em></li>
+				<li><strong>the Code quality, </strong> <em>the distribution of the average Sonar scores given to your applications.</em></li>
+				<li><strong>the global design </strong> <em>the appraisal on your projects given by yours/ours experts. It's the human point of view on projects.</em></li>
+			</ul>
+		</div>
+	</div>
+</angular-popper>
+
+<angular-popper placement="left" target="#technicalDate" *ngIf="popupHelper.isButtonActivated(selection.technicalDate) && !hasSelectedADashboard()">
+	<div content class="help">
+		<h4 class="help-title">Technical datation of portfolio</h4>
+		<div class="help-content">
+			<p>
+				You will find on this dashboard the technical datation of your portfolio, and for each project as well.
+			</p>
+			<p>
+				Each project in Fitzhì has an &laquo; historic datation &raquo; and a &laquo; technical &raquo; one.
+				<br/>
+				A project developed in 2016 might involve some technologies and frameworks of year 2011. 
+			</p>
+		</div>
+	</div>
+</angular-popper>        
+
+<angular-popper placement="left" target="#starfield" *ngIf="popupHelper.isButtonActivated(selection.starfield) && !hasSelectedADashboard()">
+	<div content class="help">
+		<h4 class="help-title">Stars and tribes</h4>
+		<div class="help-content">
+			<p>
+				This graph summarizes the level of overall expertise of the teams by skill. 
+				It brings together the constellations of skills.
+			</p>
+			<p>
+				A constellation in fact, represents the number of units of skills registered for a skill.
+				Each &#x2605; represents a &laquo; unit of skill &raquo;, e.g., a Java expert (5 &#x2605;) brings 5 ​​units to the count, when  one novice developer (1 &#x2605;) brings one.
+			</p>
+			<p>
+				This snapshot can be considered as the potential energy of your IT : the ability to do. 
+				Fitzhì save one snapshot of this KPI per month in order to follow up this ability over time.
+			</p>
+		</div>
+	</div>
+</angular-popper>        
+
 <div class="vertical-nav" id="sidebar">
 
 	<div id="skyline" class="skyline-icon"
-			(mouseenter)="popupHelper.mouseEnter(selection.skyline)" 
-			(mouseleave)="popupHelper.mouseLeave()">
-			<app-skyline-icon
-				[selected$]=skylineSelected$ 
-				[width]="'60px'" 
-				[height]="'60px'" 
-				(dashboardSelected$)="switchTo(selection.skyline)">
-			</app-skyline-icon>
+		(mouseenter)="popupHelper.mouseEnter(selection.skyline)" 
+		(mouseleave)="popupHelper.mouseLeave()">
+		<app-skyline-icon
+			[selected$]=skylineSelected$ 
+			[width]="'60px'" 
+			[height]="'60px'" 
+			(dashboardSelected$)="switchTo(selection.skyline)">
+		</app-skyline-icon>
+	</div>
+
+	<button id="treeMap-projects" 
+			class="btn rounded treeMap-projects"
+			*ngIf="projectService.allProjectsIsLoaded$|async"
+			[ngClass]="{
+					'btn-outline-success' : isSelected(selection.treeMapProjects), 
+					'btn-outline-secondary': !isSelected(selection.treeMapProjects)}" 
+					(mouseenter)="popupHelper.mouseEnter(selection.treeMapProjects)" 
+					(mouseleave)="popupHelper.mouseLeave()"
+					(click)="switchTo(selection.treeMapProjects)">
+		<!-- 	The ngx-charts-tree-map make a translate(10, 10),
+				therefore, the class 'host-treemap-projects' operates a translate -->
+		<div class="host-treemap-projects">
+			<app-treemap-projects 
+				width="71px" height="71px" 
+				[buttonOrChart]="'button'"
+				[active]="false"></app-treemap-projects>
 		</div>
+	</button>
 
-		<angular-popper placement="left" target="#skyline" *ngIf="popupHelper.isButtonActivated(selection.skyline) && !hasSelectedADashboard()">
-			<div content class="help">
-				<h4 class="help-title">Display Skyline history</h4>
-				<div class="help-content">
-					<p>
-						The history of your portfolio will be replayed on this panel with an animated histogram.  
-					</p>
-					<p>
-						Each project is represented by a surging bar.
-						And the size of each bar is proportional to the number of lines counted in the project.
-						The color is related to the proportion of developers, still active in your company.
-					</p>
-					<p>
-						We evaluate each project for each week in the history.
-						Each project has a calculated risk level from 0 to 10.
-					</p>
-					<ul>
-						<li>
-							0 : No line in the current project has been developed by an active developer.
-							The project is orphaned by all its creators
-						</li>
-						<li>10 : All lines are covered by a developer who is still present in the teams.</li>
-					</ul>
-				</div>
+	<a class="flipProjectsFilter" href="javascript:;" (click)="flip()">
+		<div class="d-flex justify-content-end m-1" 
+			*ngIf="(!(treemapProjectsFilter) && (projectService.allProjectsIsLoaded$|async) && (isSelected(selection.treeMapProjects)))">
+			<div class="p-0 m-0 panelDeveloperBase">
 			</div>
-		</angular-popper>        
-
-		<button id="treeMap-projects" 
-				class="btn rounded treeMap-projects"
-				*ngIf="projectService.allProjectsIsLoaded$|async"
-				[ngClass]="{
-						'btn-outline-success' : isSelected(selection.treeMapProjects), 
-						'btn-outline-secondary': !isSelected(selection.treeMapProjects)}" 
-						(mouseenter)="popupHelper.mouseEnter(selection.treeMapProjects)" 
-						(mouseleave)="popupHelper.mouseLeave()"
-						(click)="switchTo(selection.treeMapProjects)">
-			<!-- 	The ngx-charts-tree-map make a translate(10, 10),
-					therefore, the class 'host-treemap-projects' operates a translate -->
-			<div class="host-treemap-projects">
-				<app-treemap-projects width="71px" height="71px" [active]="false"></app-treemap-projects>
+			<div class="p-0 panelDeveloperArrowRight">
+				<span class="p-0">&#x25B6;</span>
 			</div>
-		</button>
+		</div>
+	</a>
 
-		<angular-popper placement="left" target="#treeMap-projects" 
-			*ngIf="popupHelper.isButtonActivated(selection.treeMapProjects) && !hasSelectedADashboard()">
-			<div content class="help">
-				<h4 class="help-title">Display projects patchwork</h4>
-				<div class="help-content">
-					<p> 
-						This graphic represents the patchwork of projects. 
-						Each tile represents a project. The size of which is proportional to the number of lines.
-						The color is representative of the Quality assessment of the project. 
-					</p>
-					<p> 
-						3 criteria are possible:
-					</p>
-					<ul>
-						<li>The Staff coverage</li>
-						<li>The Sonar evaluation</li>
-						<li>The Audit report</li>
-					</ul>
-					<p>
-						The geometric mean of these 3 scores is calculated with the parameters listed below :
-					</p>
-					<table class="evaluationDistributions">
-						<tr class="evaluationDistributions">
-							<td><em class="fas glyphicon fa-user-graduate"></em></td>
-							<td><img src="./assets/img/sonar-selected.png" alt="Sonar" class="logoSonar"/></td>
-							<td><em class="fas fa-brain logoTabLabel"></em></td>
-						</tr>
-						<tr *ngFor="let element of settings.evaluationDistributions; let index = index" class="evaluationDistributions">
-							<td>
-								{{(element.staffEvaluationPercentage) ? element.staffEvaluationPercentage.toString() + '%' : '&empty;'}}
-							</td>
-							<td>
-								{{(element.sonarEvaluationPercentage) ? element.sonarEvaluationPercentage.toString() + '%' : '&empty;'}}
-							</td>
-							<td>
-								{{(element.auditEvaluationPercentage) ? element.auditEvaluationPercentage.toString() + '%' : '&empty;'}}
-							</td>
-						</tr>
-					</table>
-				</div>
+	<a class="flipProjectsFilter" href="javascript:;" (click)="flip()">
+		<div class="d-flex justify-content-end m-2" 
+			*ngIf="((treemapProjectsFilter) && (projectService.allProjectsIsLoaded$|async) && (isSelected(selection.treeMapProjects)))">
+			<div class="p-0 panelDeveloperArrowLeft">
+				<span class="p-0">&#9664;</span>
 			</div>
-		</angular-popper>        
-
-		<button id="treeMap-skills" class="btn rounded treeMap-skills"
-				[ngClass]="{
-						'btn-outline-success' : isSelected(selection.treeMapSkills), 
-						'btn-outline-secondary': !isSelected(selection.treeMapSkills)}" 
-						(mouseenter)="popupHelper.mouseEnter(selection.treeMapSkills)" 
-						(mouseleave)="popupHelper.mouseLeave()"
-						(click)="switchTo(selection.treeMapSkills)">
-				<svg class="treeMapButton">
-						<rect x="6" y="6" class="rectTreeMap" style="fill:#27A53F" />
-						<rect x="21" y="6" class="rectTreeMap" style="fill:#329338" />
-						<rect x="36" y="6" class="rectTreeMap" style="fill:#3D8131"  />
-						<rect x="6" y="21" class="rectTreeMap" style="fill:#486E2A" />
-						<rect x="21" y="21" class="rectTreeMap" style="fill:#535C23" />
-						<rect x="36" y="21" class="rectTreeMap" style="fill:#5E4A1C"  />
-						<rect x="6" y="36" class="rectTreeMap" style="fill:#74250E" />
-						<rect x="21" y="36" class="rectTreeMap" style="fill:#7F1307" />
-						<rect x="36" y="36" class="rectTreeMap" style="fill:#8B0000"  />
-				</svg>
-		</button>
-
-		<angular-popper placement="left" target="#treeMap-skills" *ngIf="popupHelper.isButtonActivated(selection.treeMapSkills) && !hasSelectedADashboard()">
-			<div content class="help">
-				<h4 class="help-title">Display ecosystem staff coverage</h4>
-				<div class="help-content">
-					<p>
-						This Treemap chart represents the skills coverage of your portfolio.
-						It compares the volume of code registered by your applications, and the active teams available, and able to maintain them.
-						<br/>
-					</p>
-					<p>
-						This chart is answering the question : <em>Is my IT staff sufficient to maintain my portfolio&nbsp;?</em>
-					</p>
-				</div>
+			<div class="p-0 m-0 panelDeveloperBase">
 			</div>
-		</angular-popper>        
+		</div>
+	</a>
 
-		<button id="currentSummary" class="btn rounded currentMinimized"
-				[ngClass]="{
-						'btn-outline-success' : isSelected(selection.currentSummary), 
-						'btn-outline-secondary': !isSelected(selection.currentSummary)}" 
-					(mouseenter)="popupHelper.mouseEnter(selection.currentSummary)" 
-					(mouseleave)="popupHelper.mouseLeave()"
-					(click)="switchTo(selection.currentSummary)">
-					<div class="pie-minimized">
-						<app-pie-chart
-										[radius]=200
-										[active]=false
-										[pie]=pieIdentifier.currentMinimized>
-						</app-pie-chart>
-				</div>
-		</button>
+	<button id="treeMap-skills" class="btn rounded treeMap-skills"
+		*ngIf="(staffListService.allStaffLoaded$|async) && (projectService.allProjectsIsLoaded$|async)"
+		[ngClass]="{
+			'btn-outline-success' : isSelected(selection.treeMapSkills), 
+			'btn-outline-secondary': !isSelected(selection.treeMapSkills)}" 
+		(mouseenter)="popupHelper.mouseEnter(selection.treeMapSkills)" 
+		(mouseleave)="popupHelper.mouseLeave()"
+		(click)="switchTo(selection.treeMapSkills)">
 
-		<angular-popper placement="left" target="#currentSummary" *ngIf="popupHelper.isButtonActivated(selection.currentSummary) && !hasSelectedADashboard()">
-			<div content class="help">
-				<h4 class="help-title">Display Pie dashboard</h4>
-				<div class="help-content">
-					<p>
-						This sector diagram summarizes on a single PIE, the quality of the portfolio on the 3 metrics :
-					</p>
-					<ul>
-						<li><strong>the Staff coverage, </strong><em>the coverage of developers who are still active, and have worked on your applications.</em></li>
-						<li><strong>the Code quality, </strong> <em>the distribution of the average Sonar scores given to your applications.</em></li>
-						<li><strong>the global design </strong> <em>the appraisal on your projects given by yours/ours experts. It's the human point of view on projects.</em></li>
-					</ul>
-				</div>
+		<div style="margin-top: -6px; margin-left: -6px; width: 70px; height: 70px">
+			<app-treemap-skills-chart
+				[buttonOrChart]="'button'"
+				[active]=false>
+			</app-treemap-skills-chart>
+		</div>
+	</button>
+
+	<button id="starfield" class="btn rounded starfield"
+		[ngClass]="{
+				'btn-outline-success' : isSelected(selection.starfield), 
+				'btn-outline-secondary': !isSelected(selection.starfield)}" 
+				(mouseenter)="popupHelper.mouseEnter(selection.starfield)" 
+				(mouseleave)="popupHelper.mouseLeave()"
+			(click)="switchTo(selection.starfield)">
+		<div class="justify-content-center w-100 h-100">
+			<div *ngIf="!isSelected(selection.starfield)" class="ml-1 d-inline-flex flex-wrap" style="line-height: 1;">
+				<span style="color: var(--color-success)">
+					<span>&#x2605;</span><span>&#x2605;</span><span>&#x2605;</span>
+				</span>
+				<span style="color: #5A5423;">
+					<span>&#x2605;</span><span>&#x2605;</span><span>&#x2605;</span>
+				</span>
+				<span style="color: var(--color-error)">
+					<span>&#x2605;</span><span>&#x2605;</span>
+				</span>
 			</div>
-		</angular-popper>        
-	 
-		<button id="lastMonthSummary" class="btn rounded lastMonthMinimized"
-				[ngClass]="{
-						'btn-outline-success' : isSelected(selection.lastMonthSummary), 
-						'btn-outline-secondary': !isSelected(selection.lastMonthSummary)}" 
-					(mouseenter)="popupHelper.mouseEnter(selection.lastMonthSummary)" 
-					(mouseleave)="popupHelper.mouseLeave()"
-					(click)="switchTo(selection.lastMonthSummary)">
-			<p>Last month</p>
-				<em class="fas fa-camera"></em>
-		</button>
-
-		<angular-popper placement="left" target="#lastMonthSummary" *ngIf="popupHelper.isButtonActivated(selection.lastMonthSummary) && !hasSelectedADashboard()">
-			<div content class="help">
-				<h4 class="help-title">Summary dashboard for last month</h4>
-				<div class="help-content">
-					<p>
-						You must monitor your IT assets over time. Here, you'll find a snapshot of your portfolio for last month.
-					</p>
-					<p>
-						As you don't have any history in Fitzhi yet, no snapshot from last month is available.<br/>
-						<em>Good for us. We don't have yet developed this feature!</em>
-					</p>
-				</div>
+			<div *ngIf="isSelected(selection.starfield)" class="ml-1 d-inline-flex flex-wrap w-100" style="line-height: 1;">
+				<span>&#x2605;</span><span>&#x2605;</span><span>&#x2605;</span>
+				<span>&#x2605;</span><span>&#x2605;</span><span>&#x2605;</span>
+				<span>&#x2605;</span><span>&#x2605;</span>
 			</div>
-		</angular-popper>        
+		</div>
+	</button>
 
-		<button id="lastYearSummary" class="btn rounded lastYearMinimized"
-				[ngClass]="{
-						'btn-outline-success' : isSelected(selection.lastYearSummary), 
-						'btn-outline-secondary': !isSelected(selection.lastYearSummary)}" 
-						(mouseenter)="popupHelper.mouseEnter(selection.lastYearSummary)" 
-						(mouseleave)="popupHelper.mouseLeave()"
-					(click)="switchTo(selection.lastYearSummary)">
-				<p>Last year</p>
-				<em class="fas fa-camera"></em>
-		</button>
-
-		<angular-popper placement="left" target="#lastYearSummary" *ngIf="popupHelper.isButtonActivated(selection.lastYearSummary) && !hasSelectedADashboard()">
-			<div content class="help">
-				<h4 class="help-title">Summary dashboard for last year</h4>
-				<div class="help-content">
-					<p>
-						You must monitor your IT assets over time. Here, you'll find a snapshot of your portfolio for last year.
-					</p>
-					<p>
-						As you don't have any history in Fitzhi yet, no snapshot from last year is available.<br/>
-						<em>Good for us. We don't have yet developed this feature!</em>
-					</p>
-				</div>
+	<button id="pie" class="btn rounded pie"
+			[ngClass]="{
+					'btn-outline-success' : isSelected(selection.currentSummary), 
+					'btn-outline-secondary': !isSelected(selection.currentSummary)}" 
+				(mouseenter)="popupHelper.mouseEnter(selection.currentSummary)" 
+				(mouseleave)="popupHelper.mouseLeave()"
+				(click)="switchTo(selection.currentSummary)">
+				<div class="pie-minimized">
+					<app-pie-chart
+						[radius]=200
+						[active]=false
+						[pie]=pieIdentifier.currentMinimized>
+					</app-pie-chart>
 			</div>
-		</angular-popper>        
-	 
+	</button>
+
+	<button id="technicalDate" class="btn rounded technicalDate"
+			[ngClass]="{
+					'btn-outline-success' : isSelected(selection.technicalDate), 
+					'btn-outline-secondary': !isSelected(selection.technicalDate)}" 
+				(mouseenter)="popupHelper.mouseEnter(selection.technicalDate)" 
+				(mouseleave)="popupHelper.mouseLeave()"
+				(click)="switchTo(selection.technicalDate)">
+		<em class="fas fa-calendar-alt"></em>
+	</button>
+
 </div>
 
 <div class="mainDashboard page-content"> 
@@ -227,47 +298,34 @@
 		</div>
 
 		<div id="container-treemap-projects" 
-			*ngIf="(projectService.allProjectsIsLoaded$|async) && (isSelected(selection.treeMapProjects))">
-			<app-treemap-projects width="95%" height="620px" active="true"></app-treemap-projects>
+				*ngIf="(projectService.allProjectsIsLoaded$|async) && (isSelected(selection.treeMapProjects))">
+			<div *ngIf="(treemapProjectsFilter)">
+				<div class="position-absolute start-0 top-0 bottom-0 h-100 pt-2 pb-2 pl-2" style="width: 250px">
+					<div class="w-100 h-100 border p-1">
+						<app-table-projects-filter></app-table-projects-filter>
+					</div>
+				</div>
+				<app-treemap-projects width="95%" height="95%" [treeMapOffsetLeft]="'250px'" active="true"></app-treemap-projects>
+			</div>
+			<div *ngIf="!(treemapProjectsFilter)">
+				<app-treemap-projects width="100%" height="95%" active="true"></app-treemap-projects>
+			</div>
 		</div>
 	
-		<div class="dashboard" *ngIf="isSelected(selection.lastYearSummary)">
-				<div *ngIf="(projectService.allProjectsIsLoaded$|async) && ((pieDashboardService.slicesLastYear$|async).length > 0)" 
-								class="formerDashboard">
-						<p class="text">Last year snapshot</p>
-						<app-pie-chart
-								[radius]=180
-								[active]=false
-								[legend]=false
-								[pie]=pieIdentifier.lastYear>
-						</app-pie-chart>
-				</div>
-				<div class="camera">
-						Last year snapshot<br/>
-						<em class="fas fa-camera camera large-fas"></em>
-						<p class="camera">NO DATA AVAILABLE</p>
-				</div>
+		<div class="dashboard" *ngIf="isSelected(selection.starfield)">
+			<app-starfield></app-starfield>
 		</div>
 
 
-		<div class="dashboard" *ngIf="isSelected(selection.lastMonthSummary)">
-				<div *ngIf="(projectService.allProjectsIsLoaded$|async) && ((pieDashboardService.slicesLastMonth$|async).length > 0)" class="formerDashboard">
-						<p class="text">Last month result</p>
-						<app-pie-chart
-								[radius]=180
-								[active]=false
-								[legend]=false
-								[pie]=pieIdentifier.lastMonth>
-						</app-pie-chart>
-				</div>
-				<div class="camera">
-						Last month snapshot<br/>
-						<em class="fas fa-camera camera large-fas"></em>
-						<p class="camera">NO DATA AVAILABLE</p>
-				</div>
+		<div class="dashboard" *ngIf="isSelected(selection.technicalDate)">
+			<div class="camera">
+				Datation of your portfolio will be available soon.
+			</div>
 		</div>
 
-		<div id="logo" *ngIf="isSelected(selection.none)">质</div>
+		<div class="dashboard" *ngIf="isSelected(selection.summary)">
+			<app-summary (messengerSelectedSummary)="switchTo($event)"></app-summary>
+		</div>
 
 		<div class="dashboard-pie" *ngIf="isSelected(selection.currentSummary) && (projectService.allProjectsIsLoaded$|async)">
 
@@ -276,17 +334,17 @@
 			</div>
 
 			<div class="pie">
-						<app-pie-chart
-								[radius]=150
-								[active]=true
-								[legend]=true
-								[pie]=pieIdentifier.current>
-						</app-pie-chart>
-				</div>
+				<app-pie-chart
+					[radius]=150
+					[active]=true
+					[legend]=true
+					[pie]=pieIdentifier.current>
+				</app-pie-chart>
+			</div>
 
-				<div class="pie-projects">
-						<app-pie-projects></app-pie-projects>
-				</div>
+			<div class="pie-projects">
+				<app-pie-projects></app-pie-projects>
+			</div>
 
 		</div>
 

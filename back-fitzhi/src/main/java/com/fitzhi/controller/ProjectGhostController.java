@@ -43,7 +43,8 @@ public class ProjectGhostController {
 	 * <p>
 	 * Manage a ghost in a project.
 	 * </p>
-	 * @param param the proposal of association for this ghost sent to the controller
+	 * @param idProject the given project identifier
+	 * @param association the proposal of association for this ghost sent to the controller
 	 * @throws ApplicationException if any problem occurs during the treatment
 	 */
 	@ResponseBody

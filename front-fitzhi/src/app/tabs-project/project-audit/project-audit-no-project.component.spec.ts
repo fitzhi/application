@@ -15,7 +15,7 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { BehaviorSubject } from 'rxjs';
 import { CinematicService } from 'src/app/service/cinematic.service';
 import { ProjectService } from 'src/app/service/project/project.service';
-import { ReferentialService } from 'src/app/service/referential.service';
+import { ReferentialService } from 'src/app/service/referential/referential.service';
 import { AuditBadgeComponent } from './project-audit-badges/audit-badge/audit-badge.component';
 import { AuditGraphicBadgeComponent } from './project-audit-badges/audit-badge/audit-graphic-badge/audit-graphic-badge.component';
 import { AuditAttachmentComponent } from './project-audit-badges/files-detail-form/audit-attachment-upload/audit-attachment.component';

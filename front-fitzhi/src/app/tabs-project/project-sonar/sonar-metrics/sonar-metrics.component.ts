@@ -7,7 +7,7 @@ import { SonarService } from 'src/app/service/sonar.service';
 import { switchMap, map, catchError, take } from 'rxjs/operators';
 import { Project } from 'src/app/data/project';
 import { Observable, EMPTY, of, BehaviorSubject } from 'rxjs';
-import { BaseComponent } from 'src/app/base/base.component';
+import { BaseDirective } from 'src/app/base/base-directive.directive';
 import { Constants } from 'src/app/constants';
 import { ProjectSonarMetricValue } from 'src/app/data/project-sonar-metric-value';
 import { ProjectService } from 'src/app/service/project/project.service';
@@ -24,7 +24,7 @@ import { traceOn } from 'src/app/global';
 	templateUrl: './sonar-metrics.component.html',
 	styleUrls: ['./sonar-metrics.component.css']
 })
-export class SonarMetricsComponent extends BaseComponent implements OnInit, OnDestroy, AfterViewInit {
+export class SonarMetricsComponent extends BaseDirective implements OnInit, OnDestroy, AfterViewInit {
 
 	/**
 	* Observable emitting a PanelSwitchEvent when

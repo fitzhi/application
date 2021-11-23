@@ -1,0 +1,1 @@
+The directory contains the local GIT repository of all projects declared in Fitzhi.

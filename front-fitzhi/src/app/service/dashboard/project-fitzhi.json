@@ -1,0 +1,128 @@
+{
+	"id": 2,
+	"name": "Fitzhi",
+	"active": true,
+	"connectionSettings": 3,
+	"branch": "release-1.6",
+	"urlRepository": "https://github.com/fitzhi/application",
+	"locationRepository": "/Users/fredericvidal/work/projects/application/deploy/data/repos/2",
+	"skills": {
+		"1": {
+			"idSkill": 1,
+			"numberOfFiles": 445,
+			"totalFilesSize": 1538209
+		},
+		"18": {
+			"idSkill": 18,
+			"numberOfFiles": 1,
+			"totalFilesSize": 2378
+		},
+		"3": {
+			"idSkill": 3,
+			"numberOfFiles": 1,
+			"totalFilesSize": 12792
+		},
+		"5": {
+			"idSkill": 5,
+			"numberOfFiles": 1,
+			"totalFilesSize": 10
+		},
+		"21": {
+			"idSkill": 21,
+			"numberOfFiles": 2,
+			"totalFilesSize": 14710
+		},
+		"22": {
+			"idSkill": 22,
+			"numberOfFiles": 1,
+			"totalFilesSize": 12792
+		},
+		"24": {
+			"idSkill": 24,
+			"numberOfFiles": 32,
+			"totalFilesSize": 15820
+		},
+		"8": {
+			"idSkill": 8,
+			"numberOfFiles": 392,
+			"totalFilesSize": 1148483
+		},
+		"12": {
+			"idSkill": 12,
+			"numberOfFiles": 3,
+			"totalFilesSize": 2902
+		}
+	},
+	"ghosts": [
+		{
+			"pseudo": "Frédéric",
+			"idStaff": -1,
+			"technical": false,
+			"firstCommit": {
+				"year": 2018,
+				"month": 6,
+				"day": 7
+			},
+			"lastCommit": {
+				"year": 2019,
+				"month": 1,
+				"day": 20
+			},
+			"numberOfCommits": 1106,
+			"numberOfFiles": 175
+		},
+		{
+			"pseudo": "fitzhi",
+			"idStaff": -1,
+			"technical": false,
+			"firstCommit": {
+				"year": 2021,
+				"month": 1,
+				"day": 19
+			},
+			"lastCommit": {
+				"year": 2021,
+				"month": 3,
+				"day": 20
+			},
+			"numberOfCommits": 490,
+			"numberOfFiles": 297
+		},
+		{
+			"pseudo": "Fitzhì",
+			"idStaff": -1,
+			"technical": false,
+			"firstCommit": {
+				"year": 2020,
+				"month": 2,
+				"day": 12
+			},
+			"lastCommit": {
+				"year": 2021,
+				"month": 2,
+				"day": 9
+			},
+			"numberOfCommits": 6,
+			"numberOfFiles": 6
+		}
+	],
+	"libraries": [
+		{
+			"exclusionDirectory": "docs",
+			"type": 2
+		}
+	],
+	"urlCodeFactorIO": "https://www.codefactor.io/repository/github/fitzhi/application",
+	"sonarProjects": [],
+	"audit": {},
+	"auditEvaluation": 0,
+	"staffEvaluation": 1,
+	"ecosystems": [
+		0,
+		2,
+		10,
+		9,
+		3,
+		5
+	]
+}

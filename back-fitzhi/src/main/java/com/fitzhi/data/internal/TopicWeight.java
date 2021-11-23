@@ -8,7 +8,7 @@ import lombok.Data;
 
 /**
  * <p>
- * This object is used as parameter by {@link ProjectAuditHandler#setWeights(int, java.util.List)}
+ * This object is used as parameter by {@link ProjectAuditHandler#saveWeights(int, java.util.List)}
  * </p>
  *
  * @author Fr&eacute;d&eacute;ric VIDAL

@@ -12,7 +12,10 @@ import { NgxChartsModule } from '@swimlane/ngx-charts';
 import { DynamicPieChartModule } from 'dynamic-pie-chart';
 import { RisingSkylineModule, SkylineComponent } from 'rising-skyline';
 import { CinematicService } from 'src/app/service/cinematic.service';
-import { ReferentialService } from 'src/app/service/referential.service';
+import { ReferentialService } from 'src/app/service/referential/referential.service';
+import { DashboardService } from '../service/dashboard/dashboard.service';
+import { ProjectService } from '../service/project/project.service';
+import { StaffListService } from '../service/staff-list-service/staff-list.service';
 import { TagifyStarsComponent } from '../tabs-staff/staff-experience/tagify-stars/tagify-stars.component';
 import { FitzhiDashboardComponent } from './fitzhi-dashboard.component';
 import { PieChartComponent } from './pie-chart/pie-chart.component';
@@ -23,27 +26,15 @@ import { SkylineIconComponent } from './skyline/skyline-icon/skyline-icon.compon
 import { TreemapSkillsChartComponent } from './treemap-skills/treemap-skills-chart/treemap-skills-chart.component';
 import { TreemapSkillsComponent } from './treemap-skills/treemap-skills-container/treemap-skills.component';
 import { TreemapHeaderComponent } from './treemap-skills/treemap-skills-header/treemap-skills-header.component';
-
+import { MOCK_PROJECTS_DISTRIBUTION } from './mock-projects-distribution.spec';
+import { MOCK_SKILLS_DISTRIBUTION } from './mock-skills-distribution.spec';
+import { RouterTestingModule } from '@angular/router/testing';
 
 describe('FitzhiDashboardComponent initialization', () => {
 	let component: FitzhiDashboardComponent;
 	let fixture: ComponentFixture<FitzhiDashboardComponent>;
 	let skylineService: SkylineService;
-
-	const distribution =  [
-		{
-			name: 'java',
-			value: '50'
-		},
-		{
-			name: '.Net',
-			value: '20'
-		},
-		{
-			name: 'Typescript',
-			value: '30'
-		}
-	];
+	let projectService: ProjectService;
 
 	beforeEach(waitForAsync(() => {
 		TestBed.configureTestingModule({
@@ -53,7 +44,7 @@ describe('FitzhiDashboardComponent initialization', () => {
 				TreemapSkillsComponent, SkylineComponent],
 			imports: [MatTableModule, MatSortModule, MatPaginatorModule, HttpClientTestingModule,
 				MatDialogModule, NgxChartsModule, BrowserAnimationsModule, MatCheckboxModule,
-				DynamicPieChartModule, RisingSkylineModule],
+				DynamicPieChartModule, RisingSkylineModule, RouterTestingModule],
 			providers: [ReferentialService, CinematicService, SkylineService, DatePipe]
 		})
 		.compileComponents();
@@ -64,11 +55,21 @@ describe('FitzhiDashboardComponent initialization', () => {
 		component = fixture.componentInstance;
 		skylineService = TestBed.inject(SkylineService);
 		skylineService.skylineLoaded$.next(true);
+
+		const staffListService = TestBed.inject(StaffListService);
+		staffListService.informStaffLoaded();
+		projectService = TestBed.inject(ProjectService);
+		projectService.allProjectsIsLoaded$.next(true);
+
+		const dashboardService = TestBed.inject(DashboardService);
+		spyOn(dashboardService, 'processSkillDistribution').and.returnValue(MOCK_SKILLS_DISTRIBUTION);
+		spyOn(dashboardService, 'processProjectsDistribution').and.returnValue(MOCK_PROJECTS_DISTRIBUTION);
+
 		fixture.detectChanges();
 	});
 
 	it('should be created without any error', () => {
-		component.selected = selection.none;
+		component.selected = selection.summary;
 		fixture.detectChanges();
 		expect(component).toBeTruthy();
 		expect(document.getElementById('container-skyline')).toBeNull();
@@ -118,13 +119,14 @@ describe('FitzhiDashboardComponent initialization', () => {
 		expect(onClickMock).toHaveBeenCalled();
 	}));
 
-	it('The button for Treemap is clicked, BUT ALL PROJECTS ARE NOT loaded', fakeAsync(() => {
+	it('The button for Treemap is clicked, BUT ALL PROJECTS ARE NOT loaded', () => {
+		projectService.allProjectsIsLoaded$.next(false);
 		component.selected = selection.treeMapSkills;
 		fixture.detectChanges();
 		expect(document.getElementById('container-skyline')).toBeNull();
 		expect(document.getElementById('container-treemap-skills')).toBeNull();
 		expect(document.getElementById('logo')).toBeDefined();
-	}));
+	});
 
 /*
 	// https://blog.nrwl.io/controlling-time-with-zone-js-and-fakeasync-f0002dfbf48c

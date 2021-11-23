@@ -32,10 +32,7 @@ export class StaffService {
 	 */
 	public collaborator: Collaborator;
 
-	/**	 * @param idStaff the staff identifier.
-	 * @param idProject the project identifier to add.
-	 * @returns an observable emetting the staff record updated or an empty staff if any error occurs.
-
+	/**
 	 * Observable to a map containig the count of staff members aggregated by skill & level (i.e. experience)
 	 */
 	public peopleCountExperience$ = new Subject<Map<string, number>>();
@@ -72,11 +69,11 @@ export class StaffService {
 	}
 
 	/**
-		 * Update, _or add_, a new collaborator as a staff member, with a **POST** Verb.
+	 * Update, _or add_, a new collaborator as a staff member, with a **POST** Verb.
 	 *
 	 * This method is returning an observable emitting the freshly updated _(or created)_ staff member.
 	 * @param staff the given collaborator to be saved
-		 */
+	 */
 	save$(staff: Collaborator): Observable<Collaborator> {
 		if (traceOn()) {
 			console.log(((staff.idStaff) ? 'Saving staff %d %s %s' : 'Adding staff %d %s %s'),

@@ -1,23 +1,27 @@
 package com.fitzhi.data.internal;
 import java.io.Serializable;
+import java.time.LocalDate;
+
+import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fitzhi.data.source.GitMetrics;
 
 import lombok.Data;
 
 /**
  * <p>
- * Ghost identified in the repository.<br/>
- * Ghost are unregistered committers in the repository.<br/>
- * System failed to retrieve the read developer behind a {@link #pseudo pseudo}.<br/>
+ * Ghost identified in the repository.
+ * Ghost are unregistered committers in the repository.
+ * System failed to retrieve the read developer behind a {@link #pseudo pseudo}.
+ * </p>
  * A ghost can be 
  * <ul>
  * <li>{@link #technical technical}</li>
  * <li>{@link #idStaff associate to a staff identifier}</li>
  * </ul>
- * </p>
  * 
  * @author Fr&eacute;d&eacute;ric VIDAL
  */
-public @Data class Ghost implements Serializable {
+public @Data class Ghost implements Serializable, GitMetrics {
 
 	/**
 	 * serialVersionUID for serialization purpose.
@@ -49,6 +53,28 @@ public @Data class Ghost implements Serializable {
 	private boolean technical;
 
 	/**
+	 * Date of the first commit.
+	 */
+	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
+	private LocalDate firstCommit;
+
+	/**
+	 * Date of the latest commit.
+	 */
+	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
+	private LocalDate lastCommit;
+	
+	/**
+	 * the number of commit submitted by a developer inside the project.
+	 */
+	private int numberOfCommits;
+	
+	/**
+	 * the number of files modified by a developer inside the project.
+	 */
+	private int numberOfFiles;
+
+	/**
 	 * Empty constructor for serialization purpose
 	 */
 	public Ghost() {
@@ -64,24 +90,23 @@ public @Data class Ghost implements Serializable {
 	 * </ul>
 	 */
 	public Ghost(String pseudo, int idStaff, boolean technical) {
-		super();
 		this.setPseudo(pseudo);
 		this.setIdStaff(idStaff);
 		this.setTechnical(technical);
 	}
-	
+
 	/**
 	 * @param pseudo the committer's pseudo.
-	 * @param technical technical or human being pseudo, boolean 
+	 * @param technical Is this pseudo either a technical alias, or a human being.
+	 * This parameter is a boolean value : 
 	 * <ul>
-	 * <li>{@code true} this pseudo is a technical user. The {@code idStaff} is there for equal to {@code NULL}</li>
+	 * <li>{@code true} this pseudo is a technical user. Therefore, the {@code idStaff} is equal to {@code NULL}</li>
 	 * <li>{@code false} this is pseudo of a real developer.</li>
 	 * </ul>
 	 */
 	public Ghost(String pseudo, boolean technical) {
 		this (pseudo, NULL, technical);
 	}
-
 
 	/**
 	 * @return the alleged pseudo for this ghost

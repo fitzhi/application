@@ -69,7 +69,7 @@ public class SourceFile implements Serializable {
 	}
 
 	/**
-	 * @param the date of the last Commit for this source file.
+	 * @param lastCommit the date of the last Commit for this source file.
 	 */
 	public void setLastCommit(LocalDate lastCommit) {
 		this.lastCommit = lastCommit;
@@ -83,7 +83,7 @@ public class SourceFile implements Serializable {
 	}
 
 	/**
-	 * @param the array of staff identifiers who have submitted commits to set.
+	 * @param idStaffs the array of staff identifiers who have submitted commits to set.
 	 */
 	public void setIdStaffs(int[] idStaffs) {
 		this.idStaffs = idStaffs;

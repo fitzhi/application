@@ -1,11 +1,11 @@
 <div id="setup" *ngIf="firstLaunch; else normalLaunch">
-    <app-starting-setup></app-starting-setup>
+	<app-starting-setup></app-starting-setup>
 </div>
 <ng-template #normalLaunch>
-    <div id="setup" *ngIf="connectionIsNeeded()">
-        <app-connect-user></app-connect-user>
-    </div>
-    <div class="mainDashboard" *ngIf="this.authService.isConnected()">
-        <app-fitzhi-dashboard></app-fitzhi-dashboard>
-    </div>
+	<div id="setup" *ngIf="connectionIsNeeded()">
+		<app-connect-user></app-connect-user>
+	</div>
+	<div id="mainDashboard" *ngIf="this.authService.isConnected()">
+		<app-fitzhi-dashboard></app-fitzhi-dashboard>
+	</div>
 </ng-template>

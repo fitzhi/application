@@ -109,19 +109,19 @@ public class ContributorsCommitRepositoryTest {
     			.filter(cont -> cont.getIdStaff() == 1)
     			.findFirst()
     			.orElseThrow(ApplicationException::new); 	
-		Assert.assertEquals(3, frvidal.getNumberOfCommitsSubmitted());
+		Assert.assertEquals(3, frvidal.getNumberOfCommits());
 
 	 	Contributor glucas = contributors.stream()
     			.filter(cont -> cont.getIdStaff() == 2)
     			.findFirst()
     			.orElseThrow(ApplicationException::new);   
-		Assert.assertEquals(6, glucas.getNumberOfCommitsSubmitted());
+		Assert.assertEquals(6, glucas.getNumberOfCommits());
 		
 	 	Contributor tintin = contributors.stream()
     			.filter(cont -> cont.getIdStaff() == 3)
     			.findFirst()
     			.orElseThrow(ApplicationException::new);   
-		Assert.assertEquals(2, tintin.getNumberOfCommitsSubmitted());
+		Assert.assertEquals(2, tintin.getNumberOfCommits());
 	}
 
     @Test

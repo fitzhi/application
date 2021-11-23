@@ -1,6 +1,3 @@
-/**
- * 
- */
 package com.fitzhi.data.source;
 
 import static com.fitzhi.Global.LN;
@@ -15,9 +12,13 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.function.BiFunction;
+import java.util.function.Function;
 
 import com.fitzhi.bean.StaffHandler;
 import com.fitzhi.bean.impl.PropectDashboardCustomizerImpl;
+import com.fitzhi.data.internal.Author;
+import com.fitzhi.data.internal.Ghost;
 import com.fitzhi.data.internal.Staff;
 
 import lombok.extern.slf4j.Slf4j;
@@ -28,7 +29,7 @@ import lombok.extern.slf4j.Slf4j;
  * <br/>
  * </p>
  * <p>
- * <i>This is the first & basic implementation for the Commit repository</i>.
+ * <i>This is the first and basic implementation for the Commit repository</i>.
  * </p>
  * @author Fr&eacute;d&eacute;ric VIDAL
  */
@@ -48,7 +49,6 @@ public class BasicCommitRepository implements CommitRepository {
 		
 	@Override
 	public void addCommit(String sourceCodePath, int idStaff, String authorName, LocalDate dateCommit, long importance) {
-		
 		if (repo.containsKey(sourceCodePath)) {
 			final CommitHistory history = repo.get(sourceCodePath);
 			history.handle(idStaff, authorName, dateCommit);
@@ -102,8 +102,41 @@ public class BasicCommitRepository implements CommitRepository {
 	}
 
 	@Override
-	public Contributor extractContribution(Staff staff) {
-		
+	public Contributor extractStaffMetrics(Staff staff) {
+		BiFunction<Operation, Staff, Boolean> test  = (ope, st) -> ope.getIdStaff() == st.getIdStaff();
+		Function<Staff, Contributor> newInstance  = st -> new Contributor (st.getIdStaff());
+		return extract(staff, test, newInstance);
+	}
+
+	@Override
+	public Ghost extractGhostMetrics(Author author) {
+		BiFunction<Operation, Author, Boolean> test  = (ope, auth) -> ope.getAuthorName().equals(auth.getName());
+		Function<Author, Ghost> newInstance  = auth -> new Ghost(auth.getName(), false);
+		return extract(author, test, newInstance);
+	}
+
+	/**
+	 * Extract the data.
+	 * 
+	 * <p>
+	 * In theory, the function should never return a {@code null}, 
+	 * but it appears that this case occurs. Therefore, we put a warning to trace this case and track the issue.
+	 * <em>Most probably a filter on files eligibility is the origin of this detect.</em>
+	 * </p>
+	 * 
+	 * @param <R> the returned classname which implements the interface {@link GitMetrics}
+	 * @param <T> the passed type
+	 * @param t the given object to be used to filter
+	 * @param test the filter to be tested on data.
+	 * @param create the creation method
+	 * 
+	 * @return the {@link GitMetrics metrics} implementation
+	 */
+	public <R extends GitMetrics, T> R extract(
+		T t, 
+		BiFunction<Operation, T, Boolean> test, 
+		Function<T, R> create) {
+
 		int numberOfCommits = 0;
 		int numberOfFiles = 0;
 		LocalDate lastCommit = LocalDate.MIN; 
@@ -113,7 +146,7 @@ public class BasicCommitRepository implements CommitRepository {
 			boolean detected = false;
 			for (Operation operation : history.operations) {
 				
-				if (operation.getIdStaff() == staff.getIdStaff()) {
+				if (test.apply(operation, t)) {
 					if (!detected) {
 						detected = true;
 						numberOfFiles++;
@@ -133,12 +166,21 @@ public class BasicCommitRepository implements CommitRepository {
 		}
 		if (numberOfCommits == 0) {
 			if (log.isWarnEnabled()) {
-				log.warn(String.format("Cannot create an empty contributor for the staff member %s", staff.fullName()));
+				log.warn(String.format("Cannot create an empty contributor for %s %s", t.getClass(), t.toString()));
 			}
 		}
 		
-		return (numberOfCommits == 0) ? null :
-				new Contributor(staff.getIdStaff(), firstCommit, lastCommit, numberOfCommits, numberOfFiles);
+		R r = (numberOfCommits == 0) ? null : create.apply(t);
+
+		// If no commit is registered for this committer, we return null.
+		if (r != null) {
+			r.setFirstCommit(firstCommit);
+			r.setLastCommit(lastCommit);
+			r.setNumberOfCommits(numberOfCommits);
+			r.setNumberOfFiles(numberOfFiles);
+		}
+
+		return r;		
 	}
 	
 	@Override

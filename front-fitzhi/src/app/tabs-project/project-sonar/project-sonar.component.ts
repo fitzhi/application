@@ -1,6 +1,6 @@
 import { Component, EventEmitter, OnDestroy, OnInit, Output, ViewChild } from '@angular/core';
 import { Subject } from 'rxjs';
-import { BaseComponent } from 'src/app/base/base.component';
+import { BaseDirective } from 'src/app/base/base-directive.directive';
 import { Constants } from 'src/app/constants';
 import { traceOn } from 'src/app/global';
 import { MessageGravity } from 'src/app/interaction/message/message-gravity';
@@ -14,7 +14,7 @@ import { SonarThumbnailsComponent } from './sonar-thumbnails/sonar-thumbnails.co
 	templateUrl: './project-sonar.component.html',
 	styleUrls: ['./project-sonar.component.css']
 })
-export class ProjectSonarComponent extends BaseComponent implements OnInit, OnDestroy {
+export class ProjectSonarComponent extends BaseDirective implements OnInit, OnDestroy {
 
 	/**
 	 * Observable emitting the panel identifier.
@@ -84,7 +84,7 @@ export class ProjectSonarComponent extends BaseComponent implements OnInit, OnDe
 
 					if (this.projectService.project && this.projectService.project.sonarProjects.length > 0) {
 						if (traceOn()) {
-							console.log ('By default, we starts on the %s dashboard with %s.',
+							console.log ('By default, we start on the %s dashboard with %s.',
 								Constants.TITLE_PANELS[this.SETTINGS],
 								this.projectService.project.sonarProjects[0].key);
 						}

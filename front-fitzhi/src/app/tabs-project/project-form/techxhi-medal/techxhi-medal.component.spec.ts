@@ -1,23 +1,21 @@
+import { HttpClientTestingModule } from '@angular/common/http/testing';
+import { Component, ViewChild } from '@angular/core';
 import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
-
-import { TechxhiMedalComponent } from './techxhi-medal.component';
-import { ProjectService } from 'src/app/service/project/project.service';
-import { Project } from 'src/app/data/project';
+import { FormsModule } from '@angular/forms';
+import { MatDialogModule } from '@angular/material/dialog';
 import { BehaviorSubject } from 'rxjs';
-import { ReferentialService } from 'src/app/service/referential.service';
-import { PortalHostDirective } from '@angular/cdk/portal';
-import { SonarProject } from 'src/app/data/SonarProject';
-import { SonarEvaluation } from 'src/app/data/sonar-evaluation';
+import { Project } from 'src/app/data/project';
 import { RiskLegend } from 'src/app/data/riskLegend';
-import { MatGridList, MatGridListModule } from '@angular/material/grid-list';
-import { QuotationBadgeComponent } from '../../project-sonar/sonar-dashboard/sonar-quotation/quotation-badge/quotation-badge.component';
+import { SonarEvaluation } from 'src/app/data/sonar-evaluation';
+import { SonarProject } from 'src/app/data/SonarProject';
+import { CinematicService } from 'src/app/service/cinematic.service';
+import { ProjectService } from 'src/app/service/project/project.service';
+import { ReferentialService } from 'src/app/service/referential/referential.service';
 // tslint:disable-next-line:max-line-length
 import { AuditGraphicBadgeComponent } from '../../project-audit/project-audit-badges/audit-badge/audit-graphic-badge/audit-graphic-badge.component';
-import { FormsModule } from '@angular/forms';
-import { CinematicService } from 'src/app/service/cinematic.service';
-import { HttpClientTestingModule } from '@angular/common/http/testing';
-import { MatDialogModule } from '@angular/material/dialog';
-import { Component, ViewChild } from '@angular/core';
+import { QuotationBadgeComponent } from '../../project-sonar/sonar-dashboard/sonar-quotation/quotation-badge/quotation-badge.component';
+import { TechxhiMedalComponent } from './techxhi-medal.component';
+
 
 describe('TechxhiMedalComponent', () => {
 	let referentialService: ReferentialService;

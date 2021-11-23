@@ -1,10 +1,10 @@
 import { Component, OnInit, ViewChild, OnDestroy } from '@angular/core';
 import { MatStepper } from '@angular/material/stepper';
 import { Collaborator } from 'src/app/data/collaborator';
-import { BaseComponent } from 'src/app/base/base.component';
+import { BaseDirective } from 'src/app/base/base-directive.directive';
 import { BackendSetupService } from 'src/app/service/backend-setup/backend-setup.service';
 import { HttpClient } from '@angular/common/http';
-import { ReferentialService } from 'src/app/service/referential.service';
+import { ReferentialService } from 'src/app/service/referential/referential.service';
 import { SkillService } from 'src/app/skill/service/skill.service';
 import { Router } from '@angular/router';
 import { traceOn } from 'src/app/global';
@@ -16,7 +16,7 @@ import { Subject } from 'rxjs';
 	templateUrl: './starting-setup.component.html',
 	styleUrls: ['./starting-setup.component.css']
 })
-export class StartingSetupComponent extends BaseComponent implements OnDestroy {
+export class StartingSetupComponent extends BaseDirective implements OnDestroy {
 
 	/**
 	 * The main stepper is passed in order to procede a programmatly step.next().

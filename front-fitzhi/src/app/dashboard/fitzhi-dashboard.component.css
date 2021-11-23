@@ -7,12 +7,18 @@ div {
 	--sidebar-width: 70px;
 	--sidebar-button-width: 60px;
 	--sidebar-button-height: 60px;
+
+	/* Offset of the projects-treemap located on left of the sidebar */
+	--treemap-left-offset: 0px;
 }
 
 .mainDashboard {
-	width: calc(100% - var(--sidebar-width));
-	margin-left: var(--sidebar-width);
 	line-height: 1;
+	top: var(--toolbar-height);
+	bottom: 0;
+	left: var(--sidebar-width);
+	right: 0;
+	position: fixed;
 }
 
 .dashboard-pie {
@@ -45,22 +51,28 @@ div.pie-projects {
 	position: absolute;
 	top: 0;
 	right: 0;
-	width: 300px;
 	height: 100%;
 }
 
-#logo {
-	font-size: 420px;
-	background: -webkit-linear-gradient(var(--color-selected), var(--color-error));
-	background-clip: text;
-	-webkit-background-clip: text;
-	-webkit-text-fill-color: transparent;
+@media screen and (max-width: 1280px) {
+	div.pie-projects {
+		width: 0;
+		visibility: hidden;
+	}
 
-	margin: 40vh auto;
-	transform: translateY(-50%);
-	
-	width: 450px;
-	height: 450px;
+	div.pie-legend {
+		visibility: hidden;
+	}
+}
+
+@media screen and (min-width: 1280px) {
+	div.pie-projects {
+		width: 300px;
+		visibility: visible;
+	}
+	div.pie-legend {
+		visibility: visible;
+	}
 }
  
 div.styline-icon {
@@ -69,7 +81,7 @@ div.styline-icon {
 }
 
 
-button.lastYearMinimized, button.lastMonthMinimized, button.currentMinimized, button.treeMap-skills, button.treeMap-projects, div.styline-icon {
+button.starfield, button.technicalDate, button.pie, button.treeMap-skills, button.treeMap-projects, div.styline-icon {
 	width: var(--sidebar-button-width);
 	height: var(--sidebar-button-height);
 	left: 5px;
@@ -79,63 +91,45 @@ button.lastYearMinimized, button.lastMonthMinimized, button.currentMinimized, bu
 	margin: 0;
 }
 
-button.lastYearMinimized P, button.lastMonthMinimized P {
+button.starfield P, button.technicalDate P {
 	margin-bottom: 0;
 	font-size: 8px;
 }
 
-button.lastYearMinimized I, button.lastMonthMinimized I, button.currentMinimized I {
+button.starfield I, button.technicalDate I, button.pie I {
 	font-size: 34px;
 }
 
-button.lastYearMinimized {
+button.technicalDate {
 	bottom: 5px;
 }
 
-button.lastMonthMinimized {
+button.pie {
 	bottom: 70px;
 }
 
-button.currentMinimized {
-	bottom: 140px;
+button.starfield {
+	bottom: 210px;
 }
 
 div.skyline-icon {
-	bottom: 350px;
+	bottom: 140px;
 	position: absolute;
 	margin-left: 5px;
 }
 
 button.treeMap-projects {
-	bottom: 280px;
+	bottom: 350px;
 }
 
 button.treeMap-skills {
-	bottom: 210px;
+	bottom: 280px;
 }
 
-button.currentMinimized  div.pie-minimized {
+button.pie  div.pie-minimized {
   width: 50px;
   height: 50px;
   margin: 0 auto;
-}
-
-div.camera {
-	width: 300px;
-	margin: 40vh auto;
-	transform: translateY(-50%);
-	text-align: center;
-	font-size: 22px;
-	border-radius: 5px;
-	border-style: solid;
-	border-width: 1px;
-	border-color: lightgrey;
-	padding: 20px;
-
-}
-
-i.camera {
-	font-size: 60px;
 }
 
 .vertical-nav {
@@ -149,9 +143,9 @@ i.camera {
 	box-shadow: 3px 3px 10px rgba(0, 0, 0, 0.1);
 }
 
-svg.treeMapButton {
-	width: 60px;
-	height: 60px;
+button.treeMapSkillsCoverageButton {
+	width: 100px;
+	height: 100px;
 }
 
 rect.rectTreeMap {
@@ -185,6 +179,14 @@ em.large-fas {
 	text-align: center;
 }
 
+#container-treemap-skills {
+	width: calc(100% - var(--sidebar-width));
+	height: calc(100% - var(--toolbar-height));
+	top: var(--toolbar-height);
+	bottom: 0;
+	position: fixed;
+}
+
 div.host-treemap-projects {
 	padding: 0;
 	transform: translate(-6px, -6px); 
@@ -208,4 +210,45 @@ tr.evaluationDistributions td {
 
 tr.evaluationDistributions td em {
 	color: var(--color-selected);
+}
+
+div.panelDeveloperBase {
+	border: 1px;
+	width: 5px;
+	height: 25px;
+	border: 1px solid black;
+}
+
+div.panelDeveloperArrowRight {
+    width: 15px;
+    height: 25px;
+	border-top: 1px solid black;
+	border-bottom: 1px solid black;
+	border-right: 1px solid black;
+}
+
+div.panelDeveloperArrowLeft {
+    width: 15px;
+    height: 25px;
+	border-top: 1px solid black;
+	border-bottom: 1px solid black;
+	border-left: 1px solid black;
+}
+
+a.flipProjectsFilter {
+	color: black;
+	text-decoration: none;
+}
+
+div.camera {
+	width: 300px;
+	margin: 40vh auto;
+	transform: translateY(-50%);
+	text-align: center;
+	font-size: 22px;
+	border-radius: 5px;
+	border-style: solid;
+	border-width: 1px;
+	border-color: lightgrey;
+	padding: 20px;
 }

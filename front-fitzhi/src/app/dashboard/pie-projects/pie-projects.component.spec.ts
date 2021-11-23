@@ -3,7 +3,7 @@ import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 import { PieProjectsComponent } from './pie-projects.component';
 import { MatTableModule } from '@angular/material/table';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
-import { ReferentialService } from 'src/app/service/referential.service';
+import { ReferentialService } from 'src/app/service/referential/referential.service';
 import { RouterTestingModule } from '@angular/router/testing';
 import { MatDialogModule } from '@angular/material/dialog';
 import { CinematicService } from 'src/app/service/cinematic.service';

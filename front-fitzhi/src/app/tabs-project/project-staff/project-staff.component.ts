@@ -10,7 +10,7 @@ import { Contributor } from 'src/app/data/contributor';
 import { ProjectContributors } from 'src/app/data/external/ProjectContributors';
 import { traceOn } from 'src/app/global';
 import { TabsStaffListService } from 'src/app/tabs-staff-list/service/tabs-staff-list.service';
-import { BaseComponent } from '../../base/base.component';
+import { BaseDirective } from '../../base/base-directive.directive';
 import { Constants } from '../../constants';
 import { MessageService } from '../../interaction/message/message.service';
 import { CinematicService } from '../../service/cinematic.service';
@@ -22,7 +22,7 @@ import { ProjectStaffService } from '../project-staff-service/project-staff.serv
 	templateUrl: './project-staff.component.html',
 	styleUrls: ['./project-staff.component.css']
 })
-export class ProjectStaffComponent extends BaseComponent implements OnInit, OnDestroy, AfterContentInit {
+export class ProjectStaffComponent extends BaseDirective implements OnInit, OnDestroy, AfterContentInit {
 
 	public dataSource: MatTableDataSource<Contributor>;
 

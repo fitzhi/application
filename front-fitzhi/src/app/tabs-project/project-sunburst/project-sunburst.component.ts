@@ -10,7 +10,7 @@ import { traceOn } from 'src/app/global';
 import { StaffListService } from 'src/app/service/staff-list-service/staff-list.service';
 import { StaffService } from 'src/app/tabs-staff/service/staff.service';
 import Sunburst from 'sunburst-chart';
-import { BaseComponent } from '../../base/base.component';
+import { BaseDirective } from '../../base/base-directive.directive';
 import { Constants } from '../../constants';
 import { Contributor } from '../../data/contributor';
 import { Filename } from '../../data/filename';
@@ -46,7 +46,7 @@ export enum PreviewContext {
 	templateUrl: './project-sunburst.component.html',
 	styleUrls: ['./project-sunburst.component.css']
 })
-export class ProjectSunburstComponent extends BaseComponent implements OnInit, AfterViewInit, OnDestroy {
+export class ProjectSunburstComponent extends BaseDirective implements OnInit, AfterViewInit, OnDestroy {
 
 	/**
 	 * This event is fired if the sunburst is processed to inform the form component that the project might have changed.
@@ -297,11 +297,13 @@ export class ProjectSunburstComponent extends BaseComponent implements OnInit, A
 			.pipe(take(1))
 			.subscribe({
 				next: data => {
-					this.setActiveContext (PreviewContext.SUNBURST_READY);
-					setTimeout(() => {
-						this.cacheService.saveResponse(data);
-						this.generateChart(data);
-					}, 0);
+					if (data !== null) {
+						this.setActiveContext (PreviewContext.SUNBURST_READY);
+						setTimeout(() => {
+							this.cacheService.saveResponse(data);
+							this.generateChart(data);
+						}, 0);
+					}
 				},
 				error: error => {
 					if (error instanceof String) {
@@ -378,7 +380,25 @@ export class ProjectSunburstComponent extends BaseComponent implements OnInit, A
 		}
 	}
 
+	/**
+	 * Test if the previous chart is still present.
+	 * If this chart is still there, we hide this useless element.
+	 */
+	public hidePreviousSunburstChartDetector() {
+		const elements = document.getElementsByClassName('sunburst-viz');
+		if (elements && elements.length > 0) {
+			if (traceOn()) {
+				console.log ('Former element still present, we\'ll remove it.');
+			}
+			elements[0].setAttribute('style', 'display:none');
+		}
+	}
+
 	handleSunburstData(response: any) {
+
+		if (!response) {
+			return;
+		}
 
 		if (!this.myChart) {
 			this.myChart = Sunburst();
@@ -393,6 +413,9 @@ export class ProjectSunburstComponent extends BaseComponent implements OnInit, A
 			console.warn ('The application is in an unexpected state');
 			console.warn('Chart is not present in the HTML layout for the projet %s', this.projectService.project.name);
 		} else {
+			// Hack to hide the previous chart container is it's still there
+			this.hidePreviousSunburstChartDetector();
+			// We insert the chart into the DOM
 			this.myChart.data(response.sunburstData)
 				.width(500)
 				.height(500)

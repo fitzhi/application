@@ -1,4 +1,4 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { AfterViewInit, Component, Input, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { Building, BuildingSelected } from 'rising-skyline';
 import { BehaviorSubject } from 'rxjs';
@@ -10,7 +10,7 @@ import { SkylineService } from '../service/skyline.service';
 	templateUrl: './skyline.component.html',
 	styleUrls: ['./skyline.component.css']
 })
-export class SkylineComponent implements OnInit {
+export class SkylineComponent {
 
 	/**
 	 * The **width** of the skyline component.
@@ -37,9 +37,6 @@ export class SkylineComponent implements OnInit {
 	constructor(
 		public skylineService: SkylineService,
 		private router: Router) { }
-
-	ngOnInit(): void {
-	}
 
 	/**
 	 * This method is invoked when a building is clicked.

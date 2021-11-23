@@ -1,27 +1,51 @@
-import { TestBed, inject } from '@angular/core/testing';
-
-import { HttpClientTestingModule } from '@angular/common/http/testing';
-import { SkillService } from './skill.service';
+import { HttpClientTestingModule, HttpTestingController } from '@angular/common/http/testing';
+import { Component } from '@angular/core';
+import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { Mock } from 'protractor/built/driverProviders';
 import { of } from 'rxjs';
-import { Skill } from 'src/app/data/skill';
 import { take } from 'rxjs/operators';
+import { Skill } from 'src/app/data/skill';
+import { BackendSetupService } from 'src/app/service/backend-setup/backend-setup.service';
+import { SkillService } from './skill.service';
+
 
 describe('skillService', () => {
+	let component: DummyComponent;
+	let fixture: ComponentFixture<DummyComponent>;
 	let service: SkillService;
+	let httpTestingController: HttpTestingController;
+	let backendSetupService: BackendSetupService;
+
+	@Component({
+		selector: 'app-dummy-component',
+		template: `<div></div>`
+	})
+	class DummyComponent {
+	}
 
 	beforeEach(() => {
+		localStorage.clear();
 		TestBed.configureTestingModule({
-			providers: [SkillService],
-			imports: [HttpClientTestingModule]
+			providers: [BackendSetupService, SkillService],
+			imports: [HttpClientTestingModule],
+			declarations: []
 		});
+
+		fixture = TestBed.createComponent(DummyComponent);
+		component = fixture.componentInstance;
+
 		service = TestBed.inject(SkillService);
+
+		httpTestingController = TestBed.inject(HttpTestingController);
+
+		fixture.detectChanges();
 	});
 
-	it('should be simply created without error', () => {
+	it('should be simply created without error.', () => {
 		expect(service).toBeTruthy();
 	});
 
-	it('should CREATE a new skill if skill.id is null', done => {
+	it('should CREATE a new skill if skill.id is null.', done => {
 
 		const skill = new Skill(null, 'A revolutionary skill');
 
@@ -42,7 +66,7 @@ describe('skillService', () => {
 		});
 	});
 
-	it('should UPDATE a skill if skill.id is NOT null', done => {
+	it('should UPDATE a skill if skill.id is NOT null.', done => {
 
 		const skill = new Skill(1789, 'An empty title');
 
@@ -50,7 +74,7 @@ describe('skillService', () => {
 		const spyCreateSkill = spyOn(service, 'createSkill$');
 
 		// We mock the Skill update
-		const spyUpdateSkill = spyOn(service, 'updateSkill$')
+		spyOn(service, 'updateSkill$')
 			.and.callThrough()
 			.and.returnValue(of(new Skill(1789, 'A revolutionaly skill')));
 
@@ -62,6 +86,47 @@ describe('skillService', () => {
 				done();
 			}
 		});
+	});
+
+	it('should inform the system that the skills collection has been updated.', done => {
+
+		service.setAllSkills([new Skill(1789, 'the french revolution')]);
+
+		service.allSkillsLoaded$.pipe(take(1)).subscribe({
+			next: doneAndOk => expect(doneAndOk).toBeTrue(),
+			complete: () =>	done()
+		});
+	});
+
+	it('should load the skills from the backend server.', done => {
+
+		backendSetupService = TestBed.inject(BackendSetupService);
+		spyOn(backendSetupService, 'url').and.returnValue('URL_OF_SERVER/api');
+
+		service.loadSkills();
+
+		const req = httpTestingController.expectOne('URL_OF_SERVER/api/skill');
+		expect(req.request.method).toBe('GET');
+		req.flush([]);
+
+		service.allSkillsLoaded$.pipe(take(1)).subscribe({
+			next: doneAndOk => expect(doneAndOk).toBeTrue(),
+			complete: () =>	done()
+		});
+
+		httpTestingController.verify();
+
+	});
+
+	it('should retrieve the id of a skill from its title.', () => {
+		service.allSkills = [];
+		service.allSkills.push(new Skill(1, 'one'));
+		service.allSkills.push(new Skill(2, 'two'));
+
+		expect(service.id('one')).toBe(1);
+		expect(service.id('ONE')).toBe(-1);
+		expect(service.id('three')).toBe(-1);
+		expect(service.id('two')).toBe(2);
 	});
 
 });

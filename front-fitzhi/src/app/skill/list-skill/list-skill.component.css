@@ -1,15 +1,15 @@
 :host >>> th#skill > .mat-sort-header-container  {
-    color: darkblue;
-    font-size: 22px;
+	color: darkblue;
+	font-size: 22px;
 }
 
 :host >>> th.level > .mat-sort-header-container  {
-    justify-content: flex-end;
+	justify-content: flex-end;
 }
 
 .star {
-    width: 30px;
-    height: 30px;
+	width: 30px;
+	height: 30px;
 }
 
 #skillsList {
@@ -23,26 +23,36 @@
 }
 
 table {
-    width: 100%;
+	width: 100%;
 }
 
 .mat-header-cell {
-    height: 4em;
+	height: 4em;
 }
 
 .row_any  {
-    height: 2em;
+	height: 2em;
 }
 
 .col_string, .col_number {
-    font-size: 22px;
+	font-size: 22px;
 }
 
 .col_number {
-    text-align: right;
-    padding-right: 30px;
+	text-align: right;
+	padding-right: 30px;
 }
 
 td.mat-cell:last-of-type {
-    padding-right: 50px !important;
+	padding-right: 50px !important;
+}
+
+span.star-green {
+	font-size: xx-large;
+	color: var(--color-success);
+}
+
+span.star-grey {
+	font-size: xx-large;
+	color: gainsboro;
 }

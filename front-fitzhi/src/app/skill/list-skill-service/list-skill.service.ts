@@ -1,10 +1,9 @@
-import {Constants} from '../../constants';
-import {Skill} from '../../data/skill';
-import {SkillService} from '../service/skill.service';
-import {Injectable} from '@angular/core';
-import {Observable, of} from 'rxjs';
-import {tap} from 'rxjs/operators';
+import { Injectable } from '@angular/core';
+import { Observable, of } from 'rxjs';
+import { tap } from 'rxjs/operators';
+import { Skill } from '../../data/skill';
 import { traceOn } from '../../global';
+import { SkillService } from '../service/skill.service';
 
 @Injectable({
 	providedIn: 'root'
@@ -65,12 +64,12 @@ export class ListSkillService {
 			return of(foundSkill);
 		}
 
-		// The skill's id is not, or no more, available in the cache
-		// We try a direct access
+		// The skill's id is not, or no more, available in the local skill collection.
+		// We try a direct access to load it from the backend.
 		if (traceOn()) {
 			console.log('Direct access for : ' + id);
 		}
-		return this.skillService.get(id).pipe(tap(
+		return this.skillService.get$(id).pipe(tap(
 			(skill: Skill) => {
 				if (traceOn()) {
 					console.log('Direct access for : ' + id);

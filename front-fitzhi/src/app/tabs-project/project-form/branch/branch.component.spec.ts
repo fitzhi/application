@@ -3,7 +3,7 @@ import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 import { BranchComponent } from './branch.component';
 import { ProjectService } from 'src/app/service/project/project.service';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
-import { ReferentialService } from 'src/app/service/referential.service';
+import { ReferentialService } from 'src/app/service/referential/referential.service';
 import { CinematicService } from 'src/app/service/cinematic.service';
 import { MessageBoxService } from 'src/app/interaction/message-box/service/message-box.service';
 import { FileService } from 'src/app/service/file.service';

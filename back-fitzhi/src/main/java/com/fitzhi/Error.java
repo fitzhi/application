@@ -63,7 +63,7 @@ public class Error {
 	public static final String MESSAGE_STAFF_ACTIVE_ON_PROJECT = "You cannot remove an active project. {0} commits are registered for this staff member";
 	
 	public static final int CODE_FILE_REFERENTIAL_NOFOUND = -1017;
-	public static final String MESSAGE_FILE_REFERENTIAL_NOFOUND = "The referential file {0} doesn't exist!";
+	public static final String MESSAGE_FILE_REFERENTIAL_NOFOUND = "The referential file {0} does not exist!";
 
 	public static final int CODE_SONAR_KEY_NOFOUND = -1018;
 	public static final String MESSAGE_SONAR_KEY_NOFOUND = "There is no Sonar project {0} declared for the project {1}";
@@ -118,6 +118,11 @@ public class Error {
 	public static final int CODE_DASHBOARD_START = -1034;
 	public static final String MESSAGE_DASHBOARD_START = "The generation of the dashboard has been launched. Operation might last a while...";
 
+	public static final int CODE_MONTH_SKILLS_CONSTELLATION_NOFOUND = -1035;
+	public static final String MESSAGE_MONTH_SKILLS_CONSTELLATION_NOFOUND = "There is no skills data available for the month {0}/{1, number,####}.";
+
+	public static final int CODE_YEAR_MONTH_INVALID = -1036;
+	public static final String MESSAGE_YEAR_MONTH_INVALID = "The given month {0}/{1} is invalid.";
 
 	private Error() {
 	}

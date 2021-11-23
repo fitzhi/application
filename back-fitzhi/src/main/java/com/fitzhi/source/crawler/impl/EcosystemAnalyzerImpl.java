@@ -179,7 +179,7 @@ public class EcosystemAnalyzerImpl implements EcosystemAnalyzer {
 	    // Detected ecosystems are represented by files.
 	    // We start form 0 or 1, depending on the presence of undetected ecosystems.
 	    //
-	    List<Ecosystem> detectedEcosystems = new ArrayList<Ecosystem>();
+	    List<Ecosystem> detectedEcosystems = new ArrayList<>();
 	    for (int i = k; i < sortedList.size(); i++) {
 	    	//
 	    	// getValue() means activity detected for this ecosystem.

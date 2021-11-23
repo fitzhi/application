@@ -1,47 +1,47 @@
 /**
- * These data are extracted from the call 'http://localhost:8080/api/referential/riskLegends'
+ * These data reprensents the colors associated to the level of risk.
  */
 export const dataRiskLegends =
 [
 	{
 		'level': 0,
-		'color': '#1CB745',
+		'color': '#28A745',
 	},
 	{
 		'level': 1,
-		'color': '#27A53F',
+		'color': '#32963E',
 	},
 	{
 		'level': 2,
-		'color': '#329338',
+		'color': '#3C8637',
 	},
 	{
 		'level': 3,
-		'color': '#3D8131',
+		'color': '#467530',
 	},
 	{
 		'level': 4,
-		'color': '#486E2A',
+		'color': '#506429',
 	},
 	{
 		'level': 5,
-		'color': '#535C23',
+		'color': '#5A5423',
 	},
 	{
 		'level': 6,
-		'color': '#5E4A1C',
+		'color': '#63431C',
 	},
 	{
 		'level': 7,
-		'color': '#693715',
+		'color': '#6D3215',
 	},
 	{
 		'level': 8,
-		'color': '#74250E',
+		'color': '#77210E',
 	},
 	{
 		'level': 9,
-		'color': '#7F1307',
+		'color': '#811107',
 	},
 	{
 		'level': 10,

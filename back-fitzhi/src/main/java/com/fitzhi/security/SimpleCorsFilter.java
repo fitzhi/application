@@ -16,12 +16,15 @@ import org.springframework.core.annotation.Order;
 import org.springframework.stereotype.Component;
 
 /**
- * <b><p>Why does this filter exist ?</p></b>
+ * <p>
+ * <strong>Why does this filter exist ?</strong>
+ * </p>
+ * 
  * <i>
  * CORS requests require that before GET an OPTIONS request is sent to the server. 
  * To make it worse, that request does not contain any authentication headers. 
  * I would like to have this request always returning with 200 status without any authentication done on the server. <br/>
- * Is it possible? <b>yes it is !<b> See below...
+ * Is it possible? <strong>yes it is !</strong> See below...
  * </i><br/><br/>
  * @see <a href="https://stackoverflow.com/questions/25136532/allow-options-http-method-for-oauth-token-request">Discussion feed</a>
  * @author Fr&eacute;d&eacute;ric VIDAL

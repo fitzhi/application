@@ -3,7 +3,7 @@ import { Project } from '../../data/project';
 import { ProjectService } from './project.service';
 import { HttpTestingController, HttpClientTestingModule, TestRequest } from '@angular/common/http/testing';
 import { BackendSetupService } from '../backend-setup/backend-setup.service';
-import { ReferentialService } from '../referential.service';
+import { ReferentialService } from '../referential/referential.service';
 import { SkillService } from '../../skill/service/skill.service';
 import { FileService } from '../file.service';
 import { MessageService } from '../../interaction/message/message.service';
@@ -20,7 +20,7 @@ describe('ProjectService', () => {
 	let projectService: ProjectService;
 	let req1: TestRequest;
 	let req2: TestRequest;
-	let req: TestRequest;
+	let skillService: SkillService;
 
 	function createProject(id: number, name: string): Project {
 		const project = new Project();
@@ -53,6 +53,7 @@ describe('ProjectService', () => {
 	];
 
 	beforeEach(async () => {
+		localStorage.clear();
 		const testConf: TestModuleMetadata =  {
 			declarations: [],
 			providers: [ProjectService,
@@ -64,22 +65,24 @@ describe('ProjectService', () => {
 
 	beforeEach(() => {
 		backendSetupService = TestBed.inject(BackendSetupService);
-		backendSetupService.saveUrl('http://localhost:8080');
 
-		const skillService = TestBed.inject(SkillService);
-		skillService.allSkills = [];
-		skillService.allSkills.push(new Skill(1, 'java'));
+		skillService = TestBed.inject(SkillService);
+		const spy = spyOn(skillService, 'loadSkills').and.returnValue(null);
+		skillService.allSkills = mockSkills;
 
 		projectService = TestBed.inject(ProjectService);
 		projectService.allProjects = [];
 		projectService.allProjects.push(createProject(1, 'one'));
 		projectService.allProjects.push(createProject(2, 'two'));
 		expect(2).toEqual(projectService.allProjects.length);
+
 		httpMock = TestBed.inject(HttpTestingController);
 
 	});
 
 	it('testing the method projectService.actualizeProject', () => {
+
+		spyOn(backendSetupService, 'url').and.returnValue('http://localhost:8080/api');
 
 		expect(projectService.allProjects[1].mapSkills.get(1)).toBeUndefined();
 		//
@@ -115,10 +118,6 @@ describe('ProjectService', () => {
 		expect(projectService.allProjects[2].mapSkills.get(1)).toBeDefined();
 		expect(333).toEqual(projectService.allProjects[2].mapSkills.get(1).numberOfFiles);
 		expect(333333).toEqual(projectService.allProjects[2].mapSkills.get(1).totalFilesSize);
-
-		req = httpMock.expectOne('http://localhost:8080/api/skill');
-		expect(req.request.method).toBe('GET');
-		req.flush(mockSkills);
 
 		httpMock.verify();
 	});

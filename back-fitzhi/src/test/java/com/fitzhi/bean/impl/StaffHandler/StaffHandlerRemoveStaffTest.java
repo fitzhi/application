@@ -1,6 +1,3 @@
-/**
- * 
- */
 package com.fitzhi.bean.impl.StaffHandler;
 
 import org.junit.Assert;

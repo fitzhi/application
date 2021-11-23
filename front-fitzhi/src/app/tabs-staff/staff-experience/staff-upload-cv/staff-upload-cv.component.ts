@@ -11,7 +11,7 @@ import { Component, OnInit, Inject, OnDestroy } from '@angular/core';
 import { Subject } from 'rxjs';
 import { MAT_DIALOG_DATA, MatDialogConfig } from '@angular/material/dialog';
 import { MatDialogRef } from '@angular/material/dialog';
-import { BaseComponent } from '../../../base/base.component';
+import { BaseDirective } from '../../../base/base-directive.directive';
 import { BackendSetupService } from '../../../service/backend-setup/backend-setup.service';
 import { FileService } from 'src/app/service/file.service';
 import { traceOn } from 'src/app/global';
@@ -21,7 +21,7 @@ import { traceOn } from 'src/app/global';
 	templateUrl: './staff-upload-cv.component.html',
 	styleUrls: ['./staff-upload-cv.component.css'],
 })
-export class StaffUploadCvComponent extends BaseComponent implements OnInit, OnDestroy {
+export class StaffUploadCvComponent extends BaseDirective implements OnInit, OnDestroy {
 
 	/**
 	 * Full path of the selected resume file.

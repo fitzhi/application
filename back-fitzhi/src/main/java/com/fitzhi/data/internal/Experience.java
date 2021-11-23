@@ -7,6 +7,7 @@ import lombok.Data;
 /**
  * <p>
  * Technical background of a developer, an expert, or any staff member of the company.
+ * </p>
  * An experience is a level obtained in a skill. We manage 2 kinds of level :
  * <ul>
  * <li>the level attributed by a user (<em>it's a human appreciation of a skill</em>)</li>
@@ -14,8 +15,6 @@ import lombok.Data;
  * This appreciation is based <b>only</b> on the activity detected in the system. 
  * If James Gosling executes one single line commit on a single file, he'll be considered as a junior Java developer.</li>
  * </ul>
- * </p>
- * <br/>
  * 
  * @author Fr&eacute;d&eacute;ric VIDAL
  */

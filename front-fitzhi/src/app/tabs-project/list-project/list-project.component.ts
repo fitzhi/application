@@ -3,13 +3,13 @@ import { MatPaginator, PageEvent } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { MatTable } from '@angular/material/table';
 import { Router } from '@angular/router';
-import { BaseComponent } from 'src/app/base/base.component';
+import { BaseDirective } from 'src/app/base/base-directive.directive';
 import { UserSetting } from 'src/app/base/user-setting';
 import { CinematicService } from 'src/app/service/cinematic.service';
 import { Commit } from '../../data/commit';
 import { Project } from '../../data/project';
 import { ProjectService } from '../../service/project/project.service';
-import { ReferentialService } from '../../service/referential.service';
+import { ReferentialService } from '../../service/referential/referential.service';
 import { StaffListService } from '../../service/staff-list-service/staff-list.service';
 import { ListProjectsService } from './list-projects-service/list-projects.service';
 import { ProjectsDataSource } from './projects-data-source';
@@ -19,7 +19,7 @@ import { ProjectsDataSource } from './projects-data-source';
 	templateUrl: './list-project.component.html',
 	styleUrls: ['./list-project.component.css']
 })
-export class ListProjectComponent extends BaseComponent implements OnInit, AfterViewInit, OnDestroy {
+export class ListProjectComponent extends BaseDirective implements OnInit, AfterViewInit, OnDestroy {
 
 	/**
 	 * The datasource that contains the filtered projects
@@ -70,7 +70,7 @@ export class ListProjectComponent extends BaseComponent implements OnInit, After
 	ngOnInit() {
 
 		if (localStorage.getItem('dev') === '1') {
-			this.staffListService.loadStaff();
+			this.staffListService.reloadStaff();
 		}
 
 		this.subscriptions.add(

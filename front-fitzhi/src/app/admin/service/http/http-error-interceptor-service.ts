@@ -1,12 +1,12 @@
-import { retry, catchError, tap } from 'rxjs/operators';
-import { HttpHandler, HttpEvent, HttpErrorResponse, HttpRequest, HttpInterceptor, HttpResponse, HttpEventType } from '@angular/common/http';
-import { Observable, throwError } from 'rxjs';
+import { HttpErrorResponse, HttpEvent, HttpHandler, HttpInterceptor, HttpRequest, HttpResponse } from '@angular/common/http';
 import { Injectable, Injector } from '@angular/core';
-import { MessageService } from '../../../interaction/message/message.service';
 import { Router } from '@angular/router';
-import { traceOn } from 'src/app/global';
+import { BAD_REQUEST, INTERNAL_SERVER_ERROR, METHOD_NOT_ALLOWED, NOT_FOUND, NOT_MODIFIED, OK, UNAUTHORIZED } from 'http-status-codes';
+import { Observable, throwError } from 'rxjs';
+import { catchError, retry, tap } from 'rxjs/operators';
 import { Constants } from 'src/app/constants';
-import { BAD_REQUEST, INTERNAL_SERVER_ERROR, METHOD_NOT_ALLOWED, NOT_FOUND, OK, UNAUTHORIZED } from 'http-status-codes';
+import { traceOn } from 'src/app/global';
+import { MessageService } from '../../../interaction/message/message.service';
 
 @Injectable({ providedIn: 'root' })
 export class HttpErrorInterceptorService implements HttpInterceptor {
@@ -49,15 +49,21 @@ export class HttpErrorInterceptorService implements HttpInterceptor {
 
 					if ((response.error) && response.error.hasOwnProperty('flagApiError')) {
 						// Server side error
-						const apiError = response.error;
-						errorMessage = 'Error: ' + apiError.message;
-						setTimeout(() => messageService.error(errorMessage), 0);
+						// If a "NOT_FOUND" status is returned by the server inside a flagApiError present in the body
+						// This is not the use case of an URL NOT_FOUND, this is a server returning a status code NOT_FOUND.
+						// We do not display an error message. This use case will be treated by the calling httpClient.
+						if (response.status !== NOT_FOUND) {
+							const apiError = response.error;
+							errorMessage = 'Error: ' + apiError.message;
+							setTimeout(() => messageService.error(errorMessage), 0);
+						}
+
 						if (traceOn()) {
 							console.groupCollapsed ('Error stacktrace');
-							console.log(apiError.debugMessage);
+							console.log(response.error);
 							console.groupEnd();
 						}
-						return throwError(errorMessage);
+						return throwError(response);
 					}
 
 					if ( (response.error) && (response.error.hasOwnProperty('error')) && (response.error.hasOwnProperty('error_description'))) {
@@ -88,6 +94,9 @@ export class HttpErrorInterceptorService implements HttpInterceptor {
 							}
 							return throwError(response);
 						case METHOD_NOT_ALLOWED:
+							return throwError(response);
+						case NOT_MODIFIED:
+							// status code returned by etag filter.
 							return throwError(response);
 						case BAD_REQUEST:
 						case INTERNAL_SERVER_ERROR:

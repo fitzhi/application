@@ -3,21 +3,26 @@ import { Component, OnDestroy, OnInit } from '@angular/core';
 import { ControlledRisingSkylineService } from 'controlled-rising-skyline';
 import { BehaviorSubject } from 'rxjs';
 import { take } from 'rxjs/operators';
-import { BaseComponent } from 'src/app/base/base.component';
+import { BaseDirective } from 'src/app/base/base-directive.directive';
 import { Constants } from 'src/app/constants';
 import { ProjectService } from 'src/app/service/project/project.service';
 import { FitzhiSettings } from '../data/FitzhiSettings';
+import { traceOn } from '../global';
+import { ReferentialService } from '../service/referential/referential.service';
+import { StaffListService } from '../service/staff-list-service/staff-list.service';
+import { FilteredProject } from '../tabs-project/table-projects-filter/filtered-project';
 import { FitzhiDashboardPopupHelper } from './fitzhi-dashboard-popup-helper';
 import { selection } from './selection';
 import { PieDashboardService } from './service/pie-dashboard.service';
 import { SkylineService } from './skyline/service/skyline.service';
+import { StarfieldService } from './starfield/service/starfield.service';
 
 @Component({
 	selector: 'app-fitzhi-dashboard',
 	templateUrl: './fitzhi-dashboard.component.html',
 	styleUrls: ['./fitzhi-dashboard.component.css']
 })
-export class FitzhiDashboardComponent extends BaseComponent implements OnInit, OnDestroy {
+export class FitzhiDashboardComponent extends BaseDirective implements OnInit, OnDestroy {
 
 	public selection = selection;
 
@@ -26,7 +31,7 @@ export class FitzhiDashboardComponent extends BaseComponent implements OnInit, O
 	/**
 	 * Selected button. End-user has clicked on it.
 	 */
-	public selected = this.selection.none;
+	public selected = this.selection.summary;
 
 	public pieIdentifier = {
 		lastMonth: 1,
@@ -65,11 +70,18 @@ export class FitzhiDashboardComponent extends BaseComponent implements OnInit, O
 	 */
 	public skylineSelected$ = new BehaviorSubject<boolean>(false);
 
+	treemapProjectsFilter = false;
+
+	counter = Array;
+
 	constructor(
 		public httpClient: HttpClient,
 		public projectService: ProjectService,
+		public staffListService: StaffListService,
+		public referentialService: ReferentialService,
 		public skylineService: SkylineService,
 		public controlledRisingSkylineService: ControlledRisingSkylineService,
+		public starfieldService: StarfieldService,
 		public pieDashboardService: PieDashboardService) {
 			super();
 	}
@@ -102,13 +114,6 @@ export class FitzhiDashboardComponent extends BaseComponent implements OnInit, O
 	}
 
 	/**
-	* Calling the base class to unsubscribe all subscriptions.
-	*/
-	ngOnDestroy() {
-		super.ngOnDestroy();
-	}
-
-	/**
 	 * In progress method...
 	 * @returns ALWAYS **true**
 	 */
@@ -117,12 +122,15 @@ export class FitzhiDashboardComponent extends BaseComponent implements OnInit, O
 	}
 
 	/**
-	 * Switch to a summary.
+	 * Switch to a dashboard panel.
 	 * @param clickedselection the new Selected button
 	 */
 	switchTo(clickedselection: number) {
 		this.selected = clickedselection;
 		this.skylineSelected$.next((this.selected === selection.skyline));
+		if (clickedselection === selection.starfield) {
+			this.starfieldService.generateAndBroadcastConstellations();
+		}
 	}
 
 	/**
@@ -137,6 +145,25 @@ export class FitzhiDashboardComponent extends BaseComponent implements OnInit, O
 	 * Return **TRUE** if the user has selected a type of dashboard, **FALSE** otherwise.
 	 */
 	hasSelectedADashboard(): boolean {
-		return (this.selected !== this.selection.none);
+		return (this.selected !== this.selection.summary);
 	}
+
+	flip() {
+		this.treemapProjectsFilter = !this.treemapProjectsFilter;
+	}
+
+	onChangeFileredProjects(projects: FilteredProject[]) {
+		if (traceOn()) {
+			console.log ('onChangeFileredProjects(...) %d projects', projects.length);
+		}
+	}
+
+	/**
+	* Calling the base class to unsubscribe all subscriptions.
+	*/
+	ngOnDestroy() {
+		super.ngOnDestroy();
+	}
+
 }
+

@@ -1,6 +1,6 @@
 import { Component, Input, OnDestroy, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
-import { BaseComponent } from 'src/app/base/base.component';
+import { TreemapChartDirective } from 'src/app/base/treemap-chart-directive.directive';
 import { Constants } from 'src/app/constants';
 import { traceOn } from 'src/app/global';
 import { CinematicService } from 'src/app/service/cinematic.service';
@@ -14,20 +14,18 @@ import { TreemapProjectsService } from '../treemap-projects-service/treemap-proj
 	templateUrl: './treemap-projects-chart.component.html',
 	styleUrls: ['./treemap-projects-chart.component.css']
 })
-export class TreemapProjectsChartComponent extends BaseComponent implements OnInit, OnDestroy {
+export class TreemapProjectsChartComponent extends TreemapChartDirective implements OnInit, OnDestroy {
 
 	/**
 	 * The treemap chart is clickable, or not...
 	 */
 	@Input() active = true;
 
-	distribution: any[];
-
 	view: any[];
 
 	gradient = false;
 
-	animations = true;
+	animations = false;
 
 	colorScheme = {
 		domain: []
@@ -38,6 +36,7 @@ export class TreemapProjectsChartComponent extends BaseComponent implements OnIn
 		public treeMapService: TreemapProjectsService,
 		public projectService: ProjectService,
 		private cinematicService: CinematicService,
+		public treemapProjectsService: TreemapProjectsService,
 		private router: Router) {
 		super();
 	}
@@ -47,13 +46,26 @@ export class TreemapProjectsChartComponent extends BaseComponent implements OnIn
 	}
 
 	loadDistribution() {
-		this.distribution = this.dashboardService.processProjectsDistribution();
+		this.subscriptions.add(
+			this.treemapProjectsService.selectedProjects$.subscribe({
+				next: idProjects => this.loadChart(idProjects)
+			})
+		);
+	}
+
+	private loadChart(idProjects: number[]) {
+		this.treemapProjectsService.distribution = this.dashboardService.processProjectsDistribution();
+		this.treemapProjectsService.distribution.forEach(project => {
+			if (idProjects.findIndex(id => id === project.id) === -1) {
+				project.value = 0;
+			}
+		});
 		this.colorScheme.domain = [];
-		this.distribution.forEach(data => this.colorScheme.domain.push(data.color));
+		this.treemapProjectsService.distribution.forEach(data => this.colorScheme.domain.push(data.color));
 		if (traceOn()) {
 			console.groupCollapsed('Projects distribution');
-			this.distribution.forEach(skillData =>
-				console.log(skillData.name, skillData.value)
+			this.treemapProjectsService.distribution.forEach(project =>
+				console.log(project.name, project.value)
 			);
 			console.groupEnd();
 		}
@@ -66,7 +78,7 @@ export class TreemapProjectsChartComponent extends BaseComponent implements OnIn
 	onSelect(event) {
 		// We pass the onSelect as a callback to the treemap component. We receive the callback before this is initialized...
 		if ((this) && (this.active)) {
-			const idProject = this.distribution.filter(element => (element.name === event.name))[0].id;
+			const idProject = this.treemapProjectsService.distribution.filter(element => (element.name === event.name))[0].id;
 			if (traceOn()) {
 				console.log('idProject selected', idProject);
 			}
@@ -75,8 +87,20 @@ export class TreemapProjectsChartComponent extends BaseComponent implements OnIn
 		}
 	}
 
+	/**
+	 * @param tile the current tile
+	 * @returns
+	 */
 	labelFormatting(tile) {
 		return `<p>${(tile.label)}</p>`;
+	}
+
+	/**
+	 * @param tile the value to be drawn
+	 * @returns
+	 */
+	public valueFormatting(value) {
+		return value.toLocaleString() + ' lines';
 	}
 
 	ngOnDestroy() {

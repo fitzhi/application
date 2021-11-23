@@ -1,0 +1,34 @@
+<nav class="navbar navbar-light bg-light justify-content-between p-0">
+	<mat-checkbox 
+		id="external"
+		class="ml-4 mt-2" 
+		[checked]="starfieldService.filter.external"
+		(change)="starfieldService.switchExternalFilter()" >
+		External
+	</mat-checkbox>
+	<div class="p-1 ml-2 d-inline-flex">
+		<div id="btPrevious"
+			class="px-2"
+			[ngClass]="{'button-direction-disable' : !(starfieldService.previous$|async), 'button-direction': (starfieldService.previous$|async)}" 
+			(click)="previous()">
+			<em class="fas fa-caret-left"></em>
+		</div>	
+		<div class="ml-2 mt-2">
+			<span class="navbar-text h3" id="numberOfStars">{{(starfieldService.stars$|async).length}}</span> 
+			<span class="navbar-text h3">(<span>&#x2605;</span>)</span>
+			<span class="navbar-text h3">skills grades assessed on&nbsp;</span>
+			<span id="selectedMonth" class="navbar-text h3">{{ (today$|async) | date:'MM/YYYY'}}</span>
+		</div>
+		<div id="btNext"
+			class="px-2"
+			[ngClass]="{'button-direction-disable' : !(starfieldService.next$|async), 'button-direction': (starfieldService.next$|async)}" 
+			(click)="next()">
+			<em class="fas fa-caret-right"></em>
+		</div>
+	</div>
+	<button id="btHelp"
+		type="button "
+		class="btn ml-2 mr-3"
+		[ngClass]="{'btn-outline-success' : displayHelp, 'btn-outline-secondary': !displayHelp}" 
+		(click)="starfieldService.switchHelpPanelVisibility()">?</button>	
+</nav>

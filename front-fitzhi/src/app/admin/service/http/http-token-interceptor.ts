@@ -1,6 +1,8 @@
 
-import { HttpErrorResponse, HttpHandler, HttpHeaderResponse, HttpInterceptor, HttpProgressEvent,
-	HttpRequest, HttpResponse, HttpSentEvent, HttpUserEvent } from '@angular/common/http';
+import {
+	HttpErrorResponse, HttpHandler, HttpHeaderResponse, HttpInterceptor, HttpProgressEvent,
+	HttpRequest, HttpResponse, HttpSentEvent, HttpUserEvent
+} from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { BehaviorSubject, EMPTY, Observable, throwError } from 'rxjs';
 import { catchError, filter, finalize, switchMap, take } from 'rxjs/operators';

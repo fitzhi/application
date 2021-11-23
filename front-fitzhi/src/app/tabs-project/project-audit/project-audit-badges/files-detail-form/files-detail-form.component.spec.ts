@@ -8,7 +8,7 @@ import { AuditTopic } from 'src/app/data/AuditTopic';
 import { ProjectService } from 'src/app/service/project/project.service';
 import { AuditAttachmentComponent } from './audit-attachment-upload/audit-attachment.component';
 import { FormsModule } from '@angular/forms';
-import { ReferentialService } from 'src/app/service/referential.service';
+import { ReferentialService } from 'src/app/service/referential/referential.service';
 import { MatDialogModule } from '@angular/material/dialog';
 import { RiskLegend } from 'src/app/data/riskLegend';
 import { CinematicService } from 'src/app/service/cinematic.service';

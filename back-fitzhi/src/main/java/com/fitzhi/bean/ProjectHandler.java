@@ -4,12 +4,10 @@ import java.io.IOException;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
-import java.util.Set;
 
 import javax.validation.constraints.NotNull;
 
 import com.fitzhi.data.internal.Experience;
-import com.fitzhi.data.internal.ExperienceDetectionTemplate;
 import com.fitzhi.data.internal.FilesStats;
 import com.fitzhi.data.internal.Ghost;
 import com.fitzhi.data.internal.Library;
@@ -18,13 +16,18 @@ import com.fitzhi.data.internal.ProjectSkill;
 import com.fitzhi.data.internal.ProjectSonarMetricValue;
 import com.fitzhi.data.internal.SonarEvaluation;
 import com.fitzhi.data.internal.SonarProject;
-import com.fitzhi.data.internal.Staff;
 import com.fitzhi.data.internal.StaffExperienceTemplate;
 import com.fitzhi.data.source.CommitHistory;
 import com.fitzhi.data.source.Contributor;
 import com.fitzhi.exception.ApplicationException;
 import com.fitzhi.exception.NotFoundException;
 
+/**
+ * This interface is in charge of the Projects management.
+ * Its main implementation is ProjectHandlerImpl
+ * 
+ * @author Fr&eacute;d&eacute;ric VIDAL
+ */
 public interface ProjectHandler extends DataSaverLifeCycle {
 
 	/**
@@ -92,7 +95,7 @@ public interface ProjectHandler extends DataSaverLifeCycle {
 
 	/**
 	 * Add a new project inside the projects referential.<br/>
-	 * If project is not identified (e.g. the {@link Project#getId()} is less than 1), we will generate an ID.
+	 * If project is not identified (e.g. the {@code Project#getId()} is less than 1), we will generate an ID.
 	 * @param project the passed project
 	 * @return the newly created project
 	 * 
@@ -156,7 +159,7 @@ public interface ProjectHandler extends DataSaverLifeCycle {
 	 *            the current project
 	 * @param pseudo
 	 *            the searched pseudo
-	 * @param the
+	 * @return
 	 *            corresponding ghost entry in the project, if any, with the
 	 *            same pseudo, otherwise, this method will return {@code null}
 	 */
@@ -233,7 +236,7 @@ public interface ProjectHandler extends DataSaverLifeCycle {
 	 * <p>
 	 * When deleting a staff member, we have to detach him (if necessary) from ALL ghosts present in ALL projects.
 	 * </p>
-	 * @param staff identifier
+	 * @param idStaff the Staff identifier
 	 * @throws ApplicationException thrown if problem occurs
 	 */
 	void detachStaffMemberFromGhostsOfAllProjects(int idStaff) throws ApplicationException;
@@ -253,10 +256,10 @@ public interface ProjectHandler extends DataSaverLifeCycle {
 	 * Integrate the last list of unknowns pseudos into the ghosts list.
 	 * </p>
 	 * @param idProject idProject project identifiers 
-	 * @param pseudos the given list of pseudos retrieved from the repository
+	 * @param detectedGhosts the ghosts list detected in the repository
 	 * @throws ApplicationException thrown if any problem occurs (most probably if the project identifier does not exist)
 	 */
-	void integrateGhosts(int idProject, Set<String> pseudos) throws ApplicationException;
+	void integrateGhosts(int idProject, List<Ghost> detectedGhosts) throws ApplicationException;
 
 	/**
 	 * <p>
@@ -305,9 +308,9 @@ public interface ProjectHandler extends DataSaverLifeCycle {
 	void saveFilesStats (Project project, String sonarProjectKey, List<FilesStats> filesStats);
 	
 	/**
-	 * Save the metric values & weights for this Sonar project.
+	 * Save the metric values and weights for this Sonar project.
 	 * @param project the given project.
-	 * @param sonarKey the key of the Sonar project.
+	 * @param sonarProjectKey the key of the Sonar project.
 	 * @param metricValues The Sonar metric values/weights for this Sonar project
 	 * @throws ApplicationException thrown if any problem occurs.
 	 */
@@ -318,7 +321,7 @@ public interface ProjectHandler extends DataSaverLifeCycle {
 	/**
 	 * Save the evaluation and the total number of lines of code for this Sonar project.
 	 * @param project the given project.
-	 * @param sonarKey the key of the Sonar project.
+	 * @param sonarProjectKey the key of the Sonar project.
 	 * @param sonarEvaluation the evaluation processed for the Sonar project
 	 * @throws ApplicationException thrown if any problem occurs.
 	 */
@@ -381,7 +384,7 @@ public interface ProjectHandler extends DataSaverLifeCycle {
 	 * Aggregate the experiences of all <b>active</b> projects.
 	 * </p>
 	 * 
-	 * @return a Map indexed by the couple ({@link Staff#getIdStaff() idStaff}; {@link ExperienceDetectionTemplate#getIdEDT() idExperienceTemplate}) 
+	 * @return a Map indexed by the couple ( {@code Staff.getIdStaff()}; {@code ExperienceDetectionTemplate.getIdEDT()} ) 
 	 * associated with an aggregation of field value
 	 * @throws ApplicationException thrown if any problem occurs.
 	 */

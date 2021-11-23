@@ -12,7 +12,7 @@ import lombok.Data;
  * Class for the contributor inside the repository.
  * @author Fr&eacute;d&eacute;ric VIDAL
  */
-public @Data class Contributor {
+public @Data class Contributor implements GitMetrics {
 
 	/**
 	 * Staff member identifier
@@ -32,7 +32,7 @@ public @Data class Contributor {
 	/**
 	 * Number of commits submitted by this developer
 	 */
-	private int numberOfCommitsSubmitted;
+	private int numberOfCommits;
 	
 	/**
 	 * Number of files modified
@@ -45,25 +45,31 @@ public @Data class Contributor {
 	private Map<Integer, StaffActivitySkill> staffActivitySkill = new HashMap<>();
 	
 	/**
-	 * @param idStaff developer identifier
+	 * @param idStaff the given developer identifier
 	 * @param firstCommit date of first commit
 	 * @param lastCommit date of last commit
-	 * @param numberOfCommitsSubmitted number of commits submitted
+	 * @param numberOfCommits number of commits submitted
 	 * @param numberOfFiles number of files
 	 */
-	public Contributor(int idStaff, LocalDate firstCommit, LocalDate lastCommit, int numberOfCommitsSubmitted, int numberOfFiles) {
-		super();
+	public Contributor(int idStaff, LocalDate firstCommit, LocalDate lastCommit, int numberOfCommits, int numberOfFiles) {
 		this.setIdStaff(idStaff);
 		this.setFirstCommit(firstCommit);
 		this.setLastCommit(lastCommit);
-		this.setNumberOfCommitsSubmitted(numberOfCommitsSubmitted);
+		this.setNumberOfCommits(numberOfCommits);
 		this.setNumberOfFiles(numberOfFiles);
+	}
+
+	/**
+	 * @param idStaff the given developer identifier
+	 */
+	public Contributor(int idStaff) {
+		this(idStaff, LocalDate.EPOCH, LocalDate.EPOCH, 0, 0);
 	}
 
 	@Override
 	public String toString() {
 		return "Contributor [idStaff=" + getIdStaff() + ", firstCommit=" + getFirstCommit() + ", lastCommit=" + getLastCommit()
-				+ ", numberOfCommitsSubmitted=" + getNumberOfCommitsSubmitted() + ", numberOfFiles=" + getNumberOfFiles() + "]";
+				+ ", numberOfCommits=" + getNumberOfCommits() + ", numberOfFiles=" + getNumberOfFiles() + "]";
 	}
 
 }

@@ -60,11 +60,6 @@ describe('SkillComponent', () => {
 
 	}));
 
-	beforeEach(() => {
-
-
-	});
-
 	it('Testing the SkillForm handling template & pattern', fakeAsync(() => {
 		fixture = TestBed.createComponent(SkillComponent);
 		component = fixture.componentInstance;

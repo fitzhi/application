@@ -1,8 +1,6 @@
 import { MatTableDataSource } from '@angular/material/table';
-import { Collaborator } from 'src/app/data/collaborator';
-import { traceOn } from 'src/app/global';
-import { BehaviorSubject } from 'rxjs';
 import { Project } from 'src/app/data/project';
+import { traceOn } from 'src/app/global';
 
 export class ProjectsDataSource extends MatTableDataSource<Project> {
 

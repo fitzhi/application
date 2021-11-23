@@ -3,7 +3,7 @@
 helpFunction()
 {
 	echo ""
-	echo "Usage: $0 [-f Y/N] [-d inst_dir] [-?]"
+	echo "Usage: $0 [-f Y/N] [-d inst_dir] [-t Y/N] [-?]"
 	echo -e "\t-f (Y/N) force mode is ON. Script will erase all data in the installation directory"
 	echo -e "\t-d set the installation directory. Default is 'deploy'"
 	echo -e "\t-t (Y/N) activate or inactivate the test"
@@ -21,8 +21,10 @@ do
 	esac
 done
 
-echo "Initializing the Fitzhì backend"
+export VERSION_FITZHI=`cat back-fitzhi/VERSION_FITZHI`
+echo "Initializing the Fitzhì backend for the release ${VERSION_FITZHI}"
 echo " The setup will erase & override previous installation if the FORCE mode is on"
+
 
 if [ $test = "Y" ]
 then 
@@ -66,9 +68,13 @@ else
 mvn clean install -Dmaven.test.skip=true
 fi
 
-cp target/fitzhi.jar ../$dir/backend-fitzhi/fitzhi.jar
+cp target/fitzhi-${VERSION_FITZHI}.jar ../$dir/backend-fitzhi/fitzhi-${VERSION_FITZHI}.jar
 cp target/application.properties ../$dir/backend-fitzhi/application.properties
 cp target/logback-spring.xml ../$dir/backend-fitzhi/logback-spring.xml
+
+# docker & nginx settings
+rm -rf ../$dir/docker
+cp -R ../docker/docker ../$dir
 
 if [ $force = "Y" ]
 then 

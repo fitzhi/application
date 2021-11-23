@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, EventEmitter, OnInit, Output } from '@angular/core';
 import { Subject } from 'rxjs';
 import { traceOn } from 'src/app/global';
 import { TagifyEditableState } from 'src/app/tabs-staff/staff-experience/tagify-stars/tagify-editable-state';
@@ -11,6 +11,11 @@ import { TreemapSkillsService } from '../treemap-skills-service/treemap-skills.s
 	styleUrls: ['./treemap-skills-header.component.css']
 })
 export class TreemapHeaderComponent implements OnInit {
+
+	/**
+	 * Display the Help pane or not.
+	 */
+	@Output() messengerDisplayHelp = new EventEmitter<boolean>();
 
 	/**
 	 * Data expected to be added.
@@ -42,10 +47,24 @@ export class TreemapHeaderComponent implements OnInit {
 	 */
 	public editableState$ = new Subject<TagifyEditableState>();
 
+	/**
+	 * This boolean is used in an *ngIf to show the the data help pane.
+	 */
+	public displayData = false;
+
+	/**
+	 * This boolean is used in an *ngIf to show the help pane.
+	 */
+	public displayHelp = true;
+
 	constructor(public treeMapService: TreemapSkillsService) {
 		this.treeMapService.treemapFilter.external = (localStorage.getItem('external') === '1');
 		if (traceOn()) {
 			console.log (this.treeMapService.treemapFilter.external ? 'with externals' : 'only internals');
+		}
+		this.displayHelp = ( (localStorage.getItem('helpHeight') === null) || (localStorage.getItem('helpHeight') === '110px'));
+		if (traceOn()) {
+			console.log ( (this.displayHelp) ? 'Display the help pane' : 'Do not display the help pane');
 		}
 	}
 
@@ -79,6 +98,16 @@ export class TreemapHeaderComponent implements OnInit {
 
 	onRemoveTagEvent(tag: string) {
 		throw Error('SHOULD NOT PASS HERE !');
+	}
+
+	data() {
+		this.displayData = !this.displayData;
+		this.treeMapService.displaySettings(this.displayData);
+	}
+
+	help() {
+		this.displayHelp = !this.displayHelp;
+		this.messengerDisplayHelp.emit(this.displayHelp);
 	}
 
 }

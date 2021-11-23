@@ -6,11 +6,11 @@ import { BehaviorSubject, EMPTY } from 'rxjs';
 import { Project } from '../data/project';
 import { ListProjectsService } from './list-project/list-projects-service/list-projects.service';
 import { MessageService } from '../interaction/message/message.service';
-import { BaseComponent } from '../base/base.component';
+import { BaseDirective } from '../base/base-directive.directive';
 import { ProjectService } from '../service/project/project.service';
 import { switchMap, take } from 'rxjs/operators';
 import { MessageGravity } from '../interaction/message/message-gravity';
-import { ReferentialService } from '../service/referential.service';
+import { ReferentialService } from '../service/referential/referential.service';
 import { SonarService } from '../service/sonar.service';
 import { traceOn } from '../global';
 
@@ -19,7 +19,7 @@ import { traceOn } from '../global';
 	templateUrl: './project.component.html',
 	styleUrls: ['./project.component.css']
 })
-export class ProjectComponent extends BaseComponent implements OnInit, AfterViewInit, OnDestroy {
+export class ProjectComponent extends BaseDirective implements OnInit, AfterViewInit, OnDestroy {
 
 	/**
 	 * We given the risk -1 into the behaviorSubject an empty.

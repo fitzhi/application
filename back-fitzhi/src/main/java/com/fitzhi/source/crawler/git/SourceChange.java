@@ -112,10 +112,13 @@ public @Data class SourceChange {
 
 	/**
 	 * @return <code>true</code> if the author of the change is not anonymous.
-	 *         Author name is not <code>null</code>.
+	 * <ul>
+	 * <li>Author name is not <code>null</code></li>
+	 * <li>Email address is not <code>null</code></li>
+	 * </ul>
 	 */
 	public boolean isAuthorIdentified() {
-		return (author.getName() != null);
+		return (author.getName() != null) || (author.getEmail() != null);
 	}
 
 	/**

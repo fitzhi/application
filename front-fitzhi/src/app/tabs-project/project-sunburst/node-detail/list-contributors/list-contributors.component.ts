@@ -1,5 +1,5 @@
 import { Component, OnInit, Input, OnDestroy, ViewChild, AfterViewInit } from '@angular/core';
-import { BaseComponent } from '../../../../base/base.component';
+import { BaseDirective } from '../../../../base/base-directive.directive';
 import { traceOn } from 'src/app/global';
 import { MatTable, MatTableDataSource } from '@angular/material/table';
 import { Contributor } from 'src/app/data/contributor';
@@ -11,7 +11,7 @@ import { UserSetting } from 'src/app/base/user-setting';
 	templateUrl: './list-contributors.component.html',
 	styleUrls: ['./list-contributors.component.css']
 })
-export class ListContributorsComponent extends BaseComponent implements OnInit, OnDestroy, AfterViewInit {
+export class ListContributorsComponent extends BaseDirective implements OnInit, OnDestroy, AfterViewInit {
 
 	@Input() contributors: MatTableDataSource<Contributor>;
 

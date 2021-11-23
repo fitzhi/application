@@ -16,8 +16,8 @@ import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 
-import com.fitzhi.Global;
 import com.fitzhi.ApplicationRuntimeException;
+import com.fitzhi.Global;
 
 import org.apache.commons.lang3.StringUtils;
 
@@ -49,7 +49,6 @@ public class DataChart implements Serializable {
     
     /**
      * Level of risk evaluated for this location.
-     * @see com.fitzhi.source.crawler.RepoScanner#evaluateTheRisk 
      */
     private int riskLevel = UNKNOWN;
     
@@ -113,10 +112,10 @@ public class DataChart implements Serializable {
 
 	/**
 	 * Inject a source file in the collection.
-	 * @param current position
+	 * @param element position
 	 * @param dirAndFilename an array containing the clean path of a source file.
 	 * @param importance the importance of a source file
-	 * @param date of the latest commit.
+	 * @param latestCommit date of the latest commit.
 	 * @param committers Array of staff identifiers who are committed in this source file
 	 */
 		// We register the filename in the source files set
@@ -167,7 +166,8 @@ public class DataChart implements Serializable {
 	 * Add a source file inside the collection, and subsequently, 
 	 * update the number of elements declared in that sub-directory.
 	 * </p>
-	 * @param source the source filename.
+	 * @param sourceFile the source filename.
+	 * @param importance the given importance
 	 */
 	public void addSource(SourceFile sourceFile, long importance) {
 		

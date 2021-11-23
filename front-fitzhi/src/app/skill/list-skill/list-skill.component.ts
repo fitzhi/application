@@ -1,17 +1,17 @@
 import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
-import { Router } from '@angular/router';
-import { BehaviorSubject } from 'rxjs';
-import { BaseComponent } from '../../base/base.component';
-import { Constants } from '../../constants';
-import { CinematicService } from '../../service/cinematic.service';
-import { SkillService } from '../service/skill.service';
-import { StaffService } from '../../tabs-staff/service/staff.service';
-import { TabsStaffListService } from '../../tabs-staff-list/service/tabs-staff-list.service';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
-import { traceOn } from '../../global';
-import { SkillCountExperiences } from './skill.count.experiences';
+import { Router } from '@angular/router';
+import { BehaviorSubject } from 'rxjs';
 import { ListCriteria } from 'src/app/data/listCriteria';
+import { BaseDirective } from '../../base/base-directive.directive';
+import { Constants } from '../../constants';
+import { traceOn } from '../../global';
+import { CinematicService } from '../../service/cinematic.service';
+import { TabsStaffListService } from '../../tabs-staff-list/service/tabs-staff-list.service';
+import { StaffService } from '../../tabs-staff/service/staff.service';
+import { SkillService } from '../service/skill.service';
+import { SkillCountExperiences } from './skill.count.experiences';
 
 
 @Component({
@@ -19,7 +19,7 @@ import { ListCriteria } from 'src/app/data/listCriteria';
 	templateUrl: './list-skill.component.html',
 	styleUrls: ['./list-skill.component.css']
 })
-export class ListSkillComponent extends BaseComponent implements OnInit, OnDestroy {
+export class ListSkillComponent extends BaseDirective implements OnInit, OnDestroy {
 
 	private experiences: SkillCountExperiences[];
 

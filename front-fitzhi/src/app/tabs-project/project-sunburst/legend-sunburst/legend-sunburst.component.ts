@@ -1,15 +1,14 @@
-import { Component, OnInit, OnDestroy } from '@angular/core';
-import { ReferentialService } from '../../../service/referential.service';
+import { Component, OnDestroy, OnInit } from '@angular/core';
+import { BaseDirective } from '../../../base/base-directive.directive';
 import { RiskLegend } from '../../../data/riskLegend';
-import { BaseComponent } from '../../../base/base.component';
-import { take } from 'rxjs/operators';
+import { ReferentialService } from '../../../service/referential/referential.service';
 
 @Component({
 	selector: 'app-legend-sunburst',
 	templateUrl: './legend-sunburst.component.html',
 	styleUrls: ['./legend-sunburst.component.css']
 })
-export class DialogLegendSunburstComponent extends BaseComponent implements OnInit, OnDestroy {
+export class DialogLegendSunburstComponent extends BaseDirective implements OnInit, OnDestroy {
 
 	public riskColumns: string[] = ['color', 'description'];
 

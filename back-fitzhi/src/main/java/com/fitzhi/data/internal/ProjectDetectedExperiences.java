@@ -45,15 +45,15 @@ public class ProjectDetectedExperiences {
 
 	/**
 	 * Update the collection with a new {@link DetectedExperience}. 
-	 * The purpose of this method is to register a detected experience which count <b>ONE BY ONE</b> for the global experience.
-	 * <p><ul>
+	 * The purpose of this method is to register a detected experience which count <strong>ONE BY ONE</strong> for the global experience.
+	 * <ul>
 	 * <li>
 	 * If this is a new author for this experience, we add a new record.
 	 * </li>
 	 * <li>
 	 * If a record already exists, we increment by one the counter in the corresponding object.
 	 * </li>
-	 * </ul></p>
+	 * </ul>
 	 * 
 	 * <br/>
 	 * 
@@ -79,17 +79,18 @@ public class ProjectDetectedExperiences {
 	/**
 	 * Update the collection with a new {@link DetectedExperience}.
 	 * The purpose of this method is to register a detected experience which count <b>BY ITS VALUE</b> the global experience.
-	 * <p><ul>
+	 *
+	 * <ul>
 	 * <li>
 	 * If this is a new author for this experience, we add a new record.
 	 * </li>
 	 * <li>
 	 * If a record already exists, we add to the current count value, the given one
 	 * </li>
-	 * </ul></p>
-	 * 
+	 * </ul>
+	 *
 	 * <br/>
-	 * 
+	 *
 	 * @param detectedExperience the given {@link DetectedExperience detectedExperience}
 	 * @return the corresponding detected experience
 	 */

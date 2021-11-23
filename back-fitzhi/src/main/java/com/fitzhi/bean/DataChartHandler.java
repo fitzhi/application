@@ -12,8 +12,9 @@ import com.fitzhi.data.internal.DataChart;
 public interface DataChartHandler {
 
 	/**
-	 * <p>Compact the dashboard by aggregating empty directories.</p>
 	 * <p>
+	 * Compact the dashboard by aggregating empty directories.
+	 * </p>
 	 * e.g. 
 	 * A tree representing a class like <code>fr.common.my-package.MyClass"</code> might create 3 nodes of <code>RiskChartData</code>.
 	 * <ul>
@@ -21,6 +22,7 @@ public interface DataChartHandler {
 	 * <li>one for <code><b>common</b></code></li>
 	 * <li>one for <code><b>my-package</b></code></li>
 	 * </ul>
+	 * <p>
 	 * <b>BUT</b> Possibly, there is no source files present in <code><b>fr</b></code>. 
 	 * So instead of keeping 2 levels of hierarchy (with an empty one), 
 	 * it would be easier to aggregate the 2 directories into the resulting one : <code>fr.my-package</code>

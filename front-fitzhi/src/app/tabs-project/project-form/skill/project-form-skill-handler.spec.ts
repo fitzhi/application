@@ -8,7 +8,7 @@ import { Skill } from 'src/app/data/skill';
 import { MessageService } from 'src/app/interaction/message/message.service';
 import { CinematicService } from 'src/app/service/cinematic.service';
 import { ProjectService } from 'src/app/service/project/project.service';
-import { ReferentialService } from 'src/app/service/referential.service';
+import { ReferentialService } from 'src/app/service/referential/referential.service';
 import { SkillService } from 'src/app/skill/service/skill.service';
 import { ProjectFormSkillHandler } from './project-form-skill-handler';
 

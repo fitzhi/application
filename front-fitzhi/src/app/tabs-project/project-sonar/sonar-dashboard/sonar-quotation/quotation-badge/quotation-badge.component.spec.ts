@@ -2,7 +2,7 @@ import { ComponentFixture, TestBed, TestModuleMetadata, waitForAsync } from '@an
 
 import { QuotationBadgeComponent } from './quotation-badge.component';
 import { ProjectService } from 'src/app/service/project/project.service';
-import { ReferentialService } from 'src/app/service/referential.service';
+import { ReferentialService } from 'src/app/service/referential/referential.service';
 import { CinematicService } from 'src/app/service/cinematic.service';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { MatDialogModule } from '@angular/material/dialog';

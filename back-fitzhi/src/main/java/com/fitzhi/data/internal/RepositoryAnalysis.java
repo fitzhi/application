@@ -24,16 +24,17 @@ import lombok.Data;
 
 /**
  * <p> 
- * The class hosts the intermediate data gathered from the analysis of the repository.<br/>
+ * The class hosts the intermediate data gathered from the analysis of the repository.
+ * </p>
+ *
  * Multiple sets are updated and available in this container :
  * <ul>
- * <li>{@link RepositoryAnalysis#changes} of {@link SourceControlChanges}, list of changes detected in the repository.</i>
- * <li>{@link RepositoryAnalysis#pathsModified }, list of paths detected as having been modified in the history of the repository.</i>
+ * <li>{@link RepositoryAnalysis#changes} of {@link SourceControlChanges}, list of changes detected in the repository.</li>
+ * <li>{@link RepositoryAnalysis#pathsModified }, list of paths detected as having been modified in the history of the repository.</li>
  * <li>{@link RepositoryAnalysis#pathsAdded }, list of paths detected as having been ONLY ADDED in the history of the repository.</li>
  * </ul>
- * </p>
+ * 
  * @author Fr&eacute;d&eacute;ric VIDAL
- *
  */
 @Data
 public class RepositoryAnalysis {
@@ -124,7 +125,9 @@ public class RepositoryAnalysis {
 	}
 	
 	/**
-	 * <p><big><b>Why do we keep a set of paths modified ?</b></big></p>
+	 * <p>
+	 * <strong>Why do we keep a set of paths modified ?</strong>
+	 * /p>
 	 * We keep the paths which have been modified in order to retrieve by subtraction from the complete list, 
 	 * the paths which only have be added without modification. <br/>
 	 * The resulting list will contain good candidates for external dependencies, irrelevant for the analysis.
@@ -136,7 +139,7 @@ public class RepositoryAnalysis {
 
 	/**
 	 * Save the given path as a modified path.
-	 * @see {@link #getPathsModified()}
+	 * @see RepositoryAnalysis#getPathsModified()
 	 */
 	public void keepPathModified(String path) {
 		pathsModified.add(path);
@@ -270,7 +273,7 @@ public class RepositoryAnalysis {
 	 */
 	public Set<Integer> contributors() {
 		return changes.getChanges().values()
-			.stream()
+			.parallelStream()
 			.flatMap(history -> history.getChanges().stream())
 			.map(SourceChange::getIdStaff)
 			.filter(idStaff -> idStaff != 0)
@@ -288,8 +291,9 @@ public class RepositoryAnalysis {
 	 * @return the list of contributors involved in the project
 	 */
 	public List<Author> authors() {
-		return changes.getChanges().values()
-			.stream()
+		return changes.getChanges()
+			.values()
+			.parallelStream()
 			.flatMap(history -> history.getChanges().stream())
 			.filter(SourceChange::isAuthorIdentified)
 			.map(SourceChange::getAuthor)
@@ -303,8 +307,9 @@ public class RepositoryAnalysis {
 	 * @param idStaff the staff identifier
 	 */
 	public void updateStaff(String authorName, int idStaff) {
-		changes.getChanges().values()
-			.stream()
+		changes.getChanges()
+			.values()
+			.parallelStream()
 			.flatMap(history -> history.getChanges().stream())
 			.filter(sc -> authorName.equals(sc.getAuthor().getName()))
 			.forEach(sc ->  sc.setIdStaff(idStaff));
@@ -315,14 +320,29 @@ public class RepositoryAnalysis {
 	 * @param idStaff the staff identifier
 	 * @return the list of changes for a staff member
 	 */
-	public List<SourceChange> getPersonalChange(int idStaff) {
-		return changes.getChanges().values()
-				.stream()
-				.flatMap(history -> history.getChanges().stream())				
-				.filter(change -> idStaff == change.getIdStaff())
-				.collect(Collectors.toList());
+	public List<SourceChange> getStaffChanges(int idStaff) {
+		return changes.getChanges()
+			.values()
+			.parallelStream()
+			.flatMap(history -> history.getChanges().stream())				
+			.filter(change -> idStaff == change.getIdStaff())
+			.collect(Collectors.toList());
 	}
 	
+	/**
+	 * Collect and filter the {@link Project project} global changes for a given {@link Author author}
+	 * @param author the given author
+	 * @return the list of changes for a given author
+	 */
+	public List<SourceChange> getStaffChanges(Author author) {
+		return changes.getChanges()
+			.values()
+			.parallelStream()
+			.flatMap(history -> history.getChanges().stream())				
+			.filter(change -> author.equals(change.getAuthor()))
+			.collect(Collectors.toList());
+	}
+
 	/**
 	 * Crawl within the changes history in order the retrieve the <b>FIRST</b> commit of a staff member
  	 * @param changes a list of changes through which to collect the first commit.
@@ -347,7 +367,6 @@ public class RepositoryAnalysis {
 				.max(Comparator.comparing(LocalDate::toEpochDay))
 				.orElseThrow(() -> new ApplicationRuntimeException(SHOULD_NOT_PASS_HERE));
 	}
-
 
 	/**
 	 * @param changes a stream of changes through which to c.
@@ -388,7 +407,7 @@ public class RepositoryAnalysis {
 	/**
 	 * Gather the identified contributors with their personal statistics, such as
 	 * <ul>
-	 * <li>the date of their first & last commit</li>
+	 * <li>the date of their first and last commit</li>
 	 * <li>the number of files impacted</li>
 	 * <li>the number of commits submitted</li>
 	 * </ul>
@@ -407,7 +426,7 @@ public class RepositoryAnalysis {
 			//
 			// We filter the changes data for a given staff member
 			//
-			List<SourceChange> personalChanges = this.getPersonalChange(idStaff);
+			List<SourceChange> personalChanges = this.getStaffChanges(idStaff);
 			
 			//
 			// We process the date of the FIRST commit submitted by this staff member
@@ -443,7 +462,7 @@ public class RepositoryAnalysis {
 	 * Cleanup the pathnames of the changes collection.<br/>
 	 * e.g. <code>/src/main/java/java/util/List.java</code> will be treated like <code>java/util/List.java</code>
 	 * </p>
-	 * @param analysis the repository analysis.
+	 * @param projectDashboardCustomizer the repository analysis.
 	 */
 	public void cleanupPaths(ProjectDashboardCustomizer projectDashboardCustomizer) {
 		

@@ -110,7 +110,7 @@ export class PieDashboardService {
 
 	/**
 	 * Process the Pie slice
-	 * @param slices the slice
+	 * @param slices the slices
 	 * @param typeSlice type of slice
 	 * @param projects 4 maps of projects ___in a specific order___
 	 * - the 'green' projects

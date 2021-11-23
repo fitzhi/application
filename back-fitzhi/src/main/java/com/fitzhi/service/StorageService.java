@@ -74,14 +74,14 @@ public interface StorageService {
 	String readFileDOCX(String fileName) throws IOException;
 
 	/**
-	 * @param fileName the PDF file to be read
+	 * @param filename the PDF file to be read
 	 * @return the content of the file
 	 * @throws IOException exception occurs when reading the file system
 	 */
 	String readFilePDF(String filename) throws IOException;
    
 	/**
-	 * @param fileName the concerned file
+	 * @param filename the concerned file
 	 * @return the file size as retrieved from the file system
 	 * @throws IOException exception occurs when reading the file system
 	 */

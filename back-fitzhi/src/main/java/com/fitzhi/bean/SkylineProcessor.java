@@ -23,7 +23,6 @@ public interface SkylineProcessor {
 	/**
 	 * <p>
 	 * Generate the Build layers of the given project.
-	 * </br>
 	 * Each layer represents the size of the project, day by day.
 	 * </p>
 	 * @param project project whose changes have to be serialized in CSV
@@ -54,7 +53,7 @@ public interface SkylineProcessor {
 	 * </p>
 	 * <p>
 	 * This method loads the {@link ProjectLayer project layers} from the filesystem and delegates the generation 
-	 * to the generation {@link #generateProjectBuilding(List) generateProjectBuilding}
+	 * to the generation {@link #generateProjectBuilding(Project) generateProjectBuilding}
 	 * </p>
 	 * @param project the given project of the associated changes
 	 * @return the Project-building
@@ -77,7 +76,6 @@ public interface SkylineProcessor {
 	 * <p>
 	 * <em>Only the <strong>active</strong> projects are included.</em>
 	 * </p>
-	 * @param projects active projects declared in the application
 	 * @return the restulting skyline
 	 * @throws ApplicationException thrown if any exception occurs.
 	 */

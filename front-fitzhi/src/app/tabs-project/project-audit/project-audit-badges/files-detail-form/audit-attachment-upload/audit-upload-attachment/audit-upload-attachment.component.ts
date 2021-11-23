@@ -3,7 +3,7 @@ import { FileService } from 'src/app/service/file.service';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { BackendSetupService } from 'src/app/service/backend-setup/backend-setup.service';
 import { AuditAttachmentComponent, AuditAttachment } from '../audit-attachment.component';
-import { BaseComponent } from 'src/app/base/base.component';
+import { BaseDirective } from 'src/app/base/base-directive.directive';
 import { Constants } from 'src/app/constants';
 import { MessageBoxService } from 'src/app/interaction/message-box/service/message-box.service';
 import { HttpRequest, HttpClient, HttpEventType, HttpResponse } from '@angular/common/http';
@@ -18,7 +18,7 @@ import { AttachmentFile } from 'src/app/data/AttachmentFile';
 	templateUrl: './audit-upload-attachment.component.html',
 	styleUrls: ['./audit-upload-attachment.component.css']
 })
-export class AuditUploadAttachmentComponent extends BaseComponent implements OnInit, OnDestroy {
+export class AuditUploadAttachmentComponent extends BaseDirective implements OnInit, OnDestroy {
 
 	/**
 	 * Full path of the selected audit attachment file.

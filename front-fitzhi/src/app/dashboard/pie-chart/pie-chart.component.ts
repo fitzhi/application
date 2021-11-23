@@ -1,9 +1,11 @@
 import { AfterViewInit, Component, Input, OnDestroy, OnInit, ViewEncapsulation } from '@angular/core';
 import { Slice, TypeSlice } from 'dynamic-pie-chart';
-import { BehaviorSubject } from 'rxjs';
+import { BehaviorSubject, Subject } from 'rxjs';
 import { tap } from 'rxjs/operators';
-import { BaseComponent } from 'src/app/base/base.component';
+import { BaseDirective } from 'src/app/base/base-directive.directive';
 import { traceOn } from 'src/app/global';
+import { AnalysisTypeSlice } from '../analysis-type-slice';
+import { LevelStaffRisk } from '../level-staff-risk';
 import { PieDashboardService } from '../service/pie-dashboard.service';
 
 
@@ -13,7 +15,12 @@ import { PieDashboardService } from '../service/pie-dashboard.service';
 	encapsulation: ViewEncapsulation.Emulated,
 	styleUrls: ['./pie-chart.component.css']
 })
-export class PieChartComponent extends BaseComponent implements OnInit, OnDestroy, AfterViewInit {
+export class PieChartComponent extends BaseDirective implements OnDestroy, AfterViewInit {
+
+	/**
+	 * Debug mode for the dynamic pie chart dependency.
+	 */
+	@Input() debug = false;
 
 	/**
 	 * Radius of the Pie.
@@ -43,11 +50,6 @@ export class PieChartComponent extends BaseComponent implements OnInit, OnDestro
 	@Input() filteredId = -1;
 
 	/**
-	 * BehaviorSubject emitting an array of slices.
-	 */
-	public slices$ = new BehaviorSubject<Slice[]>([]);
-
-	/**
      * BehaviorSubject emitting an array of types of slice used to display the legend associated with each type of slice.
      */
 	public typeSlices$ = new BehaviorSubject<TypeSlice[]>([]);
@@ -57,8 +59,7 @@ export class PieChartComponent extends BaseComponent implements OnInit, OnDestro
      */
 	public filteredIds$ = new BehaviorSubject<number[]>([]);
 
-
-	constructor(private pieDashboardService: PieDashboardService) {
+	constructor(public pieDashboardService: PieDashboardService) {
 		super();
 		const typeSlices = [];
 		typeSlices.push(new TypeSlice(0, 'Sonar'));
@@ -66,9 +67,6 @@ export class PieChartComponent extends BaseComponent implements OnInit, OnDestro
 		typeSlices.push(new TypeSlice(2, 'Audit'));
 		typeSlices.push(new TypeSlice(3, 'None'));
 		this.typeSlices$.next(typeSlices);
-	}
-
-	ngOnInit() {
 	}
 
 	ngAfterViewInit() {
@@ -89,11 +87,8 @@ export class PieChartComponent extends BaseComponent implements OnInit, OnDestro
 					} else {
 						this.filteredIds$.next([]);
 					}
-					slices.forEach(slice => slice.offset = 0);
-					setTimeout(() => {
-						this.slices$.next(slices);
-					}, 0);
-				})));
+				}))
+		);
 	}
 
 	/**

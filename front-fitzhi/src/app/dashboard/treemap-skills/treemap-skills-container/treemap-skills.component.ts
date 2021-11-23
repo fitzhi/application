@@ -1,16 +1,41 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, HostBinding, Input } from '@angular/core';
 import { ProjectService } from 'src/app/service/project/project.service';
+import { ReferentialService } from 'src/app/service/referential/referential.service';
+import { TreemapSkillsService } from '../treemap-skills-service/treemap-skills.service';
 
 @Component({
 	selector: 'app-treemap-skills',
 	templateUrl: './treemap-skills.component.html',
 	styleUrls: ['./treemap-skills.component.css']
 })
-export class TreemapSkillsComponent implements OnInit {
+export class TreemapSkillsComponent  {
 
-	constructor(public projectService: ProjectService) { }
+	/**
+	 * Height of the help pane in the treemap Skills component.
+	 */
+	@HostBinding('style.--help-height')
+	@Input() helpHeight = '110px';
 
-	ngOnInit() {
+	/**
+	 * This boolean represen that the help pane is visible (or not).
+	 */
+	helpPaneVisible = true;
+
+	constructor(
+		public projectService: ProjectService,
+		public referentialService: ReferentialService,
+		public treemapSkillsService: TreemapSkillsService) {
+		const localHelpHeight = localStorage.getItem('helpHeight');
+		if (localHelpHeight) {
+			this.helpHeight = localHelpHeight;
+		}
+		this.helpPaneVisible =  (this.helpHeight === '110px');
 	}
 
+	public displayHelp($event: boolean) {
+		this.helpHeight = (!$event) ? '0' : '110px';
+		this.helpPaneVisible =  (this.helpHeight === '110px');
+		localStorage.setItem('helpHeight', this.helpHeight);
+		this.treemapSkillsService.filterUpdated$.next(true);
+	}
 }
