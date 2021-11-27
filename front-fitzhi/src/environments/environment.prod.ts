@@ -1,7 +1,7 @@
 import { RunTimeFile } from "./runtime-file";
 
 /**
- * Check the file `environment.st` for a complete presentation of these settings.
+ * Check the file `environment.ts` for a complete presentation of these settings.
  */
  export const environment = {
 	production: true,
