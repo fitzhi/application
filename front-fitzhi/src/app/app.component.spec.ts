@@ -55,7 +55,7 @@ describe('AppComponent', () => {
 
 	it('The toolbar should NOT exist if user is connected BUT the installation is complete and successful.', fakeAsync(() => {
 		const spy = spyOn(authService, 'isConnected').and.returnValue(true);
-		installService.installComplete$.next(false);
+		installService.uninstall();
 		const fixture = TestBed.createComponent(AppComponent);
 		fixture.detectChanges();
 		tick();
@@ -64,7 +64,7 @@ describe('AppComponent', () => {
 
 	it('The toolbar should exist if user is connected AND the installation is complete and successful.', waitForAsync(() => {
 		const spy = spyOn(authService, 'isConnected').and.returnValue(true);
-		installService.installComplete$.next(true);
+		installService.installComplete();
 		const fixture = TestBed.createComponent(AppComponent);
 		fixture.detectChanges();
 		expect(document.getElementById('toolbar')).toBeDefined();

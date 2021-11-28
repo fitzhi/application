@@ -2,8 +2,10 @@ import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { traceOn } from 'src/app/global';
+import { BackendSetupService } from 'src/app/service/backend-setup/backend-setup.service';
 import { ProjectService } from 'src/app/service/project/project.service';
 import { StaffListService } from 'src/app/service/staff-list-service/staff-list.service';
+import { environment } from '../../../environments/environment';
 import { AuthService } from '../service/auth/auth.service';
 
 @Component({
@@ -32,6 +34,7 @@ export class ConnectUserComponent implements OnInit {
 		private authService: AuthService,
 		private projectService: ProjectService,
 		private staffListService: StaffListService,
+		private backendSetupService: BackendSetupService,
 		private router: Router,
 		private formBuilder: FormBuilder) {
 		this.connectionGroup = this.formBuilder.group({
@@ -42,6 +45,18 @@ export class ConnectUserComponent implements OnInit {
 
 	ngOnInit() {
 		sessionStorage.clear();
+
+		if (environment.autoConnect) {
+			this.backendSetupService.saveUrl(environment.apiUrl);
+			setTimeout(() => {				
+				if (traceOn()) {
+					console.log ('Auto connnection to Fitzhi.');
+				}
+				this.connectionGroup.setValue({ username: 'guest', password: 'anonymous' });
+				this.onSubmit();
+			}, 1000);
+		}
+
 	}
 
 	/**
@@ -72,9 +87,9 @@ export class ConnectUserComponent implements OnInit {
 
 			next: connectionStatus => {
 				this.messengerUserConnected.emit(connectionStatus);
-				/**
-				 * If the connection has succeeded, we load the projects and the staff members.
-				 */
+				//
+				// If the connection has succeeded, we load the projects and the staff members.
+				//
 				if (connectionStatus) {
 					// We load the projects and start the refresh process.
 					this.projectService.startLoadingProjects();

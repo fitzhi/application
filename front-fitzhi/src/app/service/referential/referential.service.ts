@@ -98,7 +98,6 @@ export class ReferentialService {
 			return;
 		}
 
-
 		this.httpClient.get<Profile[]>(this.backendSetupService.url() + '/referential/profiles')
 			.pipe(
 				take(1),

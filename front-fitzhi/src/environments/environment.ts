@@ -20,7 +20,7 @@ export const environment = {
 	version: require('../../package.json').version,
 	buildTime: RunTimeFile.buildtime,
 	apiUrl: 'http://localhost:8080',
-	autoConnect: true
+	autoConnect: false
 };
 
 /*

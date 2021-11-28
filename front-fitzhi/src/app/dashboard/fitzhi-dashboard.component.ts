@@ -90,6 +90,7 @@ export class FitzhiDashboardComponent extends BaseDirective implements OnInit, O
 	 * Initialization.
 	 */
 	ngOnInit() {
+
 		this.subscriptions.add(
 			this.projectService.allProjectsIsLoaded$.subscribe ({
 				next: loadAndOk => {
