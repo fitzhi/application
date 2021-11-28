@@ -1,12 +1,12 @@
 import { Component, EventEmitter, OnDestroy, OnInit, Output } from '@angular/core';
 import { BaseDirective } from 'src/app/base/base-directive.directive';
-import { Project } from 'src/app/data/project';
 import { DashboardService } from 'src/app/service/dashboard/dashboard.service';
 import { ProjectService } from 'src/app/service/project/project.service';
 import { StaffListService } from 'src/app/service/staff-list-service/staff-list.service';
 import { FitzhiDashboardPopupHelper } from '../../fitzhi-dashboard-popup-helper';
 import { selection } from '../../selection';
 import { SummaryService } from '../service/summary.service';
+import { environment } from '../../../../environments/environment';
 
 @Component({
 	selector: 'app-summary',
@@ -22,6 +22,9 @@ export class SummaryComponent extends BaseDirective implements OnInit, OnDestroy
 	@Output() messengerSelectedSummary = new EventEmitter<number>();
 
 	public selection = selection;
+
+	public environment = environment;
+	
 
 	public projectsEvaluation = 0;
 

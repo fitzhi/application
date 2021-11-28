@@ -23,6 +23,7 @@ import { SummaryComponent } from './summary.component';
 import { MOCK_PROJECTS_DISTRIBUTION } from '../../mock-projects-distribution.spec';
 import { MOCK_SKILLS_DISTRIBUTION } from '../../mock-skills-distribution.spec';
 import { selection } from '../../selection';
+import { environment } from 'src/environments/environment';
 
 
 describe('SummaryComponent', () => {
@@ -77,6 +78,10 @@ describe('SummaryComponent', () => {
 
 		staffListService = TestBed.inject(StaffListService);
 		staffListService.informStaffLoaded();
+
+		// By default, we are in autoConnect OFF.
+		environment.autoConnect = false;
+
 		fixture.detectChanges();
 
 	});
@@ -107,6 +112,25 @@ describe('SummaryComponent', () => {
 				expect(fixture.debugElement.query(By.css('#logo'))).toBeNull();
 				expect(fixture.debugElement.query(By.css('#summaries'))).toBeDefined();
 				expect(fixture.debugElement.query(By.css('#small-logo'))).toBeDefined();
+				expect(fixture.debugElement.query(By.css('#invitation'))).toBeNull();
+				done();
+			}
+		});
+	});
+
+	it('should display the contact invitation panel if the environment is set to autoConnect (fitzhi.com release)', done => {
+
+		// we switch to the autoConnect mode.
+		environment.autoConnect = true;
+
+		const spy = loadTheCharts(1);
+		expect(spy).toHaveBeenCalled();
+		service.summary$.subscribe({
+			next: sum => {
+				expect(fixture.debugElement.query(By.css('#logo'))).toBeNull();
+				expect(fixture.debugElement.query(By.css('#summaries'))).toBeDefined();
+				expect(fixture.debugElement.query(By.css('#small-logo'))).toBeDefined();
+				expect(fixture.debugElement.query(By.css('#invitation'))).toBeDefined();
 				done();
 			}
 		});

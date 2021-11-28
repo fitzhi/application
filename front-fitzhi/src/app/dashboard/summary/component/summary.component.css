@@ -37,3 +37,14 @@ div.summary {
 #general-average {
 	background-color: transparent;
 }
+#invitation {
+	height: 80px;
+	bottom: 20px;
+	right: 0;
+	left: var(--sidebar-width);
+}
+
+#invitation div {
+	margin: 0 auto;
+	width: 900px;
+}
