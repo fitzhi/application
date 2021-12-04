@@ -243,6 +243,7 @@ public class SkylineProcessorImpl implements SkylineProcessor {
 
 	@Override
 	public Skyline generateSkyline(List<Project> projects) throws ApplicationException  {
+
 		final Skyline skyline = new Skyline();
 
 		for (Project project : projects) {
