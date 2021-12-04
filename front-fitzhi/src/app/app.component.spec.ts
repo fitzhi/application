@@ -20,6 +20,7 @@ import { MatDialogModule } from '@angular/material/dialog';
 import { MessageComponent } from './interaction/message/message.component';
 import { InstallService } from './admin/service/install/install.service';
 import { AuthService } from './admin/service/auth/auth.service';
+import { environment } from 'src/environments/environment';
 
 describe('AppComponent', () => {
 
@@ -46,14 +47,14 @@ describe('AppComponent', () => {
 		expect(app).toBeTruthy();
 	}));
 
-	it('The toolbar should NOT exist until user is connected', waitForAsync(() => {
+	it('The toolbar should NOT exist until user is connected ' + environment.autoConnect, waitForAsync(() => {
 		const spy = spyOn(authService, 'isConnected').and.returnValue(false);
 		const fixture = TestBed.createComponent(AppComponent);
 		fixture.detectChanges();
 		expect(document.getElementById('toolbar')).toBeNull();
 	}));
 
-	it('The toolbar should NOT exist if user is connected BUT the installation is complete and successful.', fakeAsync(() => {
+	it('The toolbar should NOT exist if user is connected BUT the installation is complete and successful.' + environment.autoConnect, fakeAsync(() => {
 		const spy = spyOn(authService, 'isConnected').and.returnValue(true);
 		installService.uninstall();
 		const fixture = TestBed.createComponent(AppComponent);
@@ -62,7 +63,7 @@ describe('AppComponent', () => {
 		expect(document.getElementById('toolbar')).toBeNull();
 	}));
 
-	it('The toolbar should exist if user is connected AND the installation is complete and successful.', waitForAsync(() => {
+	it('The toolbar should exist if user is connected AND the installation is complete and successful.'  + environment.autoConnect, waitForAsync(() => {
 		const spy = spyOn(authService, 'isConnected').and.returnValue(true);
 		installService.installComplete();
 		const fixture = TestBed.createComponent(AppComponent);
