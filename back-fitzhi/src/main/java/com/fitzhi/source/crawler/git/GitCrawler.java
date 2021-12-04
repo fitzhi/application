@@ -116,6 +116,7 @@ import org.eclipse.jgit.revwalk.FollowFilter;
 import org.eclipse.jgit.revwalk.RenameCallback;
 import org.eclipse.jgit.revwalk.RevCommit;
 import org.eclipse.jgit.revwalk.RevWalk;
+import org.eclipse.jgit.revwalk.filter.RevFilter;
 import org.eclipse.jgit.storage.file.FileRepositoryBuilder;
 import org.eclipse.jgit.transport.FetchConnection;
 import org.eclipse.jgit.transport.Transport;
@@ -642,8 +643,10 @@ public class GitCrawler extends AbstractScannerDataGenerator {
 			diffCollector = new DiffCollector();
 
 			rw.setTreeFilter(getFollowFilter(repository, filePath));
-
 			rw.markStart(rw.parseCommit(repository.resolve(Constants.HEAD)));
+			
+			// We do not include the merge operations in the scope of the audit.
+			rw.setRevFilter(RevFilter.NO_MERGES);
 
 			for (RevCommit c : rw) {
 				commits.add(c);
