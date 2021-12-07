@@ -58,7 +58,7 @@ describe('BackendSetupComponent', () => {
 	it('Setup the default backend URL server', () => {
 		localStorage.removeItem('backendUrl');
 		fixture.detectChanges();
-		expect('http://localhost:8080').toEqual(field('#url').value);
+		expect('URL_OF_SERVER').toEqual(field('#url').value);
 	});
 
 	it('Setup the backend URL server saved in the localStorage', () => {
@@ -70,7 +70,7 @@ describe('BackendSetupComponent', () => {
 	it('Submit a VALID url for the very first connection', () => {
 		localStorage.removeItem('backendUrl');
 		fixture.detectChanges();
-		expect('http://localhost:8080').toEqual(field('#url').value);
+		expect('URL_OF_SERVER').toEqual(field('#url').value);
 
 		const backendSetupService = TestBed.inject(BackendSetupService);
 		const spy = spyOn(backendSetupService, 'isVeryFirstConnection$').and.returnValue(of(new FirstConnection(true, null)));
@@ -81,7 +81,7 @@ describe('BackendSetupComponent', () => {
 
 		// We succeed to connect to the given URL. The localStorage should be updated.
 		const savedUrl  = localStorage.getItem('backendUrl');
-		expect(savedUrl).toEqual('http://localhost:8080');
+		expect(savedUrl).toEqual('URL_OF_SERVER');
 
 		expect('urlValid').toEqual(component.classButton());
 		fixture.detectChanges();
@@ -96,7 +96,7 @@ describe('BackendSetupComponent', () => {
 	it('Submit an INVALID url for the very first connection', () => {
 		localStorage.removeItem('backendUrl');
 		fixture.detectChanges();
-		expect('http://localhost:8080').toEqual(field('#url').value);
+		expect('URL_OF_SERVER').toEqual(field('#url').value);
 
 		const backendSetupService = TestBed.inject(BackendSetupService);
 		const spy = spyOn(backendSetupService, 'isVeryFirstConnection$')

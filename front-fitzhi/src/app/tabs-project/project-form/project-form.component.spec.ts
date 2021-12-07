@@ -19,6 +19,7 @@ import { BackendSetupService } from 'src/app/service/backend-setup/backend-setup
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { BranchComponent } from './branch/branch.component';
 import { ListProjectsService } from '../list-project/list-projects-service/list-projects.service';
+import { environment } from 'src/environments/environment';
 
 describe('ProjectFormComponent', () => {
 	let component: TestHostComponent;
@@ -125,7 +126,7 @@ describe('ProjectFormComponent', () => {
 
 	});
 
-	it('Updating the project invokes a reload of the filtered projects list.', () => {
+	it(`Updating the project invokes a reload of the filtered projects list (${environment.autoConnect}).`, () => {
 
 		const spyUpdate = spyOn(projectService, 'updateCurrentProject$').and.returnValue(of(true));
 		const spyReload = spyOn(listProjectsService, 'reload').and.returnValue();
