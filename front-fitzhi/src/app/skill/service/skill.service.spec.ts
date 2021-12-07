@@ -1,7 +1,6 @@
 import { HttpClientTestingModule, HttpTestingController } from '@angular/common/http/testing';
 import { Component } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { Mock } from 'protractor/built/driverProviders';
 import { of } from 'rxjs';
 import { take } from 'rxjs/operators';
 import { Skill } from 'src/app/data/skill';
