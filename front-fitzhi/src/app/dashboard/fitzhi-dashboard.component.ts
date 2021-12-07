@@ -10,6 +10,7 @@ import { FitzhiSettings } from '../data/FitzhiSettings';
 import { traceOn } from '../global';
 import { ReferentialService } from '../service/referential/referential.service';
 import { StaffListService } from '../service/staff-list-service/staff-list.service';
+import { TurnoverService } from '../service/turnover/turnover.service';
 import { FilteredProject } from '../tabs-project/table-projects-filter/filtered-project';
 import { FitzhiDashboardPopupHelper } from './fitzhi-dashboard-popup-helper';
 import { selection } from './selection';
@@ -79,6 +80,7 @@ export class FitzhiDashboardComponent extends BaseDirective implements OnInit, O
 		public projectService: ProjectService,
 		public staffListService: StaffListService,
 		public referentialService: ReferentialService,
+		public turnoverService: TurnoverService,
 		public skylineService: SkylineService,
 		public controlledRisingSkylineService: ControlledRisingSkylineService,
 		public starfieldService: StarfieldService,
@@ -112,6 +114,18 @@ export class FitzhiDashboardComponent extends BaseDirective implements OnInit, O
 				}
 		}));
 
+		this.subscriptions.add(
+			this.staffListService.allStaff$.subscribe({
+				next: doneAndOk => {
+					const to2021 = this.turnoverService.turnover(2021);
+					console.log ('Turnover 2021', to2021); 
+					const to2020 = this.turnoverService.turnover(2020);
+					console.log ('Turnover 2020', to2020); 
+					const to2019 = this.turnoverService.turnover(2019);
+					console.log ('Turnover 2019', to2019); 
+				}
+			})
+		)
 	}
 
 	/**

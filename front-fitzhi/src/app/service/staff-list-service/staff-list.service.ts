@@ -4,6 +4,8 @@ import { NOT_MODIFIED } from 'http-status-codes';
 import { BehaviorSubject, EMPTY, Observable, of } from 'rxjs';
 import { catchError, take, tap } from 'rxjs/operators';
 import { Constants } from 'src/app/constants';
+import { Experience } from 'src/app/data/experience';
+import { Mission } from 'src/app/data/mission';
 import { Collaborator } from '../../data/collaborator';
 import { Commit } from '../../data/commit';
 import { traceOn } from '../../global';
@@ -111,12 +113,91 @@ export class StaffListService {
 			console.table(staff);
 			console.groupEnd();
 		}
-		this.allStaff = staff;
+		this.loadAllStaff(staff);
 		this.allStaff$.next(this.allStaff);
 		if (!this.allStaffLoaded) {
 			this.allStaffLoaded = true;
 			this.informStaffLoaded();
 		}
+	}
+
+	/**
+	 * Load the collection of Staff members inside the Fitzhi framework.
+	 * @param staff the staff object retrieved from the backend 
+	 */
+	public loadAllStaff (staff) {
+		staff.forEach(staff => {
+			const collaborator = this.createStaffFromJson(staff);
+			this.allStaff.push(collaborator);
+		});
+	}
+
+	private setStaffProperty (staff: Object, collaborator: Collaborator | Mission, property: string) {
+		if (staff.hasOwnProperty(property)) {
+			collaborator[property] = staff[property];
+		}
+	}
+
+	private generateDate(dateReceived: string): Date {
+		const str = dateReceived.split('-');
+		const year = Number(str[0]);
+		const month = Number(str[1]) - 1;
+		const day = Number(str[2]);
+	  	return new Date (year, month, day);
+	}
+
+	/**
+	 * Create a staff member for the staff data retrieved from the backend.
+	 * @param staff the loaded staff
+	 * @returns the newly staff object
+	 */
+	createStaffFromJson(staff): Collaborator {
+
+		const collaborator = new Collaborator();
+		this.setStaffProperty(staff, collaborator, 'idStaff');
+		this.setStaffProperty(staff, collaborator, 'firstName');
+		this.setStaffProperty(staff, collaborator, 'lastName');
+
+		this.setStaffProperty(staff, collaborator, 'nickName');
+		this.setStaffProperty(staff, collaborator, 'login');
+		this.setStaffProperty(staff, collaborator, 'email');
+
+		this.setStaffProperty(staff, collaborator, 'level');
+		this.setStaffProperty(staff, collaborator, 'forceActiveState');
+		this.setStaffProperty(staff, collaborator, 'active');
+		this.setStaffProperty(staff, collaborator, 'dateInactive');
+		this.setStaffProperty(staff, collaborator, 'application');
+		this.setStaffProperty(staff, collaborator, 'typeOfApplication');
+		this.setStaffProperty(staff, collaborator, 'external');
+		this.setStaffProperty(staff, collaborator, 'username');
+		this.setStaffProperty(staff, collaborator, 'enabled');
+
+		if (staff.hasOwnProperty('missions')) {
+			collaborator.missions= [];
+			staff.missions.forEach(element => {
+				const m = new Mission(element.idProject, element.name);
+				this.setStaffProperty(element, m, 'idStaff');
+				if (element.hasOwnProperty('firstCommit')) {
+					m.firstCommit = this.generateDate (element.firstCommit);
+				}
+				if (element.hasOwnProperty('lastCommit')) {
+					m.lastCommit = this.generateDate (element.lastCommit);
+				}
+				this.setStaffProperty(element, m, 'numberOfCommits');
+				this.setStaffProperty(element, m, 'numberOfFiles');
+
+				collaborator.missions.push(m);
+			});
+		}
+
+		if (staff.hasOwnProperty('experiences')) {
+			collaborator.experiences = [];
+			staff.experiences.forEach(element => {
+				collaborator.experiences.push(new Experience(element.id, element.titme, element.level));
+			});
+		}
+
+		return collaborator;
 	}
 
 	/**
