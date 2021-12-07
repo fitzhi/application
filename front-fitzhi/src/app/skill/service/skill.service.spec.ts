@@ -15,7 +15,8 @@ describe('skillService', () => {
 	let service: SkillService;
 	let httpTestingController: HttpTestingController;
 	let backendSetupService: BackendSetupService;
-
+	let httpMock: HttpTestingController;
+	
 	@Component({
 		selector: 'app-dummy-component',
 		template: `<div></div>`
@@ -37,6 +38,7 @@ describe('skillService', () => {
 		service = TestBed.inject(SkillService);
 
 		httpTestingController = TestBed.inject(HttpTestingController);
+		httpMock = TestBed.inject(HttpTestingController);
 
 		fixture.detectChanges();
 	});
@@ -100,6 +102,11 @@ describe('skillService', () => {
 
 	it('should load the skills from the backend server.', done => {
 
+		service.allSkillsLoaded$.pipe(take(1)).subscribe({
+			next: doneAndOk => expect(doneAndOk).toBeFalse(),
+			complete: () =>	done()
+		});
+
 		backendSetupService = TestBed.inject(BackendSetupService);
 		spyOn(backendSetupService, 'url').and.returnValue('URL_OF_SERVER/api');
 
@@ -114,8 +121,6 @@ describe('skillService', () => {
 			complete: () =>	done()
 		});
 
-		httpTestingController.verify();
-
 	});
 
 	it('should retrieve the id of a skill from its title.', () => {
@@ -129,4 +134,8 @@ describe('skillService', () => {
 		expect(service.id('two')).toBe(2);
 	});
 
+	afterEach(() => {
+		httpMock.verify();
+	});
+ 
 });
