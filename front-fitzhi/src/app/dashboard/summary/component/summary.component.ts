@@ -7,6 +7,7 @@ import { FitzhiDashboardPopupHelper } from '../../fitzhi-dashboard-popup-helper'
 import { selection } from '../../selection';
 import { SummaryService } from '../service/summary.service';
 import { environment } from '../../../../environments/environment';
+import { TurnoverService } from 'src/app/service/turnover/turnover.service';
 
 
 @Component({
@@ -27,6 +28,8 @@ export class SummaryComponent extends BaseDirective implements OnInit, OnDestroy
 	
 	public projectsEvaluation = 0;
 
+	public turnoverDatas = [];
+
 	/**
 	 * Helper handler the display or not of the poppup.
 	 */
@@ -36,6 +39,7 @@ export class SummaryComponent extends BaseDirective implements OnInit, OnDestroy
 		public summaryService: SummaryService,
 		public dashboardService: DashboardService,
 		public staffListService: StaffListService,
+		private turnoverService: TurnoverService,
 		public projectService: ProjectService) {
 			super();
 		}
@@ -56,6 +60,20 @@ export class SummaryComponent extends BaseDirective implements OnInit, OnDestroy
 				next: evaluation => this.projectsEvaluation = Math.floor(evaluation * 10)
 			})
 		);
+
+		this.subscriptions.add(
+			this.staffListService.allStaff$.subscribe({
+				next: doneAndOk => {
+					this.turnoverDatas = [];
+					const currentYear = new Date(Date.now()).getFullYear();
+					this.turnoverDatas.push(this.turnoverService.turnover(currentYear-2));
+					this.turnoverDatas.push(this.turnoverService.turnover(currentYear-1));
+					this.turnoverDatas.push(this.turnoverService.turnover(currentYear));
+				}
+			})
+		)
+
+
 	}
 
 	/**

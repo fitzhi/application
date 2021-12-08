@@ -3,12 +3,6 @@
 	height: 100%;
 }
 
-
-#summaries {
-	display: flex;
-	width: 100%;
-}
-
 #logo, #small-logo {
 	background: -webkit-linear-gradient(var(--color-selected), var(--color-error));
 	background-clip: text;
