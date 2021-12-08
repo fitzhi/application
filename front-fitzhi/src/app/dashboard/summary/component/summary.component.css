@@ -37,6 +37,7 @@ div.summary {
 #general-average {
 	background-color: transparent;
 }
+
 #invitation {
 	height: 80px;
 	bottom: 20px;
@@ -47,4 +48,8 @@ div.summary {
 #invitation div {
 	margin: 0 auto;
 	width: 900px;
+}
+
+#thumbnail-turnover-penultimate-year  {
+	background-color: transparent;
 }

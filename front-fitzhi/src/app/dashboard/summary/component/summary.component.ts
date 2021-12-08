@@ -8,13 +8,13 @@ import { selection } from '../../selection';
 import { SummaryService } from '../service/summary.service';
 import { environment } from '../../../../environments/environment';
 
+
 @Component({
 	selector: 'app-summary',
 	templateUrl: './summary.component.html',
 	styleUrls: ['./summary.component.css']
 })
 export class SummaryComponent extends BaseDirective implements OnInit, OnDestroy {
-
 
 	/**
 	 * The component has to emit an event if the user clicks on a summary.

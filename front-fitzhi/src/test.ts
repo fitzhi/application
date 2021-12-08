@@ -17,12 +17,14 @@ getTestBed().initTestEnvironment(
 // Then we find all the tests
 
 const context = require.context('./', true, /\.spec\.ts$/);
-// const context = require.context('./', true,  /summary\.service\.spec\.ts$/);
+// const context = require.context('./', true,  /skill\.service\.spec\.ts$/);
+
+// const context = require.context('./', true,  /staff-cleanupStaff\.service\.spec\.ts$/);
 // const context = require.context('./', true,  /summary\.component\.spec\.ts$/);
 // const context = require.context('./', true,  /dashboard\.service\.calculateGeneralAverage\.spec\.ts$/);
-// const context = require.context('./', true,  /starfield\.service\.spec\.ts$/);
+// const context = require.context('./', true,  /turnover\.service\.spec\.ts$/);
 // const context = require.context('./', true,  /starfield-broadcastConstellations\.service\.spec\.ts$/);
-// const context = require.context('./', true,  /audit-graphic-2-badges\.component\.spec\.ts$/);
+// const context = require.context('./', true,  /backend-setup\.component\.spec\.ts$/);
 // const context = require.context('./', true,  /fitzhi-dashboard-help-popper-treemap-skills\.component\.spec\.ts$/);
 // const context = require.context('./', true,  /treemap-skills-chart\.component\.spec\.ts$/);
 // const context = require.context('./', true,  /project-inactivate\.component\.spec\.ts$/);

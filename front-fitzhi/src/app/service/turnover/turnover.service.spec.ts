@@ -4,6 +4,7 @@ import { MatDialogModule } from '@angular/material/dialog';
 import { assert } from 'console';
 import { StaffService } from 'src/app/tabs-staff/service/staff.service';
 import { StaffListService } from '../staff-list-service/staff-list.service';
+import { TurnoverData } from './turnover-data';
 
 import { TurnoverService } from './turnover.service';
 
@@ -31,7 +32,7 @@ describe('TurnoverService', () => {
 		});
 
 		expect(staffListService.allStaff.length).toBe(2);
-		expect(turnoverService.turnover(2021, true)).toBe(0);
+		expect(turnoverService.turnover(2021, true).calculation).toBe(0);
 	});
 
 	it('should calculate correctly the turnover for year 2021 with the testing data "staff-test-1".', () => {
@@ -41,31 +42,31 @@ describe('TurnoverService', () => {
 			staffListService.allStaff.push(collaborator);
 		});
 		expect(staffListService.allStaff.length).toBe(3);
-		expect(turnoverService.turnover(2021)).toBe(50);
+		expect(turnoverService.turnover(2021).calculation).toBe(50);
 	});
 
 	it('should calculate correctly the turnover for year 2020 with the testing data "staff-test-1".', () => {
 		const staff = require('./staff-test-1.json');
 		staffListService.loadAllStaff(staff);
-		expect(turnoverService.turnover(2020)).toBe(0);
+		expect(turnoverService.turnover(2020).calculation).toBe(0);
 	});
 
 	it('should calculate correctly the turnover for year 2019 with the testing data "staff-test-1".', () => {
 		const staff = require('./staff-test-1.json');
 		staffListService.loadAllStaff(staff);
-		expect(turnoverService.turnover(2019)).toBe(25);
+		expect(turnoverService.turnover(2019).calculation).toBe(25);
 	});
 
 	it('should take in account that a staff member is no more active with the testing data "staff-test-2".', () => {
 		const staff = require('./staff-test-2.json');
 		staffListService.loadAllStaff(staff);
-		expect(turnoverService.turnover(2021)).toBe(50);
+		expect(turnoverService.turnover(2021).calculation).toBe(50);
 	});
 
 	it('should handle correctly the lack of data".', () => {
 		const staff = require('./staff-test-2.json');
 		staffListService.loadAllStaff(staff);
-		expect(turnoverService.turnover(1789)).toBe(TurnoverService.NO_DATA_AVAILABLE);
+		expect(turnoverService.turnover(1789).calculation).toBe(TurnoverData.NO_DATA_AVAILABLE);
 	});
 
 });
