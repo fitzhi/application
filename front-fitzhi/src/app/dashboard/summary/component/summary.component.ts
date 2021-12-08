@@ -25,7 +25,6 @@ export class SummaryComponent extends BaseDirective implements OnInit, OnDestroy
 
 	public environment = environment;
 	
-
 	public projectsEvaluation = 0;
 
 	/**

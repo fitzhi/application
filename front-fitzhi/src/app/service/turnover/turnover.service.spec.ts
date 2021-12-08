@@ -57,6 +57,12 @@ describe('TurnoverService', () => {
 		expect(turnoverService.turnover(2019).calculation).toBe(25);
 	});
 
+	it('should store the given year into the resulting turnover data.', () => {
+		const staff = require('./staff-test-1.json');
+		staffListService.loadAllStaff(staff);
+		expect(turnoverService.turnover(2019).year).toBe(2019);
+	});
+
 	it('should take in account that a staff member is no more active with the testing data "staff-test-2".', () => {
 		const staff = require('./staff-test-2.json');
 		staffListService.loadAllStaff(staff);
@@ -67,6 +73,7 @@ describe('TurnoverService', () => {
 		const staff = require('./staff-test-2.json');
 		staffListService.loadAllStaff(staff);
 		expect(turnoverService.turnover(1789).calculation).toBe(TurnoverData.NO_DATA_AVAILABLE);
+		expect(turnoverService.turnover(1789).year).toBe(1789);
 	});
 
 });

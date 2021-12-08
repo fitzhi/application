@@ -33,14 +33,14 @@ export class TurnoverService {
 	 */
 	public turnover (year: number, external = false): TurnoverData {
 
-		const turnoverData = new TurnoverData();
+		const turnoverData = new TurnoverData(year);
 
 		this.staffListService.allStaff
 			.filter(staff => (!external) ? (!staff.external) : true )
 			.forEach( staff => this.takeInAccount(staff, year, turnoverData));
 
 		if (turnoverData.total === 0) {
-			return TurnoverData.noDataAvailable();
+			return TurnoverData.noDataAvailable(year);
 		}
 
 		// turnover = (resignation count + (arrival count / 2)) / number of workers at the 1st january
