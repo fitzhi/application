@@ -123,10 +123,10 @@ export class StaffListService {
 
 	/**
 	 * Load the collection of Staff members inside the Fitzhi framework.
-	 * @param staff the staff object retrieved from the backend 
+	 * @param staff the staff object retrieved from the backend
 	 */
-	public loadAllStaff (staff) {
-		staff.forEach(staff => {
+	public loadAllStaff (allStaff) {
+		allStaff.forEach(staff => {
 			const collaborator = this.createStaffFromJson(staff);
 			this.allStaff.push(collaborator);
 		});
@@ -143,7 +143,7 @@ export class StaffListService {
 		const year = Number(str[0]);
 		const month = Number(str[1]) - 1;
 		const day = Number(str[2]);
-	  	return new Date (year, month, day);
+		return new Date (year, month, day);
 	}
 
 	/**
@@ -173,7 +173,7 @@ export class StaffListService {
 		this.setStaffProperty(staff, collaborator, 'enabled');
 
 		if (staff.hasOwnProperty('missions')) {
-			collaborator.missions= [];
+			collaborator.missions = [];
 			staff.missions.forEach(element => {
 				const m = new Mission(element.idProject, element.name);
 				this.setStaffProperty(element, m, 'idStaff');

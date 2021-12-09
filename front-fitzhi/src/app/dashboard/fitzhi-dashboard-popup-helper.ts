@@ -28,7 +28,7 @@ export class FitzhiDashboardPopupHelper {
 	 *
 	 * @param year the year associated to the highlighted panel
 	 */
-	 public mouseTurnoverEnter(year: number) {
+	public mouseTurnoverEnter(year: number) {
 		this.activated = this.correspondingSelection(year);
 	}
 
@@ -62,9 +62,9 @@ export class FitzhiDashboardPopupHelper {
 		switch (year) {
 			case currentYear:
 				return selection.turnoverCurrentYear;
-			case (currentYear-1):
+			case (currentYear - 1):
 				return selection.turnoverLastYear;
-			case (currentYear-2):
+			case (currentYear - 2):
 				return selection.turnoverPenultimateYear;
 		}
 	}

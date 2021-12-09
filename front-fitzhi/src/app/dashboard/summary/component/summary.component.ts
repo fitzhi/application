@@ -25,7 +25,7 @@ export class SummaryComponent extends BaseDirective implements OnInit, OnDestroy
 	public selection = selection;
 
 	public environment = environment;
-	
+
 	public projectsEvaluation = 0;
 
 	public turnoverDatas = [];
@@ -66,13 +66,12 @@ export class SummaryComponent extends BaseDirective implements OnInit, OnDestroy
 				next: doneAndOk => {
 					this.turnoverDatas = [];
 					const currentYear = new Date(Date.now()).getFullYear();
-					this.turnoverDatas.push(this.turnoverService.turnover(currentYear-2));
-					this.turnoverDatas.push(this.turnoverService.turnover(currentYear-1));
+					this.turnoverDatas.push(this.turnoverService.turnover(currentYear - 2));
+					this.turnoverDatas.push(this.turnoverService.turnover(currentYear - 1));
 					this.turnoverDatas.push(this.turnoverService.turnover(currentYear));
 				}
 			})
-		)
-
+		);
 
 	}
 

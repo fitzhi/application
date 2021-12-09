@@ -12,7 +12,6 @@ import { StaffService } from './staff.service';
 
 describe('staffService', () => {
 	let service: StaffService;
-	let httpMock: HttpTestingController;
 
 	beforeEach(() => {
 		TestBed.configureTestingModule({

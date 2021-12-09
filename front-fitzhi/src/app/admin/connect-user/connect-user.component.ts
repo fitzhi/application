@@ -48,7 +48,7 @@ export class ConnectUserComponent implements OnInit {
 
 		if (environment.autoConnect) {
 			this.backendSetupService.saveUrl(environment.apiUrl);
-			setTimeout(() => {				
+			setTimeout(() => {
 				if (traceOn()) {
 					console.log ('Auto connnection to Fitzhi.');
 				}

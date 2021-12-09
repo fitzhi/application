@@ -15,7 +15,7 @@ describe('skillService', () => {
 	let httpTestingController: HttpTestingController;
 	let backendSetupService: BackendSetupService;
 	let httpMock: HttpTestingController;
-	
+
 	@Component({
 		selector: 'app-dummy-component',
 		template: `<div></div>`
@@ -136,5 +136,5 @@ describe('skillService', () => {
 	afterEach(() => {
 		httpMock.verify();
 	});
- 
+
 });

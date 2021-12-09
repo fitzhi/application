@@ -58,11 +58,11 @@ export class SkillService extends InternalService {
 
 	constructor(private httpClient: HttpClient, private backendSetupService: BackendSetupService) {
 		super();
-		
+
 		if (environment.autoConnect) {
 			this.backendSetupService.saveUrl(environment.apiUrl);
 		}
-		
+
 		if (traceOn() && !this.backendSetupService.hasSavedAnUrl()) {
 			console.log('Skills loading is postponed due to the lack of backend URL.');
 		}

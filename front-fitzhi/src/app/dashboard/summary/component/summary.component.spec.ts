@@ -78,10 +78,9 @@ describe('SummaryComponent', () => {
 		projectService = TestBed.inject(ProjectService);
 		projectService.allProjectsIsLoaded$.next(true);
 
-		
 		turnoverService = TestBed.inject(TurnoverService);
-		spyOn(turnoverService, 'turnover').and.callFake (year => { return new TurnoverData(year, 1, 1, 1, year - 2000); });
-		
+		spyOn(turnoverService, 'turnover').and.callFake (year => new TurnoverData(year, 1, 1, 1, year - 2000));
+
 		staffListService = TestBed.inject(StaffListService);
 		staffListService.informStaffLoaded();
 
@@ -229,28 +228,28 @@ describe('SummaryComponent', () => {
 	it('should display the 3 turnover panels.', done => {
 
 		const currentYear = new Date(Date.now()).getFullYear();
-		
-		let thumbnailTurnoverCurrentYear = fixture.debugElement.query(By.css('#thumbnail-turnover-' + currentYear));
-		let thumbnailTurnoverLastYear = fixture.debugElement.query(By.css('#thumbnail-turnover-' + (currentYear-1)));
-		let thumbnailTurnoverPenultimateYear = fixture.debugElement.query(By.css('#thumbnail-turnover-' + (currentYear-2)));
-		
+
+		const thumbnailTurnoverCurrentYear = fixture.debugElement.query(By.css('#thumbnail-turnover-' + currentYear));
+		const thumbnailTurnoverLastYear = fixture.debugElement.query(By.css('#thumbnail-turnover-' + (currentYear - 1)));
+		const thumbnailTurnoverPenultimateYear = fixture.debugElement.query(By.css('#thumbnail-turnover-' + (currentYear - 2)));
+
 		expect(thumbnailTurnoverCurrentYear).toBeNull();
 		expect(thumbnailTurnoverLastYear).toBeNull();
 		expect(thumbnailTurnoverPenultimateYear).toBeNull();
-		
+
 		loadTheCharts(8);
-		
+
 		setTimeout(() => {
 			staffListService.allStaffLoaded$.subscribe({
 				next: doneAndOk => {
 					if (doneAndOk) {
 						expect(fixture.debugElement.query(By.css('#thumbnail-turnover-' + currentYear))).not.toBeNull();
-						expect(fixture.debugElement.query(By.css('#thumbnail-turnover-' + (currentYear-1)))).not.toBeNull();
-						expect(fixture.debugElement.query(By.css('#thumbnail-turnover-' + (currentYear-2)))).not.toBeNull();
+						expect(fixture.debugElement.query(By.css('#thumbnail-turnover-' + (currentYear - 1)))).not.toBeNull();
+						expect(fixture.debugElement.query(By.css('#thumbnail-turnover-' + (currentYear - 2)))).not.toBeNull();
 						done();
-					} 
+					}
 				}
-			});			
+			});
 		}, 0);
 
 	});
@@ -259,9 +258,9 @@ describe('SummaryComponent', () => {
 	it('should write the turnover in the turnover panels.', done => {
 
 		const currentYear = new Date(Date.now()).getFullYear();
-		let turnoverCurrentYear = fixture.debugElement.query(By.css('#turnover-' + currentYear));
-		let turnoverLastYear = fixture.debugElement.query(By.css('#turnover-' + (currentYear-1)));
-		let turnoverPenultimateYear = fixture.debugElement.query(By.css('#turnover-' + (currentYear-2)));
+		const turnoverCurrentYear = fixture.debugElement.query(By.css('#turnover-' + currentYear));
+		const turnoverLastYear = fixture.debugElement.query(By.css('#turnover-' + (currentYear - 1)));
+		const turnoverPenultimateYear = fixture.debugElement.query(By.css('#turnover-' + (currentYear - 2)));
 
 		expect(turnoverCurrentYear).toBeNull();
 		expect(turnoverLastYear).toBeNull();
@@ -273,10 +272,10 @@ describe('SummaryComponent', () => {
 			next: doneAndOk => {
 				if (doneAndOk) {
 					expect(fixture.debugElement.query(By.css('#turnover-' + currentYear)).nativeNode.innerText).toBe('21');
-					expect(fixture.debugElement.query(By.css('#turnover-' + (currentYear-1))).nativeNode.innerText).toBe('20');
-					expect(fixture.debugElement.query(By.css('#turnover-' + (currentYear-2))).nativeNode.innerText).toBe('19');
+					expect(fixture.debugElement.query(By.css('#turnover-' + (currentYear - 1))).nativeNode.innerText).toBe('20');
+					expect(fixture.debugElement.query(By.css('#turnover-' + (currentYear - 2))).nativeNode.innerText).toBe('19');
 					done();
-				} 
+				}
 			}
 		});
 	});

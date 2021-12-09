@@ -14,9 +14,8 @@ import { AuthService } from '../auth/auth.service';
 })
 export class InstallService {
 
-
 	private installCompleteSubject$ = new BehaviorSubject<boolean>(false);
-	
+
 	/**
 	 * This `observable` will emit a **true** if the installation has been completed.
 	 */
@@ -36,10 +35,10 @@ export class InstallService {
 
 	/**
 	 * Simulate tthe fact that the installation is undone.
-	 * 
+	 *
 	 * This method has been created for testing purpose.
 	 */
-	 public uninstall() {
+	public uninstall() {
 		localStorage.clear();
 		this.installCompleteSubject$.next(false);
 	}

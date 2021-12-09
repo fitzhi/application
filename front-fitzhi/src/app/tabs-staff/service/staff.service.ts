@@ -138,24 +138,24 @@ export class StaffService {
 
 	/**
 	 * Clone and cleanup a staff object to be **PUT** to the backend server, for update purpose.
-	 * 
+	 *
 	 * Only a small piece of the staff is supposed to be updated with the url "/api/staff/999".
-	 * 
+	 *
 	 * The **missions** and the **experiences** array will be removed from the object.
-	 *	 
+	 *
 	 * @param staff the staff object tp be cleaned up.
 	 */
 	public cleanupStaff(staff: Collaborator): Collaborator {
 		const contentOfStaff = JSON.stringify(staff);
 		const cloned = JSON.parse(contentOfStaff, (key, value) => {
 			if (key === 'missions') {
-			  return null;
+				return null;
 			}
 			if (key === 'experiences') {
 				return null;
 			}
 			return value;
-		  });
+		});
 		return cloned;
 	}
 
