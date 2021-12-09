@@ -59,7 +59,7 @@
 	<div *ngFor="let turnoverData of turnoverDatas; index as id" 
 		id="thumbnail-turnover-{{turnoverData.year}}"
 		class="summary border m-1 position-relative d-flex aligns-items-center" 
-		(mouseenter)="popupHelper.mouseEnter(selection.skillsCoverageScore)" 
+		(mouseenter)="popupHelper.mouseTurnoverEnter(turnoverData.year)" 
 		(mouseleave)="popupHelper.mouseLeave()"
 		(click)="switchTo(selection.turnoverPenultimateYear)" >
 
@@ -67,7 +67,9 @@
 			<div>
 				<div class="w-100 m-1 p-0 d-flex justify-content-center align-items-center"> <em class="fab fa-git-alt icon-git"></em> </div>
 				<div class="m-1 d-flex justify-content-center align-items-center"> <h5>GIT turnover {{turnoverData.year}}</h5> </div>
-				<div class="mt-3 p-0 d-flex justify-content-center align-items-center"> <span class="turnover">{{turnoverData.calculation}} </span> </div>
+				<div class="mt-3 p-0 d-flex justify-content-center align-items-center"> 
+					<span id="turnover-{{turnoverData.year}}" class="turnover">{{turnoverData.calculation}}</span> 
+				</div>
 			</div>
 		</div>
 
@@ -121,9 +123,9 @@
 
 <div *ngFor="let turnoverData of turnoverDatas; index as id">
 	<angular-popper id="help-turnover-penultimate" placement="bottom" target="#thumbnail-turnover-{{turnoverData.year}}" 
-		*ngIf="(staffListService.allStaffLoaded$|async) && false">
+		*ngIf="(staffListService.allStaffLoaded$|async) && (isTurnoverActivated(turnoverData.year))">
 		<div content class="help">
-			<h4 class="help-title">Tunover</h4>
+			<h4 class="help-title">Tunover {{turnoverData.year}}</h4>
 			<div class="help-content">
 				<br/>
 				<p>

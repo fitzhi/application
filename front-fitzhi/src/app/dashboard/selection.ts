@@ -11,7 +11,8 @@ export const selection  = {
 	treeMapProjects: 6,
 	generalAverage: 7,
 	skillsCoverageScore: 8,
-	turnoverPenultimateYear: 9,
-	turnoverLastYear: 10,
-	turnoverCurrentYear: 11
+	turnover: 9,
+	turnoverPenultimateYear: 10,
+	turnoverLastYear: 11,
+	turnoverCurrentYear: 12
 };
