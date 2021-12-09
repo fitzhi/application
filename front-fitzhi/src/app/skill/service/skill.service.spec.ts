@@ -133,8 +133,4 @@ describe('skillService', () => {
 		expect(service.id('two')).toBe(2);
 	});
 
-	afterEach(() => {
-		httpMock.verify();
-	});
-
 });
