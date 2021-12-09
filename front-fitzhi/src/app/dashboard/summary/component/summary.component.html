@@ -127,10 +127,52 @@
 		<div content class="help">
 			<h4 class="help-title">Tunover {{turnoverData.year}}</h4>
 			<div class="help-content">
-				<br/>
-				<p>
+				<p class="text-justify">
+					There are multiple ways to evaluate the turnover in a company.
+					The type of calculation in Fitzhi depends on a property stored on the backend server.
 					This is the turnover processed for year {{turnoverData.year}}....
 				</p>
+				<table>
+					<tr>
+						<td rowspan="3">
+							Label turnover &nbsp; = &nbsp;&nbsp;
+						</td>
+						<td class="numerator">
+							(NELDY + NELAY) / 2
+						</td>
+					</tr>
+					<tr>
+						<td class="denominator">
+							NEBY
+						</td>
+					</tr>
+				</table>
+				<p class="m-1">
+					Where:
+				</p>
+				<ul>
+					<li>NELDY = Number of Employees who Left During the Year {{turnoverData.year}}</li>
+					<li>NELAY = Number of Employees who arrived During the Year {{turnoverData.year}}</li>
+					<li>NEBY = Number of Employees at the Beginning of Year {{turnoverData.year}}</li>
+				</ul>
+				<p class="m-2">
+					In this current case, we will have :
+				</p>
+				<table>
+					<tr>
+						<td rowspan="3">
+							Turnover {{turnoverData.year}} &nbsp; = &nbsp;&nbsp;
+						</td>
+						<td class="numerator">
+							({{turnoverData.resignation}} + {{turnoverData.arrival}}) / 2
+						</td>
+					</tr>
+					<tr>
+						<td class="denominator">
+							{{turnoverData.total}} 
+						</td>
+					</tr>
+				</table>
 			</div>
 		</div>
 	</angular-popper>	

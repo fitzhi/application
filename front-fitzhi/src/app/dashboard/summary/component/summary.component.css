@@ -57,3 +57,19 @@ span.turnover {
 	font-size: 80px;
 	font-weight: 700;
 }
+
+td.numerator {
+	padding-bottom: 3px;
+	border-bottom: 1px;
+	border-top: 0;
+	border-left: 0;
+	border-right: 0;
+	border-style: solid; 
+	border-color: black;
+}
+
+td.denominator {
+	text-align: center;
+	padding-top: 3px;
+}
+
