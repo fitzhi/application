@@ -35,9 +35,11 @@ describe('skillService', () => {
 		component = fixture.componentInstance;
 
 		service = TestBed.inject(SkillService);
-
 		httpTestingController = TestBed.inject(HttpTestingController);
 		httpMock = TestBed.inject(HttpTestingController);
+		
+		backendSetupService = TestBed.inject(BackendSetupService);
+		spyOn(backendSetupService, 'hasSavedAnUrl').and.returnValue(false);
 
 		fixture.detectChanges();
 	});
@@ -103,7 +105,9 @@ describe('skillService', () => {
 
 		service.allSkillsLoaded$.pipe(take(1)).subscribe({
 			next: doneAndOk => expect(doneAndOk).toBeFalse(),
-			complete: () =>	done()
+			complete: () =>	 {
+				done();
+			}
 		});
 
 		backendSetupService = TestBed.inject(BackendSetupService);
