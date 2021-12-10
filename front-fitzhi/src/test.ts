@@ -19,7 +19,7 @@ getTestBed().initTestEnvironment(
 const context = require.context('./', true, /\.spec\.ts$/);
 // const context = require.context('./', true,  /skill\.service\.spec\.ts$/);
 
-// const context = require.context('./', true,  /staff-cleanupStaff\.service\.spec\.ts$/);
+// const context = require.context('./', true,  /skill\.service\.spec\.ts$/);
 // const context = require.context('./', true,  /summary\.component\.spec\.ts$/);
 // const context = require.context('./', true,  /dashboard\.service\.calculateGeneralAverage\.spec\.ts$/);
 // const context = require.context('./', true,  /turnover\.service\.spec\.ts$/);
@@ -28,7 +28,7 @@ const context = require.context('./', true, /\.spec\.ts$/);
 // const context = require.context('./', true,  /app\.component\.spec\.ts$/);
 // const context = require.context('./', true,  /treemap-skills-chart\.component\.spec\.ts$/);
 // const context = require.context('./', true,  /project-inactivate\.component\.spec\.ts$/);
-// const context = require.context('./', true,  /list-skill\.component\.spec\.ts$/);
+// const context = require.context('./', true,  /project-staff\.component\.spec\.ts$/);
 // const context = require.context('./', true,  /http-refresh-token-error-interceptor\.spec\.ts$/);
 // const context = require.context('./', true,  /project-appropriateDistribution\.service\.spec\.ts$/);
 // const context = require.context('./', true,  /skill\.service\.spec\.ts$/);
