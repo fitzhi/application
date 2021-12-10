@@ -63,7 +63,8 @@
 		(mouseleave)="popupHelper.mouseLeave()"
 		(click)="switchTo(selection.turnoverPenultimateYear)" >
 
-		<div class="w-100 h-100 d-flex justify-content-center align-items-center">
+		<div	*ngIf="(turnoverData.calculation !== -1)"
+				class="w-100 h-100 d-flex justify-content-center align-items-center">
 			<div>
 				<div class="w-100 m-1 p-0 d-flex justify-content-center align-items-center"> <em class="fab fa-git-alt icon-git"></em> </div>
 				<div class="m-1 d-flex justify-content-center align-items-center"> <h5>GIT turnover {{turnoverData.year}}</h5> </div>
