@@ -1,7 +1,7 @@
 [
-	{ "optimalStaffNumberPerMoOfCode": 8, "minimumLevel": 1 },
-	{ "optimalStaffNumberPerMoOfCode": 4, "minimumLevel": 2 },
-	{ "optimalStaffNumberPerMoOfCode": 2, "minimumLevel": 3 },
-	{ "optimalStaffNumberPerMoOfCode": 1, "minimumLevel": 4 },
-	{ "optimalStaffNumberPerMoOfCode": 1, "minimumLevel": 5 }
+	{ "optimalStaffNumberPerMoOfCode": 1, "minimumLevel": 1 },
+	{ "optimalStaffNumberPerMoOfCode": 0.5, "minimumLevel": 2 },
+	{ "optimalStaffNumberPerMoOfCode": 0.25, "minimumLevel": 3 },
+	{ "optimalStaffNumberPerMoOfCode": 0.125, "minimumLevel": 4 },
+	{ "optimalStaffNumberPerMoOfCode": 0.125, "minimumLevel": 5 }
 ]
