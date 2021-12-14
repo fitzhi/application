@@ -36,12 +36,38 @@ public class RepositoryAnalysisHasBeenAlreadyProcessedTest {
 	
 	@Test
 	public void hasAlreadyBeenRegistered() {
-		Assert.assertTrue("A registered commit has been retrieved in history", repositoryAnalysis.hasBeenAlreadyProcessed("commit ed0e618127f4669f66106e33c8b1965a0a0b56e7 1561109606 -----sp"));
+		Assert.assertTrue("A registered commit has been retrieved in history", 
+			repositoryAnalysis.hasBeenAlreadyProcessed("commit ed0e618127f4669f66106e33c8b1965a0a0b56e7 1561109606 -----sp"));
 	}
 
 	@Test
 	public void isNewCommit() {
-		Assert.assertTrue("A NEW commit should be taken in account", repositoryAnalysis.hasBeenAlreadyProcessed("commit ed0e618127f4669f66106e33c8b1965a0a0b56e7 1561109606 -----sp"));
+		Assert.assertTrue("A NEW commit should be taken in account", 
+			repositoryAnalysis.hasBeenAlreadyProcessed("commit ed0e618127f4669f66106e33c8b1965a0a0b56e7 1561109606 -----sp"));
+	}
+
+	@Test
+	public void hasFilePathAlreadyBeenRegistered() {
+		Assert.assertTrue("A registered commit has been retrieved in history", 
+			repositoryAnalysis.hasBeenAlreadyProcessed(
+				"moduleCopyOfC/fic_in_C_1.txt",
+				"commit ed0e618127f4669f66106e33c8b1965a0a0b56e7 1561109606 -----sp"));
+	}
+
+	@Test
+	public void filePathExistButNotThisCommit() {
+		Assert.assertFalse("Not registered commit for the given file in history", 
+			repositoryAnalysis.hasBeenAlreadyProcessed(
+				"moduleCopyOfC/fic_in_C_1.txt",
+				"unknown commit"));
+	}
+
+	@Test
+	public void CommitExistButNotTheFilePath() {
+		Assert.assertFalse("The given commit does not concern this file path", 
+			repositoryAnalysis.hasBeenAlreadyProcessed(
+				"commit ed0e618127f4669f66106e33c8b1965a0a0b56e7 1561109606 -----sp",
+				"unknown.txt"));
 	}
 
 }

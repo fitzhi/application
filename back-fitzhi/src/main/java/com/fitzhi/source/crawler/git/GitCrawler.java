@@ -1225,6 +1225,7 @@ public class GitCrawler extends AbstractScannerDataGenerator {
 			// load or generate all raw changes declared in the given repository.
 			//
 			RepositoryAnalysis analysis = retrieveRepositoryAnalysis(project, repo);
+
 			if (log.isDebugEnabled()) {
 				log.debug(String.format("loadChanges (%s) returns %d entries", project.getName(),
 						analysis.numberOfChanges()));
