@@ -11,6 +11,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
 
+import ch.qos.logback.core.net.SyslogOutputStream;
+
 /**
  * Test of the method {@link RepositoryAnalysis#hasBeenAlreadyProcessed(String)}
  * 
@@ -30,8 +32,11 @@ public class RepositoryAnalysisHasBeenAlreadyProcessedTest {
 	public void before() throws ApplicationException {
 		Project project = new Project(777, "Project 777");
 		SourceControlChanges scc = this.dataHandler.loadChanges(project);
+
 		repositoryAnalysis = new RepositoryAnalysis(project);
 		repositoryAnalysis.setChanges(scc);
+
+		System.out.println ("Repository created successfully.")
 	}
 	
 	@Test
