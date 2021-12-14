@@ -69,10 +69,10 @@ jobs:
     - name: Test with maven
       run: |
         echo "test windows-latest"
-        ls D:\a\application\application\back-fitzhi\src\test\resources\out_dir\changes-data\777-changes.csv
-        ls D:\a\application\application\back-fitzhi\src\test\resources\out_dir\changes-data\
         ls D:\
         ls D:\a
+        ls D:\a\application\application\back-fitzhi\src\test\resources\out_dir\changes-data\
+        ls D:\a\application\application\back-fitzhi\src\test\resources\out_dir\changes-data\777-changes.csv
         pwd
         mvn --batch-mode test
       if: (matrix.os == 'windows-latest')
