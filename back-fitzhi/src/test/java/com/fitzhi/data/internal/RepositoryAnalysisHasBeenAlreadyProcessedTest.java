@@ -63,6 +63,7 @@ public class RepositoryAnalysisHasBeenAlreadyProcessedTest {
 
 	@Test
 	public void commitExistButNotTheFilePath()  throws ApplicationException {
+		RepositoryAnalysis repositoryAnalysis = init();
 		Assert.assertFalse("The given commit does not concern this file path", 
 			repositoryAnalysis.hasBeenAlreadyProcessed(
 				"commit 69ae7e4f2d76c1c813de09045893a73155e1a3ad 1417797509 ----sp",
