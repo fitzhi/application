@@ -26,6 +26,9 @@ public class DataHandlerHasAlreadySavedSkillsConstellationsTest {
 
 	@Test
 	public void testNotfound() throws ApplicationException {
+
+		System.out.println(LocalDate.of(1964, 2, 8).getYear());
+		System.out.println(LocalDate.of(1964, 2, 8).getMonth());
 		Assert.assertFalse(dataHandler.hasAlreadySavedSkillsConstellations(LocalDate.of(1964, 2, 8)));
 	}
 
