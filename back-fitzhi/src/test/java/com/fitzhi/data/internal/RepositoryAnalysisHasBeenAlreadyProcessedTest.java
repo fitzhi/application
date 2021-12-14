@@ -23,7 +23,7 @@ public class RepositoryAnalysisHasBeenAlreadyProcessedTest {
 	DataHandler dataHandler;
 
 	public RepositoryAnalysis init() throws ApplicationException {
-		Project project = new Project(777, "Project 777");
+		Project project = new Project(841, "Project 841");
 		SourceControlChanges scc = this.dataHandler.loadChanges(project);
 		RepositoryAnalysis repositoryAnalysis = new RepositoryAnalysis(project);
 		repositoryAnalysis.setChanges(scc);
@@ -34,14 +34,13 @@ public class RepositoryAnalysisHasBeenAlreadyProcessedTest {
 	public void hasAlreadyBeenRegistered() throws ApplicationException {
 		RepositoryAnalysis repositoryAnalysis = init();
 		Assert.assertTrue("A registered commit has been retrieved in history", 
-			repositoryAnalysis.hasBeenAlreadyProcessed("commit ed0e618127f4669f66106e33c8b1965a0a0b56e7 1561109606 -----sp"));
+			repositoryAnalysis.hasBeenAlreadyProcessed("commit de8ab3de2c39b6e07bb8fdf1979cfff034220983 1495632158 ----sp"));
 	}
 
 	@Test
 	public void isNewCommit()  throws ApplicationException {
 		RepositoryAnalysis repositoryAnalysis= init();
-		Assert.assertTrue("A NEW commit should be taken in account", 
-			repositoryAnalysis.hasBeenAlreadyProcessed("commit ed0e618127f4669f66106e33c8b1965a0a0b56e7 1561109606 -----sp"));
+		Assert.assertFalse("A NEW commit should be taken in account", repositoryAnalysis.hasBeenAlreadyProcessed("new commit -----sp"));
 	}
 
 	@Test
@@ -49,8 +48,8 @@ public class RepositoryAnalysisHasBeenAlreadyProcessedTest {
 		RepositoryAnalysis repositoryAnalysis = init();
 		Assert.assertTrue("A registered commit has been retrieved in history", 
 			repositoryAnalysis.hasBeenAlreadyProcessed(
-				"moduleCopyOfC/fic_in_C_1.txt",
-				"commit ed0e618127f4669f66106e33c8b1965a0a0b56e7 1561109606 -----sp"));
+				"/abcde/fghij/VersionService.java",
+				"commit de8ab3de2c39b6e07bb8fdf1979cfff034220983 1495632158 ----sp"));
 	}
 
 	@Test
@@ -58,17 +57,15 @@ public class RepositoryAnalysisHasBeenAlreadyProcessedTest {
 		RepositoryAnalysis repositoryAnalysis = init();
 		Assert.assertFalse("Not registered commit for the given file in history", 
 			repositoryAnalysis.hasBeenAlreadyProcessed(
-				"moduleCopyOfC/fic_in_C_1.txt",
+				"/abcde/fghijk/VersionService.java",
 				"unknown commit"));
 	}
 
 	@Test
 	public void commitExistButNotTheFilePath()  throws ApplicationException {
-		RepositoryAnalysis repositoryAnalysis = init();
-		
 		Assert.assertFalse("The given commit does not concern this file path", 
 			repositoryAnalysis.hasBeenAlreadyProcessed(
-				"commit ed0e618127f4669f66106e33c8b1965a0a0b56e7 1561109606 -----sp",
+				"commit 69ae7e4f2d76c1c813de09045893a73155e1a3ad 1417797509 ----sp",
 				"unknown.txt"));
 	}
 
