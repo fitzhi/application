@@ -11,8 +11,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
 
-import ch.qos.logback.core.net.SyslogOutputStream;
-
 /**
  * Test of the method {@link RepositoryAnalysis#hasBeenAlreadyProcessed(String)}
  * 
@@ -36,7 +34,7 @@ public class RepositoryAnalysisHasBeenAlreadyProcessedTest {
 		repositoryAnalysis = new RepositoryAnalysis(project);
 		repositoryAnalysis.setChanges(scc);
 
-		System.out.println ("Repository created successfully.")
+		System.out.println ("Repository created successfully.");
 	}
 	
 	@Test
