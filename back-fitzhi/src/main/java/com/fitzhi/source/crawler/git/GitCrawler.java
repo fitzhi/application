@@ -1179,8 +1179,7 @@ public class GitCrawler extends AbstractScannerDataGenerator {
 
 
 			//
-			// We update the ghosts list, in the project with the up-to-date list of of
-			// ghosts.
+			// We update the ghosts list, in the project with the up-to-date ghosts list.
 			//
 			projectHandler.integrateGhosts(
 				project.getId(), 
@@ -1490,7 +1489,7 @@ public class GitCrawler extends AbstractScannerDataGenerator {
 				throw e;
 			}
 			if (log.isDebugEnabled()) {
-				log.debug(String.format("The project %s is cloned into the temporay directory %s", project.getName(), project.getLocationRepository()));
+				log.debug(String.format("The project %s is cloned into the directory %s", project.getName(), project.getLocationRepository()));
 			}
 
 			this.tasks.logMessage(DASHBOARD_GENERATION, PROJECT, project.getId(), 

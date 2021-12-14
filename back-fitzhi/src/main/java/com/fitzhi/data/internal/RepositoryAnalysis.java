@@ -480,4 +480,17 @@ public class RepositoryAnalysis {
 		this.setChanges(new SourceControlChanges(cleanPathChanges));
 	}
 
+
+	/**
+	 * Test if a commit has already been processed by Fitzhi.
+	 * 
+	 * @param commitIdentifier tre GIT commit identifier
+	 * @return {@code true} if the given commit identifier has already been taken in account by the analysis
+	 */
+	public boolean hasBeenAlreadyProcessed (final String commitIdentifier) {
+		return this.changes.getChanges().values().parallelStream()
+			.flatMap((SourceFileHistory sfc) -> sfc.getChanges().stream())
+			.map(SourceChange::getCommitId)
+			.anyMatch( commitIdentifier::equals);
+	}
 }
