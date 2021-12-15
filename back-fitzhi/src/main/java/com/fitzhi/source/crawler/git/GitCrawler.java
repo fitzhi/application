@@ -26,6 +26,8 @@ import static com.fitzhi.Global.NO_PROGRESSION;
 import static com.fitzhi.Global.PROJECT;
 import static org.eclipse.jgit.diff.DiffEntry.DEV_NULL;
 
+import static com.fitzhi.bean.impl.RepositoryState.REPOSITORY_READY;
+
 import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
@@ -67,6 +69,7 @@ import com.fitzhi.bean.RiskProcessor;
 import com.fitzhi.bean.SkillHandler;
 import com.fitzhi.bean.SkylineProcessor;
 import com.fitzhi.bean.StaffHandler;
+import com.fitzhi.bean.impl.RepositoryState;
 import com.fitzhi.bean.impl.RiskCommitAndDevActiveProcessorImpl.StatActivity;
 import com.fitzhi.controller.in.SettingsGeneration;
 import com.fitzhi.data.GhostsListFactory;
@@ -1167,7 +1170,7 @@ public class GitCrawler extends AbstractScannerDataGenerator {
 		// Test if this repository is available in cache.
 		// If this repository exists, return it immediately.
 		//
-		if (cacheDataHandler.hasCommitRepositoryAvailable(project)) {
+		if (cacheDataHandler.retrieveRepositoryState(project) == REPOSITORY_READY) {
 
 			if (log.isDebugEnabled()) {
 				log.debug(String.format("Using cache file for project %s", project.getName()));
@@ -1685,7 +1688,7 @@ public class GitCrawler extends AbstractScannerDataGenerator {
 	@Override
 	public boolean hasAvailableGeneration(Project project) throws ApplicationException {
 		try {
-			boolean result = cacheDataHandler.hasCommitRepositoryAvailable(project);
+			boolean result = (cacheDataHandler.retrieveRepositoryState(project) == REPOSITORY_READY);
 			if (log.isDebugEnabled()) {
 				log.debug(String.format("hasAvailableGeneration(%d)? : %s", project.getId(), result));
 			}

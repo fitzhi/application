@@ -8,6 +8,11 @@ import static com.fitzhi.Error.CODE_IO_EXCEPTION;
 import static com.fitzhi.Error.MESSAGE_CONTRIBUTOR_INVALID;
 import static com.fitzhi.Global.INTERNAL_FILE_SEPARATORCHAR;
 
+
+import static com.fitzhi.bean.impl.RepositoryState.REPOSITORY_NOT_FOUND;
+import static com.fitzhi.bean.impl.RepositoryState.REPOSITORY_READY;
+import static com.fitzhi.bean.impl.RepositoryState.REPOSITORY_OUT_OF_DATE;
+
 import java.io.IOException;
 import java.text.MessageFormat;
 import java.time.LocalDate;
@@ -136,7 +141,7 @@ public class PropectDashboardCustomizerImpl implements ProjectDashboardCustomize
 	public synchronized void takeInAccountNewStaff(Project project, Staff staff) throws ApplicationException {
 
 		try {
-			if (cacheDataHandler.hasCommitRepositoryAvailable(project)) {
+			if (cacheDataHandler.retrieveRepositoryState(project) == REPOSITORY_READY) {
 				if (log.isDebugEnabled()) {
 					log.debug(String.format("Using cache file for project %s", project.getName()));
 				}

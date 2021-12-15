@@ -12,6 +12,8 @@ import com.fitzhi.data.source.BasicCommitRepository;
 import com.fitzhi.data.source.CommitRepository;
 import com.fitzhi.source.crawler.RepoScanner;
 
+import static com.fitzhi.bean.impl.RepositoryState.REPOSITORY_READY;
+
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -80,7 +82,7 @@ public class GitScannerCleanupUnknownPseudosTest {
 	@Test
 	public void testCleanup() throws Exception {
 
-		Mockito.when(cacheDataHandler.hasCommitRepositoryAvailable(project)).thenReturn(true);
+		Mockito.when(cacheDataHandler.retrieveRepositoryState(project)).thenReturn(REPOSITORY_READY);
 		Mockito.when(cacheDataHandler.getRepository(project)).thenReturn(repo);
 
 		CommitRepository repoCleaned = gitScanner.parseRepository(project);
