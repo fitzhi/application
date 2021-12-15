@@ -737,7 +737,7 @@ public class FileDataHandlerImpl implements DataHandler {
 		return String.format(
 				"%s/%d-%s-%s.txt", pathNames, 
 				project.getId(), 
-				project.getBranch().replace(" ", "_"),
+				project.getBranch().replace(" ", "_").replace(File.separatorChar, '_'),
 				pathsType.getTypeOfPath());
 	}
 
