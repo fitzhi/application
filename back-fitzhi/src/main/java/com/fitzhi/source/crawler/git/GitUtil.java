@@ -19,6 +19,7 @@ import org.eclipse.jgit.api.Git;
 public final class GitUtil {
 	
 	/**
+	 * @param project the given project
 	 * @return the location repository entry point <br/>
 	 *         <i>i.e. the absolute path to the .git file.</i>
 	 */
