@@ -57,7 +57,6 @@ public class CacheDataHandlerImplTest {
 		Assert.assertEquals(2, repository.size());
 		Assert.assertEquals(1, repository.unknownContributors().size());
 		Assert.assertEquals("tintin", repository.unknownContributors().toArray()[0]);
-		
 	}
 	
 	@Test
