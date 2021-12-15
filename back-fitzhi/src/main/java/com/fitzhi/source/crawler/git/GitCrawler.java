@@ -848,6 +848,14 @@ public class GitCrawler extends AbstractScannerDataGenerator {
 
 				for (int i = 0; i < tabCommits.length;  i++) {
 					
+					// If this commit has been already processed for this file, we skip the analysis
+					if (analysis.hasBeenAlreadyProcessed(finalFilePathName, tabCommits[i].getId().toString())) {
+						if (log.isDebugEnabled()) {
+							log.debug(String.format("Skipping file %s for commit identifier %s", finalFilePathName, tabCommits[i].getId().toString()));
+						}
+						continue;
+					}
+
 					RevCommit previousCommit = (i == tabCommits.length - 1) ? firstCommit :  tabCommits[i+1];
 					try (ObjectReader reader = repository.newObjectReader()) {
 
@@ -1160,6 +1168,7 @@ public class GitCrawler extends AbstractScannerDataGenerator {
 		// If this repository exists, return it immediately.
 		//
 		if (cacheDataHandler.hasCommitRepositoryAvailable(project)) {
+
 			if (log.isDebugEnabled()) {
 				log.debug(String.format("Using cache file for project %s", project.getName()));
 			}
