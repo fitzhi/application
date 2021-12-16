@@ -24,9 +24,8 @@ import static com.fitzhi.Global.INTERNAL_FILE_SEPARATORCHAR;
 import static com.fitzhi.Global.LN;
 import static com.fitzhi.Global.NO_PROGRESSION;
 import static com.fitzhi.Global.PROJECT;
-import static org.eclipse.jgit.diff.DiffEntry.DEV_NULL;
-
 import static com.fitzhi.bean.impl.RepositoryState.REPOSITORY_READY;
+import static org.eclipse.jgit.diff.DiffEntry.DEV_NULL;
 
 import java.io.File;
 import java.io.FileReader;
@@ -69,7 +68,6 @@ import com.fitzhi.bean.RiskProcessor;
 import com.fitzhi.bean.SkillHandler;
 import com.fitzhi.bean.SkylineProcessor;
 import com.fitzhi.bean.StaffHandler;
-import com.fitzhi.bean.impl.RepositoryState;
 import com.fitzhi.bean.impl.RiskCommitAndDevActiveProcessorImpl.StatActivity;
 import com.fitzhi.controller.in.SettingsGeneration;
 import com.fitzhi.data.GhostsListFactory;
@@ -1299,19 +1297,8 @@ public class GitCrawler extends AbstractScannerDataGenerator {
 			// We detect the ecosystem in the analysis and we save them in the project.
 			this.updateProjectEcosystem(project, analysis);
 
-			// Create a repository.
-			repositoryOfCommit = new BasicCommitRepository();
-
-			// Transfer the analysis data in the result file.
-			analysis.transferRepository(repositoryOfCommit);
-
-			// We update the ghosts contributors.
-			repositoryOfCommit.setUnknownContributors(unknownContributors);
-
-			//
-			// We save the unknown contributors into the "contributing ghosts" collection.
-			//
-			projectHandler.integrateGhosts(project.getId(), GhostsListFactory.getInstance(repositoryOfCommit));
+			// Build the repository of commits
+			repositoryOfCommit = buildCommitRepository(project, analysis, unknownContributors);
 
 			// We generate & save the skyline history for this project.
 			this.generateAndSaveSkyline(project, analysis);
@@ -1323,13 +1310,32 @@ public class GitCrawler extends AbstractScannerDataGenerator {
 		}
 	}
 
+	@Override
+	public CommitRepository buildCommitRepository(Project project, RepositoryAnalysis analysis, Set<String> unknownContributors) throws ApplicationException {
+		// Create a repository.
+		CommitRepository repositoryOfCommit = new BasicCommitRepository();
+
+		// Transfer the analysis data in the result file.
+		analysis.transferRepository(repositoryOfCommit);
+
+		// We update the ghosts contributors.
+		repositoryOfCommit.setUnknownContributors(unknownContributors);
+
+		//
+		// We save the unknown contributors into the "contributing ghosts" collection.
+		//
+		projectHandler.integrateGhosts(project.getId(), GhostsListFactory.getInstance(repositoryOfCommit));
+
+		return repositoryOfCommit;
+	}
+
 	/**
 	 * This private method is call by [@link #parseRepository(Project)}
 	 * 
 	 * @param project  the current project
 	 * @param analysis the given analysis processed by this project
 	 */
-	private void generateAndSaveSkyline(Project project, RepositoryAnalysis analysis) throws ApplicationException {
+	void generateAndSaveSkyline(Project project, RepositoryAnalysis analysis) throws ApplicationException {
 		ProjectLayers projectLayers = skylineProcessor.generateProjectLayers(project, analysis.getChanges());
 		if (log.isDebugEnabled()) {
 			log.debug(String.format("The project %s has generated %d layers", project.getName(),
@@ -1384,7 +1390,7 @@ public class GitCrawler extends AbstractScannerDataGenerator {
 	 * @param analysis the repository analysis
 	 * @throws ApplicationException thrown if any exception occurs
 	 */
-	private void updateProjectEcosystem(Project project, RepositoryAnalysis analysis) throws ApplicationException {
+	void updateProjectEcosystem(Project project, RepositoryAnalysis analysis) throws ApplicationException {
 
 		//
 		// To identify the eco-system, all files are taken in account.
