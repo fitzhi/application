@@ -822,7 +822,6 @@ public class GitCrawler extends AbstractScannerDataGenerator {
 				// This filePathname might changed if the file has been renamed during its history.
 				String filePathName = file.replace("\\", "/");
 
-				
 				numberOfFiles++;
 				if ((numberOfFiles % 100) == 0) {
 					totalNumberOfFiles += numberOfFiles;
@@ -851,8 +850,8 @@ public class GitCrawler extends AbstractScannerDataGenerator {
 					
 					// If this commit has been already processed for this file, we skip the analysis
 					if (analysis.hasBeenAlreadyProcessed(finalFilePathName, tabCommits[i].getId().toString())) {
-						if (log.isDebugEnabled()) {
-							log.debug(String.format("Skipping file %s for commit identifier %s", finalFilePathName, tabCommits[i].getId().toString()));
+						if (log.isWarnEnabled()) {
+							log.warn(String.format("Skipping file %s for commit identifier %s", finalFilePathName, tabCommits[i].getId().toString()));
 						}
 						continue;
 					}
