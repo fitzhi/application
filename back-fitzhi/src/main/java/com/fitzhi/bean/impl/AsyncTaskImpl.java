@@ -27,7 +27,7 @@ import lombok.extern.slf4j.Slf4j;
  * @author Fr&eacute;d&eacute;ric VIDAL
  */
 @Slf4j
-@Service
+@Service("default")
 public class AsyncTaskImpl implements AsyncTask {
 
 	private final Map<String, Task> tasks = new HashMap<>();
