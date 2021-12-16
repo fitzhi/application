@@ -850,8 +850,8 @@ public class GitCrawler extends AbstractScannerDataGenerator {
 					
 					// If this commit has been already processed for this file, we skip the analysis
 					if (analysis.hasBeenAlreadyProcessed(finalFilePathName, tabCommits[i].getId().toString())) {
-						if (log.isWarnEnabled()) {
-							log.warn(String.format("Skipping file %s for commit identifier %s", finalFilePathName, tabCommits[i].getId().toString()));
+						if (log.isDebugEnabled()) {
+							log.debug(String.format("Skipping file %s for commit identifier %s", finalFilePathName, tabCommits[i].getId().toString()));
 						}
 						continue;
 					}
