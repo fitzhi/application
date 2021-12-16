@@ -13,6 +13,8 @@ import com.fitzhi.exception.ApplicationException;
 import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Service;
 
+import lombok.extern.slf4j.Slf4j;
+
 /**
  * <p>
  * Bean in charge of the collection containing all the active tasks.
@@ -22,18 +24,19 @@ import org.springframework.stereotype.Service;
  */
 @Service("Console")
 @Primary
+@Slf4j
 public class ConsoleTaskLoggerImpl implements AsyncTask {
 
 	private final Map<String, Task> tasks = new HashMap<>();
 
 	@Override
 	public void addTask(String operation, String title, int id) throws ApplicationException {
-		System.out.println(String.format("ADD %s %s for project ID %d", operation, title, id));
+		log.info(String.format("ADD %s %s for project ID %d", operation, title, id));
 	}
 
 	@Override
 	public void removeTask(String operation, String title, int id) {
-		System.out.println(String.format("REMOVE %s %s for project ID %d", operation, title, id));
+		log.info(String.format("REMOVE %s %s for project ID %d", operation, title, id));
 	}
 
 	@Override
@@ -75,19 +78,18 @@ public class ConsoleTaskLoggerImpl implements AsyncTask {
 	@Override
 	public boolean logMessage(String operation, String title, int id, int errorCode, String message,
 			int progressionPercentage) {
-		System.out.println(
-				String.format("%s %s @ %d percents for project ID %d", operation, title, progressionPercentage, id));
+		log.info(String.format("%s %s @ %d percents for project ID %d", operation, title, progressionPercentage, id));
 		return true;
 	}
 
 	@Override
 	public void completeTask(String operation, String title, int id) throws ApplicationException {
-		System.out.println(String.format("COMPLETE %s %s for project ID %d", operation, title, id));
+		log.info(String.format("COMPLETE %s %s for project ID %d", operation, title, id));
 	}
 
 	@Override
 	public void completeTaskOnError(String operation, String title, int id) throws ApplicationException {
-		System.out.println(String.format("ERROR in %s %s for project ID %d", operation, title, id));
+		log.info(String.format("ERROR in %s %s for project ID %d", operation, title, id));
 	}
 
 }
