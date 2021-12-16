@@ -6,6 +6,12 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import static org.hamcrest.Matchers.is;
+import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyInt;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 import java.time.LocalDate;
 
@@ -15,8 +21,10 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.junit4.SpringRunner;
@@ -47,7 +55,7 @@ import static com.fitzhi.Error.CODE_TASK_NOT_FOUND;
 @RunWith(SpringRunner.class)
 @SpringBootTest
 @AutoConfigureMockMvc
-public class PluggedProjectControllerMgtTasksTest {
+public class ProjectControllerMgtTasksTest {
 
 	/**
 	 * Initialization of the Google JSON parser.
@@ -61,16 +69,13 @@ public class PluggedProjectControllerMgtTasksTest {
 	@Autowired
 	private ProjectHandler projectHandler;
 
-	@Autowired
+	@MockBean
 	AsyncTask asyncTask;
 	
 	@Before
 	public void before() throws ApplicationException {
 		Project p = new Project (1789, "Revolutionnary project");
-		projectHandler.addNewProject(p);
-		asyncTask.addTask("nopeOperation", "mockProject", 1789);
-		asyncTask.logMessage("nopeOperation", "mockProject", 1789, "my message", 0);
-		
+		projectHandler.addNewProject(p);		
 	}
 
 	/**
@@ -81,6 +86,8 @@ public class PluggedProjectControllerMgtTasksTest {
 	@WithMockUser
 	public void testReadTaskNotFound() throws Exception {
 		
+		when(asyncTask.getTask(anyString(), anyString(), anyInt())).thenReturn(null);
+
 		MvcResult result = this.mvc.perform(get("/api/project/1789/tasks/fakeOperation"))
 				.andExpect(status().isNotFound())
 				.andDo(print())
@@ -97,7 +104,12 @@ public class PluggedProjectControllerMgtTasksTest {
 	@WithMockUser
 	public void testReadTaskNominal() throws Exception {
 		
-		MvcResult result = this.mvc.perform(get("/api/project/1789/tasks/nopeOperation"))
+		Task t = new Task("nopeOperation", "project", 1789);
+		t.getActivityLogs().add(new TaskLog("my message", 0));
+
+		when(asyncTask.getTask("operation", "project", 1789)).thenReturn(t);
+
+		MvcResult result = this.mvc.perform(get("/api/project/1789/tasks/operation"))
 				.andExpect(status().isOk())
 				.andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
 				.andDo(print())
@@ -110,8 +122,7 @@ public class PluggedProjectControllerMgtTasksTest {
 	
 	@After
 	public void after() throws ApplicationException {
-		projectHandler.getProjects().remove(1789);
-		asyncTask.removeTask("nopeOperation", "mockProject", 1789);
+		projectHandler.removeProject(1789);
 	}
 
 }
