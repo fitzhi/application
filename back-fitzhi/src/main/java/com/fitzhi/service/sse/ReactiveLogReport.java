@@ -6,6 +6,7 @@ import java.time.Duration;
 import java.time.LocalDate;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Repository;
 
 import com.fitzhi.bean.AsyncTask;
@@ -26,6 +27,7 @@ public class ReactiveLogReport implements LogReport {
 	 * Asynchronous tasks list.
 	 */
 	@Autowired
+	@Qualifier("default")
 	AsyncTask tasks;
 
 	@Autowired
