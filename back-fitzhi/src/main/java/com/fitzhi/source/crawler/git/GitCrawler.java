@@ -761,6 +761,11 @@ public class GitCrawler extends AbstractScannerDataGenerator {
 		RepositoryAnalysis analysis = dataSaver.loadRepositoryAnalysis(project);
 		if (analysis == null) {
 			analysis = new RepositoryAnalysis(project);
+		} else  {
+			if (log.isDebugEnabled()) {
+				log.debug (String.format("Project %s analysis repository contains %d files for %d changes", 
+					project.getName(), analysis.numberOfFiles(), analysis.numberOfChanges()));
+			}
 		}
 		
 		fillRepositoryAnalysis(project, analysis, repository);
