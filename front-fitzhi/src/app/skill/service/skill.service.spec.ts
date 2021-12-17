@@ -104,10 +104,7 @@ describe('skillService', () => {
 	it('should load the skills from the backend server.', done => {
 
 		service.allSkillsLoaded$.pipe(take(1)).subscribe({
-			next: doneAndOk => expect(doneAndOk).toBeFalse(),
-			complete: () =>	 {
-				done();
-			}
+			next: doneAndOk => expect(doneAndOk).toBeFalse()
 		});
 
 		backendSetupService = TestBed.inject(BackendSetupService);
