@@ -1,0 +1,2 @@
+sudo npm install  @ng-bootstrap/ng-bootstrap@^9.0.0
+
