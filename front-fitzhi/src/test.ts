@@ -1,5 +1,4 @@
 // This file is required by karma.conf.js and loads recursively all the .spec and framework files
-
 import 'zone.js/testing';
 import { getTestBed } from '@angular/core/testing';
 import {
@@ -18,7 +17,6 @@ getTestBed().initTestEnvironment(
 
 const context = require.context('./', true, /\.spec\.ts$/);
 // const context = require.context('./', true,  /skill\.service\.spec\.ts$/);
-
 // const context = require.context('./', true,  /skill\.service\.spec\.ts$/);
 // const context = require.context('./', true,  /summary\.component\.spec\.ts$/);
 // const context = require.context('./', true,  /dashboard\.service\.calculateGeneralAverage\.spec\.ts$/);
