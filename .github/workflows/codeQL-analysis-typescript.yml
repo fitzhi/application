@@ -13,7 +13,7 @@ name: "CodeQL Security analysis for Typescript"
 
 on:
   push:
-    branches: [ master, release-1.6 ]
+    branches: [ master, release-1.7 ]
   pull_request:
     # The branches below must be a subset of the branches above
     branches: [ master ]
@@ -44,6 +44,7 @@ jobs:
     - name: Initialize CodeQL
       uses: github/codeql-action/init@v1
       with:
+        config-file: ./.github/workflows/codeql-config-typescript.yml
         languages: ${{ matrix.language }}
         # If you wish to specify custom queries, you can do so here or in a config file.
         # By default, queries listed here will override any specified in a config file.
