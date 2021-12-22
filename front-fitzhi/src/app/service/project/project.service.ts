@@ -1180,7 +1180,7 @@ export class ProjectService extends InternalService {
 
 		if (project.mapSkills) {
 			console.groupCollapsed(`${project.mapSkills.size} skills declared.`);
-			for (const [k, v] of project.mapSkills) {
+			for (const [k, _] of project.mapSkills) {
 				console.log(k, this.skillService.title(k));
 			}
 			console.groupEnd();
