@@ -33,7 +33,7 @@ export class GitService {
 	isGithubUrl(url: string): boolean {
 		try {
 			const myUrl = new URL(url);
-			return myUrl.hostname.indexOf('github.com') !== -1;
+			return (myUrl.hostname === 'api.github.com');
 		  } catch (TypeError) {
 			return false;
 		  }

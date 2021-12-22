@@ -4,4 +4,4 @@ queries:
  - uses: security-and-quality
 
 paths-ignore: 
- - '**/*.test.js'
+ - '**/*.spec.ts'
