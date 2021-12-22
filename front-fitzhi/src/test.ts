@@ -16,7 +16,7 @@ getTestBed().initTestEnvironment(
 // Then we find all the tests
 
 const context = require.context('./', true, /\.spec\.ts$/);
-// const context = require.context('./', true,  /skill\.service\.spec\.ts$/);
+// const context = require.context('./', true,  /git\.service\.spec\.ts$/);
 // const context = require.context('./', true,  /http-token-interceptor\.spec\.ts$/);
 // const context = require.context('./', true,  /summary\.component\.spec\.ts$/);
 // const context = require.context('./', true,  /dashboard\.service\.calculateGeneralAverage\.spec\.ts$/);

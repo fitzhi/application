@@ -6,6 +6,7 @@ import { of, Observable, EMPTY, BehaviorSubject } from 'rxjs';
 import { Repository } from 'src/app/data/git/repository';
 import { Branch } from 'src/app/data/git/branch';
 import { MessageService } from 'src/app/interaction/message/message.service';
+import { HttpTokenInterceptor } from 'src/app/admin/service/http/http-token-interceptor';
 
 @Injectable({
 	providedIn: 'root'
@@ -30,7 +31,8 @@ export class GitService {
 	 * @param url the HTTP url given by the end user
 	 */
 	isGithubUrl(url: string): boolean {
-		return url.toLowerCase().indexOf('github.com') !== -1;
+		const host = HttpTokenInterceptor.extractHost(url.toLowerCase());
+		return (host) ? (host.indexOf('github.com') !== -1) : false;
 	}
 
 	/**

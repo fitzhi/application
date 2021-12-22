@@ -23,7 +23,12 @@ export class HttpTokenInterceptor implements HttpInterceptor {
 		private tokenService: TokenService) { }
 
 
-	static extractHost(url: String) {
+	/**
+	 * Extract the host from the given URL.
+	 * @param url the given URL
+	 * @returns the extracted host from the URL
+	 */
+	public static extractHost(url: String) {
 		var matches = url.match(/^https?\:\/\/([^\/?#]+)(?:[\/?#]|$)/i);
 		var domain = matches && matches[1];
 		if (!domain) {

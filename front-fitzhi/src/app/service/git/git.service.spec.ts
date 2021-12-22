@@ -51,7 +51,7 @@ describe('GitService', () => {
 
 	it('should handle correctly the method with a valid URL.', () => {
 		expect(service).toBeTruthy();
-		expect(service.isGithubUrl('htpps://www.github.com/fitzhi/application')).toBeTrue();
+		expect(service.isGithubUrl('https://www.github.com/fitzhi/application')).toBeTrue();
 	});
 
 	it('should handle correctly the method generateUrlApiGithub(...) with a GITHUB url ', () => {
