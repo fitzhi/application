@@ -182,5 +182,13 @@
 			"detectionType": "0",
 			"pattern": ".gradle$"
 		}
+	},
+	"27": {
+		"id": 27,
+		"title": "Ansible",
+		"detectionTemplate": {
+			"detectionType": "0",
+			"pattern": "playbook.yml$"
+		}
 	}
 }
