@@ -50,6 +50,7 @@ describe('GitService', () => {
 
 	it('should handle correctly the method with a valid URL.', () => {
 		expect(service).toBeTruthy();
+		const nope = new URL('https://www.github.com/fitzhi/application');
 		expect(service.isGithubUrl('https://www.github.com/fitzhi/application')).toBeTrue();
 	});
 

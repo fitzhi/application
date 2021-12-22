@@ -32,7 +32,12 @@ export class GitService {
 	isGithubUrl(url: string): boolean {
 		try {
 			const myUrl = new URL(url);
-			return (myUrl.hostname === 'api.github.com');
+			const allowedHosts = [
+				'api.github.com',
+				'www.github.com',
+				'github.com'
+			];
+			return allowedHosts.includes(myUrl.hostname);
 		  } catch (TypeError) {
 			return false;
 		  }
