@@ -31,8 +31,12 @@ export class GitService {
 	 * @param url the HTTP url given by the end user
 	 */
 	isGithubUrl(url: string): boolean {
-		const host = HttpTokenInterceptor.extractHost(url.toLowerCase());
-		return (host) ? (host.indexOf('github.com') !== -1) : false;
+		try {
+			const myUrl = new URL(url);
+			return myUrl.hostname.indexOf('github.com') !== -1;
+		  } catch (TypeError) {
+			return false;
+		  }
 	}
 
 	/**
