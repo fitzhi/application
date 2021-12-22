@@ -52,34 +52,30 @@ public class ProjectHandlerProcessProjectsExperiencesContentParserTest {
 	@Test
 	public void completeOperation() throws ApplicationException {
 		
-		// We disable this test.
 		// Javaparser does not work correctly on Windows platform.
-		// FIXME as soon as possible !!!
-		if (OSType.DETECTED == OSType.Windows) {
-			return;
+		if (OSType.DETECTED != OSType.Windows) {
+			Assert.assertTrue(staffHandler.lookup(1789).getExperiences().isEmpty());
+			projectHandler.processProjectsExperiences();
+			Map<StaffExperienceTemplate, Integer> experiences = projectHandler.processGlobalExperiences();
+			Assert.assertTrue(experiences.containsKey(StaffExperienceTemplate.of(0, 1789)));
+			
+			projectHandler.updateStaffSkillLevel(experiences);
+			Assert.assertNotNull(staffHandler.lookup(1789));
+
+			final Staff staff = staffHandler.lookup(1789);
+			Assert.assertEquals(2, staff.getExperiences().size());
+			Experience exp = staffHandler.lookup(1789).getExperiences().get(0);
+			Assert.assertNotNull(exp);
+			Assert.assertEquals(5, exp.getId());
+			Assert.assertEquals(3, exp.getSystemLevel());
+			Assert.assertEquals(3, exp.getLevel());
+
+			exp = staffHandler.lookup(1789).getExperiences().get(1);
+			Assert.assertNotNull(exp);
+			Assert.assertEquals(6, exp.getId());
+			Assert.assertEquals(2, exp.getSystemLevel());
+			Assert.assertEquals(2, exp.getLevel());
 		}
-
-		Assert.assertTrue(staffHandler.lookup(1789).getExperiences().isEmpty());
-		projectHandler.processProjectsExperiences();
-		Map<StaffExperienceTemplate, Integer> experiences = projectHandler.processGlobalExperiences();
-		Assert.assertTrue(experiences.containsKey(StaffExperienceTemplate.of(0, 1789)));
-		
-		projectHandler.updateStaffSkillLevel(experiences);
-		Assert.assertNotNull(staffHandler.lookup(1789));
-
-		final Staff staff = staffHandler.lookup(1789);
-		Assert.assertEquals(2, staff.getExperiences().size());
-		Experience exp = staffHandler.lookup(1789).getExperiences().get(0);
-		Assert.assertNotNull(exp);
-		Assert.assertEquals(5, exp.getId());
-		Assert.assertEquals(3, exp.getSystemLevel());
-		Assert.assertEquals(3, exp.getLevel());
-
-		exp = staffHandler.lookup(1789).getExperiences().get(1);
-		Assert.assertNotNull(exp);
-		Assert.assertEquals(6, exp.getId());
-		Assert.assertEquals(2, exp.getSystemLevel());
-		Assert.assertEquals(2, exp.getLevel());
 	}
 
 }
