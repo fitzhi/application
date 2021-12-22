@@ -1,12 +1,11 @@
-import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
-import { traceOn } from 'src/app/global';
-import { tap, switchMap, catchError, map } from 'rxjs/operators';
-import { of, Observable, EMPTY, BehaviorSubject } from 'rxjs';
-import { Repository } from 'src/app/data/git/repository';
+import { Injectable } from '@angular/core';
+import { BehaviorSubject, Observable, of } from 'rxjs';
+import { catchError, switchMap, tap } from 'rxjs/operators';
 import { Branch } from 'src/app/data/git/branch';
+import { Repository } from 'src/app/data/git/repository';
+import { traceOn } from 'src/app/global';
 import { MessageService } from 'src/app/interaction/message/message.service';
-import { HttpTokenInterceptor } from 'src/app/admin/service/http/http-token-interceptor';
 
 @Injectable({
 	providedIn: 'root'

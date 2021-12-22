@@ -1,8 +1,7 @@
-import { TestBed, TestModuleMetadata, waitForAsync } from '@angular/core/testing';
-
-import { GitService } from './git.service';
 import { HttpClientModule } from '@angular/common/http';
-import { subscribeOn } from 'rxjs/operators';
+import { TestBed, TestModuleMetadata, waitForAsync } from '@angular/core/testing';
+import { GitService } from './git.service';
+
 
 describe('GitService', () => {
 	let service: GitService;
