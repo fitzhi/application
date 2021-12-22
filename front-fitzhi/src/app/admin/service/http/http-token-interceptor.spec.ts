@@ -10,7 +10,7 @@ import { Token } from '../token/token';
 import { TokenService } from '../token/token.service';
 import { HttpTokenInterceptor } from './http-token-interceptor';
 
-describe(`AuthHttpInterceptor`, () => {
+describe(`HttpTokenInterceptor`, () => {
 	let httpMock: HttpTestingController;
 	let dataService: DataService;
 	let tokenService: TokenService;
@@ -104,6 +104,19 @@ describe(`AuthHttpInterceptor`, () => {
 		expect(httpRequest.request.headers.has('authorization')).toEqual(true);
 		expect(httpRequest.request.headers.get('authorization')).toEqual('Bearer updated_access_token');
 	});
+
+
+	it('should correctly extract the domain name from the url https://api.github.com/test/fred.', () => {
+		expect(HttpTokenInterceptor.extractHost('https://api.github.com/test/fred')).toBe('api.github.com');
+	}),
+
+	it('should correctly extract the domain name from the url http://api.github.com/test/fred.', () => {
+		expect(HttpTokenInterceptor.extractHost('http://api.github.com/test/fred')).toBe('api.github.com');
+	}),
+
+	it('should return null if no scheme is given to the URL.', () => {
+		expect(HttpTokenInterceptor.extractHost('api.github.com/test/fred')).toBeNull();
+	}),
 
 	afterEach(() => {
 		httpMock.verify();
