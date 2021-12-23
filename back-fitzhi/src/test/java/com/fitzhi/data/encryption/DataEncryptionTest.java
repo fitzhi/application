@@ -33,7 +33,6 @@ import org.junit.Test;
 		String dataEncrypted = DataEncryption.encryptMessage("test message");
 		String data = DataEncryption.decryptMessage(dataEncrypted);
 		Assert.assertTrue("test message".equals(data));
-	}
-
+	}	
 }
 
