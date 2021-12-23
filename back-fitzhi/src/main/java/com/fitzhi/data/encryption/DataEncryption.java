@@ -32,7 +32,6 @@ public class DataEncryption {
 	 */
 	private final static String TRANSFORMATION = "AES"; // Good one for Sonar : "AES/GCM/NoPadding";
 
-	// TODO AES is not a safe transformation. A keystore has to be installed. See UnpluggedDataEncryption.
 	private static Cipher getCipher() throws Exception {
 		return Cipher.getInstance(TRANSFORMATION); //NOSONAR
 	}
