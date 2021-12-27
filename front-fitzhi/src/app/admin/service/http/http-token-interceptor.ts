@@ -29,8 +29,8 @@ export class HttpTokenInterceptor implements HttpInterceptor {
 	 * @returns the extracted host from the URL
 	 */
 	public static extractHost(url: String) {
-		var matches = url.match(/^https?\:\/\/([^\/?#]+)(?:[\/?#]|$)/i);
-		var domain = matches && matches[1];
+		const matches = url.match(/^https?\:\/\/([^\/?#]+)(?:[\/?#]|$)/i);
+		const domain = matches && matches[1];
 		if (!domain) {
 			console.error('Cannot extract the hostname from %s', url);
 		}

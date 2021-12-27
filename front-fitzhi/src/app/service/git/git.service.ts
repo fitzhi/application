@@ -38,9 +38,9 @@ export class GitService {
 				'github.com'
 			];
 			return allowedHosts.includes(myUrl.hostname);
-		  } catch (TypeError) {
+		} catch (TypeError) {
 			return false;
-		  }
+		}
 	}
 
 	/**

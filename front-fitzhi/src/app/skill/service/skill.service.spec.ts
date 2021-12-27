@@ -37,7 +37,7 @@ describe('skillService', () => {
 		service = TestBed.inject(SkillService);
 		httpTestingController = TestBed.inject(HttpTestingController);
 		httpMock = TestBed.inject(HttpTestingController);
-		
+
 		backendSetupService = TestBed.inject(BackendSetupService);
 		spyOn(backendSetupService, 'hasSavedAnUrl').and.returnValue(false);
 

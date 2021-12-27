@@ -43,7 +43,7 @@ export class SonarService extends InternalService {
 			'The ceil function of x is the smallest integral value that is not less than x. ',
 		'coverage':
 			'Test coverage is a percentage. Our evaluation will reproduce that rate.' +
-			'So we presume that it will be difficut to reach a note of 100%.',
+			' So we presume that it will be difficut to reach a note of 100%.',
 		'duplicated_lines_density':
 			'Duplication is a percentage. Our evaluation will substract this number from 100% to get ths metric evaluation.',
 		'sqale_rating':
