@@ -11,6 +11,7 @@ import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import com.fitzhi.bean.Administration;
@@ -40,6 +41,8 @@ public class AdministrationCreateUserIfIsVeryFirstConnectionTest {
 	@Autowired
 	StaffHandler staffHandler;
 		
+	@Autowired
+	PasswordEncoder passwordEncoder;
 
 	int idStaff;
 
@@ -64,18 +67,25 @@ public class AdministrationCreateUserIfIsVeryFirstConnectionTest {
 
 	@Test
 	public void testCreateSameUserDifferentPassword() throws ApplicationException {
-		final Staff staff = administration.createNewUser(MY_LOGIN, MY_PSSWORD);
+
+		Staff staff = administration.createNewUser(MY_LOGIN, MY_PSSWORD);
+		
 		administration.createNewUser(MY_LOGIN, ANOTHER_PSSWORD);
 		
-		staffHandler.getStaff().get(staff.getIdStaff());
+		staff = staffHandler.getStaff(staff.getIdStaff());
+		Assert.assertNotNull(staff);
+		
+		Assert.assertFalse(
+				"The password of the staff member must have changed", 
+				passwordEncoder.matches(MY_PSSWORD, staff.getPassword()));
 		
 		Assert.assertTrue(
 				"The password of the staff member must have changed", 
-				staff.isValidPassword(ANOTHER_PSSWORD));
+				passwordEncoder.matches(ANOTHER_PSSWORD, staff.getPassword()));
 	}
 
 	@After
 	public void after() {
-		staffHandler.getStaff().remove(idStaff);
+		staffHandler.removeStaff(idStaff);
  	}
 }

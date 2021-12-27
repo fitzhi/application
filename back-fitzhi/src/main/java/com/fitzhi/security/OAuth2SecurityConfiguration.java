@@ -5,13 +5,12 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.annotation.Order;
 import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
+import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.security.crypto.password.NoOpPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.oauth2.provider.ClientDetailsService;
 import org.springframework.security.oauth2.provider.approval.ApprovalStore;
@@ -22,7 +21,7 @@ import org.springframework.security.oauth2.provider.token.TokenStore;
 import org.springframework.security.oauth2.provider.token.store.InMemoryTokenStore;
 
 @Configuration
-@EnableWebSecurity
+@EnableWebSecurity (debug = true)
 @Order(101)
 public class OAuth2SecurityConfiguration extends WebSecurityConfigurerAdapter {
 
@@ -30,13 +29,11 @@ public class OAuth2SecurityConfiguration extends WebSecurityConfigurerAdapter {
 	ClientDetailsService clientDetailsService;
 	
 	@Autowired
-	private AuthenticationProvider authenticationProvider;
-
-	PasswordEncoder passwordEncoder = new BCryptPasswordEncoder();	
+	UserDetailsService userDetailsService;
 	
 	@Autowired
 	public void globalUserDetails(AuthenticationManagerBuilder auth) throws Exception {
-		auth.authenticationProvider(authenticationProvider);
+		auth.userDetailsService(userDetailsService).passwordEncoder(passwordEncoder());
 	}
 
 	@Override
@@ -78,9 +75,9 @@ public class OAuth2SecurityConfiguration extends WebSecurityConfigurerAdapter {
 		return store;
 	}
 
-	@SuppressWarnings("deprecation")
 	@Bean
-	public static NoOpPasswordEncoder passwordEncoder() {
-		return (NoOpPasswordEncoder) NoOpPasswordEncoder.getInstance();
+	public static PasswordEncoder passwordEncoder() {
+		return new BCryptPasswordEncoder();	
 	}
+
 }

@@ -1,11 +1,13 @@
 package com.fitzhi.security;
 
+import static com.fitzhi.Global.ROLE_TRUSTED_USER;
+
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.oauth2.config.annotation.configurers.ClientDetailsServiceConfigurer;
 import org.springframework.security.oauth2.config.annotation.web.configuration.AuthorizationServerConfigurerAdapter;
 import org.springframework.security.oauth2.config.annotation.web.configuration.EnableAuthorizationServer;
@@ -13,8 +15,6 @@ import org.springframework.security.oauth2.config.annotation.web.configurers.Aut
 import org.springframework.security.oauth2.config.annotation.web.configurers.AuthorizationServerSecurityConfigurer;
 import org.springframework.security.oauth2.provider.approval.UserApprovalHandler;
 import org.springframework.security.oauth2.provider.token.TokenStore;
-
-import static com.fitzhi.Global.ROLE_TRUSTED_USER;
 
 @Configuration
 @EnableAuthorizationServer
@@ -32,7 +32,9 @@ public class AuthorizationServerConfiguration extends AuthorizationServerConfigu
 	private UserDetailsService userDetailsService;
 	
 	@Autowired
-	@Qualifier("authenticationManagerBean")
+	private PasswordEncoder passwordEncoder;
+
+	@Autowired
 	private AuthenticationManager authenticationManager;
 
 	/**
@@ -59,15 +61,17 @@ public class AuthorizationServerConfiguration extends AuthorizationServerConfigu
 			.authorizedGrantTypes("password", "refresh_token")
 			.authorities(ROLE_TRUSTED_USER)
 			.scopes("read", "write", "trust")
-			.secret("secret")
+			.secret(passwordEncoder.encode("secret"))
 			.accessTokenValiditySeconds(accessTokenDuration). //Access token is only valid for 2 minutes.
 			refreshTokenValiditySeconds(refreshTokenDuration); //Refresh token is only valid for 1 hour. //NOSONAR
 	}
 
 	@Override
 	public void configure(AuthorizationServerEndpointsConfigurer endpoints) throws Exception {
-		endpoints.tokenStore(tokenStore).userApprovalHandler(userApprovalHandler)
-				.authenticationManager(authenticationManager).userDetailsService(userDetailsService);
+		endpoints.tokenStore(tokenStore)
+				.userApprovalHandler(userApprovalHandler)
+				.authenticationManager(authenticationManager)
+				.userDetailsService(userDetailsService);
 	}
 
 	@Override

@@ -38,7 +38,6 @@ public class GenerateSonarCliLauncher {
 						.append("\n");
 			}
 		}
-		System.out.println(sb.toString());
 		try (FileWriter fw = new FileWriter(new File(args[1] + "/all-run-sonar-cli.sh"))) {
 			fw.write(sb.toString());
 		} catch (final Exception e) {

@@ -33,6 +33,7 @@ public class CustomAuthenticationProvider implements AuthenticationProvider {
         String name = authentication.getName();
         String password = authentication.getCredentials().toString();
          
+        
         Optional<Staff> oStaff = staffHandler.findStaffOnLogin(name);
         
         if (!oStaff.isPresent()) {

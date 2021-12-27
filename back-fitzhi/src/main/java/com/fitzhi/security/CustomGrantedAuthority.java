@@ -7,7 +7,7 @@ import lombok.ToString;
 
 /**
  * <p>
- * Tixhì custom granted authority.<br/>
+ * Fitzhi custom granted authority.<br/>
  * The only difference with {@link org.springframework.security.core.authority.SimpleGrantedAuthority SimpleGrantedAuthority} consists of an empty constructor.
  * </p>
  * @author Fr&eacute;d&eacute;ric VIDAL
