@@ -979,7 +979,6 @@ export class ProjectService extends InternalService {
 			console.log('Evaluation given', evaluation);
 			console.groupEnd();
 		}
-		const auditTopic = new AuditTopic(idTopic, evaluation, null);
 
 		return this.httpClient
 			.put<boolean>(
