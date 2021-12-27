@@ -4,8 +4,7 @@ queries:
  - uses: security-and-quality
 
 paths:
-  - src
+  - front-fitzhi/src
 paths-ignore: 
  - '**/*.spec.ts'
- - src/node_modules
- 
+ - front-fitzhi/src/node_modules
