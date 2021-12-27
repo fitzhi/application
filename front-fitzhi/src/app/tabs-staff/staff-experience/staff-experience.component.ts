@@ -1,22 +1,20 @@
-import { Constants } from '../../constants';
+import { Component, Input, OnDestroy, OnInit } from '@angular/core';
+import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
+import { Subject } from 'rxjs';
+import { take } from 'rxjs/operators';
+import { DeclaredExperience } from 'src/app/data/declared-experience';
+import { traceOn } from 'src/app/global';
+import { FileService } from 'src/app/service/file.service';
+import { TabsStaffListService } from 'src/app/tabs-staff-list/service/tabs-staff-list.service';
+import { BaseDirective } from '../../base/base-directive.directive';
 import { Collaborator } from '../../data/collaborator';
 import { MessageService } from '../../interaction/message/message.service';
 import { SkillService } from '../../skill/service/skill.service';
 import { StaffService } from '../service/staff.service';
-import { Component, OnInit, OnDestroy, Input } from '@angular/core';
-
-import { StaffUploadCvComponent } from './staff-upload-cv/staff-upload-cv.component';
-import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
-import { BaseDirective } from '../../base/base-directive.directive';
-import { TabsStaffListService } from 'src/app/tabs-staff-list/service/tabs-staff-list.service';
 import { TagStar } from '../staff-form/tag-star';
-import { INTERNAL_SERVER_ERROR} from 'http-status-codes';
-import { FileService } from 'src/app/service/file.service';
-import { Subject } from 'rxjs';
-import { DeclaredExperience } from 'src/app/data/declared-experience';
-import { take } from 'rxjs/operators';
-import { traceOn } from 'src/app/global';
+import { StaffUploadCvComponent } from './staff-upload-cv/staff-upload-cv.component';
 import { TagifyEditableState } from './tagify-stars/tagify-editable-state';
+
 
 @Component({
 	selector: 'app-staff-experience',

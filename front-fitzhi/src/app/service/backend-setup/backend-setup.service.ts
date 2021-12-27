@@ -1,11 +1,9 @@
-import { Injectable } from '@angular/core';
-import { EMPTY, Observable, of } from 'rxjs';
 import { HttpClient } from '@angular/common/http';
-import { FirstConnection } from 'src/app/data/first-connection';
+import { Injectable } from '@angular/core';
+import { Observable, of } from 'rxjs';
 import { catchError, switchMap } from 'rxjs/operators';
-import { Constants } from 'src/app/constants';
+import { FirstConnection } from 'src/app/data/first-connection';
 import { environment } from '../../../environments/environment';
-import { traceOn } from 'src/app/global';
 
 @Injectable({
 	providedIn: 'root'

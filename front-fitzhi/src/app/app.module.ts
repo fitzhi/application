@@ -57,6 +57,12 @@ import { PieProjectsComponent } from './dashboard/pie-projects/pie-projects.comp
 import { PieDashboardService } from './dashboard/service/pie-dashboard.service';
 import { SkylineComponent } from './dashboard/skyline/component/skyline.component';
 import { SkylineIconComponent } from './dashboard/skyline/skyline-icon/skyline-icon.component';
+import { StarfieldContentComponent } from './dashboard/starfield/starfield-content/starfield-content.component';
+import { StarfieldHeaderComponent } from './dashboard/starfield/starfield-header/starfield-header.component';
+import { StarfieldComponent } from './dashboard/starfield/starfield.component';
+import { SummaryComponent } from './dashboard/summary/component/summary.component';
+import { TreemapProjectsChartComponent } from './dashboard/treemap-projects/treemap-projects-chart/treemap-projects-chart.component';
+import { TreemapProjectsContainerComponent } from './dashboard/treemap-projects/treemap-projects-container/treemap-projects-container.component';
 import { TreemapSkillsChartComponent } from './dashboard/treemap-skills/treemap-skills-chart/treemap-skills-chart.component';
 import { TreemapSkillsComponent } from './dashboard/treemap-skills/treemap-skills-container/treemap-skills.component';
 import { TreemapHeaderComponent } from './dashboard/treemap-skills/treemap-skills-header/treemap-skills-header.component';
@@ -108,6 +114,7 @@ import { SSEWatcherComponent } from './tabs-project/project-sunburst/ssewatcher/
 import { InLineEditDialogComponent } from './tabs-project/project-sunburst/table-dependencies/in-line-edit-dialog/in-line-edit-dialog.component';
 import { TableDependenciesComponent } from './tabs-project/project-sunburst/table-dependencies/table-dependencies.component';
 import { ProjectComponent } from './tabs-project/project.component';
+import { TableProjectsFilterComponent } from './tabs-project/table-projects-filter/table-projects-filter.component';
 import { StaffListComponent } from './tabs-staff-list/staff-list/staff-list.component';
 import { TabsStaffListComponent } from './tabs-staff-list/tabs-staff-list.component';
 import { StaffService } from './tabs-staff/service/staff.service';
@@ -119,13 +126,6 @@ import { StaffProjectsComponent } from './tabs-staff/staff-projects/staff-projec
 import { StaffRemoveComponent } from './tabs-staff/staff-remove/staff-remove.component';
 import { StaffComponent } from './tabs-staff/staff.component';
 import { WelcomeComponent } from './welcome/welcome.component';
-import { TreemapProjectsContainerComponent } from './dashboard/treemap-projects/treemap-projects-container/treemap-projects-container.component';
-import { TreemapProjectsChartComponent } from './dashboard/treemap-projects/treemap-projects-chart/treemap-projects-chart.component';
-import { TableProjectsFilterComponent } from './tabs-project/table-projects-filter/table-projects-filter.component';
-import { StarfieldComponent } from './dashboard/starfield/starfield.component';
-import { StarfieldHeaderComponent } from './dashboard/starfield/starfield-header/starfield-header.component';
-import { StarfieldContentComponent } from './dashboard/starfield/starfield-content/starfield-content.component';
-import { SummaryComponent } from './dashboard/summary/component/summary.component';
 
 @NgModule({
 	declarations: [

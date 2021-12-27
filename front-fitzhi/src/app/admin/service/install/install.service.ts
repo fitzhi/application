@@ -1,10 +1,5 @@
 import { Injectable } from '@angular/core';
-import { Router } from '@angular/router';
 import { BehaviorSubject } from 'rxjs';
-import { BackendSetupService } from 'src/app/service/backend-setup/backend-setup.service';
-import { ProjectService } from 'src/app/service/project/project.service';
-import { StaffListService } from 'src/app/service/staff-list-service/staff-list.service';
-import { AuthService } from '../auth/auth.service';
 
 /**
  * This service is handling the fact that the installation on this desktop has been completed.

@@ -1,19 +1,17 @@
-import { Constants } from '../../constants';
-import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
+import { Injectable } from '@angular/core';
+import { BehaviorSubject } from 'rxjs';
+import { switchMap, take } from 'rxjs/operators';
+import { DeclaredSonarServer } from '../../data/declared-sonar-server';
+import { Ecosystem } from '../../data/ecosystem';
+import { OptimalSkillCoverage } from '../../data/optimal-skill-coverage';
 import { Profile } from '../../data/profile';
 import { RiskLegend } from '../../data/riskLegend';
 import { Skill } from '../../data/skill';
-import { BackendSetupService } from '../backend-setup/backend-setup.service';
-import { take, switchMap } from 'rxjs/operators';
-import { Observable, BehaviorSubject, Subject } from 'rxjs';
 import { SupportedMetric } from '../../data/supported-metric';
 import { TopicLegend } from '../../data/topic-legend';
-import { DeclaredSonarServer } from '../../data/declared-sonar-server';
-import { Ecosystem } from '../../data/ecosystem';
 import { traceOn } from '../../global';
-import { textChangeRangeIsUnchanged } from 'typescript';
-import { OptimalSkillCoverage } from '../../data/optimal-skill-coverage';
+import { BackendSetupService } from '../backend-setup/backend-setup.service';
 
 @Injectable()
 export class ReferentialService {
