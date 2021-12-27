@@ -1,15 +1,12 @@
-import { Component, OnInit, Input, OnDestroy, AfterViewInit } from '@angular/core';
-import { Project } from 'src/app/data/project';
-import { BaseDirective } from 'src/app/base/base-directive.directive';
-import { SonarService } from 'src/app/service/sonar.service';
-import { Constants } from 'src/app/constants';
+import { Component, Input, OnDestroy, OnInit } from '@angular/core';
 import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
-import { ProjectService } from 'src/app/service/project/project.service';
+import { Subject } from 'rxjs';
+import { BaseDirective } from 'src/app/base/base-directive.directive';
 import { ProjectSonarMetricValue } from 'src/app/data/project-sonar-metric-value';
-import { Subject, BehaviorSubject } from 'rxjs';
-import { PanelSwitchEvent } from '../sonar-thumbnails/panel-switch-event';
-import * as d3 from 'd3';
 import { traceOn } from 'src/app/global';
+import { ProjectService } from 'src/app/service/project/project.service';
+import { SonarService } from 'src/app/service/sonar.service';
+import { PanelSwitchEvent } from '../sonar-thumbnails/panel-switch-event';
 
 @Component({
 	selector: 'app-sonar-dashboard',

@@ -1,4 +1,4 @@
-import { Component, OnInit, Input, AfterViewInit, ViewEncapsulation } from '@angular/core';
+import { AfterViewInit, Component, Input } from '@angular/core';
 import { ProjectService } from 'src/app/service/project/project.service';
 
 @Component({

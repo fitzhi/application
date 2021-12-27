@@ -1,16 +1,15 @@
+import { Component, ViewChild } from '@angular/core';
 import { ComponentFixture, TestBed, TestModuleMetadata, waitForAsync } from '@angular/core/testing';
-
-import { ProjectGhostsComponent } from './project-ghosts.component';
-import { TableGhostsComponent } from './table-ghosts/table-ghosts.component';
-import { MatTableModule } from '@angular/material/table';
-import { InitTest } from 'src/app/test/init-test';
 import { BehaviorSubject } from 'rxjs';
-import { ProjectGhostsDataSource } from './project-ghosts-data-source';
-import { ViewChild, Component } from '@angular/core';
-import { ProjectService } from 'src/app/service/project/project.service';
-import { Project } from 'src/app/data/project';
 import { Collaborator } from 'src/app/data/collaborator';
+import { Project } from 'src/app/data/project';
+import { ProjectService } from 'src/app/service/project/project.service';
+import { InitTest } from 'src/app/test/init-test';
+import { ProjectGhostsDataSource } from './project-ghosts-data-source';
+import { ProjectGhostsComponent } from './project-ghosts.component';
 import { GhostsService } from './service/ghosts.service';
+import { TableGhostsComponent } from './table-ghosts/table-ghosts.component';
+
 
 describe('ProjectGhostsComponent', () => {
 	let component: TestHostComponent;

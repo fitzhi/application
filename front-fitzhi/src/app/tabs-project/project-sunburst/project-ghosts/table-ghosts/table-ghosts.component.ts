@@ -1,20 +1,20 @@
-import { Component, OnInit, Input, ViewChild, OnDestroy, AfterViewInit } from '@angular/core';
-import { MatSort } from '@angular/material/sort';
-import { Unknown } from '../../../../data/unknown';
-import { BaseDirective } from 'src/app/base/base-directive.directive';
-import { ProjectGhostsDataSource } from '../project-ghosts-data-source';
+import { AfterViewInit, Component, Input, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { MatPaginator } from '@angular/material/paginator';
-import { Collaborator } from 'src/app/data/collaborator';
-import { StaffService } from 'src/app/tabs-staff/service/staff.service';
+import { MatSort } from '@angular/material/sort';
+import { MatTable } from '@angular/material/table';
 import { take } from 'rxjs/operators';
-import { MessageService } from 'src/app/interaction/message/message.service';
-import { StaffListService } from 'src/app/service/staff-list-service/staff-list.service';
-import { ProjectService } from 'src/app/service/project/project.service';
+import { BaseDirective } from 'src/app/base/base-directive.directive';
+import { Collaborator } from 'src/app/data/collaborator';
 import { traceOn } from 'src/app/global';
 import { MessageBoxService } from 'src/app/interaction/message-box/service/message-box.service';
+import { MessageService } from 'src/app/interaction/message/message.service';
+import { ProjectService } from 'src/app/service/project/project.service';
+import { StaffListService } from 'src/app/service/staff-list-service/staff-list.service';
+import { StaffService } from 'src/app/tabs-staff/service/staff.service';
+import { Unknown } from '../../../../data/unknown';
 import { SunburstCacheService } from '../../service/sunburst-cache.service';
+import { ProjectGhostsDataSource } from '../project-ghosts-data-source';
 import { GhostsService } from '../service/ghosts.service';
-import { MatTable } from '@angular/material/table';
 
 @Component({
 	selector: 'app-table-ghosts',

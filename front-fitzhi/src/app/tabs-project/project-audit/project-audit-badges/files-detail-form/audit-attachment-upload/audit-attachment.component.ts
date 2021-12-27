@@ -1,13 +1,12 @@
-import { Component, OnInit, Input, OnDestroy } from '@angular/core';
+import { Component, Input, OnDestroy, OnInit } from '@angular/core';
+import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
 import { BaseDirective } from 'src/app/base/base-directive.directive';
-import { AttachmentFile } from 'src/app/data/AttachmentFile';
-import { MatDialogConfig, MatDialog } from '@angular/material/dialog';
-import { AuditUploadAttachmentComponent } from './audit-upload-attachment/audit-upload-attachment.component';
-import { ProjectService } from 'src/app/service/project/project.service';
-import { FileService } from 'src/app/service/file.service';
-import { MessageService } from 'src/app/interaction/message/message.service';
-import { AuditAttachmentService } from '../service/audit-attachment.service';
 import { traceOn } from 'src/app/global';
+import { MessageService } from 'src/app/interaction/message/message.service';
+import { FileService } from 'src/app/service/file.service';
+import { ProjectService } from 'src/app/service/project/project.service';
+import { AuditAttachmentService } from '../service/audit-attachment.service';
+import { AuditUploadAttachmentComponent } from './audit-upload-attachment/audit-upload-attachment.component';
 
 /**
  * Class of parameters for the upload attachment dialogBox.

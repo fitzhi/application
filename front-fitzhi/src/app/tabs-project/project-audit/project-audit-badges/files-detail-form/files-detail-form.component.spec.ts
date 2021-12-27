@@ -1,18 +1,18 @@
-import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
-
-import { FilesDetailFormComponent } from './files-detail-form.component';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
-import { Project } from 'src/app/data/project';
 import { Component } from '@angular/core';
-import { AuditTopic } from 'src/app/data/AuditTopic';
-import { ProjectService } from 'src/app/service/project/project.service';
-import { AuditAttachmentComponent } from './audit-attachment-upload/audit-attachment.component';
+import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 import { FormsModule } from '@angular/forms';
-import { ReferentialService } from 'src/app/service/referential/referential.service';
 import { MatDialogModule } from '@angular/material/dialog';
+import { AuditTopic } from 'src/app/data/AuditTopic';
+import { Project } from 'src/app/data/project';
 import { RiskLegend } from 'src/app/data/riskLegend';
 import { CinematicService } from 'src/app/service/cinematic.service';
+import { ProjectService } from 'src/app/service/project/project.service';
+import { ReferentialService } from 'src/app/service/referential/referential.service';
 import { TopicEvaluation } from '../topic-evaluation';
+import { AuditAttachmentComponent } from './audit-attachment-upload/audit-attachment.component';
+import { FilesDetailFormComponent } from './files-detail-form.component';
+
 
 describe('FilesDetailFormComponent', () => {
 	let component: TestHostComponent;

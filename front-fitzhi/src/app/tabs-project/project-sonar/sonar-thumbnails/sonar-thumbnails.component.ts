@@ -1,19 +1,17 @@
-import { Component, OnInit, Input, OnDestroy, Output, EventEmitter } from '@angular/core';
-import { Project } from 'src/app/data/project';
+import { Component, Input, OnDestroy, OnInit } from '@angular/core';
+import { take } from 'rxjs/operators';
 import { BaseDirective } from 'src/app/base/base-directive.directive';
 import { Constants } from 'src/app/constants';
-import { PanelSwitchEvent } from './panel-switch-event';
-import { SonarProject } from 'src/app/data/SonarProject';
-import { SonarService } from 'src/app/service/sonar.service';
-import { ILanguageCount } from 'src/app/service/ILanguageCount';
-import { FilesStats } from 'src/app/data/sonar/FilesStats';
-import { ProjectService } from 'src/app/service/project/project.service';
-import { MessageService } from 'src/app/interaction/message/message.service';
-import { ThumbnailQuotationBadge } from './thumbnail-quotation-badge';
 import { SonarEvaluation } from 'src/app/data/sonar-evaluation';
-import { BehaviorSubject } from 'rxjs';
+import { FilesStats } from 'src/app/data/sonar/FilesStats';
+import { SonarProject } from 'src/app/data/SonarProject';
 import { traceOn } from 'src/app/global';
-import { take } from 'rxjs/operators';
+import { MessageService } from 'src/app/interaction/message/message.service';
+import { ILanguageCount } from 'src/app/service/ILanguageCount';
+import { ProjectService } from 'src/app/service/project/project.service';
+import { SonarService } from 'src/app/service/sonar.service';
+import { PanelSwitchEvent } from './panel-switch-event';
+import { ThumbnailQuotationBadge } from './thumbnail-quotation-badge';
 
 @Component({
 	selector: 'app-sonar-thumbnails',

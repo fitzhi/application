@@ -1,11 +1,10 @@
 import { Component, OnInit } from '@angular/core';
-import { ProjectStaffService } from '../../project-staff-service/project-staff.service';
-import { Constants } from '../../../constants';
-import { Contributor } from '../../../data/contributor';
+import { FormControl, FormGroup } from '@angular/forms';
 import { MatDialogRef } from '@angular/material/dialog';
-import { SettingsGeneration } from '../../../data/settingsGeneration';
-import { FormGroup, FormControl } from '@angular/forms';
 import { traceOn } from 'src/app/global';
+import { Contributor } from '../../../data/contributor';
+import { SettingsGeneration } from '../../../data/settingsGeneration';
+import { ProjectStaffService } from '../../project-staff-service/project-staff.service';
 
 @Component({
 	selector: 'app-dialog-filter',

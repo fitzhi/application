@@ -1,7 +1,7 @@
-import { Component, OnInit, Input, AfterViewInit, Output, EventEmitter, OnDestroy } from '@angular/core';
+import { AfterViewInit, Component, EventEmitter, Input, OnDestroy, Output } from '@angular/core';
 import Tagify from '@yaireo/tagify';
+import { BehaviorSubject, Subject, Subscription } from 'rxjs';
 import { TagStar } from '../tag-star';
-import { Subject, BehaviorSubject, Subscription } from 'rxjs';
 import { TagifyEditableState } from './tagify-editable-state';
 
 @Component({

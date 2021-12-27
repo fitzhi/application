@@ -1,11 +1,9 @@
-import { Component, OnInit, Input, OnDestroy } from '@angular/core';
-import { FilenamesDataSource } from './filenames-data-source';
-import { ContributorsDataSource } from './contributors-data-source';
-import { BaseDirective } from '../../../base/base-directive.directive';
-import { BehaviorSubject } from 'rxjs';
-import { Filename } from 'src/app/data/filename';
+import { Component, Input, OnDestroy, OnInit } from '@angular/core';
 import { MatTableDataSource } from '@angular/material/table';
+import { BehaviorSubject } from 'rxjs';
 import { Contributor } from 'src/app/data/contributor';
+import { Filename } from 'src/app/data/filename';
+import { BaseDirective } from '../../../base/base-directive.directive';
 
 @Component({
 	selector: 'app-node-detail',

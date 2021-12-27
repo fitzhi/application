@@ -1,31 +1,29 @@
-import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
-
-import { ProjectAuditBadgesComponent } from './project-audit-badges.component';
+import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { Component, DebugElement } from '@angular/core';
-import { BehaviorSubject } from 'rxjs';
-import { AuditBadgeComponent } from './audit-badge/audit-badge.component';
-import { MatGridListModule } from '@angular/material/grid-list';
-import { AuditGraphicBadgeComponent } from './audit-badge/audit-graphic-badge/audit-graphic-badge.component';
-import { ReportDetailFormComponent } from './report-detail-form/report-detail-form.component';
-import { FilesDetailFormComponent } from './files-detail-form/files-detail-form.component';
-import { ReferentialService } from 'src/app/service/referential/referential.service';
-import { MatFormFieldModule } from '@angular/material/form-field';
+import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { MatSliderModule } from '@angular/material/slider';
+import { MatDialogModule } from '@angular/material/dialog';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatGridListModule } from '@angular/material/grid-list';
 import { MatInputModule } from '@angular/material/input';
-import { Project } from 'src/app/data/project';
+import { MatSliderModule } from '@angular/material/slider';
+import { By } from '@angular/platform-browser';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { AuditTopic } from 'src/app/data/AuditTopic';
+import { Project } from 'src/app/data/project';
+import { RiskLegend } from 'src/app/data/riskLegend';
 import { CinematicService } from 'src/app/service/cinematic.service';
 import { AuditDetailsHistory } from 'src/app/service/cinematic/audit-details-history';
-import { RiskLegend } from 'src/app/data/riskLegend';
-import { AuditChosenDetail } from './audit-badge/audit-chosen-detail';
-import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { ProjectService } from 'src/app/service/project/project.service';
-import { AuditAttachmentComponent } from './files-detail-form/audit-attachment-upload/audit-attachment.component';
-import { MatDialogModule } from '@angular/material/dialog';
-import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { By } from '@angular/platform-browser';
+import { ReferentialService } from 'src/app/service/referential/referential.service';
 import { ProjectAuditService } from '../service/project-audit.service';
+import { AuditBadgeComponent } from './audit-badge/audit-badge.component';
+import { AuditGraphicBadgeComponent } from './audit-badge/audit-graphic-badge/audit-graphic-badge.component';
+import { AuditAttachmentComponent } from './files-detail-form/audit-attachment-upload/audit-attachment.component';
+import { FilesDetailFormComponent } from './files-detail-form/files-detail-form.component';
+import { ProjectAuditBadgesComponent } from './project-audit-badges.component';
+import { ReportDetailFormComponent } from './report-detail-form/report-detail-form.component';
+
 
 describe('ProjectAuditBadgesComponent', () => {
 	let component: TestHostComponent;

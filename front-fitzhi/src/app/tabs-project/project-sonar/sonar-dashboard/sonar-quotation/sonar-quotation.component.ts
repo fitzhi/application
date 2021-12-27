@@ -1,14 +1,13 @@
-import { Component, OnInit, ViewEncapsulation, Input, AfterViewInit, OnDestroy } from '@angular/core';
-import * as d3 from 'd3';
-import { Subject, BehaviorSubject } from 'rxjs';
-import { PanelSwitchEvent } from '../../sonar-thumbnails/panel-switch-event';
-import { Constants } from 'src/app/constants';
-import { SonarService } from 'src/app/service/sonar.service';
-import { Project } from 'src/app/data/project';
-import { ProjectService } from 'src/app/service/project/project.service';
-import { BadgeQuotation } from './badge-quotation';
+import { Component, Input, OnDestroy, OnInit } from '@angular/core';
+import { Subject } from 'rxjs';
 import { BaseDirective } from 'src/app/base/base-directive.directive';
+import { Constants } from 'src/app/constants';
+import { Project } from 'src/app/data/project';
 import { SonarProject } from 'src/app/data/SonarProject';
+import { ProjectService } from 'src/app/service/project/project.service';
+import { SonarService } from 'src/app/service/sonar.service';
+import { PanelSwitchEvent } from '../../sonar-thumbnails/panel-switch-event';
+import { BadgeQuotation } from './badge-quotation';
 
 @Component({
 	selector: 'app-sonar-quotation',

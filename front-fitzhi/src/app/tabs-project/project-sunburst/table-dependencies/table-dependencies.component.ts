@@ -1,13 +1,10 @@
-import { Component, OnInit, Input, OnDestroy, AfterViewInit } from '@angular/core';
+import { AfterViewInit, Component, OnDestroy, OnInit } from '@angular/core';
 import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
+import { BaseDirective } from 'src/app/base/base-directive.directive';
 import { Library } from '../../../data/library';
+import { ProjectService } from '../../../service/project/project.service';
 import { DependenciesDataSource } from './DependenciesDataSource';
 import { InLineEditDialogComponent } from './in-line-edit-dialog/in-line-edit-dialog.component';
-import { ProjectService } from '../../../service/project/project.service';
-import { take } from 'rxjs/operators';
-import { Observable, BehaviorSubject } from 'rxjs';
-import { Project } from 'src/app/data/project';
-import { BaseDirective } from 'src/app/base/base-directive.directive';
 
 @Component({
 	selector: 'app-table-dependencies',

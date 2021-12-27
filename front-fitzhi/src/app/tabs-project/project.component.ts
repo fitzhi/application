@@ -1,18 +1,17 @@
-import { Component, OnInit, AfterViewInit, OnDestroy } from '@angular/core';
-import { CinematicService } from '../service/cinematic.service';
-import { Constants } from '../constants';
-import { Router, ActivatedRoute } from '@angular/router';
-import { BehaviorSubject, EMPTY } from 'rxjs';
-import { Project } from '../data/project';
-import { ListProjectsService } from './list-project/list-projects-service/list-projects.service';
-import { MessageService } from '../interaction/message/message.service';
-import { BaseDirective } from '../base/base-directive.directive';
-import { ProjectService } from '../service/project/project.service';
+import { AfterViewInit, Component, OnDestroy, OnInit } from '@angular/core';
+import { ActivatedRoute, Router } from '@angular/router';
+import { BehaviorSubject } from 'rxjs';
 import { switchMap, take } from 'rxjs/operators';
+import { BaseDirective } from '../base/base-directive.directive';
+import { Constants } from '../constants';
+import { traceOn } from '../global';
 import { MessageGravity } from '../interaction/message/message-gravity';
+import { MessageService } from '../interaction/message/message.service';
+import { CinematicService } from '../service/cinematic.service';
+import { ProjectService } from '../service/project/project.service';
 import { ReferentialService } from '../service/referential/referential.service';
 import { SonarService } from '../service/sonar.service';
-import { traceOn } from '../global';
+import { ListProjectsService } from './list-project/list-projects-service/list-projects.service';
 
 @Component({
 	selector: 'app-project',

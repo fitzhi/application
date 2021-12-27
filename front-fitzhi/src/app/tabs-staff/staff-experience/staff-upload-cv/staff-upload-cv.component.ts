@@ -1,20 +1,16 @@
+import { HttpClient, HttpEventType, HttpRequest, HttpResponse } from '@angular/common/http';
+import { Component, Inject, OnDestroy, OnInit } from '@angular/core';
+import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { Subject } from 'rxjs';
+import { traceOn } from 'src/app/global';
+import { FileService } from 'src/app/service/file.service';
+import { BaseDirective } from '../../../base/base-directive.directive';
 import { Constants } from '../../../constants';
 import { Collaborator } from '../../../data/collaborator';
 import { DeclaredExperience } from '../../../data/declared-experience';
 import { StaffResume } from '../../../data/StaffResume';
 import { MessageBoxService } from '../../../interaction/message-box/service/message-box.service';
-import { HttpClient } from '@angular/common/http';
-import { HttpResponse } from '@angular/common/http';
-import { HttpEventType } from '@angular/common/http';
-import { HttpRequest } from '@angular/common/http';
-import { Component, OnInit, Inject, OnDestroy } from '@angular/core';
-import { Subject } from 'rxjs';
-import { MAT_DIALOG_DATA, MatDialogConfig } from '@angular/material/dialog';
-import { MatDialogRef } from '@angular/material/dialog';
-import { BaseDirective } from '../../../base/base-directive.directive';
 import { BackendSetupService } from '../../../service/backend-setup/backend-setup.service';
-import { FileService } from 'src/app/service/file.service';
-import { traceOn } from 'src/app/global';
 
 @Component({
 	selector: 'app-staff-upload-cv',

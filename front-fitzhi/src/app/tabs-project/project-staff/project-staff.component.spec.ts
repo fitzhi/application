@@ -1,19 +1,19 @@
-import { ComponentFixture, TestBed, TestModuleMetadata, waitForAsync } from '@angular/core/testing';
-
-import { ProjectStaffComponent } from './project-staff.component';
+import { HttpClientTestingModule, HttpTestingController } from '@angular/common/http/testing';
 import { Component, ViewChild } from '@angular/core';
-import { Project } from 'src/app/data/project';
-import { CinematicService } from 'src/app/service/cinematic.service';
-import { InitTest } from 'src/app/test/init-test';
-import { ProjectService } from 'src/app/service/project/project.service';
-import { Constants } from 'src/app/constants';
-import { HttpTestingController, HttpClientTestingModule } from '@angular/common/http/testing';
-import { MatTableModule } from '@angular/material/table';
-import { MatSortModule } from '@angular/material/sort';
+import { ComponentFixture, TestBed, TestModuleMetadata, waitForAsync } from '@angular/core/testing';
 import { MatPaginatorModule } from '@angular/material/paginator';
+import { MatSortModule } from '@angular/material/sort';
+import { MatTableModule } from '@angular/material/table';
+import { Constants } from 'src/app/constants';
+import { Project } from 'src/app/data/project';
 import { BackendSetupService } from 'src/app/service/backend-setup/backend-setup.service';
-import { ProjectStaffService } from '../project-staff-service/project-staff.service';
+import { CinematicService } from 'src/app/service/cinematic.service';
+import { ProjectService } from 'src/app/service/project/project.service';
+import { InitTest } from 'src/app/test/init-test';
 import { environment } from 'src/environments/environment';
+import { ProjectStaffService } from '../project-staff-service/project-staff.service';
+import { ProjectStaffComponent } from './project-staff.component';
+
 
 describe('ProjectStaffComponent', () => {
 	let component: TestHostComponent;

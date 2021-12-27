@@ -4,7 +4,6 @@ import { MatCardModule } from '@angular/material/card';
 import { MatSidenavModule } from '@angular/material/sidenav';
 import { RouterTestingModule } from '@angular/router/testing';
 import { NgxPopper } from 'angular-popper';
-import { connectableObservableDescriptor } from 'rxjs/internal/observable/ConnectableObservable';
 import { Project } from 'src/app/data/project';
 import { MessageBoxComponent } from 'src/app/interaction/message-box/dialog/message-box.component';
 import { BackendSetupService } from 'src/app/service/backend-setup/backend-setup.service';
