@@ -1,18 +1,15 @@
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { TestBed, waitForAsync } from '@angular/core/testing';
 import { MatDialogModule } from '@angular/material/dialog';
-import { doesNotReject } from 'assert';
 import { take } from 'rxjs/operators';
 import { AttachmentFile } from 'src/app/data/AttachmentFile';
 import { AuditTopic } from 'src/app/data/AuditTopic';
 import { Project } from 'src/app/data/project';
-import { MessageBoxService } from 'src/app/interaction/message-box/service/message-box.service';
 import { CinematicService } from 'src/app/service/cinematic.service';
-import { FileService } from 'src/app/service/file.service';
 import { ProjectService } from 'src/app/service/project/project.service';
 import { ReferentialService } from 'src/app/service/referential/referential.service';
-
 import { AuditAttachmentService } from './audit-attachment.service';
+
 
 describe('AuditAttachmentService', () => {
 

@@ -1,6 +1,5 @@
 import { Injectable } from '@angular/core';
 import { Collaborator } from 'src/app/data/collaborator';
-import { Experience } from 'src/app/data/experience';
 import { Mission } from 'src/app/data/mission';
 import { traceOn } from 'src/app/global';
 import { StaffListService } from '../staff-list-service/staff-list.service';

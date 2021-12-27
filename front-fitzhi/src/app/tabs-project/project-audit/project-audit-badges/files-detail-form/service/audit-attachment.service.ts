@@ -1,10 +1,9 @@
 import { Injectable } from '@angular/core';
+import { BehaviorSubject, EMPTY, of } from 'rxjs';
+import { switchMap } from 'rxjs/operators';
 import { AttachmentFile } from 'src/app/data/AttachmentFile';
-import { BehaviorSubject, EMPTY, Observable, of } from 'rxjs';
-import { Constants } from 'src/app/constants';
 import { traceOn } from 'src/app/global';
 import { ProjectService } from 'src/app/service/project/project.service';
-import { switchMap } from 'rxjs/operators';
 
 @Injectable({
 	providedIn: 'root'
