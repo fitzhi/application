@@ -1,7 +1,7 @@
 import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { BehaviorSubject, EMPTY, forkJoin, Observable, of, Subject } from 'rxjs';
-import { catchError, switchMap, take, takeUntil, tap } from 'rxjs/operators';
+import { BehaviorSubject, EMPTY, forkJoin, Observable, of } from 'rxjs';
+import { catchError, switchMap, take, tap } from 'rxjs/operators';
 import { DeclaredSonarServer } from '../data/declared-sonar-server';
 import { Project } from '../data/project';
 import { SonarServer } from '../data/sonar-server';

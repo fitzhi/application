@@ -1,7 +1,7 @@
 import { HttpClient, HttpHeaders, HttpResponse } from '@angular/common/http';
 import { EventEmitter, Injectable } from '@angular/core';
 import { METHOD_NOT_ALLOWED, NOT_FOUND, NOT_MODIFIED, NO_CONTENT } from 'http-status-codes';
-import { BehaviorSubject, EMPTY, interval, Observable, of, Subject, Subscription } from 'rxjs';
+import { BehaviorSubject, EMPTY, Observable, of, Subject } from 'rxjs';
 import { catchError, switchMap, take, tap } from 'rxjs/operators';
 import { EvaluationDistribution } from 'src/app/data/EvalutionDistribution';
 import { FitzhiSettings } from 'src/app/data/FitzhiSettings';

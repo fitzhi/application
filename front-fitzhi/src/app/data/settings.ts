@@ -1,5 +1,3 @@
-import { Skill } from './skill';
-import { Library } from './library';
 
 export class Settings {
 
