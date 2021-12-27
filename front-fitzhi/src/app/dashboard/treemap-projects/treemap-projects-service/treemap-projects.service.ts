@@ -1,7 +1,6 @@
 import { Injectable } from '@angular/core';
 import { BehaviorSubject } from 'rxjs';
 import { DashboardService } from 'src/app/service/dashboard/dashboard.service';
-import { isJSDocPropertyLikeTag, isTemplateExpression } from 'typescript';
 
 @Injectable({
 	providedIn: 'root'

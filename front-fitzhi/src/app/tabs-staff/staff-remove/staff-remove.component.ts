@@ -1,11 +1,10 @@
 import { Component, Input, OnInit } from '@angular/core';
-import { StaffService } from 'src/app/tabs-staff/service/staff.service';
+import { BehaviorSubject } from 'rxjs';
+import { Constants } from 'src/app/constants';
 import { MessageService } from 'src/app/interaction/message/message.service';
 import { CinematicService } from 'src/app/service/cinematic.service';
 import { StaffListService } from 'src/app/service/staff-list-service/staff-list.service';
-import { Constants } from 'src/app/constants';
-import { Collaborator } from 'src/app/data/collaborator';
-import { EMPTY, BehaviorSubject } from 'rxjs';
+import { StaffService } from 'src/app/tabs-staff/service/staff.service';
 
 @Component({
 	selector: 'app-staff-remove',
