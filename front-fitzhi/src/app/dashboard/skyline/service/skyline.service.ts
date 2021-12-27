@@ -113,7 +113,4 @@ export class SkylineService {
 		return maxNumberOfLines;
 	}
 
-	public evaluateHeightOfLine() {
-		const maxLine = this;
-	}
 }

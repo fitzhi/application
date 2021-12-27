@@ -1,4 +1,3 @@
-import { traceOn } from 'src/app/global';
 
 export class SkillProjectsAggregation {
 	constructor (

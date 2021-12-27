@@ -12,9 +12,6 @@ import { traceOn } from '../../global';
 import { InternalService } from '../../internal-service';
 import { BackendSetupService } from '../../service/backend-setup/backend-setup.service';
 
-const httpOptions = {
-	headers: new HttpHeaders({ 'Content-Type': 'application/json' })
-};
 
 @Injectable({
 	providedIn: 'root'

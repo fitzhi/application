@@ -26,7 +26,6 @@ import { ProjectGhostsDataSource } from './project-ghosts/project-ghosts-data-so
 import { SunburstCacheService } from './service/sunburst-cache.service';
 import { SunburstCinematicService } from './service/sunburst-cinematic.service';
 
-
 //
 // this context is indicating that the sunburst chart is ready to be viewed.
 //
@@ -719,7 +718,6 @@ export class ProjectSunburstComponent extends BaseDirective implements OnInit, A
 			this.titleSunburst += ' for ' + selectedDeveloper;
 		}
 		if (this.settings.startingDate > 0) {
-			const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
 			this.titleSunburst += ' filtered from ' + new Date(this.settings.startingDate).toLocaleDateString('en-EN');
 		}
 	}
