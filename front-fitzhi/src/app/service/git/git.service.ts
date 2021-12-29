@@ -66,8 +66,6 @@ export class GitService {
 	 */
 	public connect$(url: string): Observable<Repository> {
 
-		console.log('connect$', url);
-
 		const headers = new HttpHeaders();
 		headers.set('Accept', this.headerAccept);
 		return this.httpClient.get(url, { headers: headers, responseType: 'json' })
