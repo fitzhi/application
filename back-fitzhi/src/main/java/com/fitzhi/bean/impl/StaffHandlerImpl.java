@@ -203,11 +203,22 @@ public class StaffHandlerImpl extends AbstractDataSaverLifeCycleImpl implements 
 
 		// First, we're processing the search with the natural String IN LOWER CASE
 		staff =  lookup(author.getName(), input -> (input != null) ? input.toLowerCase() : null);
+		if (staff != null) {
+			return staff;
+		}
 		
 		// If no one's found, we re-process the search with NORMALIZED AND LOWER CASE String
-		if (staff == null) {
-			staff =  lookup(author.getName(), input ->
+		staff =  lookup(author.getName(), input ->
 					(input != null) ? Normalizer.normalize(input, Normalizer.Form.NFD).replaceAll("[\u0300-\u036F]", "").toLowerCase() : null);
+		if (staff != null) {
+			return staff;
+		}
+
+		// If no one's found, we re-process the search with NORMALIZED AND LOWER CASE String AND we replace '-' by ' '
+		staff =  lookup(author.getName().replace('-', ' '), input ->
+					(input != null) ? Normalizer.normalize(input, Normalizer.Form.NFD).replaceAll("[\u0300-\u036F]", "").toLowerCase() : null);
+		if (staff != null) {
+			return staff;
 		}
 		
 		return staff;
