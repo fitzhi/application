@@ -23,26 +23,7 @@ public class Global {
 	public static final String BACKEND_RETURN_CODE = "backend.return_code";
 	
 	public static final String BACKEND_RETURN_MESSAGE = "backend.return_message";
-
-	/**
-	 * Constant representing one the 2 models of connection settings for project : <br/>
-	 * This one if for the direct access : url repository / user / password
-	 */
-	public static final int USER_PASSWORD_ACCESS = 1;
-	
-	/**
-	 * Constant representing one the 3 models of connection settings : <br/>
-	 * This one if for the indirect access : url repository / remote filename with connection parameters.
-	 */
-	public static final int REMOTE_FILE_ACCESS = 2;
-
-	/**
-	 * Constant representing one the 3 models of connection settings : <br/>
-	 * This one if for the indirect access : url repository / remote filename with connection parameters.
-	 */
-	public static final int NO_USER_PASSWORD_ACCESS = 3;
-	
-	
+		
 	/** 
 	 * Operation.
 	 */

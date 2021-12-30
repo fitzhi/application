@@ -1,9 +1,5 @@
 package com.fitzhi.data.internal;
 
-import static com.fitzhi.Global.NO_USER_PASSWORD_ACCESS;
-import static com.fitzhi.Global.REMOTE_FILE_ACCESS;
-import static com.fitzhi.Global.USER_PASSWORD_ACCESS;
-
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -18,8 +14,11 @@ import com.fitzhi.Global;
 import com.fitzhi.ApplicationRuntimeException;
 import com.fitzhi.bean.ShuffleService;
 import com.fitzhi.bean.StaffHandler;
+import com.fitzhi.service.ConnectionSettingsType;
 
 import lombok.Data;
+
+import static com.fitzhi.service.ConnectionSettingsType.*;
 
 /**
  * <p>
@@ -52,10 +51,10 @@ public @Data class Project implements Serializable {
 	
 	/**
 	 * The connection settings model.
-	 * 2 models exist : either the direct (URL/user/pass), or the indirect (URL/remote file)
+	 * 2 models exist : either the direct (URL/user/pass), or the indirect (URL/remote file), or public
 	 */
-	private int connectionSettings;
-	
+	private ConnectionSettingsType connectionSettings = NO_LOGIN;
+
 	/**
 	 * The branch name. By default, the master branch is used.
 	 */
@@ -164,7 +163,7 @@ public @Data class Project implements Serializable {
 	}
 
 	@Generated ("eclipse")
-	private Project(int id, String name, int connectionSettings, String urlRepository, String locationRepository,
+	private Project(int id, String name, ConnectionSettingsType connectionSettings, String urlRepository, String locationRepository,
 			String username, String password, String filename, Map<Integer, ProjectSkill> skills, List<Ghost> ghosts, String connectionSettingsFile) {
 		super();
 		this.id = id;
@@ -205,7 +204,7 @@ public @Data class Project implements Serializable {
 	 */
 	@JsonIgnore
 	public boolean isNoUserPasswordAccess() {
-		return (connectionSettings == NO_USER_PASSWORD_ACCESS);
+		return (connectionSettings == PUBLIC_LOGIN);
 	}
 	
 	/**
@@ -214,7 +213,7 @@ public @Data class Project implements Serializable {
 	 */
 	@JsonIgnore
 	public boolean isUserPasswordAccess() {
-		return (connectionSettings == USER_PASSWORD_ACCESS);
+		return (connectionSettings == DIRECT_LOGIN);
 	}
 	
 	/**
@@ -223,7 +222,7 @@ public @Data class Project implements Serializable {
 	 */
 	@JsonIgnore
 	public boolean isRemoteFileAccess() {
-		return (connectionSettings == REMOTE_FILE_ACCESS);
+		return (connectionSettings == REMOTE_FILE_LOGIN);
 	}
 
 	/**

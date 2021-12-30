@@ -1,9 +1,10 @@
 package com.fitzhi.bean.impl.GitCrawler;
 
+import static com.fitzhi.service.ConnectionSettingsType.PUBLIC_LOGIN;
+
 import java.io.File;
 import java.io.IOException;
 
-import com.fitzhi.Global;
 import com.fitzhi.bean.ProjectHandler;
 import com.fitzhi.data.internal.Project;
 import com.fitzhi.data.source.ConnectionSettings;
@@ -43,13 +44,12 @@ public class GitCrawlerCloneTest {
 	@Autowired
 	RepoScanner scanner;
 	
-	
 	private final int ID_PROJECT = 1789;
 	
 	@Before
 	public void before() throws ApplicationException {
 		Project project = new Project(ID_PROJECT, "Revolutionary_Project");
-		project.setConnectionSettings(Global.NO_USER_PASSWORD_ACCESS);
+		project.setConnectionSettings(PUBLIC_LOGIN);
 		project.setUrlRepository("https://github.com/fitzhi/application");
 
 		projectHandler.addNewProject(project);

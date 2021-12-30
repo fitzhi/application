@@ -4,9 +4,10 @@ import static com.fitzhi.Error.CODE_PROJECT_NOFOUND;
 import static com.fitzhi.Error.CODE_SONAR_KEY_NOFOUND;
 import static com.fitzhi.Error.MESSAGE_PROJECT_NOFOUND;
 import static com.fitzhi.Error.MESSAGE_SONAR_KEY_NOFOUND;
-import static com.fitzhi.Global.NO_USER_PASSWORD_ACCESS;
-import static com.fitzhi.Global.REMOTE_FILE_ACCESS;
-import static com.fitzhi.Global.USER_PASSWORD_ACCESS;
+import static com.fitzhi.service.ConnectionSettingsType.DIRECT_LOGIN;
+import static com.fitzhi.service.ConnectionSettingsType.NO_LOGIN;
+import static com.fitzhi.service.ConnectionSettingsType.PUBLIC_LOGIN;
+import static com.fitzhi.service.ConnectionSettingsType.REMOTE_FILE_LOGIN;
 
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -61,6 +62,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 import lombok.extern.slf4j.Slf4j;
+
 
 /**
  * <p>
@@ -223,7 +225,7 @@ public class ProjectHandlerImpl extends AbstractDataSaverLifeCycleImpl implement
 	 * @throws ApplicationException thrown certainly if the encryption failed
 	 */
 	private void encryptPasswordIfNecessary(Project project) throws ApplicationException {
-		if (project.getConnectionSettings() == 1) {
+		if (project.getConnectionSettings() == DIRECT_LOGIN) {
 			String encryptedPassword = DataEncryption.encryptMessage(project.getPassword());
 			project.setPassword(encryptedPassword);
 		}
@@ -277,8 +279,8 @@ public class ProjectHandlerImpl extends AbstractDataSaverLifeCycleImpl implement
 		
 			savedProject.setConnectionSettings(project.getConnectionSettings());
 			switch (project.getConnectionSettings()) {
-				case USER_PASSWORD_ACCESS:
-					savedProject.setConnectionSettings(USER_PASSWORD_ACCESS);
+				case DIRECT_LOGIN:
+					savedProject.setConnectionSettings(DIRECT_LOGIN);
 					savedProject.setUrlRepository(project.getUrlRepository());
 					savedProject.setUsername(project.getUsername());
 					if (project.getPassword() != null) {
@@ -287,22 +289,22 @@ public class ProjectHandlerImpl extends AbstractDataSaverLifeCycleImpl implement
 					}
 					savedProject.setConnectionSettingsFile(null);
 					break;
-				case REMOTE_FILE_ACCESS:
-					savedProject.setConnectionSettings(REMOTE_FILE_ACCESS);
+				case REMOTE_FILE_LOGIN:
+					savedProject.setConnectionSettings(REMOTE_FILE_LOGIN);
 					savedProject.setUrlRepository(project.getUrlRepository());
 					savedProject.setUsername(null);
 					savedProject.setPassword(null);
 					savedProject.setConnectionSettingsFile(project.getConnectionSettingsFile());
 					break;
-				case NO_USER_PASSWORD_ACCESS:
-					savedProject.setConnectionSettings(NO_USER_PASSWORD_ACCESS);
+				case PUBLIC_LOGIN:
+					savedProject.setConnectionSettings(PUBLIC_LOGIN);
 					savedProject.setUrlRepository(project.getUrlRepository());
 					savedProject.setUsername(null);
 					savedProject.setPassword(null);
 					savedProject.setConnectionSettingsFile(project.getConnectionSettingsFile());
 					break;
 				default:
-					savedProject.setConnectionSettings(0);
+					savedProject.setConnectionSettings(NO_LOGIN);
 					savedProject.setUrlRepository(null);
 					savedProject.setUsername(null);
 					savedProject.setPassword(null);

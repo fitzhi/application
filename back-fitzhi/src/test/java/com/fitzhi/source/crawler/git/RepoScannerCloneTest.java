@@ -61,6 +61,7 @@ public class RepoScannerCloneTest {
 		settings.setPublicRepository(false);
 		settings.setUrl("https://github.com/frvidal/test.git");
 		settings.setLogin("frvidal");
+		System.out.println("Token " + System.getenv("TOKEN_FRVIDAL"));
 		settings.setPassword(System.getenv("TOKEN_FRVIDAL"));
 
 		scanner.clone(project, settings);

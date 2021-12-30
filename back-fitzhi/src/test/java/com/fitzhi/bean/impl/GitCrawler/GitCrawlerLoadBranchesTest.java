@@ -1,10 +1,12 @@
 package com.fitzhi.bean.impl.GitCrawler;
 
+import static com.fitzhi.service.ConnectionSettingsType.DIRECT_LOGIN;
+import static com.fitzhi.service.ConnectionSettingsType.PUBLIC_LOGIN;
+
 import java.util.Collection;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-import com.fitzhi.Global;
 import com.fitzhi.bean.ProjectHandler;
 import com.fitzhi.data.encryption.DataEncryption;
 import com.fitzhi.data.internal.Project;
@@ -50,7 +52,7 @@ public class GitCrawlerLoadBranchesTest {
 	public void testConnectionPublic() throws Exception {
 		project = new Project(4, "FITZHI");
 		project.setUrlRepository("https://github.com/fitzhi/application");
-		project.setConnectionSettings(Global.NO_USER_PASSWORD_ACCESS);
+		project.setConnectionSettings(PUBLIC_LOGIN);
 		Collection<Ref> branches = scanner.loadBranches(project);
 		branches.stream()
 			.map(Ref::getLeaf)
@@ -67,7 +69,7 @@ public class GitCrawlerLoadBranchesTest {
 	public void testConnectionFailed() throws ApplicationException {
 		project = new Project(4, "UNREACHABLE PROJECT");
 		project.setUrlRepository("https://github.com/fvidal/wibkac");
-		project.setConnectionSettings(Global.USER_PASSWORD_ACCESS);
+		project.setConnectionSettings(DIRECT_LOGIN);
 		project.setUsername("frvidal");
 		String encryptedPassword = DataEncryption.encryptMessage("invalid password");
 		project.setPassword(encryptedPassword);

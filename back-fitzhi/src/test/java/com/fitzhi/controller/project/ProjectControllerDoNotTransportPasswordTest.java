@@ -1,6 +1,6 @@
 package com.fitzhi.controller.project;
 
-import static com.fitzhi.Global.USER_PASSWORD_ACCESS;
+import static com.fitzhi.service.ConnectionSettingsType.DIRECT_LOGIN;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
@@ -57,7 +57,7 @@ public class ProjectControllerDoNotTransportPasswordTest {
 	public void before() throws ApplicationException {
 		Project p = new Project(ID_PROJECT, "testingProject");
 		p.setPassword("password");
-		p.setConnectionSettings(USER_PASSWORD_ACCESS);
+		p.setConnectionSettings(DIRECT_LOGIN);
 		projectHandler.addNewProject(p);
 	}
 	

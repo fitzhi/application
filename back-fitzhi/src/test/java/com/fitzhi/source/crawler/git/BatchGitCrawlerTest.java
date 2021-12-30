@@ -1,5 +1,7 @@
 package com.fitzhi.source.crawler.git;
 
+import static com.fitzhi.service.ConnectionSettingsType.DIRECT_LOGIN;
+import static com.fitzhi.service.ConnectionSettingsType.NO_LOGIN;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.timeout;
@@ -57,11 +59,11 @@ public class BatchGitCrawlerTest {
 	public void testOneActiveProjectWithSettings() throws Exception {
 		// connectionSettings > 1 and project active, so we do not skip this project
 		Project p = projectHandler.lookup(1);
-		p.setConnectionSettings(1);
+		p.setConnectionSettings(DIRECT_LOGIN);
 		p.setActive(true);
 		
 		p = projectHandler.lookup(2);
-		p.setConnectionSettings(1);
+		p.setConnectionSettings(DIRECT_LOGIN);
 		p.setActive(false);
 
 		log.debug ("The complete generation in an asynchronous mode has been launched.");
@@ -74,7 +76,7 @@ public class BatchGitCrawlerTest {
 	public void after() throws ApplicationException {
 		// We reset the data to their initial state.
 		Project p = projectHandler.lookup(1);
-		p.setConnectionSettings(0);
+		p.setConnectionSettings(NO_LOGIN);
 		p.setActive(true);
 	}
 }

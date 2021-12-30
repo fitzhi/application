@@ -15,6 +15,8 @@ import org.springframework.stereotype.Service;
 
 import lombok.extern.slf4j.Slf4j;
 
+import static com.fitzhi.service.ConnectionSettingsType.NO_LOGIN;
+
 /**
  * <p>
  * Batch source code crawler. 
@@ -53,8 +55,8 @@ public class BatchGitCrawler implements BatchRepositoryCrawler {
 		}
 		for (Project project : projectHandler.getProjects().values()) {
 			
-			// We analyze each project if the project is active and has a connection settings
-			if (project.isActive() && (project.getConnectionSettings() > 0)) {
+			// We analyze each project if the project is active and has an available connection settings
+			if (project.isActive() && (project.getConnectionSettings() != NO_LOGIN)) {
 				// We invoke RepoScanner.generateAsync from inside this method 
 				if (log.isInfoEnabled()) {
 					log.info( String.format("Analyzing project %s.", project.getName()));

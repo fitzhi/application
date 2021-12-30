@@ -1900,8 +1900,8 @@ public class GitCrawler extends AbstractScannerDataGenerator {
 		try {
 
 			switch (project.getConnectionSettings()) {
-				case Global.USER_PASSWORD_ACCESS:
-				case Global.REMOTE_FILE_ACCESS: {
+				case DIRECT_LOGIN:
+				case REMOTE_FILE_LOGIN: {
 					ConnectionSettings settings = connectionSettings(project);
 					URIish uri = new URIish(project.getUrlRepository());
 					try (Transport transport = Transport.open(uri)) {
@@ -1910,7 +1910,7 @@ public class GitCrawler extends AbstractScannerDataGenerator {
 						return transport.openFetch();
 					}
 				}
-				case Global.NO_USER_PASSWORD_ACCESS: {
+				case PUBLIC_LOGIN: {
 					URIish uri = new URIish(project.getUrlRepository());
 					try (Transport transport = Transport.open(uri)) {
 						return transport.openFetch();

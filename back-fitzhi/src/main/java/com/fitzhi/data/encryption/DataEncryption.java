@@ -19,7 +19,6 @@ import com.fitzhi.exception.ApplicationException;
  * </p>
  *
  * @author Fr&eacute;d&eacute;ric VIDAL
- *
  */
 public class DataEncryption {
 
