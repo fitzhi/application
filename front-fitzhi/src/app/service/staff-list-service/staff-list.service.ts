@@ -109,9 +109,11 @@ export class StaffListService {
 	takeInAccountStaff(staff: Collaborator[]) {
 		if (traceOn()) {
 			console.groupCollapsed('Staff retrieved');
-			staff.forEach(st => console.log(`${st.idStaff} ${st.firstName} ${st.lastName}`));
 			console.table(staff);
 			console.groupEnd();
+			/*
+			staff.forEach(st => console.log(`${st.idStaff} ${st.firstName} ${st.lastName}`));
+			*/
 		}
 		this.loadAllStaff(staff);
 		this.allStaff$.next(this.allStaff);
