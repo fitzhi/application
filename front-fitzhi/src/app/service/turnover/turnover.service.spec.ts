@@ -23,6 +23,9 @@ describe('TurnoverService', () => {
 	});
 
 	it('should calculate a simple turnover for just ONE staff member with a small piece of real-production data.', () => {
+
+		spyOn(turnoverService, 'currentYear').and.returnValue(2021);
+
 		expect(turnoverService).toBeTruthy();
 		const staff = require('./staff-test-from-prod.json');
 		staff.forEach(st => {
@@ -35,6 +38,7 @@ describe('TurnoverService', () => {
 	});
 
 	it('should calculate correctly the turnover for year 2021 with the testing data "staff-test-1".', () => {
+		spyOn(turnoverService, 'currentYear').and.returnValue(2021);
 		const staff = require('./staff-test-1.json');
 		staff.forEach(st => {
 			const collaborator = staffListService.createStaffFromJson(st);
@@ -44,7 +48,7 @@ describe('TurnoverService', () => {
 		expect(turnoverService.turnover(2021).calculation).toBe(50);
 	});
 
-	it('should calculate correctly the turnover for year 2020 with the testing data "staff-test-1".', () => {
+	it('should calculate correctly the turnover for year 2019 with the testing data "staff-test-1".', () => {
 		const staff = require('./staff-test-1.json');
 		staffListService.loadAllStaff(staff);
 		expect(turnoverService.turnover(2020).calculation).toBe(0);

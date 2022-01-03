@@ -77,7 +77,7 @@ export class TurnoverService {
 		}
 
 		// The ultimate commit for this staff member has been submitted, after the 1st of january and before the 31st december of the given year.
-		if (year === new Date(Date.now()).getFullYear()) {
+		if (year === this.currentYear()) {
 			// For the actual year, the last commit for this staff member has been made in this year and the staff is flagged as inactive
 			if ( (!staff.active) && (lastExperience.lastCommit.getFullYear() >= year) && (lastExperience.lastCommit.getFullYear() < (year + 1)))   {
 				turnoverData.resignation++;
@@ -94,4 +94,11 @@ export class TurnoverService {
 		}
 	}
 
+	/**
+	 * _This method is declared in order to be mocked in some tests!_
+	 * @returns the current year
+	 */
+	currentYear() {
+		return new Date(Date.now()).getFullYear();
+	}
 }

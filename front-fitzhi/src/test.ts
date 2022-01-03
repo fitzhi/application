@@ -19,7 +19,7 @@ const context = require.context('./', true, /\.spec\.ts$/);
 
 // const context = require.context('./', true,  /git\.service\.spec\.ts$/);
 // const context = require.context('./', true,  /http-token-interceptor\.spec\.ts$/);
-// const context = require.context('./', true,  /summary\.component\.spec\.ts$/);
+// const context = require.context('./', true,  /starfield-header\.component\.spec\.ts$/);
 // const context = require.context('./', true,  /dashboard\.service\.calculateGeneralAverage\.spec\.ts$/);
 // const context = require.context('./', true,  /turnover\.service\.spec\.ts$/);
 // const context = require.context('./', true,  /starfield-broadcastConstellations\.service\.spec\.ts$/);

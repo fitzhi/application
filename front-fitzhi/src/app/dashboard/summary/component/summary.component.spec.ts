@@ -271,9 +271,9 @@ describe('SummaryComponent', () => {
 		staffListService.allStaffLoaded$.subscribe({
 			next: doneAndOk => {
 				if (doneAndOk) {
-					expect(fixture.debugElement.query(By.css('#turnover-' + currentYear)).nativeNode.innerText).toBe('21');
-					expect(fixture.debugElement.query(By.css('#turnover-' + (currentYear - 1))).nativeNode.innerText).toBe('20');
-					expect(fixture.debugElement.query(By.css('#turnover-' + (currentYear - 2))).nativeNode.innerText).toBe('19');
+					expect(fixture.debugElement.query(By.css('#turnover-' + currentYear)).nativeNode.innerText).toBe('22');
+					expect(fixture.debugElement.query(By.css('#turnover-' + (currentYear - 1))).nativeNode.innerText).toBe('21');
+					expect(fixture.debugElement.query(By.css('#turnover-' + (currentYear - 2))).nativeNode.innerText).toBe('20');
 					done();
 				}
 			}

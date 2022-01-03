@@ -3,7 +3,6 @@ import { ComponentFixture, fakeAsync, TestBed, tick } from '@angular/core/testin
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatDialogModule } from '@angular/material/dialog';
 import { By } from '@angular/platform-browser';
-import { ControlledRisingSkylineModule } from 'controlled-rising-skyline';
 import { MessageBoxService } from 'src/app/interaction/message-box/service/message-box.service';
 import { FileService } from 'src/app/service/file.service';
 import { StaffService } from 'src/app/tabs-staff/service/staff.service';
@@ -119,7 +118,7 @@ describe('StarfieldHeaderComponent', () => {
 		const year = today.getFullYear();
 		const selectedMonth = fixture.debugElement.query(By.css('#selectedMonth'));
 		// We add 1 to display the month because the month in IS is inside the range of 0/11.
-		expect(selectedMonth.nativeElement.innerText).toBe(`${month}/${year}`);
+		expect(selectedMonth.nativeElement.innerText).toBe(((month <= 10) ? '0' : '') + `${month}/${year}`);
 	}));
 
 });
