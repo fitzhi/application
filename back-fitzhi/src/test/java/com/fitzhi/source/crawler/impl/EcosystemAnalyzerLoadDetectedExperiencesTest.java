@@ -55,10 +55,10 @@ public class EcosystemAnalyzerLoadDetectedExperiencesTest {
 			ecosystemAnalyzer.loadDetectedExperiences(this.project, map, parsers);
 	
 			DetectedExperience de = map.get(DetectedExperience.of(0, 0, new Author("frvidal", "frederic.vidal.perso@gmail.com")));
-			Assert.assertEquals(11, de.getCount());
+			Assert.assertEquals(10, de.getCount());
 	
 			de = map.get(DetectedExperience.of(1, 0, new Author("frvidal", "frederic.vidal.perso@gmail.com")));
-			Assert.assertEquals(8, de.getCount());
+			Assert.assertEquals(7, de.getCount());
 	
 			de = map.get(DetectedExperience.of(0, 0, new Author("fitzhi", "frederic.vidal@fitzhi.com")));
 			Assert.assertEquals(3, de.getCount());
