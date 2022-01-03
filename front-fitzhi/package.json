@@ -47,7 +47,8 @@
     "tslib": "^2.0.0",
     "utf-8-validate": "^5.0.2",
     "zone.js": "~0.11.4",
-    "y18n": ">=4.0.1"
+    "y18n": ">=4.0.1",
+    "json-schema": ">=0.4.0"
   },
   "devDependencies": {
     "@angular-devkit/build-angular": "~12.2.14",
