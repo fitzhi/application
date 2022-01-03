@@ -49,7 +49,8 @@
     "zone.js": "~0.11.4",
     "y18n": ">=4.0.1",
     "json-schema": ">=0.4.0",
-    "ansi-regex": ">=5.0.1"
+    "ansi-regex": ">=5.0.1",
+    "path-parse": ">=1.0.7"
   },
   "devDependencies": {
     "@angular-devkit/build-angular": "~12.2.14",
