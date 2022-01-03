@@ -1,7 +1,6 @@
 import { AfterViewInit, Component, OnDestroy, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { take } from 'rxjs/operators';
-import { ProjectService } from 'src/app/service/project/project.service';
 import { environment } from '../environments/environment';
 import { AuthService } from './admin/service/auth/auth.service';
 import { InstallService } from './admin/service/install/install.service';
@@ -9,6 +8,7 @@ import { BaseDirective } from './base/base-directive.directive';
 import { Constants } from './constants';
 import { ListCriteria } from './data/listCriteria';
 import { traceOn } from './global';
+import { BackendSetupService } from './service/backend-setup/backend-setup.service';
 import { CinematicService } from './service/cinematic.service';
 import { ReferentialService } from './service/referential/referential.service';
 import { SonarService } from './service/sonar.service';
@@ -68,7 +68,7 @@ export class AppComponent extends BaseDirective implements OnInit, AfterViewInit
 		private listProjectsService: ListProjectsService,
 		private referentialService: ReferentialService,
 		private staffService: StaffService,
-		private projectService: ProjectService,
+		private backendSetupService: BackendSetupService,
 		public installService: InstallService,
 		private router: Router) {
 
@@ -76,6 +76,25 @@ export class AppComponent extends BaseDirective implements OnInit, AfterViewInit
 	}
 
 	ngOnInit() {
+
+		// We display the current version
+		console.log('version %s build-time %s', this.environment.version, this.environment.buildTime);
+
+		if (environment.autoConnect) {
+			this.backendSetupService.saveUrl(environment.apiUrl);
+			this.installService.installComplete();
+		}
+
+		this.initWorkspaceFitzhi();
+	}
+
+	/**
+	 * Initialize the workspace of the application.
+	 */
+	initWorkspaceFitzhi() {
+		if (traceOn()) {
+			console.log ('initWorkspaceFitzhi');
+		}
 		//
 		// Loading the referentials.
 		//
@@ -83,9 +102,6 @@ export class AppComponent extends BaseDirective implements OnInit, AfterViewInit
 		this.sonarService.loadSonarsVersion();
 		this.referentialService.loadAllReferentials();
 		this.sonarService.loadSonarMetrics();
-
-		// We display the current version
-		console.log('version %s build-time %s', this.environment.version, this.environment.buildTime);
 	}
 
 	/**
@@ -257,11 +273,11 @@ export class AppComponent extends BaseDirective implements OnInit, AfterViewInit
 			$(function () {
 				$('[data-toggle="tooltip"]').tooltip();
 			}
-			));
+		));
 	}
 
 	/**
-	 * All subscriptions are closed in the BaseComponent
+	 * All subscriptions are closed in the BaseComponent.
 	 */
 	public ngOnDestroy() {
 		super.ngOnDestroy();

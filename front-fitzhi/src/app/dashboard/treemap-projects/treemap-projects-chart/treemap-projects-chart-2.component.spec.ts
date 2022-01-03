@@ -86,7 +86,11 @@ describe('TeamProjectsChartComponent', () => {
 
 		const labels = loadLabels();
 		expect(labels.length).toBe(2);
-		expect(labels[0]).toBe('Spring');
-		expect(labels[1]).toBe('Fitzhi');
+		expect(labels[0]).toBe(
+`Spring
+76,000 lines`);
+		expect(labels[1]).toBe(
+`Fitzhi
+32,300 lines`);
 	});
 });

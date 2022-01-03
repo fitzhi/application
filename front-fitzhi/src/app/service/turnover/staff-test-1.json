@@ -1,0 +1,138 @@
+[
+	{
+		"idStaff": 1,
+		"firstName": "one",
+		"lastName": "one",
+		"nickName": "one",
+		"login": "one",
+		"email": "one@nope.com",
+		"level": "Exp DEV",
+		"forceActiveState": false,
+		"active": true,
+		"dateInactive": null,
+		"application": null,
+		"typeOfApplication": 0,
+		"external": false,
+		"missions": [
+			{
+				"idStaff": 1,
+				"idProject": 1,
+				"name": "Nope",
+				"firstCommit": "2018-08-01",
+				"lastCommit": "2021-08-01",
+				"numberOfCommits": 1,
+				"numberOfFiles": 1
+			},
+			{
+				"idStaff": 1,
+				"idProject": 1,
+				"name": "Nope",
+				"firstCommit": "2019-08-01",
+				"lastCommit": "2021-08-01",
+				"numberOfCommits": 1,
+				"numberOfFiles": 1
+			}
+		],
+		"experiences": [],
+		"authorities": [
+			{
+				"authority": "ROLE_TRUSTED_USER"
+			}
+		],
+		"username": "admin",
+		"enabled": true,
+		"empty": false,
+		"accountNonExpired": true,
+		"accountNonLocked": true,
+		"credentialsNonExpired": true
+	},
+	{
+		"idStaff": 2,
+		"firstName": "two",
+		"lastName": "two",
+		"nickName": "two",
+		"login": "two",
+		"email": "two.two@two.com",
+		"level": "PM",
+		"password": null,
+		"forceActiveState": false,
+		"active": true,
+		"dateInactive": null,
+		"application": null,
+		"typeOfApplication": 0,
+		"external": false,
+		"missions": [
+			{
+				"idStaff": 2,
+				"idProject": 1,
+				"name": "Nope",
+				"firstCommit": "2021-08-01",
+				"lastCommit": "2021-08-01",
+				"numberOfCommits": 1,
+				"numberOfFiles": 1
+			}
+		],
+		"experiences": [
+		],
+		"authorities": [
+			{
+				"authority": "ROLE_TRUSTED_USER"
+			}
+		],
+		"username": "two",
+		"enabled": true,
+		"empty": false,
+		"accountNonExpired": true,
+		"accountNonLocked": true,
+		"credentialsNonExpired": true
+	},
+	{
+		"idStaff": 3,
+		"firstName": "three",
+		"lastName": "three",
+		"nickName": "three",
+		"login": "three",
+		"email": "three.three@three.com",
+		"level": "PM",
+		"password": null,
+		"forceActiveState": false,
+		"active": true,
+		"dateInactive": null,
+		"application": null,
+		"typeOfApplication": 0,
+		"external": false,
+		"missions": [
+			{
+				"idStaff": 3,
+				"idProject": 1,
+				"name": "Nope",
+				"firstCommit": "2017-08-01",
+				"lastCommit": "2019-08-01",
+				"numberOfCommits": 1,
+				"numberOfFiles": 1
+			},
+			{
+				"idStaff": 3,
+				"idProject": 1,
+				"name": "Nope",
+				"firstCommit": "2017-08-01",
+				"lastCommit": "2018-08-01",
+				"numberOfCommits": 1,
+				"numberOfFiles": 1
+			}
+		],
+		"experiences": [
+		],
+		"authorities": [
+			{
+				"authority": "ROLE_TRUSTED_USER"
+			}
+		],
+		"username": "three",
+		"enabled": true,
+		"empty": false,
+		"accountNonExpired": true,
+		"accountNonLocked": true,
+		"credentialsNonExpired": true
+	}
+]

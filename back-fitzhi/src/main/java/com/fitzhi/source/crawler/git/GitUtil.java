@@ -17,8 +17,9 @@ import org.eclipse.jgit.api.Git;
  * @author Fr&eacute;d&eacute;ric VIDAL
  */
 public final class GitUtil {
-    
-    /**
+	
+	/**
+	 * @param project the given project
 	 * @return the location repository entry point <br/>
 	 *         <i>i.e. the absolute path to the .git file.</i>
 	 */
@@ -29,13 +30,13 @@ public final class GitUtil {
 						: project.getLocationRepository() + "/.git";
 	}
 
-    /**
-     * Instanciate the {@code git} framework associated with the local repository.
-     * @param project the given project
-     * @return the {@code git} framework associated with the local repository.
-     * @throws IOException
-     */
-    public static Git git(Project project) throws IOException {
-        return Git.open(Paths.get(getLocalDotGitFile(project)).toFile());
-    }
+	/**
+	 * Instanciate the {@code git} framework associated with the local repository.
+	 * @param project the given project
+	 * @return the {@code git} framework associated with the local repository.
+	 * @throws IOException
+	 */
+	public static Git git(Project project) throws IOException {
+		return Git.open(Paths.get(getLocalDotGitFile(project)).toFile());
+	}
 }

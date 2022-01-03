@@ -1,15 +1,15 @@
-import { Component, OnInit, ViewChild, OnDestroy } from '@angular/core';
-import { MatStepper } from '@angular/material/stepper';
-import { Collaborator } from 'src/app/data/collaborator';
-import { BaseDirective } from 'src/app/base/base-directive.directive';
-import { BackendSetupService } from 'src/app/service/backend-setup/backend-setup.service';
 import { HttpClient } from '@angular/common/http';
+import { Component, OnDestroy, ViewChild } from '@angular/core';
+import { MatStepper } from '@angular/material/stepper';
+import { Router } from '@angular/router';
+import { Subject } from 'rxjs';
+import { BaseDirective } from 'src/app/base/base-directive.directive';
+import { Collaborator } from 'src/app/data/collaborator';
+import { traceOn } from 'src/app/global';
+import { BackendSetupService } from 'src/app/service/backend-setup/backend-setup.service';
 import { ReferentialService } from 'src/app/service/referential/referential.service';
 import { SkillService } from 'src/app/skill/service/skill.service';
-import { Router } from '@angular/router';
-import { traceOn } from 'src/app/global';
 import { InstallService } from '../service/install/install.service';
-import { Subject } from 'rxjs';
 
 @Component({
 	selector: 'app-starting-setup',

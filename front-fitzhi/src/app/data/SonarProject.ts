@@ -1,7 +1,6 @@
-import { FilesStats } from './sonar/FilesStats';
-import { ProjectSonarMetric } from './sonar/project-sonar-metric';
 import { ProjectSonarMetricValue } from './project-sonar-metric-value';
 import { SonarEvaluation } from './sonar-evaluation';
+import { FilesStats } from './sonar/FilesStats';
 
 export class SonarProject {
 	key: string;

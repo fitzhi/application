@@ -1,7 +1,7 @@
 import { HttpClient, HttpHeaders, HttpResponse } from '@angular/common/http';
 import { EventEmitter, Injectable } from '@angular/core';
 import { METHOD_NOT_ALLOWED, NOT_FOUND, NOT_MODIFIED, NO_CONTENT } from 'http-status-codes';
-import { BehaviorSubject, EMPTY, interval, Observable, of, Subject, Subscription } from 'rxjs';
+import { BehaviorSubject, EMPTY, Observable, of, Subject } from 'rxjs';
 import { catchError, switchMap, take, tap } from 'rxjs/operators';
 import { EvaluationDistribution } from 'src/app/data/EvalutionDistribution';
 import { FitzhiSettings } from 'src/app/data/FitzhiSettings';
@@ -979,7 +979,6 @@ export class ProjectService extends InternalService {
 			console.log('Evaluation given', evaluation);
 			console.groupEnd();
 		}
-		const auditTopic = new AuditTopic(idTopic, evaluation, null);
 
 		return this.httpClient
 			.put<boolean>(
@@ -1180,7 +1179,7 @@ export class ProjectService extends InternalService {
 
 		if (project.mapSkills) {
 			console.groupCollapsed(`${project.mapSkills.size} skills declared.`);
-			for (const [k, v] of project.mapSkills) {
+			for (const [k, _] of project.mapSkills) {
 				console.log(k, this.skillService.title(k));
 			}
 			console.groupEnd();

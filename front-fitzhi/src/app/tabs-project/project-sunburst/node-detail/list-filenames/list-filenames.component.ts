@@ -1,12 +1,10 @@
-import { Component, OnInit, Input, OnDestroy, ViewChild, AfterViewInit } from '@angular/core';
-import { Constants } from '../../../../constants';
-import { BaseDirective } from '../../../../base/base-directive.directive';
-import { Filename } from 'src/app/data/filename';
-import { FilenamesDataSource } from '../filenames-data-source';
-import { traceOn } from 'src/app/global';
-import { MatTable, MatTableDataSource } from '@angular/material/table';
+import { AfterViewInit, Component, Input, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { MatPaginator, PageEvent } from '@angular/material/paginator';
+import { MatTable, MatTableDataSource } from '@angular/material/table';
 import { UserSetting } from 'src/app/base/user-setting';
+import { Filename } from 'src/app/data/filename';
+import { traceOn } from 'src/app/global';
+import { BaseDirective } from '../../../../base/base-directive.directive';
 
 /**
  * This component hosts a table with the source filenames of a repository directory

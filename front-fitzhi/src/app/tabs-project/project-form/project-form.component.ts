@@ -385,7 +385,7 @@ export class ProjectFormComponent extends BaseDirective implements OnInit, After
 		this.subscriptions.add(this.allSkills$()
 			.subscribe(skills => {
 				if (this.projectService.project.mapSkills) {
-					for (const [idSkill, profilSkill] of this.projectService.project.mapSkills) {
+					for (const [idSkill, _] of this.projectService.project.mapSkills) {
 						this.tagifySkills.addTags(this.skillService.title(idSkill));
 					}
 				}

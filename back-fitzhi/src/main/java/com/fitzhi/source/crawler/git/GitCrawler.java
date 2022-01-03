@@ -24,6 +24,7 @@ import static com.fitzhi.Global.INTERNAL_FILE_SEPARATORCHAR;
 import static com.fitzhi.Global.LN;
 import static com.fitzhi.Global.NO_PROGRESSION;
 import static com.fitzhi.Global.PROJECT;
+import static com.fitzhi.bean.impl.RepositoryState.REPOSITORY_READY;
 import static org.eclipse.jgit.diff.DiffEntry.DEV_NULL;
 
 import java.io.File;
@@ -116,6 +117,7 @@ import org.eclipse.jgit.revwalk.FollowFilter;
 import org.eclipse.jgit.revwalk.RenameCallback;
 import org.eclipse.jgit.revwalk.RevCommit;
 import org.eclipse.jgit.revwalk.RevWalk;
+import org.eclipse.jgit.revwalk.filter.RevFilter;
 import org.eclipse.jgit.storage.file.FileRepositoryBuilder;
 import org.eclipse.jgit.transport.FetchConnection;
 import org.eclipse.jgit.transport.Transport;
@@ -642,8 +644,10 @@ public class GitCrawler extends AbstractScannerDataGenerator {
 			diffCollector = new DiffCollector();
 
 			rw.setTreeFilter(getFollowFilter(repository, filePath));
-
 			rw.markStart(rw.parseCommit(repository.resolve(Constants.HEAD)));
+			
+			// We do not include the merge operations in the scope of the audit.
+			rw.setRevFilter(RevFilter.NO_MERGES);
 
 			for (RevCommit c : rw) {
 				commits.add(c);
@@ -757,6 +761,11 @@ public class GitCrawler extends AbstractScannerDataGenerator {
 		RepositoryAnalysis analysis = dataSaver.loadRepositoryAnalysis(project);
 		if (analysis == null) {
 			analysis = new RepositoryAnalysis(project);
+		} else  {
+			if (log.isDebugEnabled()) {
+				log.debug (String.format("Project %s analysis repository contains %d files for %d changes", 
+					project.getName(), analysis.numberOfFiles(), analysis.numberOfChanges()));
+			}
 		}
 		
 		fillRepositoryAnalysis(project, analysis, repository);
@@ -818,7 +827,6 @@ public class GitCrawler extends AbstractScannerDataGenerator {
 				// This filePathname might changed if the file has been renamed during its history.
 				String filePathName = file.replace("\\", "/");
 
-				
 				numberOfFiles++;
 				if ((numberOfFiles % 100) == 0) {
 					totalNumberOfFiles += numberOfFiles;
@@ -845,6 +853,14 @@ public class GitCrawler extends AbstractScannerDataGenerator {
 
 				for (int i = 0; i < tabCommits.length;  i++) {
 					
+					// If this commit has been already processed for this file, we skip the analysis
+					if (analysis.hasBeenAlreadyProcessed(finalFilePathName, tabCommits[i].getId().toString())) {
+						if (log.isDebugEnabled()) {
+							log.debug(String.format("Skipping file %s for commit identifier %s", finalFilePathName, tabCommits[i].getId().toString()));
+						}
+						continue;
+					}
+
 					RevCommit previousCommit = (i == tabCommits.length - 1) ? firstCommit :  tabCommits[i+1];
 					try (ObjectReader reader = repository.newObjectReader()) {
 
@@ -1156,7 +1172,8 @@ public class GitCrawler extends AbstractScannerDataGenerator {
 		// Test if this repository is available in cache.
 		// If this repository exists, return it immediately.
 		//
-		if (cacheDataHandler.hasCommitRepositoryAvailable(project)) {
+		if (cacheDataHandler.retrieveRepositoryState(project) == REPOSITORY_READY) {
+
 			if (log.isDebugEnabled()) {
 				log.debug(String.format("Using cache file for project %s", project.getName()));
 			}
@@ -1176,8 +1193,7 @@ public class GitCrawler extends AbstractScannerDataGenerator {
 
 
 			//
-			// We update the ghosts list, in the project with the up-to-date list of of
-			// ghosts.
+			// We update the ghosts list, in the project with the up-to-date ghosts list.
 			//
 			projectHandler.integrateGhosts(
 				project.getId(), 
@@ -1223,6 +1239,7 @@ public class GitCrawler extends AbstractScannerDataGenerator {
 			// load or generate all raw changes declared in the given repository.
 			//
 			RepositoryAnalysis analysis = retrieveRepositoryAnalysis(project, repo);
+
 			if (log.isDebugEnabled()) {
 				log.debug(String.format("loadChanges (%s) returns %d entries", project.getName(),
 						analysis.numberOfChanges()));
@@ -1284,19 +1301,8 @@ public class GitCrawler extends AbstractScannerDataGenerator {
 			// We detect the ecosystem in the analysis and we save them in the project.
 			this.updateProjectEcosystem(project, analysis);
 
-			// Create a repository.
-			repositoryOfCommit = new BasicCommitRepository();
-
-			// Transfer the analysis data in the result file.
-			analysis.transferRepository(repositoryOfCommit);
-
-			// We update the ghosts contributors.
-			repositoryOfCommit.setUnknownContributors(unknownContributors);
-
-			//
-			// We save the unknown contributors into the "contributing ghosts" collection.
-			//
-			projectHandler.integrateGhosts(project.getId(), GhostsListFactory.getInstance(repositoryOfCommit));
+			// Build the repository of commits
+			repositoryOfCommit = buildCommitRepository(project, analysis, unknownContributors);
 
 			// We generate & save the skyline history for this project.
 			this.generateAndSaveSkyline(project, analysis);
@@ -1308,13 +1314,32 @@ public class GitCrawler extends AbstractScannerDataGenerator {
 		}
 	}
 
+	@Override
+	public CommitRepository buildCommitRepository(Project project, RepositoryAnalysis analysis, Set<String> unknownContributors) throws ApplicationException {
+		// Create a repository.
+		CommitRepository repositoryOfCommit = new BasicCommitRepository();
+
+		// Transfer the analysis data in the result file.
+		analysis.transferRepository(repositoryOfCommit);
+
+		// We update the ghosts contributors.
+		repositoryOfCommit.setUnknownContributors(unknownContributors);
+
+		//
+		// We save the unknown contributors into the "contributing ghosts" collection.
+		//
+		projectHandler.integrateGhosts(project.getId(), GhostsListFactory.getInstance(repositoryOfCommit));
+
+		return repositoryOfCommit;
+	}
+
 	/**
 	 * This private method is call by [@link #parseRepository(Project)}
 	 * 
 	 * @param project  the current project
 	 * @param analysis the given analysis processed by this project
 	 */
-	private void generateAndSaveSkyline(Project project, RepositoryAnalysis analysis) throws ApplicationException {
+	void generateAndSaveSkyline(Project project, RepositoryAnalysis analysis) throws ApplicationException {
 		ProjectLayers projectLayers = skylineProcessor.generateProjectLayers(project, analysis.getChanges());
 		if (log.isDebugEnabled()) {
 			log.debug(String.format("The project %s has generated %d layers", project.getName(),
@@ -1369,7 +1394,7 @@ public class GitCrawler extends AbstractScannerDataGenerator {
 	 * @param analysis the repository analysis
 	 * @throws ApplicationException thrown if any exception occurs
 	 */
-	private void updateProjectEcosystem(Project project, RepositoryAnalysis analysis) throws ApplicationException {
+	void updateProjectEcosystem(Project project, RepositoryAnalysis analysis) throws ApplicationException {
 
 		//
 		// To identify the eco-system, all files are taken in account.
@@ -1487,7 +1512,7 @@ public class GitCrawler extends AbstractScannerDataGenerator {
 				throw e;
 			}
 			if (log.isDebugEnabled()) {
-				log.debug(String.format("The project %s is cloned into the temporay directory %s", project.getName(), project.getLocationRepository()));
+				log.debug(String.format("The project %s is cloned into the directory %s", project.getName(), project.getLocationRepository()));
 			}
 
 			this.tasks.logMessage(DASHBOARD_GENERATION, PROJECT, project.getId(), 
@@ -1673,7 +1698,7 @@ public class GitCrawler extends AbstractScannerDataGenerator {
 	@Override
 	public boolean hasAvailableGeneration(Project project) throws ApplicationException {
 		try {
-			boolean result = cacheDataHandler.hasCommitRepositoryAvailable(project);
+			boolean result = (cacheDataHandler.retrieveRepositoryState(project) == REPOSITORY_READY);
 			if (log.isDebugEnabled()) {
 				log.debug(String.format("hasAvailableGeneration(%d)? : %s", project.getId(), result));
 			}
@@ -1875,8 +1900,8 @@ public class GitCrawler extends AbstractScannerDataGenerator {
 		try {
 
 			switch (project.getConnectionSettings()) {
-				case Global.USER_PASSWORD_ACCESS:
-				case Global.REMOTE_FILE_ACCESS: {
+				case DIRECT_LOGIN:
+				case REMOTE_FILE_LOGIN: {
 					ConnectionSettings settings = connectionSettings(project);
 					URIish uri = new URIish(project.getUrlRepository());
 					try (Transport transport = Transport.open(uri)) {
@@ -1885,7 +1910,7 @@ public class GitCrawler extends AbstractScannerDataGenerator {
 						return transport.openFetch();
 					}
 				}
-				case Global.NO_USER_PASSWORD_ACCESS: {
+				case PUBLIC_LOGIN: {
 					URIish uri = new URIish(project.getUrlRepository());
 					try (Transport transport = Transport.open(uri)) {
 						return transport.openFetch();

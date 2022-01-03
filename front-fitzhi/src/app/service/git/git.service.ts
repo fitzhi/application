@@ -1,10 +1,10 @@
-import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
-import { traceOn } from 'src/app/global';
-import { tap, switchMap, catchError, map } from 'rxjs/operators';
-import { of, Observable, EMPTY, BehaviorSubject } from 'rxjs';
-import { Repository } from 'src/app/data/git/repository';
+import { Injectable } from '@angular/core';
+import { BehaviorSubject, Observable, of } from 'rxjs';
+import { catchError, switchMap, tap } from 'rxjs/operators';
 import { Branch } from 'src/app/data/git/branch';
+import { Repository } from 'src/app/data/git/repository';
+import { traceOn } from 'src/app/global';
 import { MessageService } from 'src/app/interaction/message/message.service';
 
 @Injectable({
@@ -30,7 +30,17 @@ export class GitService {
 	 * @param url the HTTP url given by the end user
 	 */
 	isGithubUrl(url: string): boolean {
-		return url.toLowerCase().indexOf('github.com') !== -1;
+		try {
+			const myUrl = new URL(url);
+			const allowedHosts = [
+				'api.github.com',
+				'www.github.com',
+				'github.com'
+			];
+			return allowedHosts.includes(myUrl.hostname);
+		} catch (TypeError) {
+			return false;
+		}
 	}
 
 	/**
@@ -55,8 +65,6 @@ export class GitService {
 	 * @param url the given API url
 	 */
 	public connect$(url: string): Observable<Repository> {
-
-		console.log('connect$', url);
 
 		const headers = new HttpHeaders();
 		headers.set('Accept', this.headerAccept);

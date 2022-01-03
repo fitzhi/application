@@ -1,23 +1,19 @@
-import { Component, OnInit, ViewChild, Input, OnDestroy, Output, EventEmitter, AfterViewInit } from '@angular/core';
-import { MatTableDataSource } from '@angular/material/table';
-import { MatSort } from '@angular/material/sort';
+import { AfterViewInit, Component, EventEmitter, Input, OnDestroy, OnInit, Output, ViewChild } from '@angular/core';
 import { MatPaginator } from '@angular/material/paginator';
-import { ProjectSonarMetric } from 'src/app/data/sonar/project-sonar-metric';
-import { SonarService } from 'src/app/service/sonar.service';
-import { switchMap, map, catchError, take } from 'rxjs/operators';
-import { Project } from 'src/app/data/project';
-import { Observable, EMPTY, of, BehaviorSubject } from 'rxjs';
+import { MatSort } from '@angular/material/sort';
+import { MatTableDataSource } from '@angular/material/table';
+import { EMPTY, Observable, of } from 'rxjs';
+import { map, switchMap } from 'rxjs/operators';
 import { BaseDirective } from 'src/app/base/base-directive.directive';
 import { Constants } from 'src/app/constants';
 import { ProjectSonarMetricValue } from 'src/app/data/project-sonar-metric-value';
-import { ProjectService } from 'src/app/service/project/project.service';
-import { PanelSwitchEvent } from '../sonar-thumbnails/panel-switch-event';
-import { ElementSchemaRegistry } from '@angular/compiler';
-import { MessageGravity } from 'src/app/interaction/message/message-gravity';
-import { ResponseComponentMeasures } from 'src/app/data/sonar/reponse-component-measures';
-import { MessageService } from 'src/app/interaction/message/message.service';
-import { connectableObservableDescriptor } from 'rxjs/internal/observable/ConnectableObservable';
+import { ProjectSonarMetric } from 'src/app/data/sonar/project-sonar-metric';
 import { traceOn } from 'src/app/global';
+import { MessageGravity } from 'src/app/interaction/message/message-gravity';
+import { MessageService } from 'src/app/interaction/message/message.service';
+import { ProjectService } from 'src/app/service/project/project.service';
+import { SonarService } from 'src/app/service/sonar.service';
+import { PanelSwitchEvent } from '../sonar-thumbnails/panel-switch-event';
 
 @Component({
 	selector: 'app-sonar-metrics',

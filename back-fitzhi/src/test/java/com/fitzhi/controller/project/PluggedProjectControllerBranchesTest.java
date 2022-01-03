@@ -1,11 +1,19 @@
 package com.fitzhi.controller.project;
 
+import static com.fitzhi.service.ConnectionSettingsType.PUBLIC_LOGIN;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import java.util.Arrays;
+
+import com.fitzhi.bean.ProjectHandler;
+import com.fitzhi.controller.ProjectController;
+import com.fitzhi.data.internal.Project;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+
 import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
@@ -19,13 +27,6 @@ import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
-
-import com.fitzhi.Global;
-import com.fitzhi.bean.ProjectHandler;
-import com.fitzhi.controller.ProjectController;
-import com.fitzhi.data.internal.Project;
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
 
 /**
  * <p>
@@ -55,7 +56,7 @@ public class PluggedProjectControllerBranchesTest {
 	public void before() throws Exception {
 		Project project1789 = new Project(1789, "The great revolutionary project");
 		project1789.setActive(true);
-		project1789.setConnectionSettings(Global.NO_USER_PASSWORD_ACCESS);
+		project1789.setConnectionSettings(PUBLIC_LOGIN);
 		project1789.setUrlRepository("https://github.com/fitzhi/application.git");;
 		projectHandler.addNewProject(project1789);
 	}

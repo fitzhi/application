@@ -1,21 +1,17 @@
-import { ComponentFixture, TestBed, TestModuleMetadata, waitForAsync } from '@angular/core/testing';
-
-import { TableGhostsComponent } from './table-ghosts.component';
-import { MatTableModule } from '@angular/material/table';
-import { MatPaginatorModule } from '@angular/material/paginator';
-import { FormsModule } from '@angular/forms';
-import { InitTest } from 'src/app/test/init-test';
 import { Component, ViewChild } from '@angular/core';
-import { BehaviorSubject, of } from 'rxjs';
-import { Unknown } from '../../../../data/unknown';
-import { Collaborator } from 'src/app/data/collaborator';
-import { ProjectGhostsDataSource } from '../project-ghosts-data-source';
-import { Project } from 'src/app/data/project';
-import { StaffService } from 'src/app/tabs-staff/service/staff.service';
+import { ComponentFixture, TestBed, TestModuleMetadata, waitForAsync } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
+import { BehaviorSubject, of } from 'rxjs';
+import { Collaborator } from 'src/app/data/collaborator';
+import { Project } from 'src/app/data/project';
 import { ProjectService } from 'src/app/service/project/project.service';
-import { SunburstCacheService } from '../../service/sunburst-cache.service';
 import { StaffListService } from 'src/app/service/staff-list-service/staff-list.service';
+import { StaffService } from 'src/app/tabs-staff/service/staff.service';
+import { InitTest } from 'src/app/test/init-test';
+import { SunburstCacheService } from '../../service/sunburst-cache.service';
+import { ProjectGhostsDataSource } from '../project-ghosts-data-source';
+import { TableGhostsComponent } from './table-ghosts.component';
+
 
 describe('TableGhostsComponent', () => {
 	let component: TestHostComponent;

@@ -11,7 +11,7 @@
 		"id": 2,
 		"name": "Fitzhi",
 		"connectionSettings": 3,
-		"branch": "release-1.4",
+		"branch": "release-1.7",
 		"urlCodeFactorIO": "https://www.codefactor.io/repository/github/fitzhi/application",
 		"urlRepository": "https://github.com/fitzhi/application",
 		"libraries": [
@@ -30,7 +30,7 @@
 		"name": "Spring Framework",
 		"active": true,
 		"connectionSettings": 3,
-		"branch": "5.2.x",
+		"branch": "5.3.x",
 		"urlRepository": "https://github.com/spring-projects/spring-framework",
 		"sonarProjects": [],
 		"audit": {}
@@ -40,7 +40,7 @@
 		"name": "Spring Boot",
 		"active": true,
 		"connectionSettings": 3,
-		"branch": "2.5.x",
+		"branch": "2.7.x",
 		"urlRepository": "https://github.com/spring-projects/spring-boot",
 		"urlCodeFactorIO": "",
 		"urlSonarServer": "",
@@ -106,7 +106,7 @@
 		"name": "Angular",
 		"active": true,
 		"connectionSettings": 3,
-		"branch": "9.1.x",
+		"branch": "13.0.x",
 		"urlRepository": "https://github.com/angular/angular",
 		"sonarProjects": [],
 		"audit": {}

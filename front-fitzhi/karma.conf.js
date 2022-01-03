@@ -27,6 +27,7 @@ module.exports = function (config) {
     autoWatch: true,
     browsers: ['Chrome', 'ChromeHeadless'],
     singleRun: false,
+    concurrency: 1,
     restartOnFileChange: true  
   });
 };

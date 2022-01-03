@@ -4,7 +4,7 @@ name: Java CI with Maven
 
 on:
   push:
-    branches: [ master, release-1.6 ]
+    branches: [ master, release-1.7 ]
   pull_request:
     branches: [ master ]
 env:
@@ -68,6 +68,8 @@ jobs:
       if: (matrix.os == 'ubuntu-latest')
     - name: Test with maven
       run: mvn --batch-mode test
+      env:
+        TOKEN_FRVIDAL: ${{ secrets.TOKEN_FRVIDAL }}
     - name: Extract branch name
       shell: bash
       run: echo "##[set-output name=branch;]$(echo ${GITHUB_REF##*/})"

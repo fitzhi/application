@@ -2,6 +2,7 @@ package com.fitzhi.bean;
 
 import java.io.IOException;
 
+import com.fitzhi.bean.impl.RepositoryState;
 import com.fitzhi.data.internal.Project;
 import com.fitzhi.data.source.CommitRepository;
 import com.fitzhi.exception.ApplicationException;
@@ -15,13 +16,20 @@ public interface CacheDataHandler {
 
 	/**
 	 * <p>
-	 * Test if previous analysis has already been made, and saved on the file system, for this project
+	 * Test if previous analysis has already been made for this project, and saved on the file system.
 	 * </p>
+	 * This method can return 3 possible values :
+	 * </p>
+	 * <ul>
+	 * <li> {@link RepositoryState#REPOSITORY_NOT_FOUND} if no repository has been found,</li>
+	 * <li> {@link RepositoryState#REPOSITORY_OUT_OF_DATE} if the repository has been found, but is too old,</li>
+	 * <li> {@link RepositoryState#REPOSITORY_READY} if the repository is ready to be used.</li>
+	 * </ul>
 	 * @param project the current project
-	 * @return {@code true} if a previous extraction for this project is available on the file system, {@code false} otherwise
+	 * @return the state of the Fitzhi internal repository.
 	 * @throws IOException if an IOException occurs
 	 */
-	boolean hasCommitRepositoryAvailable (Project project) throws IOException;
+	RepositoryState retrieveRepositoryState (Project project) throws IOException;
 	
 	/**
 	 * <p>

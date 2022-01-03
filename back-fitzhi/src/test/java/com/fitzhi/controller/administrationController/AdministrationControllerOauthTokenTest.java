@@ -79,6 +79,6 @@ public class AdministrationControllerOauthTokenTest {
 	
 	@After
 	public void after() {
-		staffHandler.getStaff().remove(idStaff);
+		staffHandler.removeStaff(idStaff);
 	}
 }

@@ -1,9 +1,5 @@
 package com.fitzhi.bean.impl.ProjectHandler;
 
-import static com.fitzhi.Global.NO_USER_PASSWORD_ACCESS;
-import static com.fitzhi.Global.REMOTE_FILE_ACCESS;
-import static com.fitzhi.Global.USER_PASSWORD_ACCESS;
-
 import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
@@ -17,6 +13,8 @@ import com.fitzhi.bean.ProjectHandler;
 import com.fitzhi.data.encryption.DataEncryption;
 import com.fitzhi.data.internal.Project;
 import com.fitzhi.exception.ApplicationException;
+
+import static com.fitzhi.service.ConnectionSettingsType.*;
 
 /**
  * <p>
@@ -43,7 +41,7 @@ public class ProjectHandlerSaveProjectTest {
 		projectHandler.saveProject(new Project (1789, "The great revolution"));
 		project = projectHandler.lookup(1789);
 		Assert.assertTrue("The great revolution".equals(project.getName()));
-		Assert.assertEquals(0, project.getConnectionSettings());
+		Assert.assertEquals(NO_LOGIN, project.getConnectionSettings());
 		Assert.assertNull(project.getUsername());
 		Assert.assertNull(project.getPassword());
 		Assert.assertNull(project.getConnectionSettingsFile());
@@ -53,7 +51,7 @@ public class ProjectHandlerSaveProjectTest {
 	public void testUsernamePassword() throws ApplicationException {
 
 		Project project = projectHandler.lookup(1789);
-		project.setConnectionSettings(USER_PASSWORD_ACCESS);
+		project.setConnectionSettings(DIRECT_LOGIN);
 		project.setUsername("user_nope");
 		project.setPassword("pass_nope");
 		
@@ -61,7 +59,7 @@ public class ProjectHandlerSaveProjectTest {
 		project.setUrlSonarServer("https://url.ofASonarServer");
 		project.setBranch("theBranchName");
 		project.setUrlCodeFactorIO("https://url.ofCodeFactor.io");
-		project.setConnectionSettings(USER_PASSWORD_ACCESS);
+		project.setConnectionSettings(DIRECT_LOGIN);
 		project.setUsername("frvidal");
 		project.setPassword("mypass");
 
@@ -71,7 +69,7 @@ public class ProjectHandlerSaveProjectTest {
 		Assert.assertEquals("https://url.ofASonarServer", project.getUrlSonarServer());
 		Assert.assertEquals("theBranchName", project.getBranch());
 		Assert.assertEquals("https://url.ofCodeFactor.io", project.getUrlCodeFactorIO());
-		Assert.assertEquals(USER_PASSWORD_ACCESS, project.getConnectionSettings());
+		Assert.assertEquals(DIRECT_LOGIN, project.getConnectionSettings());
 		Assert.assertEquals("frvidal", project.getUsername());
 		Assert.assertNotNull(project.getPassword());
 		
@@ -85,18 +83,18 @@ public class ProjectHandlerSaveProjectTest {
 	public void testConnectionSettingsBackTo0() throws ApplicationException {
 
 		Project project = projectHandler.lookup(1789);
-		project.setConnectionSettings(USER_PASSWORD_ACCESS);
+		project.setConnectionSettings(DIRECT_LOGIN);
 		project.setUrlSonarServer("https://url.ofASonarServer");
 		project.setUsername("user_nope");
 		project.setPassword("pass_nope");
 		
 		project = new Project (1789, "French revolution");
-		project.setConnectionSettings(0);
+		project.setConnectionSettings(NO_LOGIN);
 
 		projectHandler.saveProject(project);
 		project = projectHandler.lookup(1789);
 		Assert.assertTrue("French revolution".equals(project.getName()));
-		Assert.assertEquals(0, project.getConnectionSettings());
+		Assert.assertEquals(NO_LOGIN, project.getConnectionSettings());
 		Assert.assertNull(project.getUrlSonarServer());
 		Assert.assertNull(project.getUsername());
 		Assert.assertNull(project.getPassword());
@@ -106,12 +104,12 @@ public class ProjectHandlerSaveProjectTest {
 	@Test
 	public void testConnectionSettingsFile() throws ApplicationException {
 		Project project = projectHandler.lookup(1789);
-		project.setConnectionSettings(1);
+		project.setConnectionSettings(DIRECT_LOGIN);
 		project.setUsername("user_nope");
 		project.setPassword("pass_nope");
 		
 		project = new Project (1789, "French revolution");
-		project.setConnectionSettings(REMOTE_FILE_ACCESS);
+		project.setConnectionSettings(REMOTE_FILE_LOGIN);
 		project.setUsername("frvidal");
 		project.setPassword("");
 		project.setConnectionSettingsFile("myfile");
@@ -119,7 +117,7 @@ public class ProjectHandlerSaveProjectTest {
 		projectHandler.saveProject(project);
 		project = projectHandler.lookup(1789);
 		Assert.assertTrue("French revolution".equals(project.getName()));
-		Assert.assertEquals(REMOTE_FILE_ACCESS, project.getConnectionSettings());
+		Assert.assertEquals(REMOTE_FILE_LOGIN, project.getConnectionSettings());
 		Assert.assertNull(project.getUsername());
 		Assert.assertNull(project.getPassword());
 		Assert.assertEquals("myfile", project.getConnectionSettingsFile());
@@ -128,17 +126,17 @@ public class ProjectHandlerSaveProjectTest {
 	@Test
 	public void testConnectionSettingsPublic() throws ApplicationException {
 		Project project = projectHandler.lookup(1789);
-		project.setConnectionSettings(1);
+		project.setConnectionSettings(DIRECT_LOGIN);
 		project.setUsername("user_nope");
 		project.setPassword("pass_nope");
 		
 		project = new Project (1789, "French revolution");
-		project.setConnectionSettings(NO_USER_PASSWORD_ACCESS);
+		project.setConnectionSettings(PUBLIC_LOGIN);
 
 		projectHandler.saveProject(project);
 		project = projectHandler.lookup(1789);
 		Assert.assertTrue("French revolution".equals(project.getName()));
-		Assert.assertEquals(NO_USER_PASSWORD_ACCESS, project.getConnectionSettings());
+		Assert.assertEquals(PUBLIC_LOGIN, project.getConnectionSettings());
 		Assert.assertNull(project.getUsername());
 		Assert.assertNull(project.getPassword());
 	}	
@@ -149,14 +147,14 @@ public class ProjectHandlerSaveProjectTest {
 		Project projectPrevious = new Project (1789, "French revolution");
 		projectPrevious.setLocationRepository("previous-clone-location");
 		projectPrevious.setUrlRepository("previous-url");
-		projectPrevious.setConnectionSettings(NO_USER_PASSWORD_ACCESS);
+		projectPrevious.setConnectionSettings(PUBLIC_LOGIN);
 		projectHandler.saveProject(projectPrevious);
 
 		Project project = projectHandler.lookup(1789);
 		Assert.assertEquals("previous-url", project.getUrlRepository());
 
 		Project projectNew = new Project (1789, "New French revolution");
-		projectNew.setConnectionSettings(NO_USER_PASSWORD_ACCESS);
+		projectNew.setConnectionSettings(PUBLIC_LOGIN);
 		projectNew.setUrlRepository("new-url");
 		projectHandler.saveProject(projectNew);
 
@@ -172,7 +170,7 @@ public class ProjectHandlerSaveProjectTest {
 		Project projectPrevious = new Project (1789, "French revolution");
 		projectPrevious.setLocationRepository("clone-location");
 		projectPrevious.setUrlRepository("url");
-		projectPrevious.setConnectionSettings(NO_USER_PASSWORD_ACCESS);
+		projectPrevious.setConnectionSettings(PUBLIC_LOGIN);
 		projectPrevious.setBranch("old-branch");
 		projectHandler.saveProject(projectPrevious);
 
@@ -180,7 +178,7 @@ public class ProjectHandlerSaveProjectTest {
 		Assert.assertEquals("old-branch", project.getBranch());
 
 		Project projectNew = new Project (1789, "New French revolution");
-		projectNew.setConnectionSettings(NO_USER_PASSWORD_ACCESS);
+		projectNew.setConnectionSettings(PUBLIC_LOGIN);
 		projectNew.setUrlRepository("url");
 		projectNew.setBranch("new-branch");
 		projectHandler.saveProject(projectNew);

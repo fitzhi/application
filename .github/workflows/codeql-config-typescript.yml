@@ -1,0 +1,10 @@
+name: "My CodeQL config"
+
+queries:
+ - uses: security-and-quality
+
+paths:
+  - front-fitzhi/src
+paths-ignore: 
+ - '**/*.spec.ts'
+ - front-fitzhi/src/node_modules

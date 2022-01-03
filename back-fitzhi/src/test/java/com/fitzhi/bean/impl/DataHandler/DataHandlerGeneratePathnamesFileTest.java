@@ -50,6 +50,16 @@ public class DataHandlerGeneratePathnamesFileTest {
         Assert.assertEquals("pathnames-data/1789-branch_name-pathsAll.txt", filename);
     }
 
+    @Test
+    public void testSimpleProjectWithSlashes() throws ApplicationException {
+
+        final Project p = new Project(1789, "The French Revolution");
+        p.setBranch("branch/name/1.2.3");
+
+        String filename = dataHandler.generatePathnamesFile(p, PathsType.PATHS_ALL);
+        log.debug(String.format("Filename %s", filename));
+        Assert.assertEquals("pathnames-data/1789-branch_name_1.2.3-pathsAll.txt", filename);
+    }
 
     /**
      * If the project has no branch name set, generatePathnamesFile should sthrow an {@link ApplicationException}.

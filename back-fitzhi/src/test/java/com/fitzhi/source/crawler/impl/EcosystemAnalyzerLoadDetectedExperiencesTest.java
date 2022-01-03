@@ -47,27 +47,24 @@ public class EcosystemAnalyzerLoadDetectedExperiencesTest {
 	@Test
 	public void load() throws ApplicationException {
 
-		// We disable this test.
+		// We disable this test for Windows.
 		// Javaparser does not worl correctly on Windows platform.
-		// FIXME on a Windows based system !!!
-		if (OSType.DETECTED == OSType.Windows) {
-			return;
+		if (OSType.DETECTED != OSType.Windows) {
+			ProjectDetectedExperiences map = ProjectDetectedExperiences.of();
+			final ExperienceParser[] parsers = this.ecosystemAnalyzer.loadExperienceParsers(this.project, ".java$");
+			ecosystemAnalyzer.loadDetectedExperiences(this.project, map, parsers);
+	
+			DetectedExperience de = map.get(DetectedExperience.of(0, 0, new Author("frvidal", "frederic.vidal.perso@gmail.com")));
+			Assert.assertEquals(11, de.getCount());
+	
+			de = map.get(DetectedExperience.of(1, 0, new Author("frvidal", "frederic.vidal.perso@gmail.com")));
+			Assert.assertEquals(8, de.getCount());
+	
+			de = map.get(DetectedExperience.of(0, 0, new Author("fitzhi", "frederic.vidal@fitzhi.com")));
+			Assert.assertEquals(3, de.getCount());
+	
+			de = map.get(DetectedExperience.of(0, 0, new Author("Frédéric", "frederic.vidal.perso@gmail.com")));
+			Assert.assertEquals(5, de.getCount());
 		}
-
-		ProjectDetectedExperiences map = ProjectDetectedExperiences.of();
-		final ExperienceParser[] parsers = this.ecosystemAnalyzer.loadExperienceParsers(this.project, ".java$");
-		ecosystemAnalyzer.loadDetectedExperiences(this.project, map, parsers);
-
-		DetectedExperience de = map.get(DetectedExperience.of(0, 0, new Author("frvidal", "frederic.vidal.perso@gmail.com")));
-		Assert.assertEquals(11, de.getCount());
-
-		de = map.get(DetectedExperience.of(1, 0, new Author("frvidal", "frederic.vidal.perso@gmail.com")));
-		Assert.assertEquals(8, de.getCount());
-
-		de = map.get(DetectedExperience.of(0, 0, new Author("fitzhi", "frederic.vidal@fitzhi.com")));
-		Assert.assertEquals(3, de.getCount());
-
-		de = map.get(DetectedExperience.of(0, 0, new Author("Frédéric", "frederic.vidal.perso@gmail.com")));
-		Assert.assertEquals(5, de.getCount());
 	}
 }

@@ -1,19 +1,17 @@
-import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { FormGroup } from '@angular/forms';
 import { NO_CONTENT } from 'http-status-codes';
 import { BehaviorSubject, EMPTY, Observable, of } from 'rxjs';
 import { switchMap, take, tap } from 'rxjs/operators';
 import { ListCriteria } from 'src/app/data/listCriteria';
+import { environment } from 'src/environments/environment';
 import { DetectionTemplate } from '../../data/detection-template';
 import { Skill } from '../../data/skill';
 import { traceOn } from '../../global';
 import { InternalService } from '../../internal-service';
 import { BackendSetupService } from '../../service/backend-setup/backend-setup.service';
 
-const httpOptions = {
-	headers: new HttpHeaders({ 'Content-Type': 'application/json' })
-};
 
 @Injectable({
 	providedIn: 'root'
@@ -57,6 +55,11 @@ export class SkillService extends InternalService {
 
 	constructor(private httpClient: HttpClient, private backendSetupService: BackendSetupService) {
 		super();
+
+		if (environment.autoConnect) {
+			this.backendSetupService.saveUrl(environment.apiUrl);
+		}
+
 		if (traceOn() && !this.backendSetupService.hasSavedAnUrl()) {
 			console.log('Skills loading is postponed due to the lack of backend URL.');
 		}

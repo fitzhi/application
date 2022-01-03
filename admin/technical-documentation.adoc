@@ -1,5 +1,10 @@
 
-== Install a new branch 
+== Complete a release and start a new branch 
+
+=== Upgrade the version
+
+Upgrade the version inside the file VERSION_FITZHI. +
+Update the release 1.n-SNAPSHOT to 1.n.
 
 === Working on GitHub
 

@@ -1,21 +1,9 @@
-import { ComponentFixture, TestBed, TestModuleMetadata, waitForAsync } from '@angular/core/testing';
-import { ListFilenamesComponent } from './list-filenames.component';
-import { MatTableDataSource, MatTableModule } from '@angular/material/table';
-import { MatSortModule } from '@angular/material/sort';
-import { MatPaginatorModule } from '@angular/material/paginator';
-import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { MatDatepickerModule } from '@angular/material/datepicker';
-import { MatNativeDateModule, MatOptionModule } from '@angular/material/core';
-import { MatInputModule } from '@angular/material/input';
-import { MatFormFieldModule } from '@angular/material/form-field';
-import { MatSelectModule } from '@angular/material/select';
-import { MatDialogModule } from '@angular/material/dialog';
-import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { HttpClientTestingModule } from '@angular/common/http/testing';
-import { InitTest } from 'src/app/test/init-test';
 import { Component } from '@angular/core';
-import { FilenamesDataSource } from '../filenames-data-source';
+import { ComponentFixture, TestBed, TestModuleMetadata, waitForAsync } from '@angular/core/testing';
+import { MatTableDataSource } from '@angular/material/table';
 import { Filename } from 'src/app/data/filename';
+import { InitTest } from 'src/app/test/init-test';
+import { ListFilenamesComponent } from './list-filenames.component';
 
 
 describe('ListFilenamesComponent', () => {

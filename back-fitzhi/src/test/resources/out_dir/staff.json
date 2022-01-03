@@ -1,1 +1,162 @@
-{"1":{"idStaff":1,"firstName":"Frédéric","lastName":"VIDAL","nickName":"fvidal","login":"frvidal","email":"frederic.vidal.pro@gmail.com","password":"5NZ3N2PNEGgTu/8mTkawGQ\u003d\u003d","forceActiveState":false,"active":false,"dateInactive":{"year":2020,"month":10,"day":29},"typeOfApplication":0,"external":false,"missions":[{"idStaff":1,"idProject":777,"name":"First test","firstCommit":{"year":2019,"month":6,"day":19},"lastCommit":{"year":2019,"month":6,"day":27},"numberOfCommits":6,"numberOfFiles":9,"staffActivitySkill":{}},{"idStaff":1,"idProject":1,"name":"TEST 1","numberOfCommits":0,"numberOfFiles":0,"staffActivitySkill":{}}],"experiences":[],"authorities":[{"authority":"ROLE_TRUSTED_USER"}]},"2":{"idStaff":2,"firstName":"Georges","lastName":"LUCAS","nickName":"glucas","login":"glucas","email":"glucas@gmail.com","forceActiveState":false,"active":true,"typeOfApplication":0,"external":false,"missions":[],"experiences":[],"authorities":[{"authority":"ROLE_TRUSTED_USER"}]},"3":{"idStaff":3,"firstName":"Tintin","lastName":", just Tintin","nickName":"tintin","login":"tintin","email":"tintin@gmail.com","forceActiveState":false,"active":true,"typeOfApplication":0,"external":false,"missions":[],"experiences":[],"authorities":[{"authority":"ROLE_TRUSTED_USER"}]},"4":{"idStaff":4,"firstName":"Captain","lastName":"Haddock","nickName":"haddock","login":"haddock","email":"captain_haddock@gmail.com","forceActiveState":false,"active":true,"typeOfApplication":0,"external":false,"missions":[],"experiences":[],"authorities":[{"authority":"ROLE_TRUSTED_USER"}]},"5":{"idStaff":5,"firstName":"Captain","lastName":"America","nickName":"cap_ame","login":"cap_ame","email":"captain_america@gmail.com","forceActiveState":false,"active":true,"typeOfApplication":0,"external":false,"missions":[],"experiences":[],"authorities":[{"authority":"ROLE_TRUSTED_USER"}]},"6":{"idStaff":6,"login":"theUser","password":"thePassword","forceActiveState":false,"active":true,"typeOfApplication":0,"external":false,"missions":[],"experiences":[],"authorities":[{"authority":"ROLE_TRUSTED_USER"}]},"7":{"idStaff":7,"login":"myLogin","password":"znCdOT33RyFBM2xHNC11jA\u003d\u003d","forceActiveState":false,"active":true,"typeOfApplication":0,"external":false,"missions":[],"experiences":[],"authorities":[{"authority":"ROLE_TRUSTED_USER"}]}}
+{
+    "1": {
+        "idStaff": 1,
+        "firstName": "Frédéric",
+        "lastName": "VIDAL",
+        "nickName": "fvidal",
+        "login": "frvidal",
+        "email": "frederic.vidal.pro@gmail.com",
+        "password": "$2a$10$oat2PBxenkFBIOW7PQJFD.ywZ9q/MAtyBf0bknWCwzb340NpPsZBa",
+        "forceActiveState": false,
+        "active": true,
+        "dateInactive": {
+            "year": 2020,
+            "month": 10,
+            "day": 29
+        },
+        "typeOfApplication": 0,
+        "external": false,
+        "missions": [
+            {
+                "idStaff": 1,
+                "idProject": 777,
+                "name": "First test",
+                "firstCommit": {
+                    "year": 2019,
+                    "month": 6,
+                    "day": 19
+                },
+                "lastCommit": {
+                    "year": 2019,
+                    "month": 6,
+                    "day": 27
+                },
+                "numberOfCommits": 6,
+                "numberOfFiles": 9,
+                "staffActivitySkill": {}
+            },
+            {
+                "idStaff": 1,
+                "idProject": 1,
+                "name": "TEST 1",
+                "numberOfCommits": 0,
+                "numberOfFiles": 0,
+                "staffActivitySkill": {}
+            }
+        ],
+        "experiences": [],
+        "authorities": [
+            {
+                "authority": "ROLE_TRUSTED_USER"
+            }
+        ]
+    },
+    "2": {
+        "idStaff": 2,
+        "firstName": "Georges",
+        "lastName": "LUCAS",
+        "nickName": "glucas",
+        "login": "glucas",
+        "email": "glucas@gmail.com",
+        "forceActiveState": false,
+        "active": true,
+        "typeOfApplication": 0,
+        "external": false,
+        "missions": [],
+        "experiences": [],
+        "authorities": [
+            {
+                "authority": "ROLE_TRUSTED_USER"
+            }
+        ]
+    },
+    "3": {
+        "idStaff": 3,
+        "firstName": "Tintin",
+        "lastName": ", just Tintin",
+        "nickName": "tintin",
+        "login": "tintin",
+        "email": "tintin@gmail.com",
+        "forceActiveState": false,
+        "active": true,
+        "typeOfApplication": 0,
+        "external": false,
+        "missions": [],
+        "experiences": [],
+        "authorities": [
+            {
+                "authority": "ROLE_TRUSTED_USER"
+            }
+        ]
+    },
+    "4": {
+        "idStaff": 4,
+        "firstName": "Captain",
+        "lastName": "Haddock",
+        "nickName": "haddock",
+        "login": "haddock",
+        "email": "captain_haddock@gmail.com",
+        "forceActiveState": false,
+        "active": true,
+        "typeOfApplication": 0,
+        "external": false,
+        "missions": [],
+        "experiences": [],
+        "authorities": [
+            {
+                "authority": "ROLE_TRUSTED_USER"
+            }
+        ]
+    },
+    "5": {
+        "idStaff": 5,
+        "firstName": "Captain",
+        "lastName": "America",
+        "nickName": "cap_ame",
+        "login": "cap_ame",
+        "email": "captain_america@gmail.com",
+        "forceActiveState": false,
+        "active": true,
+        "typeOfApplication": 0,
+        "external": false,
+        "missions": [],
+        "experiences": [],
+        "authorities": [
+            {
+                "authority": "ROLE_TRUSTED_USER"
+            }
+        ]
+    },
+    "6": {
+        "idStaff": 6,
+        "login": "theUser",
+        "password": "thePassword",
+        "forceActiveState": false,
+        "active": true,
+        "typeOfApplication": 0,
+        "external": false,
+        "missions": [],
+        "experiences": [],
+        "authorities": [
+            {
+                "authority": "ROLE_TRUSTED_USER"
+            }
+        ]
+    },
+    "7": {
+        "idStaff": 7,
+        "login": "myLogin",
+        "password": "znCdOT33RyFBM2xHNC11jA\u003d\u003d",
+        "forceActiveState": false,
+        "active": true,
+        "typeOfApplication": 0,
+        "external": false,
+        "missions": [],
+        "experiences": [],
+        "authorities": [
+            {
+                "authority": "ROLE_TRUSTED_USER"
+            }
+        ]
+    }
+}

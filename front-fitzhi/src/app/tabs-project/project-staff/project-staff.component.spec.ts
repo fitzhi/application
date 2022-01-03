@@ -1,18 +1,19 @@
-import { ComponentFixture, TestBed, TestModuleMetadata, waitForAsync } from '@angular/core/testing';
-
-import { ProjectStaffComponent } from './project-staff.component';
+import { HttpClientTestingModule, HttpTestingController } from '@angular/common/http/testing';
 import { Component, ViewChild } from '@angular/core';
-import { Project } from 'src/app/data/project';
-import { CinematicService } from 'src/app/service/cinematic.service';
-import { InitTest } from 'src/app/test/init-test';
-import { ProjectService } from 'src/app/service/project/project.service';
-import { Constants } from 'src/app/constants';
-import { HttpTestingController, HttpClientTestingModule } from '@angular/common/http/testing';
-import { MatTableModule } from '@angular/material/table';
-import { MatSortModule } from '@angular/material/sort';
+import { ComponentFixture, TestBed, TestModuleMetadata, waitForAsync } from '@angular/core/testing';
 import { MatPaginatorModule } from '@angular/material/paginator';
+import { MatSortModule } from '@angular/material/sort';
+import { MatTableModule } from '@angular/material/table';
+import { Constants } from 'src/app/constants';
+import { Project } from 'src/app/data/project';
 import { BackendSetupService } from 'src/app/service/backend-setup/backend-setup.service';
+import { CinematicService } from 'src/app/service/cinematic.service';
+import { ProjectService } from 'src/app/service/project/project.service';
+import { InitTest } from 'src/app/test/init-test';
+import { environment } from 'src/environments/environment';
 import { ProjectStaffService } from '../project-staff-service/project-staff.service';
+import { ProjectStaffComponent } from './project-staff.component';
+
 
 describe('ProjectStaffComponent', () => {
 	let component: TestHostComponent;
@@ -69,9 +70,11 @@ describe('ProjectStaffComponent', () => {
 		InitTest.addImports(testConf.imports);
 		InitTest.addProviders(testConf.providers);
 		TestBed.configureTestingModule(testConf).compileComponents();
+
 		backendSetupService = TestBed.inject(BackendSetupService);
-		backendSetupService.saveUrl('http://localhost:8080');
-		console.log ('beforeEach(async(()...');
+		spyOn(backendSetupService, 'hasSavedAnUrl').and.returnValue(true);
+		spyOn(backendSetupService, 'url').and.returnValue(environment.apiUrl + '/api');
+
 	}));
 
 	beforeEach(() => {
@@ -79,33 +82,24 @@ describe('ProjectStaffComponent', () => {
 		fixture = TestBed.createComponent(TestHostComponent);
 		component = fixture.componentInstance;
 		fixture.detectChanges();
-		console.log ('beforeEach(sync(()...');
 	});
 
-	it('We should create', () => {
+	it('should be instanciated successfully.', () => {
 		expect(component).toBeTruthy();
 	});
 
-	it('We do not create the dataSource as long as the end-user did not click on the \'staff\' tab', () => {
+	it('should not create the dataSource as long as the end-user did not click on the \'staff\' tab.', () => {
 		expect(component.projectStaffComponent.dataSource).toBeUndefined();
 	});
 
-	it('We do not create the dataSource as long as the application did not load a project', () => {
+	it('should not create the dataSource as long as the application did not load a project', () => {
 		const cinematicService = TestBed.inject(CinematicService);
 		cinematicService.tabProjectActivatedSubject$.next(Constants.PROJECT_IDX_TAB_STAFF);
 		fixture.detectChanges();
 		expect(component.projectStaffComponent.dataSource).toBeUndefined();
 	});
 
-	it('We do not create the dataSource as long as the application did not load a project', () => {
-		const cinematicService = TestBed.inject(CinematicService);
-		cinematicService.tabProjectActivatedSubject$.next(Constants.PROJECT_IDX_TAB_STAFF);
-
-		fixture.detectChanges();
-		expect(component.projectStaffComponent.dataSource).toBeUndefined();
-	});
-
-	it('We create the dataSource when the project has been loaded, and when the dedicated tab has been clicked', () => {
+	it('should create the dataSource when the project has been loaded, and when the dedicated tab has been clicked', () => {
 		const cinematicService = TestBed.inject(CinematicService);
 		cinematicService.tabProjectActivatedSubject$.next(Constants.PROJECT_IDX_TAB_STAFF);
 
@@ -113,7 +107,7 @@ describe('ProjectStaffComponent', () => {
 		projectService.project = new Project(1789, 'the revolutionary project');
 		projectService.projectLoaded$.next(true);
 
-		let req = httpMock.expectOne('http://localhost:8080/api/project/1789/contributors');
+		let req = httpMock.expectOne('URL_OF_SERVER/api/project/1789/contributors');
 		expect(req.request.method).toBe('GET');
 		req.flush(mockContributorDTO);
 
@@ -121,7 +115,7 @@ describe('ProjectStaffComponent', () => {
 		expect(2).toEqual(component.projectStaffComponent.dataSource.data.length);
 		fixture.detectChanges();
 
-		req = httpMock.expectOne('http://localhost:8080/api/skill');
+		req = httpMock.expectOne('URL_OF_SERVER/api/skill');
 		expect(req.request.method).toBe('GET');
 		req.flush(mockSkills);
 

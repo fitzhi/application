@@ -35,6 +35,7 @@ public class SkylineController {
 	 */
 	@Autowired
 	SkylineProcessor skylineProcessor;
+	
 	@ResponseBody
 	@ApiOperation(
 		value = "Generate the data required for the rising skyline widget."

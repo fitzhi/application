@@ -22,6 +22,21 @@ export class HttpTokenInterceptor implements HttpInterceptor {
 	constructor(
 		private tokenService: TokenService) { }
 
+
+	/**
+	 * Extract the host from the given URL.
+	 * @param url the given URL
+	 * @returns the extracted host from the URL
+	 */
+	public static extractHost(url: String) {
+		const matches = url.match(/^https?\:\/\/([^\/?#]+)(?:[\/?#]|$)/i);
+		const domain = matches && matches[1];
+		if (!domain) {
+			console.error('Cannot extract the hostname from %s', url);
+		}
+		return domain;
+	}
+
 	/**
 	 * Intercept the HTTP request.
 	 * @param req the current request
@@ -37,6 +52,8 @@ export class HttpTokenInterceptor implements HttpInterceptor {
 		if (localStorage.getItem(this.NO_SECURITY) === '1') {
 			return next.handle(req);
 		}
+
+		const host = HttpTokenInterceptor.extractHost(req.url);
 
 		if 	(req.url.includes('/api/referential/')
 
@@ -54,9 +71,9 @@ export class HttpTokenInterceptor implements HttpInterceptor {
 			|| req.url.includes('/api/server/version')
 
 			// GitHub URL
-			|| req.url.includes('https://api.github.com')) {
+			|| (host && (host  === 'api.github.com'))) {
 
-			return next.handle(req);
+				return next.handle(req);
 		}
 
 		return next.handle(this.tokenService.addToken(req)).pipe(

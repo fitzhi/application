@@ -13,8 +13,6 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { BehaviorSubject } from 'rxjs';
 import { Contributor } from 'src/app/data/contributor';
 import { Filename } from 'src/app/data/filename';
-import { ContributorsDataSource } from './contributors-data-source';
-import { FilenamesDataSource } from './filenames-data-source';
 import { ListContributorsComponent } from './list-contributors/list-contributors.component';
 import { ListFilenamesComponent } from './list-filenames/list-filenames.component';
 import { NodeDetailComponent } from './node-detail.component';

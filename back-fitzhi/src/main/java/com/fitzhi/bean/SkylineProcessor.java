@@ -3,6 +3,7 @@ package com.fitzhi.bean;
 import java.io.IOException;
 import java.util.List;
 
+import com.fitzhi.bean.impl.SkylineProcessorImpl;
 import com.fitzhi.data.internal.Project;
 import com.fitzhi.data.internal.ProjectBuilding;
 import com.fitzhi.data.internal.ProjectLayer;
@@ -14,7 +15,7 @@ import com.fitzhi.exception.ApplicationException;
 /**
  * <p>
  * This interface is in charge of the generation of the Fitzhì skyline. 
- * The main implementation (and currently the single one) is 
+ * The main implementation (and currently the single one) is {@link SkylineProcessorImpl}
  * </p>
  * @author Fr&eacute;d&eacute;ric VIDAL
  */

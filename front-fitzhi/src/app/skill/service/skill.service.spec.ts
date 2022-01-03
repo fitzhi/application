@@ -1,7 +1,6 @@
 import { HttpClientTestingModule, HttpTestingController } from '@angular/common/http/testing';
 import { Component } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { Mock } from 'protractor/built/driverProviders';
 import { of } from 'rxjs';
 import { take } from 'rxjs/operators';
 import { Skill } from 'src/app/data/skill';
@@ -15,6 +14,7 @@ describe('skillService', () => {
 	let service: SkillService;
 	let httpTestingController: HttpTestingController;
 	let backendSetupService: BackendSetupService;
+	let httpMock: HttpTestingController;
 
 	@Component({
 		selector: 'app-dummy-component',
@@ -35,8 +35,11 @@ describe('skillService', () => {
 		component = fixture.componentInstance;
 
 		service = TestBed.inject(SkillService);
-
 		httpTestingController = TestBed.inject(HttpTestingController);
+		httpMock = TestBed.inject(HttpTestingController);
+
+		backendSetupService = TestBed.inject(BackendSetupService);
+		spyOn(backendSetupService, 'hasSavedAnUrl').and.returnValue(false);
 
 		fixture.detectChanges();
 	});
@@ -100,6 +103,10 @@ describe('skillService', () => {
 
 	it('should load the skills from the backend server.', done => {
 
+		service.allSkillsLoaded$.pipe(take(1)).subscribe({
+			next: doneAndOk => expect(doneAndOk).toBeFalse()
+		});
+
 		backendSetupService = TestBed.inject(BackendSetupService);
 		spyOn(backendSetupService, 'url').and.returnValue('URL_OF_SERVER/api');
 
@@ -113,8 +120,6 @@ describe('skillService', () => {
 			next: doneAndOk => expect(doneAndOk).toBeTrue(),
 			complete: () =>	done()
 		});
-
-		httpTestingController.verify();
 
 	});
 

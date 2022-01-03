@@ -115,11 +115,14 @@ public class ScheduledTasks {
 	@Scheduled(cron = "${cron.tasks.report}")
 	public void tasksReport() {
 		try {
-			// For an unknown, this method is executed multiple times when the cron is equal to '* 0/5 * * * ?'
-			if (minute != Calendar.getInstance().get(Calendar.MINUTE)) {
-				minute = Calendar.getInstance().get(Calendar.MINUTE);
-				if (log.isInfoEnabled()) {
-					log.info(Global.LN + "Current active tasks :" + Global.LN + asyncTask.trace() + Global.LN);
+			// For an unknown reason, this method is executed multiple times when the cron is equal to '* 0/5 * * * ?'.
+			// We use a minute based singleton.
+			synchronized(new Object()) {
+				if ((minute != Calendar.getInstance().get(Calendar.MINUTE)) && (minute != Calendar.getInstance().get(Calendar.MINUTE) - 1)) {
+					minute = Calendar.getInstance().get(Calendar.MINUTE);
+					if (log.isInfoEnabled()) {
+						log.info(Global.LN + "Current active tasks :" + Global.LN + asyncTask.trace() + Global.LN);
+					}
 				}
 			}
 		} catch (Exception e) {

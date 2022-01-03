@@ -25,7 +25,6 @@ import org.junit.Test;
 	public void displayEncryptData() throws Exception {
 		String data = DataEncryption.encryptMessage("thePassword");
 		Assert.assertFalse("thePassword".equals(data));
-		// System.out.println(DataEncryption.encryptMessage("thePassword"));
 	}
 
 	@Test

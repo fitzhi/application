@@ -1,0 +1,49 @@
+[
+	{
+		"idStaff": 1,
+		"firstName": "one",
+		"lastName": "one",
+		"nickName": "one",
+		"login": "one",
+		"email": "one@nope.com",
+		"level": "Exp DEV",
+		"forceActiveState": true,
+		"active": false,
+		"dateInactive": null,
+		"application": null,
+		"typeOfApplication": 0,
+		"external": false,
+		"missions": [
+			{
+				"idStaff": 1,
+				"idProject": 1,
+				"name": "Nope",
+				"firstCommit": "2018-08-01",
+				"lastCommit": "2021-08-01",
+				"numberOfCommits": 1,
+				"numberOfFiles": 1
+			},
+			{
+				"idStaff": 1,
+				"idProject": 1,
+				"name": "Nope",
+				"firstCommit": "2019-08-01",
+				"lastCommit": "2021-08-01",
+				"numberOfCommits": 1,
+				"numberOfFiles": 1
+			}
+		],
+		"experiences": [],
+		"authorities": [
+			{
+				"authority": "ROLE_TRUSTED_USER"
+			}
+		],
+		"username": "admin",
+		"enabled": true,
+		"empty": false,
+		"accountNonExpired": true,
+		"accountNonLocked": true,
+		"credentialsNonExpired": true
+	}
+]

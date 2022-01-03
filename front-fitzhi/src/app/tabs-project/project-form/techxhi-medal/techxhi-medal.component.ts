@@ -1,10 +1,10 @@
-import { Component, OnInit, Input, AfterViewInit, OnDestroy, EventEmitter, Output } from '@angular/core';
-import { ReferentialService } from 'src/app/service/referential/referential.service';
+import { Component, Input, OnDestroy, OnInit } from '@angular/core';
+import { take } from 'rxjs/operators';
 import { BaseDirective } from 'src/app/base/base-directive.directive';
 import { Constants } from 'src/app/constants';
-import { take } from 'rxjs/operators';
-import { ProjectService } from 'src/app/service/project/project.service';
 import { CinematicService } from 'src/app/service/cinematic.service';
+import { ProjectService } from 'src/app/service/project/project.service';
+import { ReferentialService } from 'src/app/service/referential/referential.service';
 
 @Component({
 	selector: 'app-techxhi-medal',

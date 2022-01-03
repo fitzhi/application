@@ -130,7 +130,7 @@ export class ProjectFormSkillHandler {
 	logProjectSkills() {
 		if (traceOn()) {
 			console.groupCollapsed('list of skills for project ' + this.projectService.project.name);
-			for (const [idSkill, profilSkill] of this.projectService.project.mapSkills) {
+			for (const [idSkill, _] of this.projectService.project.mapSkills) {
 				console.log(idSkill, this.skillService.title(idSkill));
 			}
 			console.groupEnd();

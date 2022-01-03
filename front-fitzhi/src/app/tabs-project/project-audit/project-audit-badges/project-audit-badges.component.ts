@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angular/core';
+import { Component, EventEmitter, OnDestroy, OnInit, Output } from '@angular/core';
 import { BehaviorSubject } from 'rxjs';
 import { BaseDirective } from 'src/app/base/base-directive.directive';
 import { AttachmentFile } from 'src/app/data/AttachmentFile';

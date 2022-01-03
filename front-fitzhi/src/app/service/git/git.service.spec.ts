@@ -1,8 +1,7 @@
-import { TestBed, TestModuleMetadata, waitForAsync } from '@angular/core/testing';
-
-import { GitService } from './git.service';
 import { HttpClientModule } from '@angular/common/http';
-import { subscribeOn } from 'rxjs/operators';
+import { TestBed, TestModuleMetadata, waitForAsync } from '@angular/core/testing';
+import { GitService } from './git.service';
+
 
 describe('GitService', () => {
 	let service: GitService;
@@ -51,7 +50,7 @@ describe('GitService', () => {
 
 	it('should handle correctly the method with a valid URL.', () => {
 		expect(service).toBeTruthy();
-		expect(service.isGithubUrl('htpps://www.github.com/fitzhi/application')).toBeTrue();
+		expect(service.isGithubUrl('https://www.github.com/fitzhi/application')).toBeTrue();
 	});
 
 	it('should handle correctly the method generateUrlApiGithub(...) with a GITHUB url ', () => {

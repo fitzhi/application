@@ -5,6 +5,10 @@ package com.fitzhi.bean.impl;
 
 import static com.fitzhi.Error.CODE_IO_EXCEPTION;
 
+import static com.fitzhi.bean.impl.RepositoryState.REPOSITORY_NOT_FOUND;
+import static com.fitzhi.bean.impl.RepositoryState.REPOSITORY_READY;
+import static com.fitzhi.bean.impl.RepositoryState.REPOSITORY_OUT_OF_DATE;
+
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileReader;
@@ -59,7 +63,7 @@ public class CacheDataHandlerImpl implements CacheDataHandler {
 	private static Gson gson = new GsonBuilder().create();
 	
 	@Override
-	public boolean hasCommitRepositoryAvailable(Project project) throws IOException {
+	public RepositoryState retrieveRepositoryState(Project project) throws IOException {
 		Path savedProject = Paths.get(generateCacheFilename(project));
 		if (log.isDebugEnabled()) {
 			log.debug(String.format("Examining %s", savedProject.toFile().getAbsolutePath()));
@@ -68,12 +72,12 @@ public class CacheDataHandlerImpl implements CacheDataHandler {
 			FileTime lastModified = Files.getLastModifiedTime(savedProject);
 			if ( lastModified.toMillis() + (cacheDuration * NUMBER_OF_MS_PER_DAY) < System.currentTimeMillis() ) {
 				cleanUp(savedProject);
-				return false;
+				return REPOSITORY_OUT_OF_DATE;
 			} else {
-				return true;
+				return REPOSITORY_READY;
 			}
 		}
-		return false;
+		return REPOSITORY_NOT_FOUND;
 	}
 	
 	/**
@@ -114,7 +118,7 @@ public class CacheDataHandlerImpl implements CacheDataHandler {
 		
 		//Use try-with-resource to get auto-closeable buffered writer instance close
 		try (BufferedWriter writer = Files.newBufferedWriter(path)) {
-		    gson.toJson(repository, writer);
+			gson.toJson(repository, writer);
 		}
 	}
 	

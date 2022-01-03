@@ -1,6 +1,5 @@
 // This file is required by karma.conf.js and loads recursively all the .spec and framework files
-
-import 'zone.js/dist/zone-testing';
+import 'zone.js/testing';
 import { getTestBed } from '@angular/core/testing';
 import {
 	BrowserDynamicTestingModule,
@@ -17,16 +16,18 @@ getTestBed().initTestEnvironment(
 // Then we find all the tests
 
 const context = require.context('./', true, /\.spec\.ts$/);
-// const context = require.context('./', true,  /summary\.service\.spec\.ts$/);
-// const context = require.context('./', true,  /summary\.component\.spec\.ts$/);
+
+// const context = require.context('./', true,  /git\.service\.spec\.ts$/);
+// const context = require.context('./', true,  /http-token-interceptor\.spec\.ts$/);
+// const context = require.context('./', true,  /starfield-header\.component\.spec\.ts$/);
 // const context = require.context('./', true,  /dashboard\.service\.calculateGeneralAverage\.spec\.ts$/);
-// const context = require.context('./', true,  /starfield\.service\.spec\.ts$/);
+// const context = require.context('./', true,  /turnover\.service\.spec\.ts$/);
 // const context = require.context('./', true,  /starfield-broadcastConstellations\.service\.spec\.ts$/);
-// const context = require.context('./', true,  /audit-graphic-2-badges\.component\.spec\.ts$/);
-// const context = require.context('./', true,  /fitzhi-dashboard-help-popper-treemap-skills\.component\.spec\.ts$/);
+// const context = require.context('./', true,  /backend-setup\.component\.spec\.ts$/);
+// const context = require.context('./', true,  /app\.component\.spec\.ts$/);
 // const context = require.context('./', true,  /treemap-skills-chart\.component\.spec\.ts$/);
-// const context = require.context('./', true,  /project-sunburst-with-data\.component\.spec\.ts$/);
-// const context = require.context('./', true,  /list-skill\.component\.spec\.ts$/);
+// const context = require.context('./', true,  /project-inactivate\.component\.spec\.ts$/);
+// const context = require.context('./', true,  /project-staff\.component\.spec\.ts$/);
 // const context = require.context('./', true,  /http-refresh-token-error-interceptor\.spec\.ts$/);
 // const context = require.context('./', true,  /project-appropriateDistribution\.service\.spec\.ts$/);
 // const context = require.context('./', true,  /skill\.service\.spec\.ts$/);

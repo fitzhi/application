@@ -92,7 +92,11 @@ export class TreemapProjectsChartComponent extends TreemapChartDirective impleme
 	 * @returns
 	 */
 	labelFormatting(tile) {
-		return `<p>${(tile.label)}</p>`;
+		console.log (tile);
+		return `
+			<strong>${(tile.label)}</strong>
+			<br/>
+			<em>${tile.value.toLocaleString()} lines</em>`;
 	}
 
 	/**
@@ -100,7 +104,7 @@ export class TreemapProjectsChartComponent extends TreemapChartDirective impleme
 	 * @returns
 	 */
 	public valueFormatting(value) {
-		return value.toLocaleString() + ' lines';
+		return ``;
 	}
 
 	ngOnDestroy() {

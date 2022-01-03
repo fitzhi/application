@@ -23,7 +23,7 @@ public class ApplicationReadyListener implements ApplicationListener<Application
 
 	/**
 	 * <p>
-	 * Start the analyse after spring boot completion.
+	 * Start the analysis after spring boot completion.
 	 * </p>
 	 * {@code true} we start the global generation
 	 */

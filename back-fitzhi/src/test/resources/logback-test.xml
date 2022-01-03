@@ -12,6 +12,8 @@
 		<appender-ref ref="STDOUT" />
 	</root>
 
+<!-- Parking for my logging. 
+
  	<root level="INFO">
 		<appender-ref ref="STDOUT" />
 	</root>
@@ -21,7 +23,12 @@
 		<appender-ref ref="STDOUT" />
 	</logger>
 
-<!-- Parking for my logging. 
+
+ 	<logger name="com.fitzhi.source.crawler.git.GitCrawler" additivity="false">
+		<level value="WARN" />
+		<appender-ref ref="STDOUT" />
+	</logger>
+
 
  
 	<logger name="com.fitzhi.source.crawler.javaparser.MarkAnnotationExpParser" additivity="false">

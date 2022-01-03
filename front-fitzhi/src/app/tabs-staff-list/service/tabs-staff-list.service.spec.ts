@@ -1,13 +1,13 @@
 import { TestBed, TestModuleMetadata } from '@angular/core/testing';
-
-import { TabsStaffListService } from './tabs-staff-list.service';
-import { InitTest } from 'src/app/test/init-test';
-import { StaffService } from 'src/app/tabs-staff/service/staff.service';
 import { of } from 'rxjs';
 import { take } from 'rxjs/operators';
-import { SkillService } from 'src/app/skill/service/skill.service';
 import { Skill } from 'src/app/data/skill';
 import { MessageService } from 'src/app/interaction/message/message.service';
+import { SkillService } from 'src/app/skill/service/skill.service';
+import { StaffService } from 'src/app/tabs-staff/service/staff.service';
+import { InitTest } from 'src/app/test/init-test';
+import { TabsStaffListService } from './tabs-staff-list.service';
+
 
 describe('TabsStaffListService', () => {
 

@@ -118,7 +118,7 @@ public class DataChart implements Serializable {
 	 * @param latestCommit date of the latest commit.
 	 * @param committers Array of staff identifiers who are committed in this source file
 	 */
-		// We register the filename in the source files set
+	// We register the filename in the source files set
 	public void injectFile(final DataChart element, String[] dirAndFilename, final long importance, final LocalDate latestCommit, final int[] committers) {
 		if (log.isDebugEnabled()) {
 			log.debug(String.format(

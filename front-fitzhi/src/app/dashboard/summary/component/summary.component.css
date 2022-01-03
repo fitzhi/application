@@ -3,13 +3,7 @@
 	height: 100%;
 }
 
-
-#summaries {
-	display: flex;
-	width: 100%;
-}
-
-#logo, #small-logo {
+#logo, #small-logo, span.turnover {
 	background: -webkit-linear-gradient(var(--color-selected), var(--color-error));
 	background-clip: text;
 	-webkit-background-clip: text;
@@ -37,3 +31,45 @@ div.summary {
 #general-average {
 	background-color: transparent;
 }
+
+#invitation {
+	height: 80px;
+	bottom: 20px;
+	right: 0;
+	left: var(--sidebar-width);
+}
+
+#invitation div {
+	margin: 0 auto;
+	width: 900px;
+}
+
+#thumbnail-turnover-penultimate-year  {
+	background-color: transparent;
+}
+
+em.icon-git {
+	font-size: 50px;
+	color: orangered;
+}
+
+span.turnover {
+	font-size: 80px;
+	font-weight: 700;
+}
+
+td.numerator {
+	padding-bottom: 3px;
+	border-bottom: 1px;
+	border-top: 0;
+	border-left: 0;
+	border-right: 0;
+	border-style: solid; 
+	border-color: black;
+}
+
+td.denominator {
+	text-align: center;
+	padding-top: 3px;
+}
+

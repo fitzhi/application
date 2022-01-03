@@ -17,6 +17,7 @@ import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import com.fitzhi.bean.Administration;
@@ -51,6 +52,12 @@ public class AdministrationImpl implements Administration {
 	@Value("${allowSelfRegistration}")
 	private boolean allowSelfRegistration;
 	
+	/**
+	 * The password encoder declared inside the application server.
+	 */
+	@Autowired
+	private PasswordEncoder passwordEncoder;
+
 	/**
 	 * Name of the footprint file, which proves that the very first connection has been realized. 
 	 */
@@ -102,7 +109,7 @@ public class AdministrationImpl implements Administration {
 		if (log.isDebugEnabled()) {
 			log.debug (String.format("Staff found %s", ((staff != null) ? staff.fullName() : "(none)") ));
 		}
-		final String encryptedPassword = DataEncryption.encryptMessage(password);
+		final String encryptedPassword = passwordEncoder.encode(password);
 		
 		/**
 		 * The very first user created is the very first administrative user in Fitzhì.
@@ -110,7 +117,7 @@ public class AdministrationImpl implements Administration {
 		 */
 		if (isVeryFirstConnection()) {
 			if (log.isDebugEnabled()) {
-				log.debug (String.format("This is the very first connection in Fitzhi)"));
+				log.debug (String.format("This is the very first connection in Fitzhi."));
 			}
 			if (staff != null) {
 				staffHandler.savePassword(staff, encryptedPassword);
@@ -172,7 +179,7 @@ public class AdministrationImpl implements Administration {
 			log.debug(String.format("login found %s", staff.fullName()));
 		}
 		
-		if (!staff.isValidPassword(password)) {
+		if (!passwordEncoder.matches(password, staff.getPassword())) {
 			throw new ApplicationException(CODE_INVALID_LOGIN_PASSWORD, MESSAGE_INVALID_LOGIN_PASSWORD);
 		}
 		

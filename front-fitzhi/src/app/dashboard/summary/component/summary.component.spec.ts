@@ -23,6 +23,9 @@ import { SummaryComponent } from './summary.component';
 import { MOCK_PROJECTS_DISTRIBUTION } from '../../mock-projects-distribution.spec';
 import { MOCK_SKILLS_DISTRIBUTION } from '../../mock-skills-distribution.spec';
 import { selection } from '../../selection';
+import { environment } from 'src/environments/environment';
+import { TurnoverService } from 'src/app/service/turnover/turnover.service';
+import { TurnoverData } from 'src/app/service/turnover/turnover-data';
 
 
 describe('SummaryComponent', () => {
@@ -32,6 +35,7 @@ describe('SummaryComponent', () => {
 	let projectService: ProjectService;
 	let staffListService: StaffListService;
 	let service: SummaryService;
+	let turnoverService: TurnoverService;
 
 	@Component({
 		selector: 'app-test-host-component',
@@ -39,7 +43,6 @@ describe('SummaryComponent', () => {
 						<app-summary (messengerSelectedSummary)="switchTo($event)"></app-summary>
 					</div>`
 	})
-
 	class TestHostComponent {
 		@ViewChild(SummaryComponent) summary: SummaryComponent;
 
@@ -54,7 +57,7 @@ describe('SummaryComponent', () => {
 				TreemapProjectsContainerComponent, TreemapProjectsChartComponent,
 				TreemapProjectsChartComponent, TreemapSkillsChartComponent ],
 			providers: [ SummaryService, DashboardService, ReferentialService, CinematicService,
-				TreemapProjectsService, ProjectService, StaffListService],
+				TreemapProjectsService, ProjectService, StaffListService, TurnoverService],
 			imports: [ HttpClientTestingModule, MatDialogModule, RouterTestingModule, NgxChartsModule,
 				BrowserAnimationsModule, NgxPopper]
 		})
@@ -75,8 +78,15 @@ describe('SummaryComponent', () => {
 		projectService = TestBed.inject(ProjectService);
 		projectService.allProjectsIsLoaded$.next(true);
 
+		turnoverService = TestBed.inject(TurnoverService);
+		spyOn(turnoverService, 'turnover').and.callFake (year => new TurnoverData(year, 1, 1, 1, year - 2000));
+
 		staffListService = TestBed.inject(StaffListService);
 		staffListService.informStaffLoaded();
+
+		// By default, we are in autoConnect OFF.
+		environment.autoConnect = false;
+
 		fixture.detectChanges();
 
 	});
@@ -107,6 +117,25 @@ describe('SummaryComponent', () => {
 				expect(fixture.debugElement.query(By.css('#logo'))).toBeNull();
 				expect(fixture.debugElement.query(By.css('#summaries'))).toBeDefined();
 				expect(fixture.debugElement.query(By.css('#small-logo'))).toBeDefined();
+				expect(fixture.debugElement.query(By.css('#invitation'))).toBeNull();
+				done();
+			}
+		});
+	});
+
+	it('should display the contact invitation panel if the environment is set to autoConnect (fitzhi.com release)', done => {
+
+		// we switch to the autoConnect mode.
+		environment.autoConnect = true;
+
+		const spy = loadTheCharts(1);
+		expect(spy).toHaveBeenCalled();
+		service.summary$.subscribe({
+			next: sum => {
+				expect(fixture.debugElement.query(By.css('#logo'))).toBeNull();
+				expect(fixture.debugElement.query(By.css('#summaries'))).toBeDefined();
+				expect(fixture.debugElement.query(By.css('#small-logo'))).toBeDefined();
+				expect(fixture.debugElement.query(By.css('#invitation'))).toBeDefined();
 				done();
 			}
 		});
@@ -191,6 +220,62 @@ describe('SummaryComponent', () => {
 				expect(spy).toHaveBeenCalled();
 				expect(spyComponentParent).toHaveBeenCalled();
 				done();
+			}
+		});
+	});
+
+
+	it('should display the 3 turnover panels.', done => {
+
+		const currentYear = new Date(Date.now()).getFullYear();
+
+		const thumbnailTurnoverCurrentYear = fixture.debugElement.query(By.css('#thumbnail-turnover-' + currentYear));
+		const thumbnailTurnoverLastYear = fixture.debugElement.query(By.css('#thumbnail-turnover-' + (currentYear - 1)));
+		const thumbnailTurnoverPenultimateYear = fixture.debugElement.query(By.css('#thumbnail-turnover-' + (currentYear - 2)));
+
+		expect(thumbnailTurnoverCurrentYear).toBeNull();
+		expect(thumbnailTurnoverLastYear).toBeNull();
+		expect(thumbnailTurnoverPenultimateYear).toBeNull();
+
+		loadTheCharts(8);
+
+		setTimeout(() => {
+			staffListService.allStaffLoaded$.subscribe({
+				next: doneAndOk => {
+					if (doneAndOk) {
+						expect(fixture.debugElement.query(By.css('#thumbnail-turnover-' + currentYear))).not.toBeNull();
+						expect(fixture.debugElement.query(By.css('#thumbnail-turnover-' + (currentYear - 1)))).not.toBeNull();
+						expect(fixture.debugElement.query(By.css('#thumbnail-turnover-' + (currentYear - 2)))).not.toBeNull();
+						done();
+					}
+				}
+			});
+		}, 0);
+
+	});
+
+
+	it('should write the turnover in the turnover panels.', done => {
+
+		const currentYear = new Date(Date.now()).getFullYear();
+		const turnoverCurrentYear = fixture.debugElement.query(By.css('#turnover-' + currentYear));
+		const turnoverLastYear = fixture.debugElement.query(By.css('#turnover-' + (currentYear - 1)));
+		const turnoverPenultimateYear = fixture.debugElement.query(By.css('#turnover-' + (currentYear - 2)));
+
+		expect(turnoverCurrentYear).toBeNull();
+		expect(turnoverLastYear).toBeNull();
+		expect(turnoverPenultimateYear).toBeNull();
+
+		loadTheCharts(6);
+
+		staffListService.allStaffLoaded$.subscribe({
+			next: doneAndOk => {
+				if (doneAndOk) {
+					expect(fixture.debugElement.query(By.css('#turnover-' + currentYear)).nativeNode.innerText).toBe('22');
+					expect(fixture.debugElement.query(By.css('#turnover-' + (currentYear - 1))).nativeNode.innerText).toBe('21');
+					expect(fixture.debugElement.query(By.css('#turnover-' + (currentYear - 2))).nativeNode.innerText).toBe('20');
+					done();
+				}
 			}
 		});
 	});

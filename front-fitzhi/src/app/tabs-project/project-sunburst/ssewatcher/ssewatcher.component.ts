@@ -1,6 +1,5 @@
-import { Component, Input, OnDestroy, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { BaseDirective } from 'src/app/base/base-directive.directive';
-import { ActivityLog } from 'src/app/data/activity-log';
 import { ProjectService } from 'src/app/service/project/project.service';
 import { SunburstCinematicService } from '../service/sunburst-cinematic.service';
 import { SsewatcherService } from './service/ssewatcher.service';

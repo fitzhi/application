@@ -45,7 +45,8 @@ public class StaffHandlerLookupTest {
 				new Staff(1003, "Guillaume", "Guorin De Tourville", "gguorin" , "gguorin", "gguorin@void.com", ""));
 		staffHandler.getStaff().put(1004, 
 				new Staff(1004, "Frédéric", "NABILLAU", "fnabillau" , "fnabillau", "fnabillau@void.com", ""));
-		
+		staffHandler.getStaff().put(1005, 
+				new Staff(1005, "信鑫", "king", "信鑫" , "信鑫", "nope@nope.com", ""));
 	}
 	
 	@Test
@@ -57,7 +58,6 @@ public class StaffHandlerLookupTest {
 	public void testLookupGuorinDeTourvilleGuillaume()  {
 		assertThat(staffHandler.lookup(new Author("Guorin De Tourville Guillaume"))).isNotNull();
 	}
-		
 
 	@Test
 	public void testLookupYassine() {
@@ -89,13 +89,23 @@ public class StaffHandlerLookupTest {
 		assertThat(staffHandler.lookup(new Author("   Frédéric    NABILLAU   "))).isNotNull();
 	}
 		
+	@Test
+	public void testComposedName()  {
+		assertThat(staffHandler.lookup(new Author("信鑫-king"))).isNotNull();
+	}
 	
+	@Test
+	public void testComposedName2()  {
+		assertThat(staffHandler.lookup(new Author("信鑫-King"))).isNotNull();
+	}
+
 	@After
 	public void after() {
-		staffHandler.getStaff().remove(1000);
-		staffHandler.getStaff().remove(1001);
-		staffHandler.getStaff().remove(1002);
-		staffHandler.getStaff().remove(1003);
-		staffHandler.getStaff().remove(1004);
+		staffHandler.removeStaff(1000);
+		staffHandler.removeStaff(1001);
+		staffHandler.removeStaff(1002);
+		staffHandler.removeStaff(1003);
+		staffHandler.removeStaff(1004);
+		staffHandler.removeStaff(1005);
 	}
 }

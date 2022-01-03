@@ -737,7 +737,7 @@ public class FileDataHandlerImpl implements DataHandler {
 		return String.format(
 				"%s/%d-%s-%s.txt", pathNames, 
 				project.getId(), 
-				project.getBranch().replace(" ", "_"),
+				project.getBranch().replace(" ", "_").replace("/", "_"),
 				pathsType.getTypeOfPath());
 	}
 
@@ -772,7 +772,7 @@ public class FileDataHandlerImpl implements DataHandler {
 	public boolean hasAlreadySavedSkillsConstellations(LocalDate month) throws ApplicationException {
 		final String filename = generateConstellationsJsonFilename(month);
 		if (log.isDebugEnabled()) {
-			log.debug(String.format("hasAlreadySavedSkillsConstellations(%d, %d)", month.getYear(), month.getMonth()));
+			log.debug(String.format("hasAlreadySavedSkillsConstellations(%d, %d)", month.getYear(), month.getMonthValue()));
 			log.debug(String.format("filename %s", filename));
 		}
 		Path path = rootLocation.resolve(filename);

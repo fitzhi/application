@@ -1,3 +1,4 @@
+
 export class Mission {
 
 	/**
@@ -37,4 +38,6 @@ export class Mission {
 		this.idProject = id;
 		this.name = name;
 	}
+
 }
+
