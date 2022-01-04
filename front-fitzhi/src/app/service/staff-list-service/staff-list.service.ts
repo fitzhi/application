@@ -128,6 +128,7 @@ export class StaffListService {
 	 * @param staff the staff object retrieved from the backend
 	 */
 	public loadAllStaff (allStaff) {
+		this.allStaff = [];
 		allStaff.forEach(staff => {
 			const collaborator = this.createStaffFromJson(staff);
 			this.allStaff.push(collaborator);
