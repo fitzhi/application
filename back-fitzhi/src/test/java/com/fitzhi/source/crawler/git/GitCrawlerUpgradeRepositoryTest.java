@@ -1,5 +1,12 @@
 package com.fitzhi.source.crawler.git;
 
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyInt;
+import static org.mockito.Mockito.doNothing;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
+
 import java.time.LocalDate;
 
 import com.fitzhi.bean.ProjectHandler;
@@ -12,14 +19,6 @@ import com.fitzhi.data.source.CommitRepository;
 import com.fitzhi.data.source.Operation;
 import com.fitzhi.exception.ApplicationException;
 import com.fitzhi.source.crawler.RepoScanner;
-import com.itextpdf.text.List;
-
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.anyInt;
-import static org.mockito.Mockito.doNothing;
-import static org.mockito.Mockito.times;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
 
 import org.junit.Assert;
 import org.junit.Test;
