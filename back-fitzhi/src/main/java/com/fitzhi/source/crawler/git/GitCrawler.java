@@ -47,6 +47,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
+import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
@@ -88,6 +89,7 @@ import com.fitzhi.data.source.CommitHistory;
 import com.fitzhi.data.source.CommitRepository;
 import com.fitzhi.data.source.ConnectionSettings;
 import com.fitzhi.data.source.Contributor;
+import com.fitzhi.data.source.Operation;
 import com.fitzhi.data.source.importance.AssessorImportance;
 import com.fitzhi.data.source.importance.FileSizeImportance;
 import com.fitzhi.data.source.importance.ImportanceCriteria;
@@ -1180,29 +1182,61 @@ public class GitCrawler extends AbstractScannerDataGenerator {
 
 			CommitRepository repository = cacheDataHandler.getRepository(project);
 
-			//
-			// Since the last parsing of the repository, some developers might have been
-			// declared (or updated), and are matching (or not) to unknown pseudos.
-			// We test each ghost and re-initialize the set.
-			//
-			repository.setUnknownContributors(
-				// Pseudo does not match any staff member
-				repository.unknownContributors().stream()
-					.filter(pseudo -> (staffHandler.lookup(new Author(pseudo)) == null)) 
-					.collect(Collectors.toSet()));
-
-
-			//
-			// We update the ghosts list, in the project with the up-to-date ghosts list.
-			//
-			projectHandler.integrateGhosts(
-				project.getId(), 
-				GhostsListFactory.getInstance(repository));
-
 			return repository;
 		} else {
 			return null;
 		}
+	}
+
+
+	private Staff retrieveStaff(Operation operation) {
+		final Author author = new Author(operation.getAuthorName(), operation.getAuthorEmail());
+		return staffHandler.lookup(author);
+	}
+
+	@Override
+	public boolean upgradeRepository(Project project, CommitRepository repository) throws ApplicationException {
+
+		final AtomicBoolean updated = new AtomicBoolean();
+
+		repository.getRepository().values().stream()
+			.flatMap(history -> history.getOperations().stream())
+			.filter(operation -> operation.getIdStaff() == -1)
+			.forEach(operation -> {
+				Staff staff = retrieveStaff(operation);
+				if (staff != null) {
+					updated.compareAndSet(false, true);
+					operation.setIdStaff(staff.getIdStaff());
+				}
+			});
+
+		//
+		// Since the last parsing of the repository, some developers might have been
+		// declared (or updated), and are matching (or not) to unknown pseudos.
+		// We test each ghost and re-initialize the set.
+		//
+		repository.setUnknownContributors(
+			// Pseudo does not match any staff member
+			repository.unknownContributors().stream()
+				.filter(pseudo -> (staffHandler.lookup(new Author(pseudo)) == null)) 
+				.collect(Collectors.toSet()));
+
+		//
+		// We update the ghosts list, in the project with the up-to-date ghosts list.
+		//
+		projectHandler.integrateGhosts(
+			project.getId(), 
+			GhostsListFactory.getInstance(repository));
+
+		return updated.get();
+	}
+
+	@Override
+	public void saveRepository(Project project, CommitRepository repository) throws IOException {
+		if (log.isDebugEnabled()) {
+			log.debug(String.format("Saving the repository for the project %s", project.getName()));
+		}
+		cacheDataHandler.saveRepository(project, repository);
 	}
 
 	@Override
@@ -1214,6 +1248,10 @@ public class GitCrawler extends AbstractScannerDataGenerator {
 		//
 		CommitRepository repository = loadRepositoryFromCacheIfAny(project);
 		if (repository != null) {
+			// If the repository has been updated during the repository, we save the more complete repository.
+			if (upgradeRepository(project, repository)) {
+				saveRepository(project, repository);
+			}
 			return repository;
 		}
 

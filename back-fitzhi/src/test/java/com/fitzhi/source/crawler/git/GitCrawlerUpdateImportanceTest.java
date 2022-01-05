@@ -1,6 +1,3 @@
-/**
- * 
- */
 package com.fitzhi.source.crawler.git;
 
 import static com.fitzhi.Global.DASHBOARD_GENERATION;

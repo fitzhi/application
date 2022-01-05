@@ -52,6 +52,7 @@ public class GitCrawlerLoadRepositoryFromCacheIfAnyTest {
 	public void testProjectNope() throws IOException, ApplicationException {
 		Project project = projectHandler.lookup(4);
 		CommitRepository repository = scanner.loadRepositoryFromCacheIfAny(project);
+		scanner.upgradeRepository(project, repository);
 		Assert.assertFalse(repository.unknownContributors().isEmpty());
 		String[] ghosts = (String[]) project.getGhosts().stream().map(Ghost::getPseudo).toArray(String[]::new);
 		Assert.assertArrayEquals(repository.unknownContributors().toArray(new String[0]), ghosts);
