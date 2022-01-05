@@ -46,19 +46,19 @@ public class GitScannerPersonalizeRepoTest  {
 	@Test
 	public void test() {
 		CommitRepository repo = new BasicCommitRepository();
-		repo.addCommit("A", 1, "one", new Date(System.currentTimeMillis()), 1);
-		repo.addCommit("A", 1, "one", new Date(System.currentTimeMillis()-1000), 1);
-		repo.addCommit("A", 1, "one", new Date(System.currentTimeMillis()-10000), 1);
-		repo.addCommit("A", 2, "two", new Date(System.currentTimeMillis()-2000), 1);
-		repo.addCommit("A", 2, "two", new Date(System.currentTimeMillis()-20000), 1);
-		repo.addCommit("A", 3, "three", new Date(System.currentTimeMillis()-5000), 1);
+		repo.addCommit("A", 1, "one", "email@nope.com", new Date(System.currentTimeMillis()), 1);
+		repo.addCommit("A", 1, "one", "email@nope.com", new Date(System.currentTimeMillis()-1000), 1);
+		repo.addCommit("A", 1, "one", "email@nope.com", new Date(System.currentTimeMillis()-10000), 1);
+		repo.addCommit("A", 2, "two", "email@nope.com", new Date(System.currentTimeMillis()-2000), 1);
+		repo.addCommit("A", 2, "two", "email@nope.com", new Date(System.currentTimeMillis()-20000), 1);
+		repo.addCommit("A", 3, "three", "email@nope.com", new Date(System.currentTimeMillis()-5000), 1);
 
-		repo.addCommit("B", 2, "two", new Date(System.currentTimeMillis()), 1);
-		repo.addCommit("B", 2, "two", new Date(System.currentTimeMillis()-1000), 1);
-		repo.addCommit("B", 2, "two", new Date(System.currentTimeMillis()-10000), 1);
-		repo.addCommit("B", 3, "three", new Date(System.currentTimeMillis()-2000), 1);
-		repo.addCommit("B", 3, "three", new Date(System.currentTimeMillis()-20000), 1);
-		repo.addCommit("B", 1, "one", new Date(System.currentTimeMillis()-5000), 1);
+		repo.addCommit("B", 2, "two", "email@nope.com", new Date(System.currentTimeMillis()), 1);
+		repo.addCommit("B", 2, "two", "email@nope.com", new Date(System.currentTimeMillis()-1000), 1);
+		repo.addCommit("B", 2, "two", "email@nope.com", new Date(System.currentTimeMillis()-10000), 1);
+		repo.addCommit("B", 3, "three", "email@nope.com", new Date(System.currentTimeMillis()-2000), 1);
+		repo.addCommit("B", 3, "three", "email@nope.com", new Date(System.currentTimeMillis()-20000), 1);
+		repo.addCommit("B", 1, "one", "email@nope.com", new Date(System.currentTimeMillis()-5000), 1);
 
 		CommitRepository personalRepo = scanner.personalizeRepo(repo, new SettingsGeneration(-1, 2));		
 		Assert.assertEquals( 2 ,personalRepo.getRepository().get("A").operations.size());

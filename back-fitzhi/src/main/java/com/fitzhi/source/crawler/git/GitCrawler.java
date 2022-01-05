@@ -1623,7 +1623,7 @@ public class GitCrawler extends AbstractScannerDataGenerator {
 				it -> ((it.getIdStaff() == settings.getIdStaffSelected()) || (settings.getIdStaffSelected() == 0)))
 				.filter(it -> (it.getDateCommit()).isAfter(startingDate))
 				.forEach(item -> personalizedRepo.addCommit(commits.getSourcePath(), item.getIdStaff(),
-						item.getAuthorName(), item.getDateCommit(), commits.getImportance()));
+						item.getAuthorName(), item.getAuthorEmail(), item.getDateCommit(), commits.getImportance()));
 		}
 		return personalizedRepo;
 	}

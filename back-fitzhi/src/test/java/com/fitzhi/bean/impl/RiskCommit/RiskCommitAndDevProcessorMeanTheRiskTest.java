@@ -74,13 +74,13 @@ public class RiskCommitAndDevProcessorMeanTheRiskTest {
 		Project prj = new Project(8021964, "testRiskEvaluation");
 		projectHandler.addNewProject(prj);
 
-		comRep.addCommit(FR_ONE_ONE_A_JAVA, first.getIdStaff(), "theFirstAuthor", new Timestamp(System.currentTimeMillis()), 1);
-		comRep.addCommit(FR_ONE_ONE_A_JAVA, first.getIdStaff(), "theFirstAuthor", new Timestamp(System.currentTimeMillis()-1000), 1);
-		comRep.addCommit(FR_ONE_ONE_A_JAVA, first.getIdStaff(), "theFirstAuthor", new Timestamp(System.currentTimeMillis()-2000), 1);
-		comRep.addCommit("fr/one/one/B.java", second.getIdStaff(), "theSecondtAuthor", new Timestamp(System.currentTimeMillis()), 1);
-		comRep.addCommit("fr/one/one/C.java", third.getIdStaff(), "theThirdAuthor",new Timestamp(System.currentTimeMillis()), 1);
+		comRep.addCommit(FR_ONE_ONE_A_JAVA, first.getIdStaff(), "theFirstAuthor", "email@nope.com", new Timestamp(System.currentTimeMillis()), 1);
+		comRep.addCommit(FR_ONE_ONE_A_JAVA, first.getIdStaff(), "theFirstAuthor", "email@nope.com", new Timestamp(System.currentTimeMillis()-1000), 1);
+		comRep.addCommit(FR_ONE_ONE_A_JAVA, first.getIdStaff(), "theFirstAuthor", "email@nope.com", new Timestamp(System.currentTimeMillis()-2000), 1);
+		comRep.addCommit("fr/one/one/B.java", second.getIdStaff(), "theSecondtAuthor", "email@nope.com", new Timestamp(System.currentTimeMillis()), 1);
+		comRep.addCommit("fr/one/one/C.java", third.getIdStaff(), "theThirdAuthor", "email@nope.com", new Timestamp(System.currentTimeMillis()), 1);
 
-		comRep.addCommit("fr/A.java", second.getIdStaff(), "theSecondAuthor", new Timestamp(System.currentTimeMillis()), 1);
+		comRep.addCommit("fr/A.java", second.getIdStaff(), "theSecondAuthor", "email@nope.com", new Timestamp(System.currentTimeMillis()), 1);
 }
 
 	@Test

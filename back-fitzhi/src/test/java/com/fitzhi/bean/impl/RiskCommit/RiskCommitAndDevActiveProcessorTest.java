@@ -83,25 +83,25 @@ public class RiskCommitAndDevActiveProcessorTest {
 		prj = new Project(8021964, "testRiskEvaluation");
 		projectHandler.addNewProject(prj);
 
-		comRep.addCommit(FR_ONE_ONE_A_JAVA, first.getIdStaff(), "thefirstAuthor", new Timestamp(System.currentTimeMillis()), 1);
-		comRep.addCommit(FR_ONE_ONE_A_JAVA, first.getIdStaff(), "thefirstAuthor", new Timestamp(System.currentTimeMillis()-1000), 1);
-		comRep.addCommit(FR_ONE_ONE_A_JAVA, first.getIdStaff(), "thefirstAuthor", new Timestamp(System.currentTimeMillis()-2000), 1);
-		comRep.addCommit("fr/one/one/B.java", second.getIdStaff(), "thesecondAuthor", new Timestamp(System.currentTimeMillis()), 1);
-		comRep.addCommit("fr/one/one/C.java", third.getIdStaff(), "theThirdAuthor", new Timestamp(System.currentTimeMillis()), 1);
+		comRep.addCommit(FR_ONE_ONE_A_JAVA, first.getIdStaff(), "thefirstAuthor", "email@nope.com", new Timestamp(System.currentTimeMillis()), 1);
+		comRep.addCommit(FR_ONE_ONE_A_JAVA, first.getIdStaff(), "thefirstAuthor", "email@nope.com", new Timestamp(System.currentTimeMillis()-1000), 1);
+		comRep.addCommit(FR_ONE_ONE_A_JAVA, first.getIdStaff(), "thefirstAuthor", "email@nope.com", new Timestamp(System.currentTimeMillis()-2000), 1);
+		comRep.addCommit("fr/one/one/B.java", second.getIdStaff(), "thesecondAuthor", "email@nope.com", new Timestamp(System.currentTimeMillis()), 1);
+		comRep.addCommit("fr/one/one/C.java", third.getIdStaff(), "theThirdAuthor", "email@nope.com", new Timestamp(System.currentTimeMillis()), 1);
 
-		comRep.addCommit("fr/one/two/D.java", fourth.getIdStaff(), "theFourthAuthor", new Timestamp(System.currentTimeMillis()), 1);
-		comRep.addCommit("fr/one/two/E.java", fifth.getIdStaff(), "theFifthAuthor", new Timestamp(System.currentTimeMillis()), 1);
+		comRep.addCommit("fr/one/two/D.java", fourth.getIdStaff(), "theFourthAuthor", "email@nope.com", new Timestamp(System.currentTimeMillis()), 1);
+		comRep.addCommit("fr/one/two/E.java", fifth.getIdStaff(), "theFifthAuthor", "email@nope.com", new Timestamp(System.currentTimeMillis()), 1);
 		
-		comRep.addCommit("fr/two/Z.java", second.getIdStaff(), "thesecondAuthor", new Timestamp(System.currentTimeMillis()), 1);
+		comRep.addCommit("fr/two/Z.java", second.getIdStaff(), "thesecondAuthor", "email@nope.com", new Timestamp(System.currentTimeMillis()), 1);
 		
-		comRep.addCommit(FR_TWO_ONE_F_JAVA, first.getIdStaff(), "thefirstAuthor", new Timestamp(System.currentTimeMillis()), 1);
-		comRep.addCommit(FR_TWO_ONE_F_JAVA, second.getIdStaff(), "thesecondAuthor", new Timestamp(System.currentTimeMillis()), 1);
-		comRep.addCommit(FR_TWO_ONE_F_JAVA, second.getIdStaff(), "thesecondAuthor", new Timestamp(System.currentTimeMillis()-1000), 1);
+		comRep.addCommit(FR_TWO_ONE_F_JAVA, first.getIdStaff(), "thefirstAuthor", "email@nope.com", new Timestamp(System.currentTimeMillis()), 1);
+		comRep.addCommit(FR_TWO_ONE_F_JAVA, second.getIdStaff(), "thesecondAuthor", "email@nope.com", new Timestamp(System.currentTimeMillis()), 1);
+		comRep.addCommit(FR_TWO_ONE_F_JAVA, second.getIdStaff(), "thesecondAuthor", "email@nope.com", new Timestamp(System.currentTimeMillis()-1000), 1);
 		
-		comRep.addCommit(FR_TWO_TWO_G_JAVA, fourth.getIdStaff(), "theFourthAuthor", new Timestamp(System.currentTimeMillis()), 1);
-		comRep.addCommit(FR_TWO_TWO_G_JAVA, fifth.getIdStaff(), "theFifthAuthor", new Timestamp(System.currentTimeMillis()), 1);
-		comRep.addCommit(FR_TWO_TWO_G_JAVA, fifth.getIdStaff(), "theFifthAuthor", new Timestamp(System.currentTimeMillis()-1000), 1);
-		comRep.addCommit(FR_TWO_TWO_G_JAVA, fifth.getIdStaff(), "theFifthAuthor", new Timestamp(System.currentTimeMillis()-2000), 1);
+		comRep.addCommit(FR_TWO_TWO_G_JAVA, fourth.getIdStaff(), "theFourthAuthor", "email@nope.com", new Timestamp(System.currentTimeMillis()), 1);
+		comRep.addCommit(FR_TWO_TWO_G_JAVA, fifth.getIdStaff(), "theFifthAuthor", "email@nope.com", new Timestamp(System.currentTimeMillis()), 1);
+		comRep.addCommit(FR_TWO_TWO_G_JAVA, fifth.getIdStaff(), "theFifthAuthor", "email@nope.com", new Timestamp(System.currentTimeMillis()-1000), 1);
+		comRep.addCommit(FR_TWO_TWO_G_JAVA, fifth.getIdStaff(), "theFifthAuthor", "email@nope.com", new Timestamp(System.currentTimeMillis()-2000), 1);
 	}
 	
 	@Test

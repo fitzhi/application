@@ -22,7 +22,7 @@ public class CommitRepositoryTest {
 	
 	@Test
 	public void testAdd() {
-		commitRepository.addCommit("/test.java", 1, "one", LocalDate.now(), 1);
+		commitRepository.addCommit("/test.java", 1, "one", "email@nope.com", LocalDate.now(), 1);
 		Assert.assertTrue(commitRepository.containsSourceCode("/test.java"));
 	}
 

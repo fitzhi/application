@@ -28,18 +28,18 @@ public class GhostsListFactoryGetInstanceTest {
 		unknowns.add("WTF should not be here");
 		repo.setUnknownContributors(unknowns);
 
-		repo.addCommit("A", 0, "one", LocalDate.of(2021, 6, 1), 1);
-		repo.addCommit("A", 0, "one", LocalDate.of(2021, 6, 1), 1);
-		repo.addCommit("A", 0, "one", LocalDate.of(2021, 6, 1), 1);
-		repo.addCommit("A", 0, "two", LocalDate.of(2021, 6, 1), 1);
-		repo.addCommit("A", 0, "two", LocalDate.of(2021, 6, 1), 1);
+		repo.addCommit("A", 0, "one", "email@nope.com", LocalDate.of(2021, 6, 1), 1);
+		repo.addCommit("A", 0, "one", "email@nope.com", LocalDate.of(2021, 6, 1), 1);
+		repo.addCommit("A", 0, "one", "email@nope.com", LocalDate.of(2021, 6, 1), 1);
+		repo.addCommit("A", 0, "two", "email@nope.com", LocalDate.of(2021, 6, 1), 1);
+		repo.addCommit("A", 0, "two", "email@nope.com", LocalDate.of(2021, 6, 1), 1);
 
-		repo.addCommit("B", 0, "two", LocalDate.of(2021, 9, 1), 1);
-		repo.addCommit("B", 0, "two", LocalDate.of(2021, 9, 2), 1);
-		repo.addCommit("B", 0, "two", LocalDate.of(2021, 9, 2), 1);
-		repo.addCommit("B", 0, "three", LocalDate.of(2021, 10, 1), 1);
-		repo.addCommit("B", 0, "three", LocalDate.of(2021, 10, 2), 1);
-		repo.addCommit("B", 0, "one", LocalDate.of(2020, 11, 1), 1);
+		repo.addCommit("B", 0, "two", "email@nope.com", LocalDate.of(2021, 9, 1), 1);
+		repo.addCommit("B", 0, "two", "email@nope.com", LocalDate.of(2021, 9, 2), 1);
+		repo.addCommit("B", 0, "two", "email@nope.com", LocalDate.of(2021, 9, 2), 1);
+		repo.addCommit("B", 0, "three", "email@nope.com", LocalDate.of(2021, 10, 1), 1);
+		repo.addCommit("B", 0, "three", "email@nope.com", LocalDate.of(2021, 10, 2), 1);
+		repo.addCommit("B", 0, "one", "email@nope.com", LocalDate.of(2020, 11, 1), 1);
 	}
 
 	@Test

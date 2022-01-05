@@ -31,13 +31,13 @@ public class Operations {
 	 * @param authorName the author's name
 	 * @param dateCommit the date of the commit
 	 */
-	void addCommit (final int idStaff, String authorName, final LocalDate dateCommit) {
+	void addCommit (final int idStaff, String authorName, String authorEmail, final LocalDate dateCommit) {
 		
 		String key = (idStaff > 0) ? String.valueOf(idStaff) : authorName;
 		
 		Operation operation = operations.get(key);
 		if (operation == null) {
-			operations.put(key, new Operation(idStaff, authorName, dateCommit));
+			operations.put(key, new Operation(idStaff, authorName, authorEmail, dateCommit));
 		} else {
 			if (dateCommit.isAfter(operation.getDateCommit())) {
 				operation.setDateCommit(dateCommit);

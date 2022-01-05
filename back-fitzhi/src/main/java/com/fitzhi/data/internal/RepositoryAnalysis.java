@@ -256,6 +256,7 @@ public class RepositoryAnalysis {
 						path,
 						change.isIdentified() ? change.getIdStaff() : com.fitzhi.Global.UNKNOWN, 
 						change.getAuthor().getName(),
+						change.getAuthor().getEmail(),
 						change.getDateCommit(),
 						changes.getChanges().get(path).getImportance());
 			});

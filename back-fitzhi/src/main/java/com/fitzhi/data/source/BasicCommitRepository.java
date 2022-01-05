@@ -48,20 +48,20 @@ public class BasicCommitRepository implements CommitRepository {
 	Set<String> unknownContributors = new HashSet<>();
 		
 	@Override
-	public void addCommit(String sourceCodePath, int idStaff, String authorName, LocalDate dateCommit, long importance) {
+	public void addCommit(String sourceCodePath, int idStaff, String authorName, String authorEmail, LocalDate dateCommit, long importance) {
 		if (repo.containsKey(sourceCodePath)) {
 			final CommitHistory history = repo.get(sourceCodePath);
-			history.handle(idStaff, authorName, dateCommit);
+			history.handle(idStaff, authorName, authorEmail, dateCommit);
 		} else {
 			CommitHistory fileLogs = new CommitHistory(sourceCodePath, importance);
-			fileLogs.addOperation(new Operation(idStaff, authorName, dateCommit));
+			fileLogs.addOperation(new Operation(idStaff, authorName, authorEmail, dateCommit));
 			repo.put(sourceCodePath, fileLogs);
 		}
 	}
 	
 	@Override
-	public void addCommit(String sourceCodePath, int idStaff, String authorName, Date dateCommit, long importance) {
-		addCommit(sourceCodePath, idStaff, authorName, dateCommit.toInstant().atZone(ZoneId.systemDefault()).toLocalDate(), importance);
+	public void addCommit(String sourceCodePath, int idStaff, String authorName, String authorEmail, Date dateCommit, long importance) {
+		addCommit(sourceCodePath, idStaff, authorName, authorEmail, dateCommit.toInstant().atZone(ZoneId.systemDefault()).toLocalDate(), importance);
 	}
 	
 	@Override
