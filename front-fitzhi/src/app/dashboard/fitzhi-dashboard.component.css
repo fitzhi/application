@@ -154,16 +154,16 @@ rect.rectTreeMap {
 }
 
 :host >>> div.angular-popper {
-  background: lightyellow;
-  width: 520px;
-  left: 5px !important;
-  z-index: 100;
-  font-size: smaller;
+	background: lightyellow;
+	width: 520px;
+	left: 5px !important;
+	z-index: 100;
+	font-size: smaller;
 }
 
 :host >>> div.angular-popper__arrow {
-  background: lightyellow;
-  border-color: lightgrey;
+	background: lightyellow;
+	border-color: lightgrey;
 }
 
 em.fas {
@@ -220,16 +220,16 @@ div.panelDeveloperBase {
 }
 
 div.panelDeveloperArrowRight {
-    width: 15px;
-    height: 25px;
+	width: 15px;
+	height: 25px;
 	border-top: 1px solid black;
 	border-bottom: 1px solid black;
 	border-right: 1px solid black;
 }
 
 div.panelDeveloperArrowLeft {
-    width: 15px;
-    height: 25px;
+	width: 15px;
+	height: 25px;
 	border-top: 1px solid black;
 	border-bottom: 1px solid black;
 	border-left: 1px solid black;
