@@ -29,7 +29,7 @@ export class ProjectStaffComponent extends BaseDirective implements OnInit, OnDe
 	/**
 	 * Helper handler the display or not of the poppup.
 	 */
-	 public popupHelper = new FitzhiDashboardPopupHelper();
+	public popupHelper = new FitzhiDashboardPopupHelper();
 
 	public selection = selection;
 

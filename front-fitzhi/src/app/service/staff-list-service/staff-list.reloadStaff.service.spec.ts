@@ -79,7 +79,7 @@ describe('ListStaffService', () => {
 		const staff = createStaff();
 
 		expect(service).toBeTruthy();
-		service.allStaff = [staff]
+		service.allStaff = [staff];
 		expect(service.allStaff.length).toBe(1);
 
 		service.reloadStaff();
