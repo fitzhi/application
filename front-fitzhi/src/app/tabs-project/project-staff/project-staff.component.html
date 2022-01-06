@@ -45,7 +45,7 @@
 		</ng-container>
 
 		<ng-container matColumnDef="numberOfCommits">
-			<th mat-header-cell id="numberOfCommits" *matHeaderCellDef mat-sort-header>Number of commits</th>
+			<th mat-header-cell id="numberOfCommits" *matHeaderCellDef mat-sort-header>Number of files/commits</th>
 			<td mat-cell class="col_numeric {{class_active_inactive(contributor.active)}}" *matCellDef="let contributor"
 					(click)="routeStaff(contributor.idStaff)">
 				{{contributor.numberOfCommits}}</td>
