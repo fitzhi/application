@@ -16,6 +16,8 @@ import { MessageService } from '../../interaction/message/message.service';
 import { CinematicService } from '../../service/cinematic.service';
 import { ProjectService } from '../../service/project/project.service';
 import { ProjectStaffService } from '../project-staff-service/project-staff.service';
+import { selection } from '../../dashboard/selection';
+import { FitzhiDashboardPopupHelper } from 'src/app/dashboard/fitzhi-dashboard-popup-helper';
 
 @Component({
 	selector: 'app-project-staff',
@@ -23,6 +25,13 @@ import { ProjectStaffService } from '../project-staff-service/project-staff.serv
 	styleUrls: ['./project-staff.component.css']
 })
 export class ProjectStaffComponent extends BaseDirective implements OnInit, OnDestroy, AfterContentInit {
+
+	/**
+	 * Helper handler the display or not of the poppup.
+	 */
+	 public popupHelper = new FitzhiDashboardPopupHelper();
+
+	public selection = selection;
 
 	public dataSource: MatTableDataSource<Contributor>;
 

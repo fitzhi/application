@@ -14,5 +14,7 @@ export const selection  = {
 	turnover: 9,
 	turnoverPenultimateYear: 10,
 	turnoverLastYear: 11,
-	turnoverCurrentYear: 12
+	turnoverCurrentYear: 12,
+	numberOfCommits: 13,
+	numberOfFiles: 14,
 };

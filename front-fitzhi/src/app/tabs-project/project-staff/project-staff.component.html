@@ -45,14 +45,23 @@
 		</ng-container>
 
 		<ng-container matColumnDef="numberOfCommits">
-			<th mat-header-cell id="numberOfCommits" *matHeaderCellDef mat-sort-header>Number of files/commits</th>
+			<th mat-header-cell id="numberOfCommits" *matHeaderCellDef mat-sort-header
+				(mouseenter)="popupHelper.mouseEnter(selection.numberOfCommits)" 
+				(mouseleave)="popupHelper.mouseLeave()">
+				Number of files/commits
+			</th>
 			<td mat-cell class="col_numeric {{class_active_inactive(contributor.active)}}" *matCellDef="let contributor"
 					(click)="routeStaff(contributor.idStaff)">
 				{{contributor.numberOfCommits}}</td>
 		</ng-container>
 
 		<ng-container matColumnDef="numberOfFiles">
-			<th mat-header-cell id="numberOfFiles" *matHeaderCellDef mat-sort-header>Number of files</th>
+			<th id="numberOfFiles"
+				 *matHeaderCellDef mat-sort-header mat-header-cell 
+				(mouseenter)="popupHelper.mouseEnter(selection.numberOfFiles)" 
+				(mouseleave)="popupHelper.mouseLeave()">
+				Number of files
+			</th>
 			<td mat-cell class="col_numeric {{class_active_inactive(contributor.active)}}" *matCellDef="let contributor"
 					(click)="routeStaff(contributor.idStaff)">
 				{{contributor.numberOfFiles}}&nbsp;&nbsp;</td>
@@ -72,4 +81,27 @@
 	</mat-paginator>
 
 </div>
+
+<angular-popper placement="bottom" target="#numberOfCommits" *ngIf="popupHelper.isButtonActivated(selection.numberOfCommits)" >
+	<div content class="help">
+		<h4 class="help-title">Number of files/commits</h4>
+		<div class="help-content">
+			<p>
+				This column contains the number of files each contributor has worked on.
+			</p>
+		</div>
+	</div>
+</angular-popper>
+
+<angular-popper placement="bottom" target="#numberOfFiles" *ngIf="popupHelper.isButtonActivated(selection.numberOfFiles)" >
+	<div content class="help">
+		<h4 class="help-title">Number of files</h4>
+		<div class="help-content">
+			<p>
+				This column contains the number of changes made to each file by each contributor. 
+				Several changes on the same file made on the same day count as 1.
+			</p>
+		</div>
+	</div>
+</angular-popper>
 
