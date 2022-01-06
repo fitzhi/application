@@ -83,7 +83,7 @@
 </div>
 
 <angular-popper placement="bottom" target="#numberOfCommits" *ngIf="popupHelper.isButtonActivated(selection.numberOfCommits)" >
-	<div content class="help">
+	<div id="helpNumberOfCommits" content class="help">
 		<h4 class="help-title">Number of files/commits</h4>
 		<div class="help-content">
 			<p>
@@ -94,9 +94,9 @@
 </angular-popper>
 
 <angular-popper placement="bottom" target="#numberOfFiles" *ngIf="popupHelper.isButtonActivated(selection.numberOfFiles)" >
-	<div content class="help">
+	<div id="helpNumberOfFiles" content class="help">
 		<h4 class="help-title">Number of files</h4>
-		<div class="help-content">
+		<div xclass="help-content">
 			<p>
 				This column contains the number of changes made to each file by each contributor. 
 				Several changes on the same file made on the same day count as 1.

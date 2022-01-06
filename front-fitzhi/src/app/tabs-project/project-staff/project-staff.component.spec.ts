@@ -4,6 +4,7 @@ import { ComponentFixture, TestBed, TestModuleMetadata, waitForAsync } from '@an
 import { MatPaginatorModule } from '@angular/material/paginator';
 import { MatSortModule } from '@angular/material/sort';
 import { MatTableModule } from '@angular/material/table';
+import { By } from '@angular/platform-browser';
 import { Constants } from 'src/app/constants';
 import { Project } from 'src/app/data/project';
 import { BackendSetupService } from 'src/app/service/backend-setup/backend-setup.service';
@@ -92,14 +93,14 @@ describe('ProjectStaffComponent', () => {
 		expect(component.projectStaffComponent.dataSource).toBeUndefined();
 	});
 
-	it('should not create the dataSource as long as the application did not load a project', () => {
+	it('should not create the dataSource as long as the application did not load a project.', () => {
 		const cinematicService = TestBed.inject(CinematicService);
 		cinematicService.tabProjectActivatedSubject$.next(Constants.PROJECT_IDX_TAB_STAFF);
 		fixture.detectChanges();
 		expect(component.projectStaffComponent.dataSource).toBeUndefined();
 	});
 
-	it('should create the dataSource when the project has been loaded, and when the dedicated tab has been clicked', () => {
+	it('should create the dataSource when the project has been loaded, and when the dedicated tab has been clicked.', () => {
 		const cinematicService = TestBed.inject(CinematicService);
 		cinematicService.tabProjectActivatedSubject$.next(Constants.PROJECT_IDX_TAB_STAFF);
 
@@ -122,5 +123,20 @@ describe('ProjectStaffComponent', () => {
 		httpMock.verify();
 	});
 
+	it('should display the "number of files" help popup when the mouse enter on the corresponding column title.', () => {
+		expect(fixture.debugElement.query(By.css('#helpNumberOfFiles'))).toBeNull();
+		const titleNumberOfFiles = fixture.debugElement.query(By.css('#numberOfFiles')).nativeElement;
+		titleNumberOfFiles.dispatchEvent(new Event('mouseenter'));
+		fixture.detectChanges();
+		expect(fixture.debugElement.query(By.css('#helpNumberOfFiles'))).toBeDefined();
+	});
+
+	it('should display the "number of commits" help popup when the mouse enter on the corresponding column title', () => {
+		expect(fixture.debugElement.query(By.css('#helpNumberOfCommits'))).toBeNull();
+		const titleNumberOfCommits = fixture.debugElement.query(By.css('#numberOfCommits')).nativeElement;
+		titleNumberOfCommits.dispatchEvent(new Event('mouseenter'));
+		fixture.detectChanges();
+		expect(fixture.debugElement.query(By.css('#helpNumberOfCommits'))).toBeDefined();
+	});
 
 });
