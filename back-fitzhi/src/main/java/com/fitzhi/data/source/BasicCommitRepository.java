@@ -256,7 +256,7 @@ public class BasicCommitRepository implements CommitRepository {
 	}
 	
 	@Override
-	public int numberOfFileCommits (final int idStaff) {
+	public int numberOfFileCommit (final int idStaff) {
 		return (int) this.repo.values().stream()
 				.mapToLong( 
 					 history -> history.operations.stream()

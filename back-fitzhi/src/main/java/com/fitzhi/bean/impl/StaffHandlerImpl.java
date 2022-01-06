@@ -494,26 +494,37 @@ public class StaffHandlerImpl extends AbstractDataSaverLifeCycleImpl implements 
 	}
 
 	@Override
-	public void involve(Project project, Contributor contributor) throws ApplicationException {
+	public void involve(Project project, Contributor contributor)  {
 
-		Staff staff = getStaff().get(contributor.getIdStaff());
-		if (staff == null) {
+		try {
+			Staff staff = getStaff(contributor.getIdStaff());
+
+			Optional<Mission> oMission = staff.getMissions()
+				.stream()
+				.filter(mission -> mission.getIdProject() == project.getId())
+				.findFirst();
+			
+			// We create a new Mission record if necessary.
+			Mission mission = (oMission.isPresent()) ? oMission.get() : new Mission();
+
+			mission.setIdProject(project.getId());
+			mission.setName(project.getName());
+			mission.setIdStaff(staff.getIdStaff());
+			mission.setFirstCommit(contributor.getFirstCommit());
+			mission.setLastCommit(contributor.getLastCommit());
+			mission.setNumberOfCommits(contributor.getNumberOfCommits());
+			mission.setNumberOfFiles(contributor.getNumberOfFiles());
+
+			// We add this new mission if necessary.
+			if (!oMission.isPresent()) {
+				staff.addMission(mission);
+			}
+
+		} catch (final NotFoundException nfe) {
+			throw new ApplicationRuntimeException(
+				String.format("EVERE ERROR : the Staff identifier %d should already exist.", contributor.getIdStaff()));
 		}
 		
-		Optional<Mission> oMission = staff.getMissions()
-			.stream()
-			.filter(mission -> mission.getIdProject() == project.getId())
-			.findFirst();
-		
-		Mission mission = (oMission.isPresent()) ? oMission.get() : new Mission();
-		mission.setIdProject(project.getId());
-		mission.setName(project.getName());
-		mission.setIdStaff(staff.getIdStaff());
-		mission.setFirstCommit(contributor.getFirstCommit());
-		mission.setLastCommit(contributor.getLastCommit());
-		mission.setNumberOfCommits(contributor.getNumberOfCommits());
-		mission.setNumberOfFiles(contributor.getNumberOfFiles());
-		staff.addMission(mission);
 	}
 
 	@Override
@@ -593,7 +604,7 @@ public class StaffHandlerImpl extends AbstractDataSaverLifeCycleImpl implements 
 	}
 
 	@Override
-	public Staff createWorkforceMember(final Staff staff) throws ApplicationException {
+	public Staff createWorkforceMember(Staff staff) throws ApplicationException {
 		controlWorkforceMember(staff);
 		addNewStaff(staff);
 		return staff;

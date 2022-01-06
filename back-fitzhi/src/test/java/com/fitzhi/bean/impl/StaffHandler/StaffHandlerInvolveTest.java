@@ -12,6 +12,7 @@ import java.util.Map;
 
 import com.fitzhi.bean.DataHandler;
 import com.fitzhi.bean.StaffHandler;
+import com.fitzhi.data.internal.Mission;
 import com.fitzhi.data.internal.Project;
 import com.fitzhi.data.internal.Staff;
 import com.fitzhi.data.source.Contributor;
@@ -76,16 +77,68 @@ public class StaffHandlerInvolveTest {
 		// We add the mission of reference to be updated. 
 		List<Contributor> contributors = new ArrayList<>();
 		contributors.add(new Contributor(1802, LocalDate.of(1802, 12, 1), LocalDate.of(1802, 12, 2), 2, 5));
+
+		// First launch, we create the missions
 		staffHandler.involve(project, contributors);
 
 		contributors = new ArrayList<>();
 		contributors.add(new Contributor(1802, LocalDate.of(1802, 12, 3), LocalDate.of(1802, 12, 4), 5, 15));
+
+		// Second launch, we update the missions
 		staffHandler.involve(project, contributors);
+
 		Staff staff = staffHandler.getStaff(1802);
 		assertEquals(1, staff.getMissions().size());
 		assertEquals(1789, staff.getMissions().get(0).getIdProject());
 		assertEquals(LocalDate.of(1802, 12, 3), staff.getMissions().get(0).getFirstCommit());
 		assertEquals(LocalDate.of(1802, 12, 4), staff.getMissions().get(0).getLastCommit());
+	}
+
+	@Test
+	public void createMission4SingleContributor() throws ApplicationException {
+		Map<Integer, Staff> staffs = new HashMap<>();
+		Staff st = new Staff(1802, "Napoleon", "Bonaparte", "l'emprereur", "l'empereur", "noemail", "Big level");
+		staffs.put(1802, st);
+   
+		when(dataHandler.loadStaff()).thenReturn(staffs);
+
+		Project project = new Project(1789, "The revolutionary project");
+		Contributor contributor = new Contributor(1802, LocalDate.of(1802, 12, 1), LocalDate.of(1802, 12, 2), 2, 5);
+
+		staffHandler.involve(project, contributor);
+
+		Staff staff = staffHandler.getStaff(1802);
+		assertEquals(1, staff.getMissions().size());
+		Mission mission = staff.getMissions().get(0);
+		assertEquals(1789, mission.getIdProject());
+		assertEquals(LocalDate.of(1802, 12, 1), mission.getFirstCommit());
+		assertEquals(LocalDate.of(1802, 12, 2), mission.getLastCommit());
+		assertEquals(2, mission.getNumberOfCommits());
+		assertEquals(5, mission.getNumberOfFiles());
+	}
+
+	@Test
+	public void updateMission4SingleContributor() throws ApplicationException {
+		Map<Integer, Staff> staffs = new HashMap<>();
+		Staff st = new Staff(1802, "Napoleon", "Bonaparte", "l'emprereur", "l'empereur", "noemail", "Big level");
+		st.addMission(new Mission(1802, 1789, "The revolutionary project", LocalDate.of(1802, 11, 1), LocalDate.of(1802, 11, 2), 1, 3));
+		staffs.put(1802, st);
+   
+		when(dataHandler.loadStaff()).thenReturn(staffs);
+
+		Project project = new Project(1789, "The revolutionary project");
+		Contributor contributor = new Contributor(1802, LocalDate.of(1802, 12, 1), LocalDate.of(1802, 12, 2), 2, 5);
+
+		staffHandler.involve(project, contributor);
+
+		Staff staff = staffHandler.getStaff(1802);
+		assertEquals(1, staff.getMissions().size());
+		Mission mission = staff.getMissions().get(0);
+		assertEquals(1789, mission.getIdProject());
+		assertEquals(LocalDate.of(1802, 12, 1), mission.getFirstCommit());
+		assertEquals(LocalDate.of(1802, 12, 2), mission.getLastCommit());
+		assertEquals(2, mission.getNumberOfCommits());
+		assertEquals(5, mission.getNumberOfFiles());
 	}
 
 }

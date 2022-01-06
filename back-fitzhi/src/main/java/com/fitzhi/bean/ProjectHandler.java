@@ -11,6 +11,7 @@ import com.fitzhi.data.internal.Experience;
 import com.fitzhi.data.internal.FilesStats;
 import com.fitzhi.data.internal.Ghost;
 import com.fitzhi.data.internal.Library;
+import com.fitzhi.data.internal.Mission;
 import com.fitzhi.data.internal.Project;
 import com.fitzhi.data.internal.ProjectSkill;
 import com.fitzhi.data.internal.ProjectSonarMetricValue;
@@ -87,16 +88,17 @@ public interface ProjectHandler extends DataSaverLifeCycle {
 	void init();
 
 	/**
-	 * @param idProject
-	 *            the project identifier.
-	 * @return the list of contributor for the given project.
+	 * Retrieve the list of submitters (and their metrics) for this project based on the {@link Mission missions} declared in the Staff collection. 
+	 * 
+	 * @param idProject the project identifier.
+	 * @return the list of contributors for the given project.
 	 */
 	List<Contributor> contributors(int idProject);
 
 	/**
 	 * Add a new project inside the projects referential.<br/>
-	 * If project is not identified (e.g. the {@code Project#getId()} is less than 1), we will generate an ID.
-	 * @param project the passed project
+	 * If project is not identified (e.g. the {@code Project#getId()} is less than 1), application will generate an ID.
+	 * @param project the given project
 	 * @return the newly created project
 	 * 
 	 */

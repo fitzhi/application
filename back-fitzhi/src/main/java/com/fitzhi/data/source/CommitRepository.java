@@ -103,7 +103,7 @@ public interface CommitRepository {
 	 * @param idStaff developer's identifier
 	 * @return the number of unit of commits submitted by the passed developer for each file.
 	 */
-	int numberOfFileCommits(int idStaff);
+	int numberOfFileCommit(int idStaff);
 	
 	/**
 	 * @param idStaff developer identifier

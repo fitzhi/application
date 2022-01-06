@@ -1207,6 +1207,12 @@ public class GitCrawler extends AbstractScannerDataGenerator {
 				if (staff != null) {
 					updated.compareAndSet(false, true);
 					operation.setIdStaff(staff.getIdStaff());
+
+					// We update the mission for the newly updated Staff member.
+					Contributor contributor = repository.extractStaffMetrics(staff);
+					if (contributor != null) {
+						staffHandler.involve(project, contributor);
+					}
 				}
 			});
 
@@ -1393,9 +1399,9 @@ public class GitCrawler extends AbstractScannerDataGenerator {
 	 * to the project.
 	 * </p>
 	 * 
-	 * @param project             the given project
-	 * @param analysis            the analysis processed on this project
-	 * @param unknownContributors set of unknown contributors
+	 * @param project the given project
+	 * @param analysis the analysis processed on this project
+	 * @param unknownContributors set of unknown contributors, this set will be filled with the method.
 	 * @throws ApplicationException thrown if any exception occurs
 	 */
 	private void handlingProjectStaffAndGhost(Project project, RepositoryAnalysis analysis,

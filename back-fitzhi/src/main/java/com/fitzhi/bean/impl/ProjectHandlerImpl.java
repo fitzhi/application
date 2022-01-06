@@ -189,7 +189,7 @@ public class ProjectHandlerImpl extends AbstractDataSaverLifeCycleImpl implement
 	public Project addNewProject(Project project) throws ApplicationException {
 		
 		// 
-		// We encrypt the password 
+		// We encrypt the GIT credential password if necessary.
 		//
 		encryptPasswordIfNecessary(project);
 		

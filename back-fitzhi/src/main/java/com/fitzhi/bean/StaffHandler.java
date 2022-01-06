@@ -164,17 +164,15 @@ public interface StaffHandler extends DataSaverLifeCycle {
 
 	/**
 	 * <p>
-	 * Involve a single contributors into the project.<br/>
+	 * Involve a single contributor into the project.<br/>
 	 * The method add, or update, the missions for the staff associated with the
 	 * contributor.
 	 * </p>
 	 * 
-	 * @param project     the current project
-	 * @param contributor the contributor data representing the contribution of a
-	 *                    staff member in a project.
-	 * @throws ApplicationException thrown if any problem occurs
+	 * @param project the given project
+	 * @param contributor the contributor data representing the contribution of a staff member in a project.
 	 */
-	void involve(Project project, Contributor contributor) throws ApplicationException;
+	void involve(Project project, Contributor contributor);
 
 	/**
 	 * <p>
