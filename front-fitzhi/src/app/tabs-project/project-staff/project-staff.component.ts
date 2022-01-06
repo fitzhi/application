@@ -92,7 +92,7 @@ export class ProjectStaffComponent extends BaseDirective implements OnInit, OnDe
 				.subscribe({
 					next: doneAndOk => {
 						if (traceOn()) {
-							this.projectService.dump(this.projectService.project, 'projectStaffComponent.ngOnInit()');
+							this.projectService.dump(this.projectService.project, 'projectStaffComponent.ngAfterContentInit()');
 						}
 						if (doneAndOk) {
 							this.loadContributors();
@@ -116,7 +116,7 @@ export class ProjectStaffComponent extends BaseDirective implements OnInit, OnDe
 						if (traceOn()) {
 							console.log('404 : cannot find contributors for the id ' + this.projectService.project.id);
 						}
-						this.messageService.error('Cannot retrieve the contributors for the project identifier ' + this.projectService.project.id);
+						this.messageService.error('Cannot retrieve the contributors for project ' + this.projectService.project.name);
 					} else {
 						console.error(error);
 					}
