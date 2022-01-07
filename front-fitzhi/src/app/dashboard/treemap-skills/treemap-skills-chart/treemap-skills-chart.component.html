@@ -1,4 +1,4 @@
-<div *ngIf="isChart()" class="w-100 h-100">
+<div *ngIf="isChart() && (distribution.length > 0)" class="w-100 h-100">
 	<ngx-charts-tree-map
 		[scheme]="colorScheme"
 		[results]="distribution"
@@ -10,7 +10,7 @@
 		(select)="onSelect($event)">
 	</ngx-charts-tree-map>
 </div>
-<div *ngIf="isButton()" class="w-100 h-100">
+<div *ngIf="isButton() && (distribution.length > 0)" class="w-100 h-100">
 	<ngx-charts-tree-map
 		[scheme]="colorScheme"
 		[results]="distribution"
