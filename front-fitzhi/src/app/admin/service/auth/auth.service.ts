@@ -70,6 +70,20 @@ export class AuthService extends InternalService {
 	}
 
 	/**
+	 * **Disable** the connection status stored in the authentication service.
+	 */
+	public setDisconnect() {
+		this.connected = false;
+	}
+
+	/**
+	 * **Enable** the connection status stored in the authentication service.
+	 */
+	 public setConnect() {
+		this.connected = true;
+	}
+
+	/**
      * @returns TRUE if the user is connected, FALSE otherwise.
      */
 	public isConnected() {

@@ -7,12 +7,14 @@ import { TestBed } from '@angular/core/testing';
 import { Router } from '@angular/router';
 import { RouterTestingModule } from '@angular/router/testing';
 import { MessageService } from 'src/app/interaction/message/message.service';
+import { AuthService } from '../auth/auth.service';
 import { DataService } from '../data.service';
 import { HttpRefreshTokenErrorInterceptor } from './http-refresh-token-error-interceptor';
 
 describe(`HttpRefreshTokenErrorInterceptor`, () => {
 	let httpMock: HttpTestingController;
 	let dataService: DataService;
+	let authService: AuthService;
 	let router: Router;
 
 	beforeEach(() => {
@@ -34,6 +36,7 @@ describe(`HttpRefreshTokenErrorInterceptor`, () => {
 
 		httpMock = TestBed.inject(HttpTestingController);
 		dataService = TestBed.inject(DataService);
+		authService = TestBed.inject(AuthService);
 		router = TestBed.inject(Router);
 
 	});
@@ -41,6 +44,8 @@ describe(`HttpRefreshTokenErrorInterceptor`, () => {
 	it('should redirect the application to "/login" if an "Invalid refresh" error is emitted.', () => {
 
 		const navigateSpy = spyOn(router, 'navigate');
+		authService.setConnect();
+		expect(authService.isConnected()).toBeTrue();
 
 		dataService.ROOT_URL = 'https://urlWith401Error';
 
@@ -58,10 +63,12 @@ describe(`HttpRefreshTokenErrorInterceptor`, () => {
 				status: 401,
 				statusText: 'Unauthorized!',
 			});
+
 		expect(navigateSpy).toHaveBeenCalledWith(['/login']);
+		expect(authService.isConnected()).toBeFalse();
 	});
 
-	it('should redirect the application to "/login" if a "Full authentication is required" error is emitted', () => {
+	it('should redirect the application to "/login" if a "Full authentication is required" error is emitted.', () => {
 
 		const navigateSpy = spyOn(router, 'navigate');
 
@@ -84,7 +91,7 @@ describe(`HttpRefreshTokenErrorInterceptor`, () => {
 		expect(navigateSpy).toHaveBeenCalledWith(['/login']);
 	});
 
-	it('should NOT redirect the application to "/login" if ONLY the access token has expired', () => {
+	it('should NOT redirect the application to "/login" if ONLY the access token has expired.', () => {
 
 		const navigateSpy = spyOn(router, 'navigate');
 

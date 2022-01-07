@@ -56,21 +56,23 @@ describe('AppComponent', () => {
 
 	it('The toolbar should NOT exist if user is connected BUT the installation is not complete and successful.' + environment.autoConnect,
 		fakeAsync(() => {
-		const spy = spyOn(authService, 'isConnected').and.returnValue(true);
-		installService.uninstall();
-		const fixture = TestBed.createComponent(AppComponent);
-		fixture.detectChanges();
-		tick();
-		expect(document.getElementById('toolbar')).toBeNull();
-	}));
+			const spy = spyOn(authService, 'isConnected').and.returnValue(true);
+			installService.uninstall();
+			const fixture = TestBed.createComponent(AppComponent);
+			fixture.detectChanges();
+			tick();
+			expect(document.getElementById('toolbar')).toBeNull();
+		})
+	);
 
 	it('The toolbar should exist if user is connected AND the installation is complete and successful.' + environment.autoConnect,
 		waitForAsync(() => {
-		const spy = spyOn(authService, 'isConnected').and.returnValue(true);
-		installService.installComplete();
-		const fixture = TestBed.createComponent(AppComponent);
-		fixture.detectChanges();
-		expect(document.getElementById('toolbar')).toBeDefined();
-	}));
+			const spy = spyOn(authService, 'isConnected').and.returnValue(true);
+			installService.installComplete();
+			const fixture = TestBed.createComponent(AppComponent);
+			fixture.detectChanges();
+			expect(document.getElementById('toolbar')).toBeDefined();
+		})
+	);
 
 });
