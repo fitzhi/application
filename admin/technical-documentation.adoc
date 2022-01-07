@@ -28,11 +28,8 @@ Front-end build and test.js.yml +
 codeQL-analysis-typescript.yml +
 docker/docker/start-fitzhi.sh +
 back-fitzhi/run.sh +
-projects.json
-
-- Update the Typescript test "git.service.spec.ts" to take in account the branch release-1.n
-
-
+projects.json +
+front-fitzhi/package.json
 
 
 === Merging Master into the branch release-1.n
