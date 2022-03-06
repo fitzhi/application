@@ -92,9 +92,7 @@ describe('TeamProjectsChartComponent', () => {
 			fixture.detectChanges();
 			const labels = loadLabels();
 			expect(labels.length).toBe(1);
-			expect(labels[0]).toBe(
-`Spring
-76,000 lines`);
+			expect(labels[0].replace(/\s+/g, ' ')).toEqual(`Spring 76,000 lines`);
 			done();
 		}, 0);
 	});
