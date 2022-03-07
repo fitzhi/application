@@ -25,6 +25,7 @@ import java.util.stream.Collectors;
 import javax.validation.constraints.NotNull;
 
 import com.fitzhi.ApplicationRuntimeException;
+import com.fitzhi.bean.CacheDataHandler;
 import com.fitzhi.bean.DataHandler;
 import com.fitzhi.bean.ProjectHandler;
 import com.fitzhi.bean.SkillHandler;
@@ -101,6 +102,12 @@ public class ProjectHandlerImpl extends AbstractDataSaverLifeCycleImpl implement
 	@Autowired
 	public DataHandler dataHandler;
 			
+	/**
+	 * Cache service regarding the sunburst data.
+	 */
+	@Autowired
+	public CacheDataHandler cacheDataHandler;
+
 	/**
 	 * Component in charge of handling connected Sonar server.
 	 */
@@ -262,6 +269,9 @@ public class ProjectHandlerImpl extends AbstractDataSaverLifeCycleImpl implement
 			if ( 	(savedProject.getUrlRepository() != null) && 
 					(!savedProject.getUrlRepository().equals(project.getUrlRepository()))) {
 				savedProject.setLocationRepository(null);
+				dataHandler.removeCrawlerFiles(savedProject);
+				cacheDataHandler.removeRepository(savedProject);
+				staffHandler.removeProject(savedProject.getId());
 			}
 			
 			// If we change the active branch, we have to reset the previous clone (if any). 
@@ -269,7 +279,11 @@ public class ProjectHandlerImpl extends AbstractDataSaverLifeCycleImpl implement
 			if ( 	(savedProject.getBranch() != null) && 
 					(!savedProject.getBranch().equals(project.getBranch()))) {
 				savedProject.setLocationRepository(null);
+				dataHandler.removeCrawlerFiles(savedProject);
+				cacheDataHandler.removeRepository(savedProject);
+				staffHandler.removeProject(savedProject.getId());
 			}
+
 			// Default branch name is "master" if none is given
 			if ((project.getUrlRepository() != null) && (project.getBranch() == null)) {
 				savedProject.setBranch("master");

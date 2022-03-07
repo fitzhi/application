@@ -7,6 +7,7 @@ import java.util.Optional;
 
 import javax.validation.constraints.NotNull;
 
+import com.fitzhi.bean.impl.ProjectHandlerImpl;
 import com.fitzhi.data.internal.Experience;
 import com.fitzhi.data.internal.FilesStats;
 import com.fitzhi.data.internal.Ghost;
@@ -25,7 +26,7 @@ import com.fitzhi.exception.NotFoundException;
 
 /**
  * This interface is in charge of the Projects management.
- * Its main implementation is ProjectHandlerImpl
+ * Its main implementation is {@link ProjectHandlerImpl}
  * 
  * @author Fr&eacute;d&eacute;ric VIDAL
  */
