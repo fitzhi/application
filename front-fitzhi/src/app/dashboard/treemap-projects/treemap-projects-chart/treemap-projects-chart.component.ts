@@ -89,10 +89,9 @@ export class TreemapProjectsChartComponent extends TreemapChartDirective impleme
 
 	/**
 	 * @param tile the current tile
-	 * @returns
+	 * @returns the label in a formatted way
 	 */
 	labelFormatting(tile) {
-		console.log (tile);
 		return `
 			<strong>${(tile.label)}</strong>
 			<br/>
