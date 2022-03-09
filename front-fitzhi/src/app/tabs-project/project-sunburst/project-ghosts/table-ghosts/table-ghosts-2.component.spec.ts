@@ -128,7 +128,7 @@ describe('TableGhostsComponent', () => {
 
 		const buttonAddStaff: HTMLInputElement = fixture.debugElement.query(By.css('#addStaff-1')).nativeElement;
 
-		const spyClearCache = spyOn(sunburstCacheService, 'clearReponse');
+		const spyClearCache = spyOn(sunburstCacheService, 'clearResponse');
 		const spyUpdateGhost$ = spyOn(projectService, 'updateGhost$').and.returnValue(of(true));
 
 		staffListService.allStaff$.next(allStaff);

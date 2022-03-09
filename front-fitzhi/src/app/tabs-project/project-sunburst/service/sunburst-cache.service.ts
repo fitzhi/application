@@ -33,7 +33,7 @@ export class SunburstCacheService {
 	/**
 	 * Returns the cache data chart saved in the sessionStorage.
 	 */
-	public getReponse(): any {
+	public getResponse(): any {
 		const json = sessionStorage.getItem(this.keySessionStorage());
 		return JSON.parse(json);
 	}
@@ -41,7 +41,7 @@ export class SunburstCacheService {
 	/**
 	 * Remove the entry key for the current project.
 	 */
-	public clearReponse() {
+	public clearResponse() {
 		sessionStorage.removeItem(this.keySessionStorage());
 	}
 }

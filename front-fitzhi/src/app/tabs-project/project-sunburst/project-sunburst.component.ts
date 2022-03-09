@@ -277,7 +277,7 @@ export class ProjectSunburstComponent extends BaseDirective implements OnInit, A
 		//
 		if (this.cacheService.hasResponse()) {
 			this.setActiveContext (PreviewContext.SUNBURST_READY);
-			setTimeout(() => this.generateChart(this.cacheService.getReponse()), 0);
+			setTimeout(() => this.generateChart(this.cacheService.getResponse()), 0);
 			return;
 		}
 
@@ -633,7 +633,7 @@ export class ProjectSunburstComponent extends BaseDirective implements OnInit, A
 			.pipe(take(1))
 			.subscribe(answer => {
 				if (answer) {
-					this.cacheService.clearReponse();
+					this.cacheService.clearResponse();
 					this.projectService
 						.resetDashboard(this.settings.idProject)
 						.pipe(take(1))
@@ -662,7 +662,7 @@ export class ProjectSunburstComponent extends BaseDirective implements OnInit, A
 			.pipe(take(1))
 			.subscribe(answer => {
 				if (answer) {
-					this.cacheService.clearReponse();
+					this.cacheService.clearResponse();
 					this.projectService
 						.reloadSunburst$(this.settings.idProject)
 						.pipe(take(1))

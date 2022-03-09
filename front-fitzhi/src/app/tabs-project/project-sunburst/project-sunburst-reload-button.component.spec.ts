@@ -72,7 +72,7 @@ describe('Testing the Reload button behavior in ProjectSunburstComponent with da
 		expect(component).toBeTruthy();
 
 		spyOn(messageBoxService, 'question').and.returnValue(new BehaviorSubject(true));
-		const spyClearResponse = spyOn(cacheService, 'clearReponse').and.returnValue();
+		const spyClearResponse = spyOn(cacheService, 'clearResponse').and.returnValue();
 		const spyResetDashboard = spyOn(projectService, 'resetDashboard');
 
 		const button = fixture.debugElement.nativeElement.querySelector('#reload');
@@ -92,7 +92,7 @@ describe('Testing the Reload button behavior in ProjectSunburstComponent with da
 
 		spyOn(messageBoxService, 'question').and.returnValue(new BehaviorSubject(false));
 		const spyReloadDashboard = spyOn(projectService, 'reloadSunburst$');
-		const spyClearResponse = spyOn(cacheService, 'clearReponse');
+		const spyClearResponse = spyOn(cacheService, 'clearResponse');
 		const spyResetDashboard = spyOn(projectService, 'resetDashboard');
 
 		const button = fixture.debugElement.nativeElement.querySelector('#reload');

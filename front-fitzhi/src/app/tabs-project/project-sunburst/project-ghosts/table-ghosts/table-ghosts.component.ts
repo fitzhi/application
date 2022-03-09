@@ -258,7 +258,7 @@ export class TableGhostsComponent extends BaseDirective implements OnInit, OnDes
 
 					this.table.renderRows();
 
-					this.sunburstCacheService.clearReponse();
+					this.sunburstCacheService.clearResponse();
 					this.messageService.success('Staff member ' + staff.firstName + ' ' + staff.lastName + ' saved.');
 					if (traceOn()) {
 						console.log ('Onboarding the staff %d into the project %d', staff.idStaff, this.projectService.project.id);
@@ -315,7 +315,7 @@ export class TableGhostsComponent extends BaseDirective implements OnInit, OnDes
 							this.table.renderRows();
 
 							// We reset the cache to force a re-generation of the chart
-							this.sunburstCacheService.clearReponse();
+							this.sunburstCacheService.clearResponse();
 
 							this.messageService.info('The pseudo ' + ghost.pseudo + ' has been associated to '
 								+ ghost.staffRelated.firstName + ' ' + ghost.staffRelated.lastName);
@@ -350,7 +350,7 @@ export class TableGhostsComponent extends BaseDirective implements OnInit, OnDes
 
 		this.table.renderRows();
 		// We reset the cache to force a re-generation of the chart
-		this.sunburstCacheService.clearReponse();
+		this.sunburstCacheService.clearResponse();
 
 		return false;
 	}

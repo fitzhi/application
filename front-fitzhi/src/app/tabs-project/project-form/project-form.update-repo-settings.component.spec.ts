@@ -96,9 +96,9 @@ describe('ProjectFormComponent', () => {
 	it('Should cleanup the Sunburst cache data when the user change the selected branch.', () => {
 		expect(component).toBeTruthy();
 
-		const spyClearSessionStorage = spyOn(sunburstCacheService, 'clearReponse').and.callThrough();
+		const spyClearSessionStorage = spyOn(sunburstCacheService, 'clearResponse').and.callThrough();
 		sunburstCacheService.saveResponse('response');
-		expect(sunburstCacheService.getReponse()).toEqual('response');
+		expect(sunburstCacheService.getResponse()).toEqual('response');
 
 		// We mock the branches loading
 		const reqBranches = httpTestingController.expectOne('URL_OF_SERVER/api/project/1789/branches');
@@ -117,16 +117,16 @@ describe('ProjectFormComponent', () => {
 		fixture.detectChanges();
 
 		expect(spyClearSessionStorage).toHaveBeenCalled();
-		expect(sunburstCacheService.getReponse()).toBeNull();
+		expect(sunburstCacheService.getResponse()).toBeNull();
 
 	});
 
 	it('Should cleanup the Sunburst cache data when the user update the repository url.', () => {
 		expect(component).toBeTruthy();
 
-		const spyClearSessionStorage = spyOn(sunburstCacheService, 'clearReponse').and.callThrough();
+		const spyClearSessionStorage = spyOn(sunburstCacheService, 'clearResponse').and.callThrough();
 		sunburstCacheService.saveResponse('response');
-		expect(sunburstCacheService.getReponse()).toEqual('response');
+		expect(sunburstCacheService.getResponse()).toEqual('response');
 
 		// We mock the branches loading
 		const reqBranches = httpTestingController.expectOne('URL_OF_SERVER/api/project/1789/branches');
@@ -144,7 +144,7 @@ describe('ProjectFormComponent', () => {
 		fixture.detectChanges();
 
 		expect(spyClearSessionStorage).toHaveBeenCalled();
-		expect(sunburstCacheService.getReponse()).toBeNull();
+		expect(sunburstCacheService.getResponse()).toBeNull();
 
 	});
 
