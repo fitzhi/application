@@ -1,7 +1,10 @@
 #!/bin/sh
 
 export VERSION_FITZHI=`cat ../back-fitzhi/VERSION_FITZHI`
+export SONAR_HOST_URL=`cat ./SONAR_HOST_URL`
+
 echo "Build, push and test the Fitzhi container for the release ${VERSION_FITZHI} of Fitzhi."
+echo "Sonar server is located @ ${SONAR_HOST_URL}."
 
 # Terminating the last test if any.
 docker stop fitzhi
@@ -32,16 +35,16 @@ docker pull fitzhi/application:${VERSION_FITZHI}
 # Test inside the Fitzhi infrastructure.
 docker volume create fitzhi-data
 docker run --name fitzhi \
--e "urlSonarServer=http://192.168.1.155:9000" \
+-e "urlSonarServer=http://${SONAR_HOST_URL}:9000" \
 -e "login=c1574b8a8ca259d527d7c8d1d630e6322f2b0455" \
 -v fitzhi-data:/fitzhi/deploy/ \
 -p 80:80 -d --rm fitzhi/application:${VERSION_FITZHI}
 
 # For debugging purpose only...
 #docker run --name fitzhi \
-#-e "urlSonarServer=http://192.168.1.155:9000" \
+#-e "urlSonarServer=http://${SONAR_HOST_URL}:9000" \
 #-e "login=c1574b8a8ca259d527d7c8d1d630e6322f2b0455" \
 #-v fitzhi-data:/fitzhi/deploy/ \
-#-p 80:80 -ti --rm fitzhi/application:${VERSION_FITZHI} /bin/bash
+#-p 80:80 -ti --rm fitzhi/application:1.8-SNAPSHOT /bin/bash
 
 
