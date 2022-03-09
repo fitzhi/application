@@ -21,6 +21,7 @@ import { CinematicService } from '../../service/cinematic.service';
 import { ProjectService } from '../../service/project/project.service';
 import { SkillService } from '../../skill/service/skill.service';
 import { ListProjectsService } from '../list-project/list-projects-service/list-projects.service';
+import { SunburstCacheService } from '../project-sunburst/service/sunburst-cache.service';
 import { ProjectFormSkillHandler } from './skill/project-form-skill-handler';
 
 /**
@@ -141,6 +142,7 @@ export class ProjectFormComponent extends BaseDirective implements OnInit, After
 		public listProjectService: ListProjectsService,
 		public gitService: GitService,
 		public sonarService: SonarService,
+		private sunburstCacheService: SunburstCacheService,
 		private router: Router) {
 		super();
 
@@ -756,6 +758,10 @@ export class ProjectFormComponent extends BaseDirective implements OnInit, After
 
 		const url = ($event.target) ? $event.target.value : null;
 
+		if (this.projectService.project.id > -1) {
+			this.sunburstCacheService.clearReponse()
+		}
+
 		// Empty URL, nothing to do
 		if (!url) {
 			return;
@@ -874,6 +880,9 @@ export class ProjectFormComponent extends BaseDirective implements OnInit, After
 			console.log('New branch has been chosen', branch);
 		}
 		this.projectService.project.branch = branch;
+		if (this.projectService.project.id > -1) {
+			this.sunburstCacheService.clearReponse()
+		}
 	}
 
 	/**
