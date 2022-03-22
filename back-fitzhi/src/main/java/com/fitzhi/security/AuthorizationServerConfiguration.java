@@ -54,8 +54,8 @@ public class AuthorizationServerConfiguration extends AuthorizationServerConfigu
 	@Override
 	public void configure(ClientDetailsServiceConfigurer clients) throws Exception {
 
-		// There is is NOSONAR comment on this line, 
-		// because the Security check from Sonar falsely detects a credential with the couple password/refresh_token.
+		// There is a //NOSONAR comment on this line, 
+		// because the Security check from Sonar falsely detects a credential issue with the couple password/refresh_token.
 		clients.inMemory()
 			.withClient(TRUSTED_CLIENT_USERNAME)
 			.authorizedGrantTypes("password", "refresh_token")
