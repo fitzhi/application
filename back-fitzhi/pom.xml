@@ -21,7 +21,7 @@
 
 	<properties>
 		<jdk.version>11</jdk.version>
-		<spring.version>5.1.14.RELEASE</spring.version>
+		<spring.version>5.3.17</spring.version>
 		<spring-security.version>5.1.8.RELEASE</spring-security.version>
 		<spring-boot.version>2.1.13.RELEASE</spring-boot.version>
 		<spring-reactor-test.version>3.3.4.RELEASE</spring-reactor-test.version>
