@@ -31,7 +31,7 @@ export class AuthService extends InternalService {
 		}
 
 		let headers: HttpHeaders = new HttpHeaders();
-		headers = headers.append('Content-Type', 'application/x-www-urlencoded');
+		headers = headers.append('Content-Type', 'application/x-www-form-urlencoded');
 		headers = headers.append('Authorization', 'Basic ' + btoa('fitzhi-trusted-client' + ':secret'));
 
 		const params = new HttpParams()
@@ -40,8 +40,9 @@ export class AuthService extends InternalService {
 			.set('grant_type', 'password');
 
 		return this.httpClient.post<Token>(
-			localStorage.getItem('backendUrl') + '/oauth/token', '',
-				{ headers: headers, params: params })
+			localStorage.getItem('backendUrl') + '/oauth/token',
+				params.toString(),
+				{ headers: headers })
 			.pipe(
 				take(1),
 				switchMap(

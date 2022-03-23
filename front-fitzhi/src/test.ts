@@ -17,7 +17,7 @@ getTestBed().initTestEnvironment(
 
 const context = require.context('./', true, /\.spec\.ts$/);
 
-// const context = require.context('./', true,  /git\.service\.spec\.ts$/);
+// const context = require.context('./', true,  /auth\.service\.spec\.ts$/);
 // const context = require.context('./', true,  /project-form\.update-repo-settings\.component\.spec\.ts$/);
 // const context = require.context('./', true,  /starfield-header\.component\.spec\.ts$/);
 // const context = require.context('./', true,  /dashboard\.service\.calculateGeneralAverage\.spec\.ts$/);
