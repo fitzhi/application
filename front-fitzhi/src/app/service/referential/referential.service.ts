@@ -2,6 +2,7 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { BehaviorSubject } from 'rxjs';
 import { switchMap, take } from 'rxjs/operators';
+import { AuthenticationServer } from 'src/app/data/authentication-server';
 import { DeclaredSonarServer } from '../../data/declared-sonar-server';
 import { Ecosystem } from '../../data/ecosystem';
 import { OptimalSkillCoverage } from '../../data/optimal-skill-coverage';
@@ -64,13 +65,19 @@ export class ReferentialService {
 	 */
 	public sonarServers$ = new BehaviorSubject<DeclaredSonarServer[]>([]);
 
+
+	/**
+	 * BehaviorSubject containing the list of declared AuthenticationServers declared in the backend of Fitzhi.
+	 */
+	 public authenticationServers$ = new BehaviorSubject<AuthenticationServer[]>([]);
+
 	/**
 	 * This observable informs the application that all referrential data are loaded.
 	 */
 	public referentialLoaded$ = new BehaviorSubject<boolean>(false);
 
-	/*
-	 * Skills.
+	/**
+	 * the Skills loaded.
 	 */
 	public skills: Skill[] = [];
 
@@ -90,7 +97,6 @@ export class ReferentialService {
 				console.log('Fetching the profiles on URL ' + this.backendSetupService.url() + '/referential/profiles');
 			}
 		}
-		console.log(this.backendSetupService.url() + '/referential/profiles');
 
 		if (!this.backendSetupService.hasSavedAnUrl()) {
 			return;
@@ -208,6 +214,8 @@ export class ReferentialService {
 							topics['' + topic.id] = topic.title;
 						});
 						this.topics$.next(topics);
+
+						this.authenticationServers$.next([ new AuthenticationServer('Google', 'url', 'clientId', 'secret')]);
 
 						/**
 						 * All referential are loaded.

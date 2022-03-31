@@ -1,0 +1,66 @@
+<div class="container">
+
+	<form class="needs-validation" [formGroup]="connectionGroup" (submit)="onSubmit()">	
+		<div class="row">
+			<div class="col-6 labelConnection">
+				<label for="username" class="required labelConnection">Username</label>
+			</div>
+			<div class="col-6">
+				<input 
+					type="text" 
+					class="form-control required" 
+					id="user" name="username" 
+					placeholder="Username (Required)" 
+					formControlName="username"/>
+				<label *ngIf="username.touched && username.invalid" [ngClass]="'alert alert-warning'">
+					Username is required, and cannot exceed 16 characters max.
+				</label>
+			</div>
+		</div>
+
+		<div class="row">
+			<div class="col-6 labelConnection">
+				<label for="password" class="required labelConnection">Password</label>
+			</div>
+			<div class="col-6">
+				<input type="password" 
+					class="form-control required" 
+					id="password" name="password" 
+					placeholder="Password (Required)" 
+					formControlName="password"/>
+				<label *ngIf="password.touched && password.invalid" 
+					[ngClass]="'alert alert-warning'">
+					Password is required, with 8 chars min, and 16 chars max
+				</label>
+			</div>
+		</div>
+
+		<div class="row">
+			<div class="col-6 labelConnection">
+				<label for="confirmPassword" class="required labelConnection">Confirm the password</label>
+			</div>
+			<div class="col-6">
+				<input type="password" 
+					class="form-control required" 
+					id="passwordConfirmation" 
+					name="passwordConfirmation" 
+					placeholder="Password (Required)" 
+					formControlName="passwordConfirmation"/>
+				<label *ngIf="passwordConfirmation.touched && passwordConfirmation.invalid" 
+					[ngClass]="'alert alert-warning'">
+					Confirmation password must be identical to the one above.
+				</label>
+			</div>
+		</div>
+
+		<div class="row">
+			<div class="col-5"></div>
+			<div class="col-3">
+				<button id="cancelButton" class="cancelButton" type="button" alt="cancel this operation" (click)="onCancel()"></button>
+			</div>
+			<div class="col-3">
+				<button id="okButton" [ngClass]="classOkButton()" type="submit" [disabled]="connectionGroup.invalid"></button>
+			</div>
+		</div>
+	</form>
+</div>

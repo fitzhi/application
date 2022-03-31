@@ -27,8 +27,9 @@ export class DialogLegendSunburstComponent extends BaseDirective implements OnIn
 							this.referentialService.legendsLoaded$.subscribe(
 								legends => this.dataSource = this.referentialService.legends));
 					}
-				}));
-
+				}
+			)
+		);
 	}
 
 	ngOnDestroy() {

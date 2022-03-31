@@ -19,6 +19,7 @@ import { InstallService } from '../service/install/install.service';
 import { StaffService } from 'src/app/tabs-staff/service/staff.service';
 import { Collaborator } from 'src/app/data/collaborator';
 import { of } from 'rxjs';
+import { RegisterUserFormComponent } from './register-user-form/register-user-form.component';
 
 
 describe('RegisterUserComponent', () => {
@@ -54,7 +55,7 @@ describe('RegisterUserComponent', () => {
 
 	beforeEach(waitForAsync(() => {
 		TestBed.configureTestingModule({
-			declarations: [RegisterUserComponent],
+			declarations: [RegisterUserComponent, RegisterUserFormComponent],
 			providers: [ReferentialService, CinematicService, InstallService],
 			imports: [MatCheckboxModule, MatTableModule, FormsModule, MatPaginatorModule, MatGridListModule,
 				HttpClientTestingModule, HttpClientModule, BrowserAnimationsModule, MatFormFieldModule,
@@ -146,9 +147,9 @@ describe('RegisterUserComponent', () => {
 		const spyChangeCollaborator = spyOn(staffService, 'changeCollaborator').and.returnValue();
 		const spyRegisterUsers = spyOn(staffService, 'registerUser$').and.returnValue(of(new Collaborator()));
 
-		component.connectionGroup.get('username').setValue('myPersonalUser');
-		component.connectionGroup.get('password').setValue('myPersonalPass');
-		component.connectionGroup.get('passwordConfirmation').setValue('myPersonalPass');
+		component.registerUserFormComponent.connectionGroup.get('username').setValue('myPersonalUser');
+		component.registerUserFormComponent.connectionGroup.get('password').setValue('myPersonalPass');
+		component.registerUserFormComponent.connectionGroup.get('passwordConfirmation').setValue('myPersonalPass');
 		fixture.detectChanges();
 
 		const btnOk = fixture.debugElement.nativeElement.querySelector('#okButton');
@@ -159,4 +160,6 @@ describe('RegisterUserComponent', () => {
 		expect(spyRegisterUsers).toHaveBeenCalled();
 		expect(spyChangeCollaborator).toHaveBeenCalled();
 	});
+
+
 });

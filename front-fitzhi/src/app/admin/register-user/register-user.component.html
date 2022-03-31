@@ -33,68 +33,24 @@
 		</div>
 	</div>
 	<br/>
-	<div class="col-md-12">
-	  <form class="needs-validation" [formGroup]="connectionGroup" (submit)="onSubmit()">
-		
-			<div class="row">
-				<div class="col-md-5 labelConnection">
-					<label for="username" class="required labelConnection">Username</label>
-				</div>
-				<div class="col-md-7">
-					<input 
-						type="text" 
-						class="form-control required" 
-						id="user" name="username" 
-						placeholder="Username (Required)" 
-						formControlName="username"/>
-					<label *ngIf="username.touched && username.invalid" [ngClass]="'alert alert-warning'">
-						Username is required, and cannot exceed 16 characters max.
-					</label>
-				</div>
+	<div *ngIf="localOnly;then localOauthOnly else multipleOauth"></div>
+	<ng-template #localOauthOnly>
+		<div id="localOauthOnly" class="row">
+			<div class="col-4"></div>
+			<div class="col-8">
+				<register-user-form>
+				</register-user-form>
 			</div>
-
-			<div class="row">
-				<div class="col-md-5 labelConnection">
-					<label for="password" class="required labelConnection">Password</label>
-				</div>
-				<div class="col-md-7">
-					<input type="password" 
-						class="form-control required" 
-						id="password" name="password" 
-						placeholder="Password (Required)" 
-						formControlName="password"/>
-					<label *ngIf="password.touched && password.invalid" 
-						[ngClass]="'alert alert-warning'">
-						Password is required, with 8 chars min, and 16 chars max
-					</label>
-				</div>
+		</div>
+	</ng-template>
+	<ng-template #multipleOauth>
+		<div id="multipleOauth" class="row">
+			<div class="col-4">
 			</div>
-			<div class="row">
-				<div class="col-md-5 labelConnection">
-					<label for="confirmPassword" class="required labelConnection">Confirm the password</label>
-				</div>
-				<div class="col-md-7">
-					<input type="password" 
-						class="form-control required" 
-						id="passwordConfirmation" 
-						name="passwordConfirmation" 
-						placeholder="Password (Required)" 
-						formControlName="passwordConfirmation"/>
-					<label *ngIf="passwordConfirmation.touched && passwordConfirmation.invalid" 
-						[ngClass]="'alert alert-warning'">
-						Confirmation password must be identical to the one above.
-					</label>
-				</div>
+			<div class="col-8">
+				<register-user-form>
+				</register-user-form>
 			</div>
-			<div class="row">
-				<div class="col-md-8"></div>
-				<div class="col-md-2">
-					<button id="cancelButton" class="cancelButton" type="button" alt="cancel this operation" (click)="onCancel()"></button>
-				</div>
-				<div class="col-md-2">
-					<button id="okButton" [ngClass]="classOkButton()" type="submit" [disabled]="connectionGroup.invalid"></button>
-				</div>
-			</div>
-		</form>
-	</div>
+		</div>
+	</ng-template>
 </div>

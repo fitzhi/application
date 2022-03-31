@@ -126,6 +126,7 @@ import { StaffProjectsComponent } from './tabs-staff/staff-projects/staff-projec
 import { StaffRemoveComponent } from './tabs-staff/staff-remove/staff-remove.component';
 import { StaffComponent } from './tabs-staff/staff.component';
 import { WelcomeComponent } from './welcome/welcome.component';
+import { RegisterUserFormComponent } from './admin/register-user/register-user-form/register-user-form.component';
 
 @NgModule({
 	declarations: [
@@ -204,7 +205,8 @@ import { WelcomeComponent } from './welcome/welcome.component';
 		StarfieldComponent,
 		StarfieldHeaderComponent,
 		StarfieldContentComponent,
-		SummaryComponent
+		SummaryComponent,
+  RegisterUserFormComponent
 	],
 	imports: [
 		BsDropdownModule.forRoot(),
