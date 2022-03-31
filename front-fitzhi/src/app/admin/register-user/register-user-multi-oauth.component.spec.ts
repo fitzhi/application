@@ -20,7 +20,7 @@ import { RegisterUserFormComponent } from './register-user-form/register-user-fo
 import { RegisterUserComponent } from './register-user.component';
 
 
-describe('RegisterUserComponent', () => {
+describe('registerUserMultiOauthComponent', () => {
 	let component: RegisterUserComponent;
 	let fixture: ComponentFixture<RegisterUserComponent>;
 
