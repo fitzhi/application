@@ -1,5 +1,8 @@
 import { Component, EventEmitter, Input, OnDestroy, OnInit, Output, ViewChild } from '@angular/core';
 import { FormGroup } from '@angular/forms';
+import { EMPTY } from 'rxjs';
+import { switchMap } from 'rxjs/operators';
+import { AuthenticationServer } from 'src/app/data/authentication-server';
 import { ReferentialService } from 'src/app/service/referential/referential.service';
 import { BaseDirective } from '../../base/base-directive.directive';
 import { InstallService } from '../service/install/install.service';
@@ -39,22 +42,13 @@ export class RegisterUserComponent extends BaseDirective implements OnInit, OnDe
 	}
 
 	ngOnInit() {
-		this.subscriptions.add(
-			this.referentialService.referentialLoaded$.subscribe(
-				(doneAndOk: boolean) => {
-					if (doneAndOk) {
-						this.subscriptions.add(
-							this.referentialService.authenticationServers$.subscribe({
-								next: servers => {
-									console.log (servers.length);
-									this.localOnly = (servers.length === 0);
-								}
-							})
-						)
-					}
+		this.referentialService.referentialLoaded$
+			.pipe(switchMap(doneAndOk => (doneAndOk) ? this.referentialService.authenticationServers$ : EMPTY))
+			.subscribe({
+				next: (servers: AuthenticationServer[]) => {
+					this.localOnly = (servers.length === 0);
 				}
-			)
-		);
+			})
 	}
 
 	/**
@@ -64,6 +58,14 @@ export class RegisterUserComponent extends BaseDirective implements OnInit, OnDe
 		// We do know at this point the staff identifier corresponding to this user.
 		this.installService.installComplete();
 		this.messengerSkipAndConnect.emit(true);
+	}
+
+
+	/**
+	 * Calling the base class to unsubscribe all subscriptions.
+	 */
+	ngOnDestroy() {
+		super.ngOnDestroy();
 	}
 
 }

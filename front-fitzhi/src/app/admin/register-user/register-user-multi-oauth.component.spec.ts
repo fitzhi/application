@@ -14,6 +14,7 @@ import { By } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { AuthenticationServer } from 'src/app/data/authentication-server';
 import { TypeAuthenticationServer } from 'src/app/data/type-authentication-server';
+import { AlternativeOpenidConnectionComponent } from 'src/app/interaction/alternative-openid-connection/alternative-openid-connection.component';
 import { CinematicService } from 'src/app/service/cinematic.service';
 import { ReferentialService } from 'src/app/service/referential/referential.service';
 import { InstallService } from '../service/install/install.service';
@@ -55,7 +56,7 @@ describe('registerUserMultiOauthComponent', () => {
 
 	beforeEach(waitForAsync(() => {
 		TestBed.configureTestingModule({
-			declarations: [RegisterUserComponent, RegisterUserFormComponent],
+			declarations: [RegisterUserComponent, RegisterUserFormComponent, AlternativeOpenidConnectionComponent],
 			providers: [ReferentialService, CinematicService, InstallService],
 			imports: [MatCheckboxModule, MatTableModule, FormsModule, MatPaginatorModule, MatGridListModule,
 				HttpClientTestingModule, HttpClientModule, BrowserAnimationsModule, MatFormFieldModule,
@@ -74,8 +75,8 @@ describe('registerUserMultiOauthComponent', () => {
 
 		installService = TestBed.inject(InstallService);
 		referentialService = TestBed.inject(ReferentialService);
-		referentialService.authenticationServers$.next( [ new AuthenticationServer(TypeAuthenticationServer.Google, 'url', 'clientId', 'secret') ]);
-		
+		referentialService.authenticationServers$.next( 
+			[ new AuthenticationServer(TypeAuthenticationServer.Google, 'url', 'clientId', 'secret') ]);
 		referentialService.referentialLoaded$.next(true);
 
 		fixture.detectChanges();

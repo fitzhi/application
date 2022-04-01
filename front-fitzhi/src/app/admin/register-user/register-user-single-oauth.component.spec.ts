@@ -12,6 +12,7 @@ import { MatSliderModule } from '@angular/material/slider';
 import { MatTableModule } from '@angular/material/table';
 import { By } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { AlternativeOpenidConnectionComponent } from 'src/app/interaction/alternative-openid-connection/alternative-openid-connection.component';
 import { CinematicService } from 'src/app/service/cinematic.service';
 import { ReferentialService } from 'src/app/service/referential/referential.service';
 import { InstallService } from '../service/install/install.service';
@@ -52,7 +53,7 @@ describe('registerUserSingleOauthComponent', () => {
 
 	beforeEach(waitForAsync(() => {
 		TestBed.configureTestingModule({
-			declarations: [RegisterUserComponent, RegisterUserFormComponent],
+			declarations: [RegisterUserComponent, RegisterUserFormComponent, AlternativeOpenidConnectionComponent],
 			providers: [ReferentialService, CinematicService, InstallService],
 			imports: [MatCheckboxModule, MatTableModule, FormsModule, MatPaginatorModule, MatGridListModule,
 				HttpClientTestingModule, HttpClientModule, BrowserAnimationsModule, MatFormFieldModule,

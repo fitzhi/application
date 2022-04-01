@@ -20,6 +20,7 @@ import { StaffService } from 'src/app/tabs-staff/service/staff.service';
 import { Collaborator } from 'src/app/data/collaborator';
 import { of } from 'rxjs';
 import { RegisterUserFormComponent } from './register-user-form/register-user-form.component';
+import { AlternativeOpenidConnectionComponent } from 'src/app/interaction/alternative-openid-connection/alternative-openid-connection.component';
 
 
 describe('RegisterUserComponent', () => {
@@ -33,7 +34,7 @@ describe('RegisterUserComponent', () => {
 
 	beforeEach(waitForAsync(() => {
 		TestBed.configureTestingModule({
-			declarations: [RegisterUserComponent, RegisterUserFormComponent],
+			declarations: [RegisterUserComponent, RegisterUserFormComponent, AlternativeOpenidConnectionComponent],
 			providers: [ReferentialService, CinematicService, InstallService],
 			imports: [MatCheckboxModule, MatTableModule, FormsModule, MatPaginatorModule, MatGridListModule,
 				HttpClientTestingModule, HttpClientModule, BrowserAnimationsModule, MatFormFieldModule,

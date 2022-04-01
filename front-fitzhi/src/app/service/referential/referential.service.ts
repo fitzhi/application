@@ -90,6 +90,8 @@ export class ReferentialService {
 	 */
 	public loadAllReferentials(): void {
 
+//		this.authenticationServers$.next([ new AuthenticationServer(TypeAuthenticationServer.Google, 'url', 'clientId', 'secret')]);
+
 		if (traceOn()) {
 			if (!this.backendSetupService.hasSavedAnUrl()) {
 				console.log('First start of application. Referentials loading is postponed.');
@@ -215,8 +217,6 @@ export class ReferentialService {
 							topics['' + topic.id] = topic.title;
 						});
 						this.topics$.next(topics);
-
-						this.authenticationServers$.next([ new AuthenticationServer(TypeAuthenticationServer.Google, 'url', 'clientId', 'secret')]);
 
 						/**
 						 * All referential are loaded.
