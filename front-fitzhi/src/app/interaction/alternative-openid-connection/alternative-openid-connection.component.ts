@@ -12,7 +12,7 @@ import { ReferentialService } from 'src/app/service/referential/referential.serv
 })
 export class AlternativeOpenidConnectionComponent implements OnInit {
 
-	private google: AuthenticationServer = undefined;
+	public google: AuthenticationServer = undefined;
 
 	constructor(public referentialService: ReferentialService) { }
 
