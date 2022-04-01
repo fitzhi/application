@@ -18,7 +18,12 @@ getTestBed().initTestEnvironment(
 const context = require.context('./', true, /\.spec\.ts$/);
 
 // const context = require.context('./', true,  /auth\.service\.spec\.ts$/);
-// const context = require.context('./', true,  /project-form\.update-repo-settings\.component\.spec\.ts$/);
+// const context = require.context('./', true,  /register-user\.component\.spec\.ts$/);
+// const context = require.context('./', true,  /register-user-multi-oauth\.component\.spec\.ts$/);
+// const context = require.context('./', true,  /register-user-single-oauth\.component\.spec\.ts$/);
+// const context = require.context('./', true,  /register-user-form\.component\.spec\.ts$/);
+// const context = require.context('./', true,  /alternative-openid-connection-google\.component\.spec\.ts$/);
+
 // const context = require.context('./', true,  /starfield-header\.component\.spec\.ts$/);
 // const context = require.context('./', true,  /dashboard\.service\.calculateGeneralAverage\.spec\.ts$/);
 // const context = require.context('./', true,  /turnover\.service\.spec\.ts$/);

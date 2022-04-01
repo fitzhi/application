@@ -3,6 +3,7 @@ import { Injectable } from '@angular/core';
 import { BehaviorSubject } from 'rxjs';
 import { switchMap, take } from 'rxjs/operators';
 import { AuthenticationServer } from 'src/app/data/authentication-server';
+import { TypeAuthenticationServer } from 'src/app/data/type-authentication-server';
 import { DeclaredSonarServer } from '../../data/declared-sonar-server';
 import { Ecosystem } from '../../data/ecosystem';
 import { OptimalSkillCoverage } from '../../data/optimal-skill-coverage';
@@ -215,7 +216,7 @@ export class ReferentialService {
 						});
 						this.topics$.next(topics);
 
-						this.authenticationServers$.next([ new AuthenticationServer('Google', 'url', 'clientId', 'secret')]);
+						this.authenticationServers$.next([ new AuthenticationServer(TypeAuthenticationServer.Google, 'url', 'clientId', 'secret')]);
 
 						/**
 						 * All referential are loaded.

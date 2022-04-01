@@ -127,6 +127,7 @@ import { StaffRemoveComponent } from './tabs-staff/staff-remove/staff-remove.com
 import { StaffComponent } from './tabs-staff/staff.component';
 import { WelcomeComponent } from './welcome/welcome.component';
 import { RegisterUserFormComponent } from './admin/register-user/register-user-form/register-user-form.component';
+import { AlternativeOpenidConnectionComponent } from './interaction/alternative-openid-connection/alternative-openid-connection.component';
 
 @NgModule({
 	declarations: [
@@ -206,7 +207,8 @@ import { RegisterUserFormComponent } from './admin/register-user/register-user-f
 		StarfieldHeaderComponent,
 		StarfieldContentComponent,
 		SummaryComponent,
-  RegisterUserFormComponent
+  RegisterUserFormComponent,
+  AlternativeOpenidConnectionComponent
 	],
 	imports: [
 		BsDropdownModule.forRoot(),
