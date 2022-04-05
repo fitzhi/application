@@ -1,11 +1,8 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { GoogleLoginProvider } from 'angularx-social-login';
-import { BehaviorSubject, EMPTY, Observable, of, Subject } from 'rxjs';
+import { BehaviorSubject } from 'rxjs';
 import { switchMap, take } from 'rxjs/operators';
-import { AuthenticationServer } from 'src/app/data/authentication-server';
 import { OpenidServer } from 'src/app/data/openid-server';
-import { TypeAuthenticationServer } from 'src/app/data/type-authentication-server';
 import { DeclaredSonarServer } from '../../data/declared-sonar-server';
 import { Ecosystem } from '../../data/ecosystem';
 import { OptimalSkillCoverage } from '../../data/optimal-skill-coverage';
@@ -106,7 +103,7 @@ export class ReferentialService {
 				console.log('First start of application. Referentials loading is postponed.');
 				return;
 			} else {
-				console.log('Fetching the profiles on URL ' + this.backendSetupService.url() + '/referential/openid-server');
+				console.log('Fetching the profiles on URL ' + this.backendSetupService.url() + '/referential/openid-servers');
 			}
 		}
 
@@ -114,7 +111,7 @@ export class ReferentialService {
 			return;
 		}
 
-		this.httpClient.get<OpenidServer[]>(this.backendSetupService.url() + '/referential/openid-server')
+		this.httpClient.get<OpenidServer[]>(this.backendSetupService.url() + '/referential/openid-servers')
 			.pipe(
 				take(1),
 				switchMap(
