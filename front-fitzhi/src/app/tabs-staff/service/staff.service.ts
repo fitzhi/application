@@ -451,15 +451,13 @@ export class StaffService {
 	 * @param password  the given password
 	 */
 	registerUser$(veryFirstConnection: boolean, username: string, password: string): Observable<Collaborator> {
-		let params: HttpParams = new HttpParams();
-		params = params.set('login', username);
-		params = params.set('password', password);
+
+		const body = { login: username, password: password};
 
 		return this.httpClient.post<Collaborator>(
 			this.backendSetupService.url() + '/admin/' +
-			(veryFirstConnection ? 'veryFirstUser' : 'register'),
-			null,
-			{params});
+			(veryFirstConnection ? 'classic/primeRegister' : 'classic/register'),
+			body);
 	}
 
 	/**
