@@ -1,3 +1,4 @@
+import { CssSelector } from '@angular/compiler';
 import { AfterViewInit, Component, EventEmitter, OnDestroy, OnInit, Output } from '@angular/core';
 import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
 import { MatTableDataSource } from '@angular/material/table';
@@ -9,6 +10,7 @@ import { ProjectContributors } from 'src/app/data/external/ProjectContributors';
 import { traceOn } from 'src/app/global';
 import { StaffListService } from 'src/app/service/staff-list-service/staff-list.service';
 import { StaffService } from 'src/app/tabs-staff/service/staff.service';
+import { environment } from 'src/environments/environment';
 import Sunburst from 'sunburst-chart';
 import { BaseDirective } from '../../base/base-directive.directive';
 import { Constants } from '../../constants';
@@ -502,6 +504,12 @@ export class ProjectSunburstComponent extends BaseDirective implements OnInit, A
     *   2) We put the tooltip on top of the components stack (z-index:'500')
     */
 	hackSunburstStyle() {
+
+		// We do not hack the CSS in Test mode.
+		if (environment.hasOwnProperty('doNotHackCss')) {
+			return;
+		}
+
 		const sheets = document.styleSheets;
 		let sheet, rules, rule;
 		let i, j, k, iLen, jLen, kLen;
@@ -524,7 +532,8 @@ export class ProjectSunburstComponent extends BaseDirective implements OnInit, A
 
 			// W3C model
 			rules = getCssRules(sheet);
-			if (rules) {
+			if (sheet.cssRules) {
+				rules = sheet.cssRules;
 				for (j = 0, jLen = rules.length; j < jLen; j++) {
 					rule = rules[j];
 					if (typeof rule.selectorText !== 'undefined') {

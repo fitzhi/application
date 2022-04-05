@@ -13,14 +13,13 @@ import { RunTimeFile } from './runtime-file';
  * and saved into the local storage.
  * - autoConnect : automatic connection mode `TRUE`/`FALSE`.
  * This setting is actually only `TRUE` for the demo version of Fitzhi in the website.
- */
+  */
 export const environment = {
 	production: false,
 	debug: true,
 	version: require('../../package.json').version,
 	buildTime: RunTimeFile.buildtime,
 	apiUrl: 'http://localhost:8080',
-	autoConnect: false
 };
 
 /*
