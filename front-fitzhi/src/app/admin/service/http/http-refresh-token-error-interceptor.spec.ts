@@ -37,6 +37,15 @@ describe(`HttpRefreshTokenErrorInterceptor`, () => {
 		httpMock = TestBed.inject(HttpTestingController);
 		dataService = TestBed.inject(DataService);
 		authService = TestBed.inject(AuthService);
+
+		// We add this seting because we test the localStorage authService.isConnected()
+		//
+		// For development convenience, we deactivate the security control.
+		// if (localStorage.getItem('dev') === '1') {
+		//		return true;
+		// }
+		localStorage.setItem('dev', '0');
+
 		router = TestBed.inject(Router);
 
 	});
