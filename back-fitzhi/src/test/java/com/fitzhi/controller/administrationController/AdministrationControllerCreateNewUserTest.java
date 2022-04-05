@@ -103,7 +103,7 @@ public class AdministrationControllerCreateNewUserTest {
 		
 		ClassicCredentials cc = ClassicCredentials.of("adminForTest", "passForTest");
 
-		MvcResult result = this.mvc.perform(post("/api/admin/classicVeryFirstUser") 
+		MvcResult result = this.mvc.perform(post("/api/admin/classic/primeRegister") 
 				.header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON)
 				.content(gson.toJson(cc)))
 				.andExpect(status().isInternalServerError())

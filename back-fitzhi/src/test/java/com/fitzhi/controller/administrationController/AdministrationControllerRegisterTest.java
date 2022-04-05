@@ -8,10 +8,16 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
+import java.time.LocalDate;
+
 import com.fitzhi.bean.Administration;
 import com.fitzhi.bean.StaffHandler;
+import com.fitzhi.controller.util.LocalDateAdapter;
+import com.fitzhi.data.internal.ClassicCredentials;
 import com.fitzhi.data.internal.Staff;
 import com.fitzhi.exception.ApplicationException;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -21,6 +27,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.context.junit4.SpringRunner;
@@ -39,9 +46,11 @@ import org.springframework.test.web.servlet.MockMvc;
 @TestPropertySource(properties = { "allowSelfRegistration=false" }) 
 public class AdministrationControllerRegisterTest {
 
-	private static final String LOGIN = "login";
-
-	private static final String PASS_WORD = "password"; //NOSONAR
+	/**
+	 * Initialization of the Google JSON parser.
+	 */
+	Gson gson = new GsonBuilder().
+		registerTypeAdapter(LocalDate.class, new LocalDateAdapter().nullSafe()).create();
 
 	@Autowired
 	private MockMvc mvc;
@@ -64,13 +73,11 @@ public class AdministrationControllerRegisterTest {
 		when(administration.createNewUser("adminForTest", "passForTest")).thenReturn(
 			new Staff(1789, "login", "password"));
 
-		//
-		// We disable this line for the Sonar analysis to avoid a useless password security check. 
-		// This fake password is useless for any hacker
-		//
-		this.mvc.perform(post("/api/admin/register") //NOSONAR
-					.param(LOGIN, "adminForTest") 
-					.param(PASS_WORD, "passForTest"))  
+		ClassicCredentials cc = ClassicCredentials.of("adminForTest", "passForTest");
+
+		this.mvc.perform(post("/api/admin/classic/register")
+				.header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON)
+				.content(gson.toJson(cc)))
 				.andExpect(status().isOk())
 				.andExpect(jsonPath("$.idStaff", is(1789)))
 				.andExpect(jsonPath("$.login", is("login")))
@@ -85,13 +92,11 @@ public class AdministrationControllerRegisterTest {
 				
 		when(administration.createNewUser("adminForTest", "passForTest")).thenThrow(new ApplicationException(666, "Failure"));
 
-		//
-		// We disable this line for the Sonar analysis to avoid a useless password security check. 
-		// This fake password is useless for any hacker
-		//
-		this.mvc.perform(post("/api/admin/register") //NOSONAR
-					.param(LOGIN, "adminForTest") 
-					.param(PASS_WORD, "passForTest"))  
+		ClassicCredentials cc = ClassicCredentials.of("adminForTest", "passForTest");
+
+		this.mvc.perform(post("/api/admin/classic/register")
+				.header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON)
+				.content(gson.toJson(cc)))
 				.andExpect(status().isInternalServerError())
 				.andExpect(jsonPath("$.code", is(666)))
 				.andExpect(jsonPath("$.message", is("Failure")))

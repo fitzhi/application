@@ -10,13 +10,18 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.time.LocalDate;
 import java.util.Optional;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fitzhi.ApiError;
 import com.fitzhi.bean.Administration;
 import com.fitzhi.bean.StaffHandler;
+import com.fitzhi.controller.util.LocalDateAdapter;
+import com.fitzhi.data.internal.ClassicCredentials;
 import com.fitzhi.data.internal.Staff;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 
 import org.junit.After;
 import org.junit.Assert;
@@ -27,12 +32,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.MediaType;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
-import org.springframework.util.LinkedMultiValueMap;
-import org.springframework.util.MultiValueMap;
 
 import lombok.extern.slf4j.Slf4j;
 
@@ -51,6 +56,12 @@ import lombok.extern.slf4j.Slf4j;
 @SpringBootTest(properties="allowSelfRegistration=false")
 @Slf4j
 public class AdministrationControllerSelfRegisteringDisallowedTest {
+
+	/**
+	 * Initialization of the Google JSON parser.
+	 */
+	Gson gson = new GsonBuilder().
+		registerTypeAdapter(LocalDate.class, new LocalDateAdapter().nullSafe()).create();
 
 	@Value("${applicationOutDirectory}")
 	private String rootLocation;
@@ -83,13 +94,12 @@ public class AdministrationControllerSelfRegisteringDisallowedTest {
 	@WithMockUser
 	public void register() throws Exception {
 
-		MultiValueMap<String, String> params = new LinkedMultiValueMap<>();
-	    params.add("login", TEST_USER);
-	    params.add("password", "test-pass"); // NOSONAR
+		ClassicCredentials cc = ClassicCredentials.of(TEST_USER, "test-pass");
 
-	    MvcResult result = mvc.perform(post("/api/admin/register")
-	        .params(params)
-	        .accept("application/json;charset=UTF-8"))
+	    MvcResult result = mvc.perform(post("/api/admin/classic/register")
+			.header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON)
+			.content(gson.toJson(cc))
+			.accept("application/json;charset=UTF-8"))
 	        .andExpect(status().isInternalServerError())
 	        .andExpect(content().contentType("application/json;charset=UTF-8"))
 			.andExpect(status().isInternalServerError()).andReturn();

@@ -50,9 +50,8 @@ public class ResourceServerConfiguration extends ResourceServerConfigurerAdapter
 
 				"/api/admin/isVeryFirstConnection", 
 				"/api/admin/saveVeryFirstConnection", 
-				"/api/admin/classicVeryFirstUser",
-				"/api/admin/openIdVeryFirstUser",
-				"/api/admin/register",
+				"/api/admin/classic",
+				"/api/admin/openId",
 				"/api/test/ping",
 
 				// All projets are broadcasted ? (it's a question. I do not know why the complete list of projects has to to be broadcast)

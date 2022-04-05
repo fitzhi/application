@@ -82,7 +82,7 @@ public class AdministrationControllerVeryFirstUserTest {
 		// We disable this line for the Sonar analysis to avoid a useless password security check. 
 		// This fake password is useless for any hacker
 		//
-		this.mvc.perform(post("/api/admin/classicVeryFirstUser")
+		this.mvc.perform(post("/api/admin/classic/primeRegister")
 			.header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON)
 			.content(gson.toJson(cc)))
 			.andExpect(status().isOk())
@@ -104,7 +104,7 @@ public class AdministrationControllerVeryFirstUserTest {
 		// We disable this line for the Sonar analysis to avoid a useless password security check. 
 		// This fake password is useless for any hacker
 		//
-		this.mvc.perform(post("/api/admin/classicVeryFirstUser")
+		this.mvc.perform(post("/api/admin/classic/primeRegister")
 			.header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON)
 			.content(gson.toJson(cc)))
 			.andExpect(status().isInternalServerError())

@@ -82,7 +82,7 @@ public class AdminController {
 	@ApiOperation(
 		value="Create the FIRST admin user for Fitzhi with the classic way (user/password). This creation is executed during the installation."
 	)
-	@PostMapping("/classicVeryFirstUser")
+	@PostMapping("/classic/primeRegister")
 	public Staff veryFirstUser(@RequestBody ClassicCredentials classicCredentials) throws ApplicationException {
 		
 		if (log.isDebugEnabled() && !this.staffHandler.getStaff().isEmpty()) {
@@ -144,11 +144,9 @@ public class AdminController {
 		value="Creates a new user.",
 		notes = " This creation is allowed if the global setting 'allowSelfRegistration' is set to 'True'."
 	)
-	@PostMapping("/register")
-	public Staff autoRegister(
-			@RequestParam("login") String login,
-			@RequestParam("password") String password) throws ApplicationException {
-		return this.internalCreateNewUser(login, password);	
+	@PostMapping("/classic/register")
+	public Staff autoRegister(@RequestBody ClassicCredentials credentials) throws ApplicationException {
+		return this.internalCreateNewUser(credentials.getLogin(), credentials.getPassword());	
 	}	
 	
 	@ResponseBody
