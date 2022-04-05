@@ -1,9 +1,7 @@
-<div>
-	<div class="container">
-		<div class="row" *ngIf="googleService.isRegistered$|async">
-			<div class="col-12">
-				<div id="btnGoogle" (click)="googleService.render()"></div>
-			</div>
+<div class="container">
+	<div class="row" *ngIf="googleService.isRegistered$|async">
+		<div class="col-12">
+			<div id="btnGoogle" (click)="googleService.render()"></div>
 		</div>
 	</div>
 </div>

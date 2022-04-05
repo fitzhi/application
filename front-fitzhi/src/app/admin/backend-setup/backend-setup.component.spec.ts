@@ -40,6 +40,7 @@ describe('BackendSetupComponent', () => {
 		fixture = TestBed.createComponent(BackendSetupComponent);
 		component = fixture.componentInstance;
 		debugElement = fixture.debugElement;
+		
 	});
 
 	afterEach(() => {

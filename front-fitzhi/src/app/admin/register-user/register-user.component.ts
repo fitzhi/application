@@ -1,4 +1,6 @@
 import { Component, EventEmitter, Input, OnDestroy, OnInit, Output, ViewChild } from '@angular/core';
+import { BehaviorSubject } from 'rxjs';
+import { traceOn } from 'src/app/global';
 import { ReferentialService } from 'src/app/service/referential/referential.service';
 import { BaseDirective } from '../../base/base-directive.directive';
 import { InstallService } from '../service/install/install.service';
@@ -18,6 +20,11 @@ export class RegisterUserComponent extends BaseDirective implements OnInit, OnDe
 	 */
 	 @Input() veryFirstConnection: boolean;
 
+	/**
+	 * We'll send to the parent component (startingSetup) the new user has been created.
+	 */
+	 @Output() messengerUserRegistered$ = new EventEmitter<number>();
+
 	 /**
 	 * We'll send to the parent component (startingSetup) the new user has been created.
 	 */
@@ -29,7 +36,7 @@ export class RegisterUserComponent extends BaseDirective implements OnInit, OnDe
 	 * - ONE UNIQUE local authentication server, the fitzhi server
 	 * - Multiple authentication servers as the Fitzhi backend and the Google server or instance
 	 */
-	public localOnly = false;
+	public localOnly$ = new BehaviorSubject<boolean>(true);
 
 	constructor(
 		private installService: InstallService,
@@ -41,7 +48,9 @@ export class RegisterUserComponent extends BaseDirective implements OnInit, OnDe
 		this.referentialService.referentialLoaded$
 			.subscribe({
 				next: doneAndOk => {
-					this.localOnly = (doneAndOk) && (this.referentialService.openidServers.length === 0)
+					if (doneAndOk) {
+						this.localOnly$.next((this.referentialService.openidServers.length === 0));
+					}
 				}
 			});
 
@@ -56,6 +65,13 @@ export class RegisterUserComponent extends BaseDirective implements OnInit, OnDe
 		this.messengerSkipAndConnect.emit(true);
 	}
 
+
+	public onRegisterUser(idStaff: number) {
+		if (traceOn()) {
+			console.log ("onRegisterUser(%d)", idStaff);
+		}
+		this.messengerUserRegistered$.emit(idStaff);
+	}
 
 	/**
 	 * Calling the base class to unsubscribe all subscriptions.

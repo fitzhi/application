@@ -21,7 +21,7 @@ export class RegisterUserFormComponent extends BaseDirective implements OnInit, 
 	 @Input() veryFirstConnection: boolean;
 
 	/**
-	 * We'll send to the parent component (startingSetup) the new user has been created.
+	 * We'll send to the parent component (RegisterUser) the new user has been created.
 	 */
 	 @Output() messengerUserRegistered = new EventEmitter<number>();
 

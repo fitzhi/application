@@ -109,6 +109,7 @@ describe('RegisterUserComponent', () => {
 
 		expect(spyRegisterUsers).toHaveBeenCalled();
 		expect(spyChangeCollaborator).toHaveBeenCalled();
+
 	});
 
 

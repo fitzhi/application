@@ -81,12 +81,6 @@ export class ReferentialService {
 	 */
 	public openidServers: OpenidServer[] = [];
 
-	/**
-	 * Observable emitting the Google setting for Fitzhì.
-	 */
-	public googleOauthClientId$ = new BehaviorSubject<string>('');
-
-	
 	constructor(
 		private httpClient: HttpClient, 
 		private googleService: GoogleService,
@@ -123,7 +117,7 @@ export class ReferentialService {
 							});
 							console.groupEnd();
 						}
-						servers.forEach(server => this.openidServers.push(server));
+						this.openidServers.push(...servers);
 						this.googleService.takeInAccountDeclaredServers(servers);
 						return this.httpClient.get<Profile[]> 	(this.backendSetupService.url() + '/referential/profiles');
 					}))

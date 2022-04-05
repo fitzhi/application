@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { BehaviorSubject } from 'rxjs';
 import { OpenidServer } from 'src/app/data/openid-server';
+import { traceOn } from 'src/app/global';
 
 declare var google: any;
 
@@ -24,6 +25,9 @@ export class GoogleService {
 	takeInAccountDeclaredServers(servers: OpenidServer[]) {
 		const server = servers.find(server => server.serverId === this.GOOGLE_SERVER_ID);
 		if (server) {
+			if (traceOn()) {
+				console.log ('Google oauth server found with %s as clientId', server.clientId)
+			}
 			this.clientId = server.clientId;
 			this.isRegistered$.next(true);
 		}
@@ -39,7 +43,6 @@ export class GoogleService {
 		let id = 'google-client-script';
 		
 		let script = document.getElementById(id);
-		console.log (script);
 		if (script === null) {
 			
 			let crscript = document.createElement('script');			
@@ -50,7 +53,7 @@ export class GoogleService {
 			
 			crscript.onload = () => {
 				google.accounts.id.initialize({
-					client_id:'690807651852-sqjienqot7ui0pufj4ie4n320pss5ipc.apps.googleusercontent.com',
+					client_id: this.clientId,
 					callback: handleCredentialResponse
 				});
 			
@@ -59,7 +62,7 @@ export class GoogleService {
 			
 		} else {
 			google.accounts.id.initialize({
-				client_id:'690807651852-sqjienqot7ui0pufj4ie4n320pss5ipc.apps.googleusercontent.com',
+				client_id: this.clientId,
 				callback: handleCredentialResponse
 			});	
 		}
