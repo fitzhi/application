@@ -48,8 +48,8 @@ public class ProjectSonarControllerSaveEntryTest {
 	/**
 	 * Initialization of the Google JSON parser.
 	 */
-	Gson gson = new GsonBuilder()
-		      .registerTypeAdapter(LocalDate.class, new LocalDateAdapter().nullSafe()).create();
+	Gson gson = new GsonBuilder().
+		registerTypeAdapter(LocalDate.class, new LocalDateAdapter().nullSafe()).create();
 
 	@Autowired
 	private MockMvc mvc;

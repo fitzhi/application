@@ -50,7 +50,8 @@ public class ResourceServerConfiguration extends ResourceServerConfigurerAdapter
 
 				"/api/admin/isVeryFirstConnection", 
 				"/api/admin/saveVeryFirstConnection", 
-				"/api/admin/veryFirstUser",
+				"/api/admin/classicVeryFirstUser",
+				"/api/admin/openIdVeryFirstUser",
 				"/api/admin/register",
 				"/api/test/ping",
 

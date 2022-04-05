@@ -5,6 +5,8 @@ import static com.fitzhi.Error.MESSAGE_INVALID_FIRST_USER_ADMIN_ALREADY_CREATED;
 
 import com.fitzhi.bean.Administration;
 import com.fitzhi.bean.StaffHandler;
+import com.fitzhi.data.internal.ClassicCredentials;
+import com.fitzhi.data.internal.OpenIdCredentials;
 import com.fitzhi.data.internal.Staff;
 import com.fitzhi.exception.ApplicationException;
 
@@ -12,6 +14,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -77,12 +80,10 @@ public class AdminController {
 	 */
 	@ResponseBody
 	@ApiOperation(
-		value="Create the FIRST admin user for Fitzhi. This creation is executed during the installation."
+		value="Create the FIRST admin user for Fitzhi with the classic way (user/password). This creation is executed during the installation."
 	)
-	@PostMapping("/veryFirstUser")
-	public Staff veryFirstUser(
-			@RequestParam("login") String login,
-			@RequestParam("password") String password) throws ApplicationException {
+	@PostMapping("/classicVeryFirstUser")
+	public Staff veryFirstUser(@RequestBody ClassicCredentials classicCredentials) throws ApplicationException {
 		
 		if (log.isDebugEnabled() && !this.staffHandler.getStaff().isEmpty()) {
 			log.debug ("the staff collection is not empty and has 'may-be' already registered users, see below...");
@@ -107,13 +108,29 @@ public class AdminController {
 		}
 		
 		if (numberOfUsersAlreadyRegistered == 0) {
-			return this.internalCreateNewUser(login, password);	
+			return this.internalCreateNewUser(classicCredentials.getLogin(), classicCredentials.getPassword());	
 		} else {
 			throw new ApplicationException(
 				CODE_INVALID_FIRST_USER_ADMIN_ALREADY_CREATED, 
 				MESSAGE_INVALID_FIRST_USER_ADMIN_ALREADY_CREATED);
 		}
 	}	
+
+	/**
+	 * This method is used to create the first admin user.
+	 * @param login the first admin user login
+	 * @param password this first admin user password
+	 * @throws ApplicationException thrown if any problem occurs.
+	 * @return the newly created staff entry
+	 */
+	@ResponseBody
+	@ApiOperation(
+		value="Create the FIRST admin user for Fitzhi from the OpenId JWT. This creation is executed during the installation."
+	)
+	@PostMapping("/openIdVeryFirstUser")
+	public Staff veryFirstUser(@RequestBody OpenIdCredentials openIdToken) throws ApplicationException {
+		return null;
+	}
 
 	/**
 	 * This method creates a new user if the setting <code><b>allowSelfRegistration</b></code> is set 
@@ -175,6 +192,7 @@ public class AdminController {
 		Staff staff = administration.createNewUser(login, password);
 		return staff;
 	}
+
 
 
 }
