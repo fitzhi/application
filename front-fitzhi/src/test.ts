@@ -25,7 +25,7 @@ const context = require.context('./', true, /\.spec\.ts$/);
 // const context = require.context('./', true,  /alternative-openid-connection-google\.component\.spec\.ts$/);
 
 // const context = require.context('./', true,  /starfield-header\.component\.spec\.ts$/);
-// const context = require.context('./', true,  /dashboard\.service\.calculateGeneralAverage\.spec\.ts$/);
+// const context = require.context('./', true,  /google\.service\.spec\.ts$/);
 // const context = require.context('./', true,  /turnover\.service\.spec\.ts$/);
 // const context = require.context('./', true,  /starfield-broadcastConstellations\.service\.spec\.ts$/);
 // const context = require.context('./', true,  /backend-setup\.component\.spec\.ts$/);
@@ -40,12 +40,14 @@ const context = require.context('./', true, /\.spec\.ts$/);
 // const context = require.context('./', true,  /summary\.component\.spec\.ts$/);
 // const context = require.context('./', true,  /treemap-skills\.component\.spec\.ts$/);
 // const context = require.context('./', true,  /project-sunburst-with-data\.component\.spec\.ts$/);
-// const context = require.context('./', true,  /sonar-initSonarServer\$\.service\.spec\.ts$/);
+// const context = require.context('./', true,  /referential\.service\.spec\.ts$/);
 // const context = require.context('./', true,  /project-actualizeProject\.service\.spec\.ts$/);
 // const context = require.context('./', true,  /treemap-projects-chart-2\.component\.spec\.ts$/);
 // const context = require.context('./', true,  /project-sunburst-with-data\.component\.spec\.ts$/);
 // const context = require.context('./', true,  /fitzhi-dashboard-help-popper-treemap-skills\.component\.spec\.ts$/);
-// const context = require.context('./', true,  /dashboardService-testingComponentFor-colorTile\.component\.spec\.ts$/);
+// const context = require.context('./', true,  /project-sunburst-reload-button\.component\.spec\.ts$/);
+
+
 // const context = require.context('./', true,  /dashboard\.service\.globalScoreSkillDistribution\.spec\.ts$/);
 // And load the modules.
 context.keys().map(context);

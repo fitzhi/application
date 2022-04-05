@@ -12,6 +12,7 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { MessageBoxService } from 'src/app/interaction/message-box/service/message-box.service';
 import { BackendSetupService } from 'src/app/service/backend-setup/backend-setup.service';
 import { FileService } from 'src/app/service/file.service';
+import { GoogleService } from 'src/app/service/google/google.service';
 import { ReferentialService } from 'src/app/service/referential/referential.service';
 import { StaffService } from 'src/app/tabs-staff/service/staff.service';
 import { RegisterUserFormComponent } from './register-user-form.component';
@@ -21,6 +22,7 @@ describe('RegisterUserFormComponent', () => {
 
 	let component: TestHostComponent;
 	let fixture: ComponentFixture<TestHostComponent>;
+	let googleService: GoogleService;
 
 	@Component({
 		selector: 'app-host-component',
@@ -70,13 +72,18 @@ describe('RegisterUserFormComponent', () => {
 	beforeEach(() => {
 		fixture = TestBed.createComponent(TestHostComponent);
 		component = fixture.componentInstance;
+
+		googleService = TestBed.inject(GoogleService);
+		const spy = spyOn(googleService, 'initialize').and.returnValue();
+
 		fixture.detectChanges();
 	});
 
 	it('should be created without error.', () => {
+		expect(component).toBeDefined();
 	});
 
-	it('should NOT activate the button Ok if the password length is lower than 8 characters.', () => {
+	it('should NOT activate the button Ok, if the password length is lower than 8 characters.', () => {
 
 		setUser('frvidal');
 		setPassword('pass123');
@@ -87,7 +94,7 @@ describe('RegisterUserFormComponent', () => {
 		expect(btnOk.nativeElement.disabled).toBeTruthy();
 	});
 
-	it('should NOT activate the button Ok if the password is not correctly confirmed.', () => {
+	it('should NOT activate the button Ok, if the password is not correctly confirmed.', () => {
 
 		setUser('frvidal');
 		setPassword('pass123word');

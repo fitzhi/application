@@ -31,7 +31,6 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { NgxChartsModule } from '@swimlane/ngx-charts';
 import { NgxPopper } from 'angular-popper';
-import { GoogleLoginProvider, SocialAuthServiceConfig, SocialLoginModule } from 'angularx-social-login';
 import { ControlledRisingSkylineModule } from 'controlled-rising-skyline';
 import { DynamicPieChartModule } from 'dynamic-pie-chart';
 import { BsDropdownModule } from 'ngx-bootstrap/dropdown';
@@ -130,6 +129,7 @@ import { StaffRemoveComponent } from './tabs-staff/staff-remove/staff-remove.com
 import { StaffComponent } from './tabs-staff/staff.component';
 import { WelcomeComponent } from './welcome/welcome.component';
 
+
 @NgModule({
 	declarations: [
 		AppComponent,
@@ -208,8 +208,8 @@ import { WelcomeComponent } from './welcome/welcome.component';
 		StarfieldHeaderComponent,
 		StarfieldContentComponent,
 		SummaryComponent,
-  RegisterUserFormComponent,
-  AlternativeOpenidConnectionComponent
+		RegisterUserFormComponent,
+		AlternativeOpenidConnectionComponent
 	],
 	imports: [
 		BsDropdownModule.forRoot(),
@@ -249,12 +249,11 @@ import { WelcomeComponent } from './welcome/welcome.component';
 		DynamicPieChartModule,
 		ControlledRisingSkylineModule,
 		RisingSkylineModule,
-		SocialLoginModule
 	],
 	providers: [
+		ReferentialService,
 		CinematicService,
 		StaffService,
-		ReferentialService,
 		PieDashboardService,
 		AuthGuardService,
 		TokenService,
@@ -278,20 +277,9 @@ import { WelcomeComponent } from './welcome/welcome.component';
 			provide: LOCALE_ID, 
 			useValue: 'fr'
 		},
-		// Google authentication settings.
-		{
-			provide: 'SocialAuthServiceConfig',
-			useValue: {
-				autoLogin: false,
-				providers: [
-					{
-						id: GoogleLoginProvider.PROVIDER_ID,
-						provider: new GoogleLoginProvider('690807651852-sqjienqot7ui0pufj4ie4n320pss5ipc.apps.googleusercontent.com')
-					}
-				]
-			} as SocialAuthServiceConfig
-		}
+
 		// Remove this line or change the useValue property to your regional settings
+		// provider: new GoogleLoginProvider('690807651852-sqjienqot7ui0pufj4ie4n320pss5ipc.apps.googleusercontent.com')
 
 
 	],

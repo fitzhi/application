@@ -33,6 +33,10 @@ describe('ReferentialService', () => {
 
 		service.loadAllReferentials();
 
+		const req0 = httpMock.expectOne('HOST_URL/api/referential/openid-server');
+		expect(req0.request.method).toBe('GET');
+		req0.flush([]);
+
 		const req1 = httpMock.expectOne('HOST_URL/api/referential/profiles');
 		expect(req1.request.method).toBe('GET');
 		req1.flush([]);

@@ -31,7 +31,6 @@
     "@swimlane/ngx-charts": "^18.0.1",
     "@yaireo/tagify": "^2.23.1",
     "angular-popper": "^2.0.1",
-    "angularx-social-login": "^3.5.7",
     "ansi-regex": ">=5.0.1",
     "bootstrap": "^4.5.0",
     "bufferutil": "^4.0.1",

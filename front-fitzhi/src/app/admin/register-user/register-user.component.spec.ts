@@ -21,12 +21,14 @@ import { Collaborator } from 'src/app/data/collaborator';
 import { of } from 'rxjs';
 import { RegisterUserFormComponent } from './register-user-form/register-user-form.component';
 import { AlternativeOpenidConnectionComponent } from 'src/app/interaction/alternative-openid-connection/alternative-openid-connection.component';
+import { GoogleService } from 'src/app/service/google/google.service';
 
 
 describe('RegisterUserComponent', () => {
 	let component: RegisterUserComponent;
 	let fixture: ComponentFixture<RegisterUserComponent>;
-
+	let googleService: GoogleService;
+	
 	let httpClient: HttpClient;
 	let httpTestingController: HttpTestingController;
 
@@ -35,7 +37,7 @@ describe('RegisterUserComponent', () => {
 	beforeEach(waitForAsync(() => {
 		TestBed.configureTestingModule({
 			declarations: [RegisterUserComponent, RegisterUserFormComponent, AlternativeOpenidConnectionComponent],
-			providers: [ReferentialService, CinematicService, InstallService],
+			providers: [ReferentialService, CinematicService, InstallService, GoogleService],
 			imports: [MatCheckboxModule, MatTableModule, FormsModule, MatPaginatorModule, MatGridListModule,
 				HttpClientTestingModule, HttpClientModule, BrowserAnimationsModule, MatFormFieldModule,
 				ReactiveFormsModule, MatSliderModule, MatInputModule, MatDialogModule]
@@ -52,6 +54,9 @@ describe('RegisterUserComponent', () => {
 		component = fixture.componentInstance;
 
 		installService = TestBed.inject(InstallService);
+
+		const googleService = TestBed.inject(GoogleService);
+		const spy = spyOn(googleService, 'initialize').and.returnValue();
 
 		fixture.detectChanges();
 	});

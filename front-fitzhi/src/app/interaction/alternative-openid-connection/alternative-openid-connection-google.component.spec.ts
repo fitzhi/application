@@ -1,11 +1,10 @@
 import { HttpClientModule } from '@angular/common/http';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
-import { Component } from '@angular/core';
+import { AfterViewInit, Component } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { MatFormFieldModule } from '@angular/material/form-field';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { AuthenticationServer } from 'src/app/data/authentication-server';
-import { TypeAuthenticationServer } from 'src/app/data/type-authentication-server';
+import { TokenService } from 'src/app/admin/service/token/token.service';
+import { GoogleService } from 'src/app/service/google/google.service';
 import { ReferentialService } from 'src/app/service/referential/referential.service';
 import { AlternativeOpenidConnectionComponent } from './alternative-openid-connection.component';
 
@@ -21,14 +20,18 @@ describe('Google OpenidConnectionComponent', () => {
 				<alternative-openid-connection></alternative-openid-connection>
 			</div>`})
 
-	class TestHostComponent {
+	class TestHostComponent implements AfterViewInit {
+
 		constructor() {}
+
+		ngAfterViewInit(): void {
+		}
 	}
  
 	beforeEach(async () => {
 		await TestBed.configureTestingModule({
 			declarations: [ AlternativeOpenidConnectionComponent, TestHostComponent ],
-			providers: [ReferentialService],
+			providers: [ReferentialService, GoogleService],
 			imports: [HttpClientTestingModule, HttpClientModule, BrowserAnimationsModule]
 
 		})
@@ -38,11 +41,8 @@ describe('Google OpenidConnectionComponent', () => {
 	beforeEach(() => {
 		fixture = TestBed.createComponent(TestHostComponent);
 		component = fixture.componentInstance;
-
-		const referentialService = TestBed.inject(ReferentialService);
-		referentialService.authenticationServers$.next([ new AuthenticationServer (TypeAuthenticationServer.Google, 'url', 'clientId', 'secret') ]);
-		referentialService.referentialLoaded$.next(true);
-
+		const googleService = TestBed.inject(GoogleService);
+		const spy = spyOn(googleService, 'initialize').and.returnValue();
 		fixture.detectChanges();
 	});
 
@@ -53,6 +53,12 @@ describe('Google OpenidConnectionComponent', () => {
 	});
 
 	it('should display the Google button if Google is registered as a possible authentication server.', () => {
+
+		const googleService = TestBed.inject(GoogleService);
+		googleService.clientId = "myClientId";
+		googleService.isRegistered$.next(true);
+		fixture.detectChanges();
+
 		const btnGoogle = fixture.debugElement.nativeElement.querySelector('#btnGoogle');
 		expect(btnGoogle).not.toBeNull();
 	});

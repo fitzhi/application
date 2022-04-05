@@ -525,7 +525,7 @@ export class ProjectSunburstComponent extends BaseDirective implements OnInit, A
 					}
 				}
 
-				// IE model
+			// IE model
 			} else if (sheet.rules) {
 				rules = sheet.rules;
 				for (k = 0, kLen = rules.length; k < kLen; k++) {

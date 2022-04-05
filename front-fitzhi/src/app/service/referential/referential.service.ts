@@ -1,8 +1,10 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { BehaviorSubject } from 'rxjs';
+import { GoogleLoginProvider } from 'angularx-social-login';
+import { BehaviorSubject, EMPTY, Observable, of, Subject } from 'rxjs';
 import { switchMap, take } from 'rxjs/operators';
 import { AuthenticationServer } from 'src/app/data/authentication-server';
+import { OpenidServer } from 'src/app/data/openid-server';
 import { TypeAuthenticationServer } from 'src/app/data/type-authentication-server';
 import { DeclaredSonarServer } from '../../data/declared-sonar-server';
 import { Ecosystem } from '../../data/ecosystem';
@@ -14,8 +16,9 @@ import { SupportedMetric } from '../../data/supported-metric';
 import { TopicLegend } from '../../data/topic-legend';
 import { traceOn } from '../../global';
 import { BackendSetupService } from '../backend-setup/backend-setup.service';
+import { GoogleService } from '../google/google.service';
 
-@Injectable()
+@Injectable({providedIn: 'root'})
 export class ReferentialService {
 
 	/*
@@ -66,12 +69,6 @@ export class ReferentialService {
 	 */
 	public sonarServers$ = new BehaviorSubject<DeclaredSonarServer[]>([]);
 
-
-	/**
-	 * BehaviorSubject containing the list of declared AuthenticationServers declared in the backend of Fitzhi.
-	 */
-	 public authenticationServers$ = new BehaviorSubject<AuthenticationServer[]>([]);
-
 	/**
 	 * This observable informs the application that all referrential data are loaded.
 	 */
@@ -82,7 +79,21 @@ export class ReferentialService {
 	 */
 	public skills: Skill[] = [];
 
-	constructor(private httpClient: HttpClient, private backendSetupService: BackendSetupService) {}
+	/**
+	 * Array of Open ID servers. This array of settings is loaded from the backend server.
+	 */
+	public openidServers: OpenidServer[] = [];
+
+	/**
+	 * Observable emitting the Google setting for Fitzhì.
+	 */
+	public googleOauthClientId$ = new BehaviorSubject<string>('');
+
+	
+	constructor(
+		private httpClient: HttpClient, 
+		private googleService: GoogleService,
+		private backendSetupService: BackendSetupService) {}
 
 	/**
 	 * Loading all referential.
@@ -90,14 +101,12 @@ export class ReferentialService {
 	 */
 	public loadAllReferentials(): void {
 
-//		this.authenticationServers$.next([ new AuthenticationServer(TypeAuthenticationServer.Google, 'url', 'clientId', 'secret')]);
-
 		if (traceOn()) {
 			if (!this.backendSetupService.hasSavedAnUrl()) {
 				console.log('First start of application. Referentials loading is postponed.');
 				return;
 			} else {
-				console.log('Fetching the profiles on URL ' + this.backendSetupService.url() + '/referential/profiles');
+				console.log('Fetching the profiles on URL ' + this.backendSetupService.url() + '/referential/openid-server');
 			}
 		}
 
@@ -105,7 +114,22 @@ export class ReferentialService {
 			return;
 		}
 
-		this.httpClient.get<Profile[]>(this.backendSetupService.url() + '/referential/profiles')
+		this.httpClient.get<OpenidServer[]>(this.backendSetupService.url() + '/referential/openid-server')
+			.pipe(
+				take(1),
+				switchMap(
+					(servers: OpenidServer[]) => {
+						if (traceOn()) {
+							console.groupCollapsed('OpenId servers : ');
+							servers.forEach(function (server) {
+								console.log(server.serverId + ' ' + server.clientId);
+							});
+							console.groupEnd();
+						}
+						servers.forEach(server => this.openidServers.push(server));
+						this.googleService.takeInAccountDeclaredServers(servers);
+						return this.httpClient.get<Profile[]> 	(this.backendSetupService.url() + '/referential/profiles');
+					}))
 			.pipe(
 				take(1),
 				switchMap(
@@ -226,4 +250,15 @@ export class ReferentialService {
 				);
 	}
 
+
+//	public oauth = { "clientId": "690807651852-sqjienqot7ui0pufj4ie4n320pss5ipc.apps.googleusercontent.com" } as SocialClientConfig;
+//	public o = new BehaviorSubject<SocialClientConfig>(this.oauth);
+
+	/**
+	 * @returns the Social (Google, Microsot, GitHub...) configuration registered for FitzhI.
+	 *
+	public getSocialConfigFactory$(): Observable<SocialClientConfig> {
+		return this.referentialLoaded$.pipe(switchMap(doneAndOk => doneAndOk ? this.o : EMPTY));
+	}
+	*/
 }

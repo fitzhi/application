@@ -1,5 +1,4 @@
 import { TestBed } from '@angular/core/testing';
-import { GoogleLoginProvider, SocialAuthService, SocialAuthServiceConfig, SocialLoginModule } from 'angularx-social-login';
 import { GoogleService } from './google.service';
 
 
@@ -8,29 +7,69 @@ describe('GoogleService', () => {
 
 	beforeEach(() => {
 		TestBed.configureTestingModule({
-			providers: [
-				SocialAuthService,
-				
-				// Google authentication settings.
-				{
-					provide: 'SocialAuthServiceConfig',
-					useValue: {
-						autoLogin: false,
-						providers: [
-							{
-								id: GoogleLoginProvider.PROVIDER_ID,
-								provider: new GoogleLoginProvider('690807651852-sqjienqot7ui0pufj4ie4n320pss5ipc.apps.googleusercontent.com')
-							}
-						]
-					} as SocialAuthServiceConfig
-				}
-			],
-			imports: [SocialLoginModule]
+			providers: [],
+			imports: []
 		});
 		service = TestBed.inject(GoogleService);
 	});
 
-	it('should be created', () => {
+	it('take in account an empty array of server retrieved from the backend.', done => {
 		expect(service).toBeTruthy();
+		expect(service.clientId).toBeUndefined();
+		service.takeInAccountDeclaredServers ([]);
+		expect(service.clientId).toBeUndefined();
+		service.isRegistered$.subscribe({
+			next: isRegistered => {
+				expect(isRegistered).toBeFalse();
+				done();
+			}
+		});
 	});
+
+	it('take in account the Google server declared in the backend.', done => {
+		expect(service).toBeTruthy();
+		expect(service.clientId).toBeUndefined();
+		service.takeInAccountDeclaredServers (
+			[
+				{
+					serverId: "GOOGLE",
+					clientId: "theclientIdGoogle.com"
+				},
+				{
+					serverId: "Nope",
+					clientId: "N/A.com"
+				}
+			]);
+		expect(service.clientId).toBe("theclientIdGoogle.com");
+		service.isRegistered$.subscribe({
+			next: isRegistered => {
+				expect(isRegistered).toBeTrue();
+				done();
+			}
+		});
+	});
+
+	it('do not take in account the Google server if it is not declared in the backend.', done => {
+		expect(service).toBeTruthy();
+		expect(service.clientId).toBeUndefined();
+		service.takeInAccountDeclaredServers (
+			[
+				{
+					serverId: "NOT_GOOGLE",
+					clientId: "theclientIdGoogle.com"
+				},
+				{
+					serverId: "Nope",
+					clientId: "N/A.com"
+				}
+			]);
+		expect(service.clientId).toBeUndefined();
+		service.isRegistered$.subscribe({
+			next: isRegistered => {
+				expect(isRegistered).toBeFalse();
+				done();
+			}
+		});
+	});
+
 });

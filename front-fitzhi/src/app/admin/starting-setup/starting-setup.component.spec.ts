@@ -19,9 +19,6 @@ import { ReferentialService } from 'src/app/service/referential/referential.serv
 import { BackendSetupComponent } from '../backend-setup/backend-setup.component';
 import { StartingSetupComponent } from './starting-setup.component';
 
-
-
-
 describe('StartingSetupComponent', () => {
 	let component: StartingSetupComponent;
 	let fixture: ComponentFixture<StartingSetupComponent>;

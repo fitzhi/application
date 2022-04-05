@@ -1,17 +1,8 @@
 <div>
 	<div class="container">
-		<div class="row" *ngIf="google">
+		<div class="row" *ngIf="googleService.isRegistered$|async">
 			<div class="col-12">
-				<button id="btnGoogle" class="btn btn-info rounded w-100">
-					<div class="d-inline-flex p-0 m-0 align-items-center">
-						<div class="col-3 p-0">
-							<img src="./assets/img/logo-google.png" class="w-100 h-100" />
-						</div>
-						<div class="col-9 d-inline-flex">
-							<span class="h5">Sign in with Google</span>
-						</div>
-					</div>
-				</button>
+				<div id="btnGoogle" (click)="googleService.render()"></div>
 			</div>
 		</div>
 	</div>

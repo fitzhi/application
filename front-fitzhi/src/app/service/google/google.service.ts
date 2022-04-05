@@ -1,19 +1,95 @@
 import { Injectable } from '@angular/core';
-import { GoogleLoginProvider, SocialAuthService } from 'angularx-social-login';
+import { BehaviorSubject } from 'rxjs';
+import { OpenidServer } from 'src/app/data/openid-server';
+
+declare var google: any;
 
 @Injectable({
 	providedIn: 'root'
 })
 export class GoogleService {
 
-	private promise = this.authService.signIn(GoogleLoginProvider.PROVIDER_ID);
+	public GOOGLE_SERVER_ID = "GOOGLE";
 
-	constructor(private authService: SocialAuthService) { }
+	public isRegistered$ = new BehaviorSubject<boolean>(false);
 
+	public clientId: string;
 
-	signInWithGoogle(): void {
-		this.promise.then(
-			(user) => {
+	constructor() { }
+
+	/**
+	 * Take in account the Google openId server settings if the Google has been registered.
+	 * @param servers the authentification servers loaded fron the backend.
+	 */
+	takeInAccountDeclaredServers(servers: OpenidServer[]) {
+		const server = servers.find(server => server.serverId === this.GOOGLE_SERVER_ID);
+		if (server) {
+			this.clientId = server.clientId;
+			this.isRegistered$.next(true);
+		}
+	}
+
+	initialize(document) {
+		let handleCredentialResponse = (response:any) => {
+			const data = {idToken:response.credential,oauth:'v3'};
+			console.log (data.idToken);
+			this.loginCheckSocial(data);
+		}
+		
+		let id = 'google-client-script';
+		
+		let script = document.getElementById(id);
+		console.log (script);
+		if (script === null) {
+			
+			let crscript = document.createElement('script');			
+			crscript.setAttribute('src', 'https://accounts.google.com/gsi/client');
+			crscript.setAttribute('id', id);
+			crscript.setAttribute('async', '');
+			document.body.appendChild(crscript);
+			
+			crscript.onload = () => {
+				google.accounts.id.initialize({
+					client_id:'690807651852-sqjienqot7ui0pufj4ie4n320pss5ipc.apps.googleusercontent.com',
+					callback: handleCredentialResponse
+				});
+			
+				google.accounts.id.renderButton(document.getElementById("btnGoogle"),{ theme: "outline", size: "large" });
+			}
+			
+		} else {
+			google.accounts.id.initialize({
+				client_id:'690807651852-sqjienqot7ui0pufj4ie4n320pss5ipc.apps.googleusercontent.com',
+				callback: handleCredentialResponse
+			});	
+		}
+	}
+
+	/**
+	 * Display the Google connection dialog.
+	 */
+	public render() {
+		google.accounts.id.prompt();
+	}
+
+	public isLoggedin(){
+		console.log ('isLoggedin()');
+	}
+
+	/**
+	 * 
+	 * @param data 
+	 */
+	public loginCheckSocial(data: any) {
+		console.log (data);
+	}
+
+	/*
+	public signInWithGoogle(): void {
+		this.authService.initState.subscribe({
+			next: value => {
+			this.authService.signIn(GoogleLoginProvider.PROVIDER_ID).then((user) => {
+
 				console.log (user)
 				console.log (user.firstName)
 				console.log (`authToken ${user.authToken}`)
@@ -31,15 +107,15 @@ export class GoogleService {
 							console.log ("his.tokenService.token.access_token", this.tokenService.token.access_token);
 						}
 					});
-				*/
+				*
 
 			},
 			(error) => {
 				console.log(error);
 			}
-		)
-	}
+		);
+	}})
 
-
+	} */
 
 }

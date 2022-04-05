@@ -85,6 +85,7 @@ export class StartingSetupComponent extends BaseDirective implements OnDestroy {
 		this.skillService.loadSkills();
 
 		setTimeout(() => this.stepper.next(), 0);
+
 	}
 
 	/**
@@ -105,6 +106,7 @@ export class StartingSetupComponent extends BaseDirective implements OnDestroy {
 		}
 		this.completed[1] = true;
 		this.idStaff = $event;
+		
 		setTimeout(() => this.stepper.next(), 0);
 	}
 

@@ -26,30 +26,6 @@ describe('registerUserSingleOauthComponent', () => {
 
 	let httpClient: HttpClient;
 	let httpTestingController: HttpTestingController;
-	let referentialService: ReferentialService;
-	
-	let installService: InstallService;
-
-	function setUser(value: string) {
-		const user = fixture.debugElement.query(By.css('#user'));
-		user.nativeElement.value = value;
-		user.nativeElement.dispatchEvent(new Event('input'));
-		fixture.detectChanges();
-	}
-
-	function setPassword(value: string) {
-		const password = fixture.debugElement.query(By.css('#password'));
-		password.nativeElement.value = value; // This is not a credential. //NOSONAR
-		password.nativeElement.dispatchEvent(new Event('input'));
-		fixture.detectChanges();
-	}
-
-	function setConfirmedPassword(value: string) {
-		const passwordConfirmation = fixture.debugElement.query(By.css('#passwordConfirmation'));
-		passwordConfirmation.nativeElement.value = value; // This is not a credential. //NOSONAR
-		passwordConfirmation.nativeElement.dispatchEvent(new Event('input'));
-		fixture.detectChanges();
-	}
 
 	beforeEach(waitForAsync(() => {
 		TestBed.configureTestingModule({
@@ -70,17 +46,10 @@ describe('registerUserSingleOauthComponent', () => {
 		fixture = TestBed.createComponent(RegisterUserComponent);
 		component = fixture.componentInstance;
 
-		installService = TestBed.inject(InstallService);
-		referentialService = TestBed.inject(ReferentialService);
-		referentialService.authenticationServers$.next( [ ]);
+		const referentialService = TestBed.inject(ReferentialService);
+		referentialService.referentialLoaded$.next(true);
 
 		fixture.detectChanges();
-
-		component.registerUserFormComponent.connectionGroup.get('username').setValue('myPersonalUser');
-		component.registerUserFormComponent.connectionGroup.get('password').setValue('myPersonalPass');
-		component.registerUserFormComponent.connectionGroup.get('passwordConfirmation').setValue('myPersonalPass');
-		fixture.detectChanges();
-
 	});
 
 	it('should display the Google connection if the openid google authentication server has been declared.', () => {

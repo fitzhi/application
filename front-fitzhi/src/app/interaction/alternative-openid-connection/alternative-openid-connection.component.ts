@@ -1,9 +1,5 @@
-import { Component, OnInit, Type } from '@angular/core';
-import { EMPTY } from 'rxjs';
-import { switchMap } from 'rxjs/operators';
-import { AuthenticationServer } from 'src/app/data/authentication-server';
-import { TypeAuthenticationServer } from 'src/app/data/type-authentication-server';
-import { ReferentialService } from 'src/app/service/referential/referential.service';
+import { Component, OnInit } from '@angular/core';
+import { GoogleService } from 'src/app/service/google/google.service';
 
 @Component({
   selector: 'alternative-openid-connection',
@@ -12,18 +8,13 @@ import { ReferentialService } from 'src/app/service/referential/referential.serv
 })
 export class AlternativeOpenidConnectionComponent implements OnInit {
 
-	public google: AuthenticationServer = undefined;
+	public google = true;
 
-	constructor(public referentialService: ReferentialService) { }
+	constructor(
+		public googleService: GoogleService) { }
 
-	ngOnInit(): void {	
-		this.referentialService.referentialLoaded$
-			.pipe(switchMap(doneAndOk => (doneAndOk) ? this.referentialService.authenticationServers$ : EMPTY))
-			.subscribe({
-				next: (servers: AuthenticationServer[]) => {
-					this.google = servers.find(server => server.typeAuthenticationServer === TypeAuthenticationServer.Google);
-				}
-			})
+	ngOnInit(): void {
+		this.googleService.initialize(document);
 	}
-
+	
 }

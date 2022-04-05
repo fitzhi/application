@@ -2,10 +2,8 @@ import { HttpClientModule } from '@angular/common/http';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { Component } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { MatFormFieldModule } from '@angular/material/form-field';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { AuthenticationServer } from 'src/app/data/authentication-server';
-import { TypeAuthenticationServer } from 'src/app/data/type-authentication-server';
+import { GoogleService } from 'src/app/service/google/google.service';
 import { ReferentialService } from 'src/app/service/referential/referential.service';
 import { AlternativeOpenidConnectionComponent } from './alternative-openid-connection.component';
 
@@ -38,7 +36,8 @@ describe('Empty alternative OpenidConnection Component', () => {
 	beforeEach(() => {
 		fixture = TestBed.createComponent(TestHostComponent);
 		component = fixture.componentInstance;
-
+		const googleService = TestBed.inject(GoogleService);
+		const spy = spyOn(googleService, 'initialize').and.returnValue();
 		fixture.detectChanges();
 	});
 

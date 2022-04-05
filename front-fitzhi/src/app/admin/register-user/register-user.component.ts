@@ -1,8 +1,4 @@
 import { Component, EventEmitter, Input, OnDestroy, OnInit, Output, ViewChild } from '@angular/core';
-import { FormGroup } from '@angular/forms';
-import { EMPTY } from 'rxjs';
-import { switchMap } from 'rxjs/operators';
-import { AuthenticationServer } from 'src/app/data/authentication-server';
 import { ReferentialService } from 'src/app/service/referential/referential.service';
 import { BaseDirective } from '../../base/base-directive.directive';
 import { InstallService } from '../service/install/install.service';
@@ -33,7 +29,7 @@ export class RegisterUserComponent extends BaseDirective implements OnInit, OnDe
 	 * - ONE UNIQUE local authentication server, the fitzhi server
 	 * - Multiple authentication servers as the Fitzhi backend and the Google server or instance
 	 */
-	public localOnly = true;
+	public localOnly = false;
 
 	constructor(
 		private installService: InstallService,
@@ -43,12 +39,12 @@ export class RegisterUserComponent extends BaseDirective implements OnInit, OnDe
 
 	ngOnInit() {
 		this.referentialService.referentialLoaded$
-			.pipe(switchMap(doneAndOk => (doneAndOk) ? this.referentialService.authenticationServers$ : EMPTY))
 			.subscribe({
-				next: (servers: AuthenticationServer[]) => {
-					this.localOnly = (servers.length === 0);
+				next: doneAndOk => {
+					this.localOnly = (doneAndOk) && (this.referentialService.openidServers.length === 0)
 				}
-			})
+			});
+
 	}
 
 	/**

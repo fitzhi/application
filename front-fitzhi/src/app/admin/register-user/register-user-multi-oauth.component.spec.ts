@@ -12,8 +12,6 @@ import { MatSliderModule } from '@angular/material/slider';
 import { MatTableModule } from '@angular/material/table';
 import { By } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { AuthenticationServer } from 'src/app/data/authentication-server';
-import { TypeAuthenticationServer } from 'src/app/data/type-authentication-server';
 import { AlternativeOpenidConnectionComponent } from 'src/app/interaction/alternative-openid-connection/alternative-openid-connection.component';
 import { CinematicService } from 'src/app/service/cinematic.service';
 import { ReferentialService } from 'src/app/service/referential/referential.service';
@@ -28,32 +26,7 @@ describe('registerUserMultiOauthComponent', () => {
 
 	let httpClient: HttpClient;
 	let httpTestingController: HttpTestingController;
-	let referentialService: ReferentialService;
 	
-	let installService: InstallService;
-
-	function setUser(value: string) {
-		const user = fixture.debugElement.query(By.css('#user'));
-		user.nativeElement.value = value;
-		user.nativeElement.dispatchEvent(new Event('input'));
-		fixture.detectChanges();
-	}
-
-	function setPassword(value: string) {
-		const password = fixture.debugElement.query(By.css('#password'));
-		password.nativeElement.value = value; // This is not a credential. //NOSONAR
-		password.nativeElement.dispatchEvent(new Event('input'));
-		fixture.detectChanges();
-	}
-
-	function setConfirmedPassword(value: string) {
-		const passwordConfirmation = fixture.debugElement.query(By.css('#passwordConfirmation'));
-		passwordConfirmation.nativeElement.value = value; // This is not a credential. //NOSONAR
-		passwordConfirmation.nativeElement.dispatchEvent(new Event('input'));
-		fixture.detectChanges();
-	}
-
-
 	beforeEach(waitForAsync(() => {
 		TestBed.configureTestingModule({
 			declarations: [RegisterUserComponent, RegisterUserFormComponent, AlternativeOpenidConnectionComponent],
@@ -73,16 +46,14 @@ describe('registerUserMultiOauthComponent', () => {
 		fixture = TestBed.createComponent(RegisterUserComponent);
 		component = fixture.componentInstance;
 
-		installService = TestBed.inject(InstallService);
-		referentialService = TestBed.inject(ReferentialService);
-		referentialService.authenticationServers$.next( 
-			[ new AuthenticationServer(TypeAuthenticationServer.Google, 'url', 'clientId', 'secret') ]);
+		const referentialService = TestBed.inject(ReferentialService);
+		referentialService.openidServers.push( { "serverId": "GOOGLE", "clientId": "myClientId"} );
 		referentialService.referentialLoaded$.next(true);
 
 		fixture.detectChanges();
 	});
 
-	it('should display the Google connection if the openid google authentication server has been declared.', () => {
+	it('should display the Google connection if the openId google authentication server has been declared.', () => {
 		const localOauthOnly = fixture.debugElement.nativeElement.querySelector('#localOauthOnly');
 		expect(localOauthOnly).toBeNull();
 		const multiOauth = fixture.debugElement.nativeElement.querySelector('#multipleOauth');
