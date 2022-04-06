@@ -70,10 +70,24 @@ public class EcosystemAnalyzerImpl implements EcosystemAnalyzer {
 	@Autowired
 	ReferentialHandler<ExperienceDetectionTemplate> referentialHandlerExperienceDetectionTemplate; 
 
+
 	/**
-	 * Name of the file containing the settings required to detect a skill and its level in 
+	 * Name of the file containing the ecosystems declared in the system.
+	 * @see Ecosystem 
 	 */
-	private final String nameOfFileCodeLevelDetectionSettings = "experience-detection-template.json";
+	private final String ecosystemFilename = "ecosystem.json";
+
+	/**
+	 * Name of the file containing the abacus in experience
+	 * @see ExperienceAbacus 
+	 */
+	private final String experienceAbacusFilename = "experience-abacus.json";
+
+	/**
+	 * Name of the file containing the settings required to detect a skill and its level 
+	 * @see ExperienceDetectionTemplate
+	 */
+	private final String experienceDetectionTemplateFilename = "experience-detection-template.json";
 
 	/**
 	 * Ecosystems.
@@ -93,13 +107,13 @@ public class EcosystemAnalyzerImpl implements EcosystemAnalyzer {
 	
 	@Override
 	public Map<Integer, Ecosystem> loadEcosystems() throws ApplicationException {
-		List<Ecosystem> list = referentialHandlerEcosystem.loadReferential("ecosystem.json", new TypeToken<List<Ecosystem>>() {});
+		List<Ecosystem> list = referentialHandlerEcosystem.loadReferential(ecosystemFilename, new TypeToken<List<Ecosystem>>() {});
 		return list.stream().collect(Collectors.toMap(Ecosystem::getId, Function.identity()));
 	}
 	
 	@Override
 	public List<ExperienceAbacus> loadExperienceAbacus() throws ApplicationException {
-		return referentialHandlerExperienceAbacus.loadReferential("experience-abacus.json", new TypeToken<List<ExperienceAbacus>>() {});
+		return referentialHandlerExperienceAbacus.loadReferential(experienceAbacusFilename, new TypeToken<List<ExperienceAbacus>>() {});
 	}
 
 	@Override
@@ -177,7 +191,7 @@ public class EcosystemAnalyzerImpl implements EcosystemAnalyzer {
 	@Override
 	public Map<Integer, ExperienceDetectionTemplate> loadExperienceDetectionTemplates() throws ApplicationException {
 		List<ExperienceDetectionTemplate> list = referentialHandlerExperienceDetectionTemplate.loadReferential(
-			nameOfFileCodeLevelDetectionSettings, 
+			experienceDetectionTemplateFilename, 
 			new TypeToken<List<ExperienceDetectionTemplate>>() {});
 		return list.stream().collect(Collectors.toMap(ExperienceDetectionTemplate::getIdEDT, Function.identity()));
 	}
