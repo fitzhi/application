@@ -127,6 +127,9 @@ public class Error {
 	public static final int CODE_GOOGLE_TOKEN_ERROR = -1037;
 	public static final String MESSAGE_GOOGLE_TOKEN_ERROR = "Google token verification error.";
 
+	public static final int CODE_INVALID_OPENID_SERVER = -1038;
+	public static final String MESSAGE_INVALID_OPENID_SERVER = "Invalid OpenId server {0}.";
+
 	private Error() {
 	}
 	

@@ -35,6 +35,8 @@ import com.fitzhi.data.internal.Author;
 import com.fitzhi.data.internal.Constellation;
 import com.fitzhi.data.internal.Experience;
 import com.fitzhi.data.internal.Mission;
+import com.fitzhi.data.internal.OpenId;
+import com.fitzhi.data.internal.OpenIdToken;
 import com.fitzhi.data.internal.PeopleCountExperienceMap;
 import com.fitzhi.data.internal.Project;
 import com.fitzhi.data.internal.ResumeSkill;
@@ -632,6 +634,21 @@ public class StaffHandlerImpl extends AbstractDataSaverLifeCycleImpl implements 
 		return staff;
 	}
 
+	@Override
+	public Staff createStaffMember(OpenIdToken openIdToken) throws ApplicationException {
+		Staff staff = new Staff();
+		staff.setFirstName(openIdToken.getGivenName());
+		staff.setLastName(openIdToken.getFamilyName());
+		staff.setEmail(openIdToken.getEmail());
+
+		List<OpenId> list = new ArrayList<>();
+		list.add(OpenId.of(openIdToken.getServerId(), openIdToken.getUserId()));
+		staff.setOpenIds(list);
+		
+		addNewStaff(staff);
+		return staff;
+	}
+	
 	/**
 	 * Add a new staff in the staff collection
 	 * @param staff the new Staff member

@@ -1,5 +1,6 @@
 package com.fitzhi.security.google;
 
+import com.fitzhi.data.internal.OpenIdToken;
 import com.fitzhi.exception.ApplicationException;
 import com.google.api.client.http.HttpTransport;
 import com.google.api.client.json.JsonFactory;
@@ -15,11 +16,17 @@ public interface TokenHandler {
     boolean isDeclared();
 
     /**
+     * get the <b>client Identifier</b> for this  authentication server <em>(if any)</em>.
+     */
+    String getClientId();
+
+    /**
      * Take in account the given token.
      * @param idTokenString the Java Web Token received from this server
      * @param transport the type of transport
      * @param jsonFactory The JSON factory to decode the JSON string
-     * @throws ApplicationException thrown if any problem occurs
+     * @return the resulting {@link OpenIdToken}. This token might be in error.
+     * @throws ApplicationException thrown if any technical problem occurs
      */
-    void takeInAccountToken(String idTokenString, HttpTransport transport, JsonFactory jsonFactory) throws ApplicationException;
+    OpenIdToken takeInAccountToken(String idTokenString, HttpTransport transport, JsonFactory jsonFactory) throws ApplicationException;
 }

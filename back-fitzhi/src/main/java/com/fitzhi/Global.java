@@ -44,6 +44,11 @@ public class Global {
 	 */
 	public static final String ROLE_TRUSTED_USER = "ROLE_TRUSTED_USER";
 
+	/**
+	 * Identifiant for the Google authentication server.
+	 */
+	public final static String GOOGLE_OPENID_SERVER = "GOOGLE";
+
 
 	private Global() {
 	}

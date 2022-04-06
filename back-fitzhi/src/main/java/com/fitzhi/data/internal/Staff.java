@@ -95,6 +95,11 @@ public @Data class Staff implements UserDetails {
 	private List<CustomGrantedAuthority> authorities = new ArrayList<>();
 	
 	/**
+	* List of openIds associated with this staff member.
+	*/
+	private List<OpenId> openIds = new ArrayList<>();
+
+	/**
 	 * Empty construction.
 	 */
 	public Staff() {

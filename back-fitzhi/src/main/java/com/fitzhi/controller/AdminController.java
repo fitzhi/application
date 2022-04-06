@@ -2,15 +2,23 @@ package com.fitzhi.controller;
 
 import static com.fitzhi.Error.CODE_INVALID_FIRST_USER_ADMIN_ALREADY_CREATED;
 import static com.fitzhi.Error.MESSAGE_INVALID_FIRST_USER_ADMIN_ALREADY_CREATED;
+import static com.fitzhi.Error.CODE_INVALID_OPENID_SERVER;
+import static com.fitzhi.Error.MESSAGE_INVALID_OPENID_SERVER;
 
 import com.fitzhi.bean.Administration;
 import com.fitzhi.bean.StaffHandler;
 import com.fitzhi.data.internal.ClassicCredentials;
 import com.fitzhi.data.internal.OpenIdCredentials;
+import com.fitzhi.data.internal.OpenIdToken;
 import com.fitzhi.data.internal.Staff;
 import com.fitzhi.exception.ApplicationException;
+import com.fitzhi.security.google.TokenHandler;
+import com.google.api.client.http.HttpTransport;
+import com.google.api.client.http.javanet.NetHttpTransport;
+import com.google.api.client.json.gson.GsonFactory;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -19,6 +27,10 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
+
+import static com.fitzhi.Global.GOOGLE_OPENID_SERVER;
+
+import java.text.MessageFormat;
 
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -41,6 +53,10 @@ public class AdminController {
 
 	@Autowired
 	private StaffHandler staffHandler;
+
+	@Autowired
+	@Qualifier("GOOGLE")
+	private TokenHandler googleTokenHandler;
 
 	/**
 	 * Does Fitzhi allow self registration ?
@@ -127,9 +143,17 @@ public class AdminController {
 	@ApiOperation(
 		value="Create the FIRST admin user for Fitzhi from the OpenId JWT. This creation is executed during the installation."
 	)
-	@PostMapping("/openIdVeryFirstUser")
+	@PostMapping("/openId/primeRegister")
 	public Staff veryFirstUser(@RequestBody OpenIdCredentials openIdToken) throws ApplicationException {
-		return null;
+
+		if (GOOGLE_OPENID_SERVER.equals(openIdToken.getOpenIdServer())) {
+			HttpTransport HTTP_TRANSPORT = new NetHttpTransport();
+			OpenIdToken oit = googleTokenHandler.takeInAccountToken(openIdToken.getIdToken(), HTTP_TRANSPORT, GsonFactory.getDefaultInstance());
+			Staff staff = staffHandler.createStaffMember(oit);
+			return staff;
+		}
+
+		throw new ApplicationException(CODE_INVALID_OPENID_SERVER, MessageFormat.format(MESSAGE_INVALID_OPENID_SERVER, openIdToken.getOpenIdServer()));
 	}
 
 	/**

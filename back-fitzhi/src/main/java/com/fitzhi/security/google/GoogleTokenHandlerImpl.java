@@ -1,10 +1,13 @@
 package com.fitzhi.security.google;
 
+import static com.fitzhi.Error.CODE_GOOGLE_TOKEN_ERROR;
+import static com.fitzhi.Error.MESSAGE_GOOGLE_TOKEN_ERROR;
+import static com.fitzhi.Global.GOOGLE_OPENID_SERVER;
+
 import java.io.IOException;
 import java.security.GeneralSecurityException;
 import java.util.Arrays;
 import java.util.Calendar;
-import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
@@ -14,6 +17,7 @@ import javax.annotation.PostConstruct;
 import com.fitzhi.ApplicationRuntimeException;
 import com.fitzhi.bean.ReferentialHandler;
 import com.fitzhi.data.internal.OpenIdServer;
+import com.fitzhi.data.internal.OpenIdToken;
 import com.fitzhi.exception.ApplicationException;
 import com.fitzhi.security.google.util.GoogleAuthentication;
 import com.fitzhi.security.google.util.OAuth2AuthenticationBuilder;
@@ -30,10 +34,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.oauth2.provider.token.TokenStore;
 import org.springframework.stereotype.Service;
 
-import static com.fitzhi.Error.CODE_GOOGLE_TOKEN_ERROR;
-import static com.fitzhi.Error.MESSAGE_GOOGLE_TOKEN_ERROR;
+import lombok.extern.slf4j.Slf4j;
 
-@Service
+@Service("GOOGLE")
+@Slf4j
 public class GoogleTokenHandlerImpl implements TokenHandler {
 
 	@Autowired
@@ -52,8 +56,6 @@ public class GoogleTokenHandlerImpl implements TokenHandler {
 	 */
 	private final static String openIdServersFilename = "openid-servers.json";
 
-	private final static String googleServerId = "GOOGLE";
-
 	private String clientId = null;
 
 	@PostConstruct
@@ -61,13 +63,14 @@ public class GoogleTokenHandlerImpl implements TokenHandler {
 		try {
 			List<OpenIdServer> servers = referentialHandlerOpenIdServer.loadReferential
 				(openIdServersFilename, new TypeToken<List<OpenIdServer>>() {});
-				Optional<OpenIdServer> oOpenIdServer = servers.stream()
-					.filter(server -> googleServerId.equals(server.getClientId()))
-					.findFirst();
-				if (oOpenIdServer.isPresent()) {
-					clientId = oOpenIdServer.get().getClientId();
-				}
+			Optional<OpenIdServer> oOpenIdServer = servers.stream()
+				.filter(server -> GOOGLE_OPENID_SERVER.equals(server.getServerId()))
+				.findFirst();
+			if (oOpenIdServer.isPresent()) {
+				clientId = oOpenIdServer.get().getClientId();
+			}
 		} catch (ApplicationException e) {
+			log.error(e.getMessage(), e);
 			applicationException = e;
 		}
 	}
@@ -78,7 +81,7 @@ public class GoogleTokenHandlerImpl implements TokenHandler {
 	}
 
 	@Override
-	public void takeInAccountToken(String idTokenString, HttpTransport transport, JsonFactory jsonFactory) throws ApplicationException {
+	public OpenIdToken takeInAccountToken(String idTokenString, HttpTransport transport, JsonFactory jsonFactory) throws ApplicationException {
 
 		// If an error occurs at startup.
 		if (applicationException != null) {
@@ -101,48 +104,48 @@ public class GoogleTokenHandlerImpl implements TokenHandler {
 			if (idToken != null) {
 				Payload payload = idToken.getPayload();
 
-				// Print user identifier
-				String userId = payload.getSubject();
-				System.out.println("User ID: " + userId);
+				OpenIdToken oit = OpenIdToken.of();
 
-				// Get profile information from payload
-				String email = payload.getEmail();
-				System.out.println(email);
-				boolean emailVerified = Boolean.valueOf(payload.getEmailVerified());
-				System.out.println(emailVerified);
-				String name = (String) payload.get("name");
-				System.out.println(name);
-				String pictureUrl = (String) payload.get("picture");
-				System.out.println(pictureUrl);
-				String locale = (String) payload.get("locale");
-				System.out.println(locale);
-				String familyName = (String) payload.get("family_name");
-				System.out.println(familyName);
-				String givenName = (String) payload.get("given_name");
-				System.out.println(givenName);
-				
+				oit.setServerId(GOOGLE_OPENID_SERVER);
+				oit.setInError(false);
+				oit.setUserId(payload.getSubject());
+				oit.setEmail(payload.getEmail());
+				oit.setEmailVerified(Boolean.valueOf(payload.getEmailVerified()));
+				oit.setName((String) payload.get("name"));
+				oit.setLocale((String) payload.get("locale"));
+				oit.setFamilyName((String) payload.get("family_name"));
+				oit.setGivenName((String) payload.get("given_name"));
+
 				Calendar calendar = Calendar.getInstance();
-				System.out.println("getExpirationTimeSeconds() : " + payload.getExpirationTimeSeconds());
 				calendar.setTimeInMillis(payload.getExpirationTimeSeconds() * 1000);
-				final Date until = calendar.getTime();
+				oit.setExpirationDate(calendar.getTime());
 
 				calendar.setTimeInMillis(payload.getIssuedAtTimeSeconds() * 1000);
-				final Date from = calendar.getTime();
+				oit.setIssuedDate(calendar.getTime());
 
-				System.out.println("from " + from + " until " + until);
-				
+				if (log.isDebugEnabled()) {
+					log.debug("Token validation for %s %s %d", oit.getUserId(), oit.getName(), oit.getExpirationDate());
+				}
+
 				tokenStore.storeAccessToken(
 					new OpenIdToOauth2Converter(idTokenString, idToken), 
 					OAuth2AuthenticationBuilder.getInstance(
-						OAuth2RequestBuilder.getInstance(userId, Set.of("read", "write", "trust")), 
-						new GoogleAuthentication(userId, name)));
+						OAuth2RequestBuilder.getInstance(oit.getUserId(), Set.of("read", "write", "trust")), 
+						new GoogleAuthentication(oit.getUserId(), oit.getName())));
+
+				return oit;
 
 			} else {
-				System.out.println("Invalid ID token.");
+				return OpenIdToken.error();
 			}
 		} catch (final GeneralSecurityException | IOException e) {
 			throw new ApplicationException(CODE_GOOGLE_TOKEN_ERROR, MESSAGE_GOOGLE_TOKEN_ERROR, e);
 		}
+	}
+
+	@Override
+	public String getClientId() {
+		return clientId;
 	}
 
 }
