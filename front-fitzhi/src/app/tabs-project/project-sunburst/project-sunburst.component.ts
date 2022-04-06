@@ -514,24 +514,10 @@ export class ProjectSunburstComponent extends BaseDirective implements OnInit, A
 		let sheet, rules, rule;
 		let i, j, k, iLen, jLen, kLen;
 
-		function getCssRules(styleSheet: StyleSheet) {
-			var cssRules = [];
-			if (sheet.hasOwnProperty("cssRules")) {
-				console.log (sheet.href);
-				try {
-					Array.from(sheet.cssRules || []).forEach(cssRules.push.bind(cssRules));
-				} catch (e) {
-					console.log('Error while reading CSS rules from ' + sheet.href, e.toString());
-				}
-			}
-			return cssRules;
-		}
-
 		for (i = 0, iLen = sheets.length; i < iLen; i++) {
 			sheet = sheets[i];
 
 			// W3C model
-			rules = getCssRules(sheet);
 			if (sheet.cssRules) {
 				rules = sheet.cssRules;
 				for (j = 0, jLen = rules.length; j < jLen; j++) {

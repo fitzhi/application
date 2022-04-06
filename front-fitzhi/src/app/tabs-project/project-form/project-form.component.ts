@@ -759,7 +759,7 @@ export class ProjectFormComponent extends BaseDirective implements OnInit, After
 		const url = ($event.target) ? $event.target.value : null;
 
 		if (this.projectService.project.id > -1) {
-			this.sunburstCacheService.clearResponse()
+			this.sunburstCacheService.clearResponse();
 		}
 
 		// Empty URL, nothing to do
@@ -881,7 +881,7 @@ export class ProjectFormComponent extends BaseDirective implements OnInit, After
 		}
 		this.projectService.project.branch = branch;
 		if (this.projectService.project.id > -1) {
-			this.sunburstCacheService.clearResponse()
+			this.sunburstCacheService.clearResponse();
 		}
 	}
 

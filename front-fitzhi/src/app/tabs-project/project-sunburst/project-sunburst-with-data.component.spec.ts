@@ -91,7 +91,7 @@ describe('ProjectSunburstComponent filled with data', () => {
 			sunburstCacheService.saveResponse(data);
 
 			sunburstCinematicService.refreshChart$.next(true);
-			
+
 			setTimeout(() => {
 				sunburstCinematicService.refreshChart$.subscribe({
 					next: doneAndOk => {
