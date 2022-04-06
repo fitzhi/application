@@ -124,6 +124,9 @@ public class Error {
 	public static final int CODE_YEAR_MONTH_INVALID = -1036;
 	public static final String MESSAGE_YEAR_MONTH_INVALID = "The given month {0}/{1} is invalid.";
 
+	public static final int CODE_GOOGLE_TOKEN_ERROR = -1037;
+	public static final String MESSAGE_GOOGLE_TOKEN_ERROR = "Google token verification error.";
+
 	private Error() {
 	}
 	
