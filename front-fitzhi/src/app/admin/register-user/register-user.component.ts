@@ -18,16 +18,16 @@ export class RegisterUserComponent extends BaseDirective implements OnInit, OnDe
 	/**
 	 * Is this ever the first connection to this server, assuming that the user has to be "administrator" ?
 	 */
-	 @Input() veryFirstConnection: boolean;
+	@Input() veryFirstConnection: boolean;
 
 	/**
 	 * We'll send to the parent component (startingSetup) the new user has been created.
 	 */
-	 @Output() messengerUserRegistered$ = new EventEmitter<number>();
+	@Output() messengerUserRegistered$ = new EventEmitter<number>();
 
-	 /**
-	 * We'll send to the parent component (startingSetup) the new user has been created.
-	 */
+	/**
+	* We'll send to the parent component (startingSetup) the new user has been created.
+	*/
 	@Output() messengerSkipAndConnect = new EventEmitter<boolean>();
 
 	/**
@@ -68,7 +68,7 @@ export class RegisterUserComponent extends BaseDirective implements OnInit, OnDe
 
 	public onRegisterUser(idStaff: number) {
 		if (traceOn()) {
-			console.log ("onRegisterUser(%d)", idStaff);
+			console.log("onRegisterUser(%d)", idStaff);
 		}
 		this.messengerUserRegistered$.emit(idStaff);
 	}

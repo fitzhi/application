@@ -23,7 +23,7 @@ export class RegisterUserFormComponent extends BaseDirective implements OnInit, 
 	/**
 	 * We'll send to the parent component (RegisterUser) the new user has been created.
 	 */
-	 @Output() messengerUserRegistered = new EventEmitter<number>();
+	 @Output() messengerUserRegistered$ = new EventEmitter<number>();
 
 	/**
 	 * Group of the components present in the form.
@@ -79,7 +79,7 @@ export class RegisterUserFormComponent extends BaseDirective implements OnInit, 
 							console.log('Empty staff created with id ' + staff.idStaff);
 						}
 						this.staffService.changeCollaborator(staff);
-						this.messengerUserRegistered.emit(staff.idStaff);
+						this.messengerUserRegistered$.emit(staff.idStaff);
 					},
 					error: error => {
 						if (traceOn()) {
@@ -101,7 +101,7 @@ export class RegisterUserFormComponent extends BaseDirective implements OnInit, 
 				.subscribe(answer => {
 					if (answer) {
 						this.backendSetupService.removeUrl();
-						this.messengerUserRegistered.emit(-1);
+						this.messengerUserRegistered$.emit(-1);
 					}
 				}));
 	}

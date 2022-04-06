@@ -8,7 +8,7 @@
 	<mat-step [completed]="completed[1]">
 		<ng-template matStepLabel>{{labelUser}}</ng-template>
 		<app-register-user 
-				(messengerUserRegistered)="setRegisteredUser($event)" 
+				(messengerUserRegistered$)="setRegisteredUser($event)" 
 				(messengerSkipAndConnect)="skipAndConnect($event)" 
 				[veryFirstConnection]="veryFirstConnection$|async"></app-register-user>
 	</mat-step>
