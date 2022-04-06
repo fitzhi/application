@@ -42,6 +42,8 @@
 		<file.encoding>UTF-8</file.encoding>
 		<sonar-plugin.version>3.7.0.1746</sonar-plugin.version>
 		<javaparser.version>3.22.1</javaparser.version>
+		<google-api-client.version>1.33.4</google-api-client.version>
+		<google-api-client-http.version>1.2.3-alpha</google-api-client-http.version>
 	</properties>
 
 	<licenses>
@@ -178,6 +180,20 @@
 			<groupId>com.google.code.gson</groupId>
 			<artifactId>gson</artifactId>
 			<version>${gson.version}</version>
+		</dependency>
+
+		<!-- https://mvnrepository.com/artifact/com.google.api-client/google-api-client -->
+		<dependency>
+			<groupId>com.google.api-client</groupId>
+			<artifactId>google-api-client</artifactId>
+			<version>${google-api-client.version}</version>
+		</dependency>
+
+		<!-- https://mvnrepository.com/artifact/com.google.api.client/google-api-client-http -->
+		<dependency>
+			<groupId>com.google.api.client</groupId>
+			<artifactId>google-api-client-http</artifactId>
+			<version>${google-api-client-http.version}</version>
 		</dependency>
 
 		<!-- https://mvnrepository.com/artifact/com.opencsv/opencsv -->
