@@ -1,15 +1,9 @@
 package com.fitzhi.source.crawler.impl;
 
-import static com.fitzhi.Error.CODE_IO_ERROR;
 import static com.fitzhi.Error.CODE_IO_EXCEPTION;
-import static com.fitzhi.Error.MESSAGE_IO_ERROR;
 
-import java.io.File;
-import java.io.FileReader;
 import java.io.IOException;
-import java.lang.reflect.Type;
 import java.nio.file.Paths;
-import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
@@ -18,6 +12,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
+import java.util.function.Function;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
@@ -25,12 +20,13 @@ import java.util.stream.Collectors;
 import javax.validation.constraints.NotNull;
 
 import com.fitzhi.ApplicationRuntimeException;
+import com.fitzhi.bean.ReferentialHandler;
 import com.fitzhi.data.internal.DetectedExperience;
 import com.fitzhi.data.internal.Ecosystem;
 import com.fitzhi.data.internal.ExperienceAbacus;
 import com.fitzhi.data.internal.ExperienceDetectionTemplate;
-import com.fitzhi.data.internal.ProjectDetectedExperiences;
 import com.fitzhi.data.internal.Project;
+import com.fitzhi.data.internal.ProjectDetectedExperiences;
 import com.fitzhi.data.internal.Skill;
 import com.fitzhi.data.internal.SourceControlChanges;
 import com.fitzhi.data.internal.TypeCode;
@@ -46,12 +42,10 @@ import com.github.javaparser.ast.CompilationUnit;
 import com.github.javaparser.utils.ParserCollectionStrategy;
 import com.github.javaparser.utils.ProjectRoot;
 import com.github.javaparser.utils.SourceRoot;
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
 
 import org.eclipse.jgit.api.Git;
-import org.springframework.beans.factory.annotation.Value;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import lombok.extern.slf4j.Slf4j;
@@ -67,17 +61,15 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public class EcosystemAnalyzerImpl implements EcosystemAnalyzer {
 
-	/**
-	 * Directory where the referential data are stored.
-	 */
-	@Value("${referential.dir}")
-	private String referentialDir;
-
-	/**
-	 * Initialization of the Google JSON parser.
-	 */
-	private static Gson gson = new GsonBuilder().create();
+	@Autowired
+	ReferentialHandler<Ecosystem> referentialHandlerEcosystem; 
 	
+	@Autowired
+	ReferentialHandler<ExperienceAbacus> referentialHandlerExperienceAbacus; 
+
+	@Autowired
+	ReferentialHandler<ExperienceDetectionTemplate> referentialHandlerExperienceDetectionTemplate; 
+
 	/**
 	 * Name of the file containing the settings required to detect a skill and its level in 
 	 */
@@ -101,38 +93,13 @@ public class EcosystemAnalyzerImpl implements EcosystemAnalyzer {
 	
 	@Override
 	public Map<Integer, Ecosystem> loadEcosystems() throws ApplicationException {
-
-		final File fileEcosystem = new File (referentialDir + "ecosystem.json"); 
-		if (log.isDebugEnabled()) {
-			log.debug(String.format("Loading the file %s", fileEcosystem.getAbsolutePath()));
-		}
-		
-		try (FileReader fr = new FileReader(fileEcosystem)) {
-			Type listEcosystemsType = new TypeToken<List<Ecosystem>>(){}.getType();
-			List<Ecosystem> listEcosystems = gson.fromJson(fr, listEcosystemsType);
-			Map<Integer, Ecosystem> mapEcosystems = new HashMap<Integer, Ecosystem>();
-			listEcosystems.forEach(ecosystem -> mapEcosystems.put(ecosystem.getId(), ecosystem));
-			return mapEcosystems;
-		} catch (final Exception e) {
-			throw new ApplicationException(CODE_IO_ERROR, MessageFormat.format(MESSAGE_IO_ERROR, fileEcosystem.getAbsolutePath()), e);
-		}
+		List<Ecosystem> list = referentialHandlerEcosystem.loadReferential("ecosystem.json", new TypeToken<List<Ecosystem>>() {});
+		return list.stream().collect(Collectors.toMap(Ecosystem::getId, Function.identity()));
 	}
 	
 	@Override
 	public List<ExperienceAbacus> loadExperienceAbacus() throws ApplicationException {
-
-		final File fileAbacus = new File (referentialDir + "experience-abacus.json"); 
-		if (log.isDebugEnabled()) {
-			log.debug(String.format("Loading the file %s", fileAbacus.getAbsolutePath()));
-		}
-		
-		try (FileReader fr = new FileReader(fileAbacus)) {
-			Type listExperienceAbacusType = new TypeToken<List<ExperienceAbacus>>(){}.getType();
-			List<ExperienceAbacus> listExperienceAbacus = gson.fromJson(fr, listExperienceAbacusType);
-			return listExperienceAbacus;
-		} catch (final Exception e) {
-			throw new ApplicationException(CODE_IO_ERROR, MessageFormat.format(MESSAGE_IO_ERROR, fileAbacus.getAbsolutePath()), e);
-		}
+		return referentialHandlerExperienceAbacus.loadReferential("experience-abacus.json", new TypeToken<List<ExperienceAbacus>>() {});
 	}
 
 	@Override
@@ -209,21 +176,10 @@ public class EcosystemAnalyzerImpl implements EcosystemAnalyzer {
 
 	@Override
 	public Map<Integer, ExperienceDetectionTemplate> loadExperienceDetectionTemplates() throws ApplicationException {
-
-		final File fileEcosystem = new File (referentialDir + nameOfFileCodeLevelDetectionSettings); 
-		if (log.isDebugEnabled()) {
-			log.debug(String.format("Loading the file %s", fileEcosystem.getAbsolutePath()));
-		}
-		
-		try (FileReader fr = new FileReader(fileEcosystem)) {
-			Type listDetectionTemplates = new TypeToken<List<ExperienceDetectionTemplate>>(){}.getType();
-			List<ExperienceDetectionTemplate> listExperiencesDetectionTemplate = gson.fromJson(fr, listDetectionTemplates);
-			Map<Integer, ExperienceDetectionTemplate> mapExperienceDetectionTemplates = new HashMap<Integer, ExperienceDetectionTemplate>();
-			listExperiencesDetectionTemplate.forEach(edt -> mapExperienceDetectionTemplates.put(edt.getIdEDT(), edt));
-			return mapExperienceDetectionTemplates;
-		} catch (final Exception e) {
-			throw new ApplicationException(CODE_IO_ERROR, MessageFormat.format(MESSAGE_IO_ERROR, fileEcosystem.getAbsolutePath()), e);
-		}
+		List<ExperienceDetectionTemplate> list = referentialHandlerExperienceDetectionTemplate.loadReferential(
+			nameOfFileCodeLevelDetectionSettings, 
+			new TypeToken<List<ExperienceDetectionTemplate>>() {});
+		return list.stream().collect(Collectors.toMap(ExperienceDetectionTemplate::getIdEDT, Function.identity()));
 	}
 
 	@Override
