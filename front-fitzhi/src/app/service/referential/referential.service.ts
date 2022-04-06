@@ -81,8 +81,8 @@ export class ReferentialService {
 	 */
 	public openidServers: OpenidServer[] = [];
 
-	constructor(
-		private httpClient: HttpClient, 
+	constructor (
+		private httpClient: HttpClient,
 		private googleService: GoogleService,
 		private backendSetupService: BackendSetupService) {}
 
@@ -240,16 +240,4 @@ export class ReferentialService {
 					}
 				);
 	}
-
-
-//	public oauth = { "clientId": "690807651852-sqjienqot7ui0pufj4ie4n320pss5ipc.apps.googleusercontent.com" } as SocialClientConfig;
-//	public o = new BehaviorSubject<SocialClientConfig>(this.oauth);
-
-	/**
-	 * @returns the Social (Google, Microsot, GitHub...) configuration registered for FitzhI.
-	 *
-	public getSocialConfigFactory$(): Observable<SocialClientConfig> {
-		return this.referentialLoaded$.pipe(switchMap(doneAndOk => doneAndOk ? this.o : EMPTY));
-	}
-	*/
 }

@@ -100,10 +100,11 @@ export class SummaryComponent extends BaseDirective implements OnInit, OnDestroy
 	 */
 	switchTo(selectionId: number) {
 		if (traceOn()) {
-			console.log (`switch to ${selectionId}`)
+			console.log (`switch to ${selectionId}`);
 		}
 		// No click action  for the turnover summary.
-		if ((selectionId === selection.turnoverPenultimateYear) || (selectionId === selection.turnoverLastYear) || (selectionId === selection.currentSummary)) {
+		if ((selectionId === selection.turnoverPenultimateYear) || (selectionId === selection.turnoverLastYear)
+			|| (selectionId === selection.currentSummary)) {
 			return;
 		}
 		this.messengerSelectedSummary.emit(selectionId);

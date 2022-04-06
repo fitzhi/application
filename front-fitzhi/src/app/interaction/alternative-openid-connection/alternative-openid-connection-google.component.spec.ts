@@ -3,7 +3,6 @@ import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { AfterViewInit, Component } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { TokenService } from 'src/app/admin/service/token/token.service';
 import { GoogleService } from 'src/app/service/google/google.service';
 import { ReferentialService } from 'src/app/service/referential/referential.service';
 import { AlternativeOpenidConnectionComponent } from './alternative-openid-connection.component';
@@ -17,7 +16,7 @@ describe('Google OpenidConnectionComponent', () => {
 		selector: 'app-host-component',
 		template: `
 			<div style="width: 400px; height: 300px; background-color: lightYellow; margin-top: 30px; margin-left: 100px; padding: 20px">
-				<alternative-openid-connection></alternative-openid-connection>
+				<app-alternative-openid-connection></app-alternative-openid-connection>
 			</div>`})
 
 	class TestHostComponent implements AfterViewInit {
@@ -27,7 +26,7 @@ describe('Google OpenidConnectionComponent', () => {
 		ngAfterViewInit(): void {
 		}
 	}
- 
+
 	beforeEach(async () => {
 		await TestBed.configureTestingModule({
 			declarations: [ AlternativeOpenidConnectionComponent, TestHostComponent ],
@@ -55,7 +54,7 @@ describe('Google OpenidConnectionComponent', () => {
 	it('should display the Google button if Google is registered as a possible authentication server.', () => {
 
 		const googleService = TestBed.inject(GoogleService);
-		googleService.clientId = "myClientId";
+		googleService.clientId = 'myClientId';
 		googleService.isRegistered$.next(true);
 		fixture.detectChanges();
 

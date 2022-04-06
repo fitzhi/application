@@ -38,21 +38,21 @@
 		<div id="localOauthOnly" class="row">
 			<div class="col-4"></div>
 			<div class="col-8">
-				<register-user-form
+				<app-register-user-form
 					(messengerUserRegistered$)="onRegisterUser($event)" >
-				</register-user-form>
+				</app-register-user-form>
 			</div>
 		</div>
 	</ng-template>
 	<ng-template #multipleOauth>
 		<div id="multipleOauth" class="row">
 			<div class="col-5 m-10">
-				<alternative-openid-connection></alternative-openid-connection>
+				<app-alternative-openid-connection></app-alternative-openid-connection>
 			</div>
 			<div class="col-7">
-				<register-user-form
+				<app-register-user-form
 					(messengerUserRegistered$)="onRegisterUser($event)" >
-				</register-user-form>
+				</app-register-user-form>
 			</div>
 		</div>
 	</ng-template>

@@ -9,7 +9,7 @@ import { PasswordConfirmationMustMatchValidator } from 'src/app/service/password
 import { StaffService } from 'src/app/tabs-staff/service/staff.service';
 
 @Component({
-	selector: 'register-user-form',
+	selector: 'app-register-user-form',
 	templateUrl: './register-user-form.component.html',
 	styleUrls: ['./register-user-form.component.css']
 })
@@ -18,12 +18,12 @@ export class RegisterUserFormComponent extends BaseDirective implements OnInit, 
 	/**
 	 * Is this ever the first connection to this server, assuming that the user has to be "administrator" ?
 	 */
-	 @Input() veryFirstConnection: boolean;
+	@Input() veryFirstConnection: boolean;
 
 	/**
 	 * We'll send to the parent component (RegisterUser) the new user has been created.
 	 */
-	 @Output() messengerUserRegistered$ = new EventEmitter<number>();
+	@Output() messengerUserRegistered$ = new EventEmitter<number>();
 
 	/**
 	 * Group of the components present in the form.
@@ -34,7 +34,7 @@ export class RegisterUserFormComponent extends BaseDirective implements OnInit, 
 		private backendSetupService: BackendSetupService,
 		private staffService: StaffService,
 		private messageBoxService: MessageBoxService,
-		private passwordConfirmationMatcher: PasswordConfirmationMustMatchValidator) { 
+		private passwordConfirmationMatcher: PasswordConfirmationMustMatchValidator) {
 			super();
 		}
 
@@ -121,7 +121,7 @@ export class RegisterUserFormComponent extends BaseDirective implements OnInit, 
 	/**
 	 * Calling the base class to unsubscribe all subscriptions.
 	 */
-	 ngOnDestroy() {
+	ngOnDestroy() {
 		super.ngOnDestroy();
 	}
 

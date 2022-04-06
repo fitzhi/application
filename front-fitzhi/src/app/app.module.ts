@@ -273,8 +273,8 @@ import { WelcomeComponent } from './welcome/welcome.component';
 			multi: true
 		},
 		DatePipe,
-		{ 
-			provide: LOCALE_ID, 
+		{
+			provide: LOCALE_ID,
 			useValue: 'fr'
 		},
 

@@ -39,7 +39,7 @@ describe('AuthService', () => {
 			}
 		});
 
-		const req = httpTestingController.expectOne('URL_OF_SERVER/oauth/token'); 
+		const req = httpTestingController.expectOne('URL_OF_SERVER/oauth/token');
 		expect(req.request.method).toBe('POST');
 		expect(req.request.body).toBe('username=my-user&password=my-password&grant_type=password'); // This is not a credential. //NOSONAR
 		const t = new Token();
@@ -63,7 +63,7 @@ describe('AuthService', () => {
 			}
 		});
 
-		const req = httpTestingController.expectOne('URL_OF_SERVER/oauth/token'); 
+		const req = httpTestingController.expectOne('URL_OF_SERVER/oauth/token');
 		expect(req.request.method).toBe('POST');
 		expect(req.request.body).toBe('username=my-user&password=my-password&grant_type=password'); // This is not a credential. //NOSONAR
 		req.error(new ErrorEvent('error'), { status: 500, statusText: 'Invalid login/password!' });

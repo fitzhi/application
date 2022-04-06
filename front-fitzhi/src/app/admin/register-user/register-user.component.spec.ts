@@ -1,38 +1,39 @@
-import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
-import { RegisterUserComponent } from './register-user.component';
-import { HttpClientTestingModule, HttpTestingController } from '@angular/common/http/testing';
 import { HttpClient, HttpClientModule } from '@angular/common/http';
-import { ReferentialService } from 'src/app/service/referential/referential.service';
-import { CinematicService } from 'src/app/service/cinematic.service';
-import { MatCheckboxModule } from '@angular/material/checkbox';
-import { MatTableModule } from '@angular/material/table';
+import { HttpClientTestingModule, HttpTestingController } from '@angular/common/http/testing';
+import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { MatPaginatorModule } from '@angular/material/paginator';
-import { MatGridListModule } from '@angular/material/grid-list';
-import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { MatFormFieldModule } from '@angular/material/form-field';
-import { MatSliderModule } from '@angular/material/slider';
-import { MatInputModule } from '@angular/material/input';
+import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatDialogModule } from '@angular/material/dialog';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatGridListModule } from '@angular/material/grid-list';
+import { MatInputModule } from '@angular/material/input';
+import { MatPaginatorModule } from '@angular/material/paginator';
+import { MatSliderModule } from '@angular/material/slider';
+import { MatTableModule } from '@angular/material/table';
 import { By } from '@angular/platform-browser';
-import { InstallService } from '../service/install/install.service';
-import { StaffService } from 'src/app/tabs-staff/service/staff.service';
-import { Collaborator } from 'src/app/data/collaborator';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { of } from 'rxjs';
-import { RegisterUserFormComponent } from './register-user-form/register-user-form.component';
+import { Collaborator } from 'src/app/data/collaborator';
 import { AlternativeOpenidConnectionComponent } from 'src/app/interaction/alternative-openid-connection/alternative-openid-connection.component';
+import { CinematicService } from 'src/app/service/cinematic.service';
 import { GoogleService } from 'src/app/service/google/google.service';
+import { ReferentialService } from 'src/app/service/referential/referential.service';
+import { StaffService } from 'src/app/tabs-staff/service/staff.service';
+import { InstallService } from '../service/install/install.service';
+import { RegisterUserFormComponent } from './register-user-form/register-user-form.component';
+import { RegisterUserComponent } from './register-user.component';
 
 
 describe('RegisterUserComponent', () => {
 	let component: RegisterUserComponent;
 	let fixture: ComponentFixture<RegisterUserComponent>;
 	let googleService: GoogleService;
-	
+
 	let httpClient: HttpClient;
 	let httpTestingController: HttpTestingController;
 
 	let installService: InstallService;
+	let spyGoogleInit: any;
 
 	beforeEach(waitForAsync(() => {
 		TestBed.configureTestingModule({
@@ -55,8 +56,8 @@ describe('RegisterUserComponent', () => {
 
 		installService = TestBed.inject(InstallService);
 
-		const googleService = TestBed.inject(GoogleService);
-		const spy = spyOn(googleService, 'initialize').and.returnValue();
+		googleService = TestBed.inject(GoogleService);
+		spyGoogleInit = spyOn(googleService, 'initialize').and.returnValue();
 
 		fixture.detectChanges();
 	});

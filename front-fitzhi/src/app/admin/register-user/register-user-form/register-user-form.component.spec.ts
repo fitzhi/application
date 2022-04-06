@@ -28,7 +28,7 @@ describe('RegisterUserFormComponent', () => {
 		selector: 'app-host-component',
 		template: `
 			<div style="width: 600px; height: 300px; background-color: whiteSmoke; margin-top: 30px; margin-left: 100px; padding: 20px">
-				<register-user-form></register-user-form>
+				<app-register-user-form></app-register-user-form>
 			</div>`})
 
 	class TestHostComponent {

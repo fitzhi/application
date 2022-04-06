@@ -16,13 +16,13 @@ describe('Empty alternative OpenidConnection Component', () => {
 		selector: 'app-host-component',
 		template: `
 			<div style="width: 400px; height: 300px; background-color: lightYellow; margin-top: 30px; margin-left: 100px; padding: 20px">
-				<alternative-openid-connection></alternative-openid-connection>
+				<app-alternative-openid-connection></app-alternative-openid-connection>
 			</div>`})
 
 	class TestHostComponent {
 		constructor() {}
 	}
- 
+
 	beforeEach(async () => {
 		await TestBed.configureTestingModule({
 			declarations: [ AlternativeOpenidConnectionComponent, TestHostComponent ],

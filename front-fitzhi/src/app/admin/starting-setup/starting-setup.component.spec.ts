@@ -63,7 +63,7 @@ describe('StartingSetupComponent', () => {
 
 		fixture.detectChanges();
 
-		setUrl("URL_OF_SERVER");
+		setUrl('URL_OF_SERVER');
 
 	});
 
@@ -72,7 +72,7 @@ describe('StartingSetupComponent', () => {
 	});
 
 	it('should jump to the register form if the given backend URL is valid.', () => {
-		
+
 		const spy = spyOn(backendSetupService, 'isVeryFirstConnection$').and.returnValue(of(new FirstConnection(true, 'URL')));
 
 		const spyLoadReferentials = spyOn(referentialService, 'loadAllReferentials').and.returnValue();
@@ -87,7 +87,7 @@ describe('StartingSetupComponent', () => {
 		expect(spyLoadReferentials).toHaveBeenCalled();
 		expect(spySkillService).toHaveBeenCalled();
 
-		expect(backendSetupService.url()).toBe("URL_OF_SERVER/api");
+		expect(backendSetupService.url()).toBe('URL_OF_SERVER/api');
 
 	});
 });

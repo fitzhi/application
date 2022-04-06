@@ -32,7 +32,7 @@ export class RegisterUserComponent extends BaseDirective implements OnInit, OnDe
 
 	/**
 	 * This variable monitor the UI between 2 possible cases :
-	 * 
+	 *
 	 * - ONE UNIQUE local authentication server, the fitzhi server
 	 * - Multiple authentication servers as the Fitzhi backend and the Google server or instance
 	 */
@@ -68,7 +68,7 @@ export class RegisterUserComponent extends BaseDirective implements OnInit, OnDe
 
 	public onRegisterUser(idStaff: number) {
 		if (traceOn()) {
-			console.log("onRegisterUser(%d)", idStaff);
+			console.log('onRegisterUser(%d)', idStaff);
 		}
 		this.messengerUserRegistered$.emit(idStaff);
 	}

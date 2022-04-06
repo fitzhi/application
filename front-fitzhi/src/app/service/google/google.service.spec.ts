@@ -32,15 +32,15 @@ describe('GoogleService', () => {
 		service.takeInAccountDeclaredServers (
 			[
 				{
-					serverId: "GOOGLE",
-					clientId: "theclientIdGoogle.com"
+					serverId: 'GOOGLE',
+					clientId: 'theclientIdGoogle.com'
 				},
 				{
-					serverId: "Nope",
-					clientId: "N/A.com"
+					serverId: 'Nope',
+					clientId: 'N/A.com'
 				}
 			]);
-		expect(service.clientId).toBe("theclientIdGoogle.com");
+		expect(service.clientId).toBe('theclientIdGoogle.com');
 		service.isRegistered$.subscribe({
 			next: isRegistered => {
 				expect(isRegistered).toBeTrue();
@@ -55,12 +55,12 @@ describe('GoogleService', () => {
 		service.takeInAccountDeclaredServers (
 			[
 				{
-					serverId: "NOT_GOOGLE",
-					clientId: "theclientIdGoogle.com"
+					serverId: 'NOT_GOOGLE',
+					clientId: 'theclientIdGoogle.com'
 				},
 				{
-					serverId: "Nope",
-					clientId: "N/A.com"
+					serverId: 'Nope',
+					clientId: 'N/A.com'
 				}
 			]);
 		expect(service.clientId).toBeUndefined();

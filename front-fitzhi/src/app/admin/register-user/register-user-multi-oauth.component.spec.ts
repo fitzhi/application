@@ -10,7 +10,6 @@ import { MatInputModule } from '@angular/material/input';
 import { MatPaginatorModule } from '@angular/material/paginator';
 import { MatSliderModule } from '@angular/material/slider';
 import { MatTableModule } from '@angular/material/table';
-import { By } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { AlternativeOpenidConnectionComponent } from 'src/app/interaction/alternative-openid-connection/alternative-openid-connection.component';
 import { CinematicService } from 'src/app/service/cinematic.service';
@@ -26,7 +25,7 @@ describe('registerUserMultiOauthComponent', () => {
 
 	let httpClient: HttpClient;
 	let httpTestingController: HttpTestingController;
-	
+
 	beforeEach(waitForAsync(() => {
 		TestBed.configureTestingModule({
 			declarations: [RegisterUserComponent, RegisterUserFormComponent, AlternativeOpenidConnectionComponent],
@@ -47,7 +46,7 @@ describe('registerUserMultiOauthComponent', () => {
 		component = fixture.componentInstance;
 
 		const referentialService = TestBed.inject(ReferentialService);
-		referentialService.openidServers.push( { "serverId": "GOOGLE", "clientId": "myClientId"} );
+		referentialService.openidServers.push( { 'serverId': 'GOOGLE', 'clientId': 'myClientId'} );
 		referentialService.referentialLoaded$.next(true);
 
 		fixture.detectChanges();

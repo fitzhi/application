@@ -42,7 +42,7 @@ describe(`HttpRefreshTokenErrorInterceptor`, () => {
 		//
 		// For development convenience, we deactivate the security control.
 		// if (localStorage.getItem('dev') === '1') {
-		//		return true;
+		// 	return true;
 		// }
 		localStorage.setItem('dev', '0');
 

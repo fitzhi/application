@@ -234,7 +234,7 @@ describe('SummaryComponent', () => {
 		service.summary$.subscribe({
 			next: sum => {
 				const thumbnail = fixture.debugElement.query(By.css('#thumbnail-turnover-2020'));
-				console.log ('tumbnail', thumbnail )
+				console.log ('tumbnail', thumbnail );
 				thumbnail.triggerEventHandler('click', null);
 				fixture.detectChanges();
 				expect(spy).toHaveBeenCalled();
@@ -254,7 +254,7 @@ describe('SummaryComponent', () => {
 		service.summary$.subscribe({
 			next: sum => {
 				const thumbnail = fixture.debugElement.query(By.css('#thumbnail-turnover-2021'));
-				console.log ('tumbnail', thumbnail )
+				console.log ('tumbnail', thumbnail );
 				thumbnail.triggerEventHandler('click', null);
 				fixture.detectChanges();
 				expect(spy).toHaveBeenCalled();
@@ -274,7 +274,7 @@ describe('SummaryComponent', () => {
 		service.summary$.subscribe({
 			next: sum => {
 				const thumbnail = fixture.debugElement.query(By.css('#thumbnail-turnover-2022'));
-				console.log ('tumbnail', thumbnail )
+				console.log ('tumbnail', thumbnail );
 				thumbnail.triggerEventHandler('click', null);
 				fixture.detectChanges();
 				expect(spy).toHaveBeenCalled();

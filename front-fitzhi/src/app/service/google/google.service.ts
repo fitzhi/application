@@ -2,8 +2,7 @@ import { Injectable } from '@angular/core';
 import { BehaviorSubject } from 'rxjs';
 import { OpenidServer } from 'src/app/data/openid-server';
 import { traceOn } from 'src/app/global';
-import jwt_decode from "jwt-decode";
-import { StringMapWithRename } from '@angular/compiler/src/compiler_facade_interface';
+import jwt_decode from 'jwt-decode';
 
 declare var google: any;
 
@@ -20,7 +19,7 @@ class GoogleToken {
 })
 export class GoogleService {
 
-	public GOOGLE_SERVER_ID = "GOOGLE";
+	public GOOGLE_SERVER_ID = 'GOOGLE';
 
 	public isRegistered$ = new BehaviorSubject<boolean>(false);
 
@@ -33,47 +32,47 @@ export class GoogleService {
 	 * @param servers the authentification servers loaded fron the backend.
 	 */
 	takeInAccountDeclaredServers(servers: OpenidServer[]) {
-		const server = servers.find(server => server.serverId === this.GOOGLE_SERVER_ID);
-		if (server) {
+		const serverGoogle = servers.find(server => server.serverId === this.GOOGLE_SERVER_ID);
+		if (serverGoogle) {
 			if (traceOn()) {
-				console.log ('Google oauth server found with %s as clientId', server.clientId)
+				console.log ('Google oauth server found with %s as clientId', serverGoogle.clientId);
 			}
-			this.clientId = server.clientId;
+			this.clientId = serverGoogle.clientId;
 			this.isRegistered$.next(true);
 		}
 	}
 
-	initialize(document) {
-		let handleCredentialResponse = (response:any) => {
-			const data = {idToken:response.credential,oauth:'v3'};
+	initialize (document) {
+		const handleCredentialResponse = (response: any) => {
+			const data = {idToken: response.credential, oauth: 'v3'};
 			this.loginCheckSocial(data.idToken);
-		}
-		
-		let id = 'google-client-script';
-		
-		let script = document.getElementById(id);
+		};
+
+		const id = 'google-client-script';
+
+		const script = document.getElementById(id);
 		if (script === null) {
-			
-			let crscript = document.createElement('script');			
+
+			const crscript = document.createElement('script');
 			crscript.setAttribute('src', 'https://accounts.google.com/gsi/client');
 			crscript.setAttribute('id', id);
 			crscript.setAttribute('async', '');
 			document.body.appendChild(crscript);
-			
+
 			crscript.onload = () => {
 				google.accounts.id.initialize({
 					client_id: this.clientId,
 					callback: handleCredentialResponse
 				});
-			
-				google.accounts.id.renderButton(document.getElementById("btnGoogle"),{ theme: "outline", size: "large" });
-			}
-			
+
+				google.accounts.id.renderButton(document.getElementById('btnGoogle'), {theme: 'outline', size: 'large'});
+			};
+
 		} else {
 			google.accounts.id.initialize({
 				client_id: this.clientId,
 				callback: handleCredentialResponse
-			});	
+			});
 		}
 	}
 
@@ -84,19 +83,18 @@ export class GoogleService {
 		google.accounts.id.prompt();
 	}
 
-	public isLoggedin(){
+	public isLoggedin() {
 		console.log ('isLoggedin()');
 	}
 
 	/**
-	 * 
-	 * @param data 
+	 * Decode and take in account the JWT token received.
+	 * @param jwt the Json Web Token
 	 */
-	public loginCheckSocial(data: any) {
-		console.log (jwt_decode(data));
-		let token = jwt_decode(data) as GoogleToken;
+	public loginCheckSocial (jwt: any) {
+		const token = jwt_decode(jwt) as GoogleToken;
 		if (traceOn()) {
-			console.log ("login %s %s %s @", token.jti, token.given_name, token.family_name, token.email);
+			console.log ('login %s %s %s @', token.jti, token.given_name, token.family_name, token.email);
 		}
 	}
 

@@ -80,7 +80,7 @@ export class AuthService extends InternalService {
 	/**
 	 * **Enable** the connection status stored in the authentication service.
 	 */
-	 public setConnect() {
+	public setConnect() {
 		this.connected = true;
 	}
 
