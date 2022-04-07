@@ -45,15 +45,17 @@ export class RegisterUserComponent extends BaseDirective implements OnInit, OnDe
 	}
 
 	ngOnInit() {
-		this.referentialService.referentialLoaded$
-			.subscribe({
-				next: doneAndOk => {
-					if (doneAndOk) {
-						this.localOnly$.next((this.referentialService.openidServers.length === 0));
+		this.subscriptions.add(
+			this.referentialService.referentialLoaded$
+				.subscribe({
+					next: doneAndOk => {
+						if (doneAndOk) {
+							this.localOnly$.next((this.referentialService.openidServers.length === 0));
+						}
 					}
 				}
-			});
-
+			)
+		);
 	}
 
 	/**

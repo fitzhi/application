@@ -128,6 +128,7 @@ import { StaffProjectsComponent } from './tabs-staff/staff-projects/staff-projec
 import { StaffRemoveComponent } from './tabs-staff/staff-remove/staff-remove.component';
 import { StaffComponent } from './tabs-staff/staff.component';
 import { WelcomeComponent } from './welcome/welcome.component';
+import { ConnectUserFormComponent } from './admin/connect-user/connect-user-form/connect-user-form.component';
 
 
 @NgModule({
@@ -209,7 +210,8 @@ import { WelcomeComponent } from './welcome/welcome.component';
 		StarfieldContentComponent,
 		SummaryComponent,
 		RegisterUserFormComponent,
-		AlternativeOpenidConnectionComponent
+		AlternativeOpenidConnectionComponent,
+  ConnectUserFormComponent
 	],
 	imports: [
 		BsDropdownModule.forRoot(),

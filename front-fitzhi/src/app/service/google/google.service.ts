@@ -21,11 +21,17 @@ export class GoogleService {
 
 	public GOOGLE_SERVER_ID = 'GOOGLE';
 
-	public isRegistered$ = new BehaviorSubject<boolean>(false);
+
+	private registeredSubject$ = new BehaviorSubject<boolean>(false); 
+	public isRegistered$ = this.registeredSubject$.asObservable();
 
 	public clientId: string;
 
 	constructor() { }
+
+	public register() {
+		this.registeredSubject$.next(true);
+	}
 
 	/**
 	 * Take in account the Google openId server settings if the Google has been registered.
@@ -38,7 +44,7 @@ export class GoogleService {
 				console.log ('Google oauth server found with %s as clientId', serverGoogle.clientId);
 			}
 			this.clientId = serverGoogle.clientId;
-			this.isRegistered$.next(true);
+			this.register();
 		}
 	}
 

@@ -1,115 +1,48 @@
-import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
-import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
-import { Router } from '@angular/router';
-import { traceOn } from 'src/app/global';
-import { BackendSetupService } from 'src/app/service/backend-setup/backend-setup.service';
-import { ProjectService } from 'src/app/service/project/project.service';
-import { StaffListService } from 'src/app/service/staff-list-service/staff-list.service';
-import { environment } from '../../../environments/environment';
-import { AuthService } from '../service/auth/auth.service';
+import { Component, Input, OnDestroy, OnInit } from '@angular/core';
+import { BehaviorSubject } from 'rxjs';
+import { BaseDirective } from 'src/app/base/base-directive.directive';
+import { ReferentialService } from 'src/app/service/referential/referential.service';
 
 @Component({
 	selector: 'app-connect-user',
 	templateUrl: './connect-user.component.html',
 	styleUrls: ['./connect-user.component.css']
 })
-export class ConnectUserComponent implements OnInit {
-
-	/**
-     * We'll send to the parent component (startingSetup) the new user is connected.
-     */
-	@Output() messengerUserConnected = new EventEmitter<boolean>();
+export class ConnectUserComponent extends BaseDirective implements OnInit, OnDestroy {
 
 	/**
 	 * Are we entering in this component, just by routing directly into '/login'
 	 */
-	@Input() private directLogin = true;
+	@Input() directLogin = false;
 
-	/**
-     * Group of the components present in the form.
-     */
-	public connectionGroup: FormGroup;
+	private localOnlyOauthSubject$ = new BehaviorSubject<boolean>(true);
 
-	constructor(
-		private authService: AuthService,
-		private projectService: ProjectService,
-		private staffListService: StaffListService,
-		private backendSetupService: BackendSetupService,
-		private router: Router,
-		private formBuilder: FormBuilder) {
-		this.connectionGroup = this.formBuilder.group({
-			username: new FormControl('', [Validators.required, Validators.maxLength(16)]),
-			password: new FormControl('', [Validators.required, Validators.minLength(6), Validators.maxLength(16)])
-		});
+	public localOnlyOauth$ = this.localOnlyOauthSubject$.asObservable();
+
+	constructor(private referentialService: ReferentialService) {
+		super();
 	}
 
 	ngOnInit() {
-		sessionStorage.clear();
-
-		if (environment.autoConnect) {
-			this.backendSetupService.saveUrl(environment.apiUrl);
-			setTimeout(() => {
-				if (traceOn()) {
-					console.log ('Auto connnection to Fitzhi.');
+		this.subscriptions.add(
+			this.referentialService.referentialLoaded$
+				.subscribe({
+					next: doneAndOk => {
+						if (doneAndOk) {
+							console.log (this.referentialService.openidServers.length);
+							this.localOnlyOauthSubject$.next((this.referentialService.openidServers.length === 0));
+						}
+					}
 				}
-				this.connectionGroup.setValue({ username: 'guest', password: 'anonymous' });
-				this.onSubmit();
-			}, 1000);
-		}
-
+			)
+		);
 	}
 
 	/**
-     * Class of the button corresponding to the 3 possible states of the "Ok" button.
-     */
-	classOkButton() {
-		return (this.connectionGroup.invalid) ?
-			'okButton okButtonInvalid' : 'okButton okButtonValid';
-	}
-
-	/**
-     * Cancel the installation.
-     */
-	onCancel() {
-		if (traceOn()) {
-			console.log('onCancel');
-		}
-		this.router.navigate(['/ciao']);
-	}
-
-	/**
-     * Cancel the installation
-     */
-	onSubmit() {
-		const username: string = this.connectionGroup.get('username').value;
-		const password: string = this.connectionGroup.get('password').value;
-		this.authService.connect$(username, password).subscribe({
-
-			next: connectionStatus => {
-				this.messengerUserConnected.emit(connectionStatus);
-				//
-				// If the connection has succeeded, we load the projects and the staff members.
-				//
-				if (connectionStatus) {
-					// We load the projects and start the refresh process.
-					this.projectService.startLoadingProjects();
-					// We load the staff and start the refresh process.
-					this.staffListService.startLoadingStaff();
-				}
-
-				if (this.directLogin) {
-					this.router.navigate(['/welcome'], {});
-				}
-			}
-		});
-	}
-
-	get username(): any {
-		return this.connectionGroup.get('username');
-	}
-
-	get password(): any {
-		return this.connectionGroup.get('password');
+	 * Calling the base class to unsubscribe all subscriptions.
+	 */
+	 ngOnDestroy() {
+		super.ngOnDestroy();
 	}
 
 }

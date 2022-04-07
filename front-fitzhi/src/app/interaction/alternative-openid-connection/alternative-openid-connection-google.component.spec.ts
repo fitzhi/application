@@ -55,7 +55,7 @@ describe('Google OpenidConnectionComponent', () => {
 
 		const googleService = TestBed.inject(GoogleService);
 		googleService.clientId = 'myClientId';
-		googleService.isRegistered$.next(true);
+		googleService.register();
 		fixture.detectChanges();
 
 		const btnGoogle = fixture.debugElement.nativeElement.querySelector('#btnGoogle');
