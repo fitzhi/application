@@ -450,13 +450,28 @@ export class StaffService {
 	 * @param username the given username
 	 * @param password  the given password
 	 */
-	registerUser$(veryFirstConnection: boolean, username: string, password: string): Observable<Collaborator> {
+	classicRegisterUser$(veryFirstConnection: boolean, username: string, password: string): Observable<Collaborator> {
 
 		const body = { login: username, password: password};
 
 		return this.httpClient.post<Collaborator>(
-			this.backendSetupService.url() + '/admin/' +
-			(veryFirstConnection ? 'classic/primeRegister' : 'classic/register'),
+			this.backendSetupService.url() + '/admin/classic/' +
+			(veryFirstConnection ? 'primeRegister' : 'register'),
+			body);
+	}
+
+	/**
+	 * Register a new user inside the application
+	 * @param veryFirstConnection TRUE if the is the VERY FIRST USER to be created, and subsequently the FIRST ADMIN USER.
+	 * @param serverId the openId server identifier _(like "GOOGLE" for instance)_
+	 * @param idToken the JWT token
+	 */
+	 openIdRegisterUser$(veryFirstConnection: boolean, openIdServer: string, idToken: string): Observable<Collaborator> {
+
+		const body = { openIdServer: openIdServer, idToken: idToken};
+
+		return this.httpClient.post<Collaborator>(
+			this.backendSetupService.url() + '/admin/openId/' + (veryFirstConnection ? 'primeRegister' : 'register'),
 			body);
 	}
 

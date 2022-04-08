@@ -1,7 +1,10 @@
 import { Component, EventEmitter, Input, OnDestroy, OnInit, Output, ViewChild } from '@angular/core';
-import { BehaviorSubject } from 'rxjs';
+import { BehaviorSubject, EMPTY } from 'rxjs';
+import { switchMap } from 'rxjs/operators';
 import { traceOn } from 'src/app/global';
+import { GoogleService } from 'src/app/service/google/google.service';
 import { ReferentialService } from 'src/app/service/referential/referential.service';
+import { StaffService } from 'src/app/tabs-staff/service/staff.service';
 import { BaseDirective } from '../../base/base-directive.directive';
 import { InstallService } from '../service/install/install.service';
 import { RegisterUserFormComponent } from './register-user-form/register-user-form.component';
@@ -40,7 +43,9 @@ export class RegisterUserComponent extends BaseDirective implements OnInit, OnDe
 
 	constructor(
 		private installService: InstallService,
-		private referentialService: ReferentialService) {
+		private referentialService: ReferentialService,
+		private staffService: StaffService,
+		private googleService: GoogleService) {
 		super();
 	}
 
@@ -55,6 +60,27 @@ export class RegisterUserComponent extends BaseDirective implements OnInit, OnDe
 					}
 				}
 			)
+		);
+
+		this.subscriptions.add(
+			this.googleService.isRegistered$
+				.pipe(switchMap( doneAndOk => (doneAndOk) ? this.googleService.isAuthenticated$ : EMPTY))
+				.subscribe({
+					next: authenticated => {
+						if (authenticated) {
+							if (traceOn()) {
+								console.log ('%s is logged in', this.googleService.googleToken.name);
+							}
+							this.staffService.openIdRegisterUser$(this.veryFirstConnection, "GOOGLE", this.googleService.jwt).subscribe({
+								next: staff => {
+									console.log ('%s has been created in Fitzi from its Google token', staff.lastName)
+									this.staffService.changeCollaborator(staff);
+									this.messengerUserRegistered$.emit(staff.idStaff);			
+								}
+							})
+						}
+					}
+				})
 		);
 	}
 

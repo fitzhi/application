@@ -96,7 +96,7 @@ describe('RegisterUserComponent', () => {
 
 		const staffService = TestBed.inject(StaffService);
 		const spyChangeCollaborator = spyOn(staffService, 'changeCollaborator').and.returnValue();
-		const spyRegisterUsers = spyOn(staffService, 'registerUser$').and.returnValue(of(new Collaborator()));
+		const spyRegisterUsers = spyOn(staffService, 'classicRegisterUser$').and.returnValue(of(new Collaborator()));
 
 		component.registerUserFormComponent.connectionGroup.get('username').setValue('myPersonalUser');
 		component.registerUserFormComponent.connectionGroup.get('password').setValue('myPersonalPass');

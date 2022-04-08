@@ -1,5 +1,5 @@
 import { HttpClient } from '@angular/common/http';
-import { Component, OnDestroy, ViewChild } from '@angular/core';
+import { Component, ElementRef, NgZone, OnDestroy, ViewChild } from '@angular/core';
 import { MatStepper } from '@angular/material/stepper';
 import { Router } from '@angular/router';
 import { Subject } from 'rxjs';
@@ -9,6 +9,7 @@ import { traceOn } from 'src/app/global';
 import { BackendSetupService } from 'src/app/service/backend-setup/backend-setup.service';
 import { ReferentialService } from 'src/app/service/referential/referential.service';
 import { SkillService } from 'src/app/skill/service/skill.service';
+import { RegisterUserComponent } from '../register-user/register-user.component';
 import { InstallService } from '../service/install/install.service';
 
 @Component({
@@ -22,6 +23,8 @@ export class StartingSetupComponent extends BaseDirective implements OnDestroy {
 	 * The main stepper is passed in order to procede a programmatly step.next().
 	 */
 	@ViewChild('stepper', { static: true }) stepper: MatStepper;
+
+	@ViewChild(RegisterUserComponent) register;
 
 	/**
 	 * This status will be setup to TRUE, FALSE otherwise.
@@ -65,7 +68,8 @@ export class StartingSetupComponent extends BaseDirective implements OnDestroy {
 		private skillService: SkillService,
 		private installService: InstallService,
 		private router: Router,
-		private httpClient: HttpClient) { super(); }
+		private httpClient: HttpClient,
+		private ngZone: NgZone) { super(); }
 
 	/**
 	 * Setup the fact that this is the very first connection.
@@ -96,18 +100,21 @@ export class StartingSetupComponent extends BaseDirective implements OnDestroy {
 		if (traceOn()) {
 			console.log('idStaff created :', $event);
 		}
-		// Operation has been cancelled.
+
+		// Operation has been cancelled. We skip backward.
 		if ($event === -1) {
 			this.completed[1] = false;
-			setTimeout(() => {
-				this.stepper.previous();
-			}, 0);
+			setTimeout(() => { this.stepper.previous(); }, 0);
 			return;
 		}
-		this.completed[1] = true;
-		this.idStaff = $event;
 
-		setTimeout(() => this.stepper.next(), 0);
+		this.idStaff = $event;
+		this.ngZone.run(() => {
+			this.completed[1] = true;
+			setTimeout(() => {
+				this.stepper.next();
+			}, 0);
+		});    
 	}
 
 	/**

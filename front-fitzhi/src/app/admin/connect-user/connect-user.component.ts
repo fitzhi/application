@@ -1,6 +1,9 @@
 import { Component, Input, OnDestroy, OnInit } from '@angular/core';
-import { BehaviorSubject } from 'rxjs';
+import { BehaviorSubject, EMPTY } from 'rxjs';
+import { switchMap } from 'rxjs/operators';
 import { BaseDirective } from 'src/app/base/base-directive.directive';
+import { traceOn } from 'src/app/global';
+import { GoogleService } from 'src/app/service/google/google.service';
 import { ReferentialService } from 'src/app/service/referential/referential.service';
 
 @Component({
@@ -19,7 +22,9 @@ export class ConnectUserComponent extends BaseDirective implements OnInit, OnDes
 
 	public localOnlyOauth$ = this.localOnlyOauthSubject$.asObservable();
 
-	constructor(private referentialService: ReferentialService) {
+	constructor(
+		private referentialService: ReferentialService,
+		private googleService: GoogleService) {
 		super();
 	}
 
@@ -36,7 +41,22 @@ export class ConnectUserComponent extends BaseDirective implements OnInit, OnDes
 				}
 			)
 		);
+
+		this.subscriptions.add(
+			this.googleService.isRegistered$
+				.pipe(switchMap( doneAndOk => (doneAndOk) ? this.googleService.isAuthenticated$ : EMPTY))
+				.subscribe({
+					next: authenticated => {
+						if (authenticated) {
+							if (traceOn()) {
+								console.log ('%s is logged in', this.googleService.googleToken.name);
+							}
+						}
+					}
+				})
+		);
 	}
+
 
 	/**
 	 * Calling the base class to unsubscribe all subscriptions.

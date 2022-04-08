@@ -18,7 +18,8 @@ export class AlternativeOpenidConnectionComponent extends BaseDirective implemen
 		this.subscriptions.add(
 			this.googleService.isRegistered$.subscribe({
 				next: isRegistered => (isRegistered) ? this.googleService.initialize(document) : null
-			}));
+			})
+		);
 	}
 
 	/**

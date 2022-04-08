@@ -3,6 +3,7 @@ import { BehaviorSubject } from 'rxjs';
 import { OpenidServer } from 'src/app/data/openid-server';
 import { traceOn } from 'src/app/global';
 import jwt_decode from 'jwt-decode';
+import { HttpClient } from '@angular/common/http';
 
 declare var google: any;
 
@@ -25,9 +26,22 @@ export class GoogleService {
 	private registeredSubject$ = new BehaviorSubject<boolean>(false); 
 	public isRegistered$ = this.registeredSubject$.asObservable();
 
+	private authenticatedSubject$ = new BehaviorSubject<boolean>(false); 
+	public isAuthenticated$ = this.authenticatedSubject$.asObservable();
+
 	public clientId: string;
 
-	constructor() { }
+	/**
+	 * The raw JWT retrieved from Google.
+	 */
+	 public jwt = null;
+
+	/**
+	 * The decoded authentication token
+	 */
+	public googleToken: GoogleToken = null;
+
+	constructor(private httpClient: HttpClient) { }
 
 	public register() {
 		this.registeredSubject$.next(true);
@@ -48,7 +62,21 @@ export class GoogleService {
 		}
 	}
 
+	private googleClientLoadedSubject$ = new BehaviorSubject<boolean>(false);
+
+	private googleClientLoaded$ = this.googleClientLoadedSubject$.asObservable();
+
+	/**
+	 * Initialize the Google workplace.
+	 * 
+	 * @param document the current HTML document
+	 */
 	initialize (document) {
+
+		if (traceOn()) {
+			console.log ('Initializing googleService...');
+		}
+
 		const handleCredentialResponse = (response: any) => {
 			const data = {idToken: response.credential, oauth: 'v3'};
 			this.loginCheckSocial(data.idToken);
@@ -62,24 +90,37 @@ export class GoogleService {
 			const crscript = document.createElement('script');
 			crscript.setAttribute('src', 'https://accounts.google.com/gsi/client');
 			crscript.setAttribute('id', id);
-			crscript.setAttribute('async', '');
+			// crscript.setAttribute('async', '');
 			document.body.appendChild(crscript);
 
 			crscript.onload = () => {
+				this.googleClientLoadedSubject$.next(true);
+				if (traceOn()) {
+					console.log ('...googleService is initialized');
+				}	
 				google.accounts.id.initialize({
 					client_id: this.clientId,
 					callback: handleCredentialResponse
 				});
-
 				google.accounts.id.renderButton(document.getElementById('btnGoogle'), {theme: 'outline', size: 'large'});
 			};
 
 		} else {
-			google.accounts.id.initialize({
-				client_id: this.clientId,
-				callback: handleCredentialResponse
-			});
+			this.googleClientLoaded$.subscribe({
+				next: loaded => {
+					if (loaded) {
+						google.accounts.id.initialize({
+							client_id: this.clientId,
+							callback: handleCredentialResponse
+						});
+					}
+				}
+			})
 		}
+	}
+
+	public signIn() {
+		this.authenticatedSubject$.next(true);
 	}
 
 	/**
@@ -98,44 +139,12 @@ export class GoogleService {
 	 * @param jwt the Json Web Token
 	 */
 	public loginCheckSocial (jwt: any) {
-		const token = jwt_decode(jwt) as GoogleToken;
+		this.googleToken = jwt_decode(jwt) as GoogleToken;
+		this.jwt = jwt;
 		if (traceOn()) {
-			console.log ('login %s %s %s @', token.jti, token.given_name, token.family_name, token.email);
+			console.log ('login %s %s %s @', this.googleToken.jti, this.googleToken.given_name, this.googleToken.family_name, this.googleToken.email);
 		}
+		this.signIn();
 	}
-
-	/*
-	public signInWithGoogle(): void {
-		this.authService.initState.subscribe({
-			next: value => {
-			this.authService.signIn(GoogleLoginProvider.PROVIDER_ID).then((user) => {
-
-				console.log (user)
-				console.log (user.firstName)
-				console.log (`authToken ${user.authToken}`)
-				console.log (`id ${user.id}`)
-				console.log (`firstname ${user.firstName}`)
-				console.log (`lastname ${user.lastName}`)
-				console.log (`token ${user.response.access_token}`)
-
-				/*
-				this.tokenService.verifyGoogleToken$(user.idToken).pipe(take(1))
-					.subscribe({
-						next: res => {
-							this.tokenService.token = new Token();
-							this.tokenService.token.access_token = user.idToken;
-							console.log ("his.tokenService.token.access_token", this.tokenService.token.access_token);
-						}
-					});
-				*
-
-			},
-			(error) => {
-				console.log(error);
-			}
-		);
-	}})
-
-	} */
 
 }

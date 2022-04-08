@@ -1,3 +1,4 @@
+import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { TestBed } from '@angular/core/testing';
 import { GoogleService } from './google.service';
 
@@ -8,7 +9,7 @@ describe('GoogleService', () => {
 	beforeEach(() => {
 		TestBed.configureTestingModule({
 			providers: [],
-			imports: []
+			imports: [HttpClientTestingModule]
 		});
 		service = TestBed.inject(GoogleService);
 	});

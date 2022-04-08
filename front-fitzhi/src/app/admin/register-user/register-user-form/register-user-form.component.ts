@@ -69,7 +69,7 @@ export class RegisterUserFormComponent extends BaseDirective implements OnInit, 
 		}
 
 		this.subscriptions
-			.add(this.staffService.registerUser$(
+			.add(this.staffService.classicRegisterUser$(
 					this.veryFirstConnection,
 					username,
 					password)

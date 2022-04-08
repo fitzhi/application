@@ -24,7 +24,7 @@ const context = require.context('./', true, /\.spec\.ts$/);
 // const context = require.context('./', true,  /register-user-form\.component\.spec\.ts$/);
 // const context = require.context('./', true,  /alternative-openid-connection-google\.component\.spec\.ts$/);
 
-// const context = require.context('./', true,  /starfield-header\.component\.spec\.ts$/);
+// const context = require.context('./', true,  /skill\.service\.spec\.ts$/);
 // const context = require.context('./', true,  /google\.service\.spec\.ts$/);
 // const context = require.context('./', true,  /staff\.service\.spec\.ts$/);
 // const context = require.context('./', true,  /starfield-broadcastConstellations\.service\.spec\.ts$/);
