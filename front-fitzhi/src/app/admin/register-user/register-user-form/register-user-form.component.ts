@@ -2,6 +2,8 @@ import { Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angu
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { BaseDirective } from 'src/app/base/base-directive.directive';
 import { Collaborator } from 'src/app/data/collaborator';
+import { LoginEvent } from 'src/app/data/login-event';
+import { LoginMode } from 'src/app/data/login-mode';
 import { traceOn } from 'src/app/global';
 import { MessageBoxService } from 'src/app/interaction/message-box/service/message-box.service';
 import { BackendSetupService } from 'src/app/service/backend-setup/backend-setup.service';
@@ -23,7 +25,7 @@ export class RegisterUserFormComponent extends BaseDirective implements OnInit, 
 	/**
 	 * We'll send to the parent component (RegisterUser) the new user has been created.
 	 */
-	@Output() messengerUserRegistered$ = new EventEmitter<number>();
+	@Output() messengerUserRegistered$ = new EventEmitter<LoginEvent>();
 
 	/**
 	 * Group of the components present in the form.
@@ -79,7 +81,7 @@ export class RegisterUserFormComponent extends BaseDirective implements OnInit, 
 							console.log('Empty staff created with id ' + staff.idStaff);
 						}
 						this.staffService.changeCollaborator(staff);
-						this.messengerUserRegistered$.emit(staff.idStaff);
+						this.messengerUserRegistered$.emit(new LoginEvent(staff.idStaff, LoginMode.CLASSIC));
 					},
 					error: error => {
 						if (traceOn()) {
@@ -101,7 +103,7 @@ export class RegisterUserFormComponent extends BaseDirective implements OnInit, 
 				.subscribe(answer => {
 					if (answer) {
 						this.backendSetupService.removeUrl();
-						this.messengerUserRegistered$.emit(-1);
+						this.messengerUserRegistered$.emit(new LoginEvent(-1, LoginMode.CLASSIC));
 					}
 				}));
 	}

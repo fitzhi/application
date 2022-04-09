@@ -5,6 +5,8 @@ import { Router } from '@angular/router';
 import { Subject } from 'rxjs';
 import { BaseDirective } from 'src/app/base/base-directive.directive';
 import { Collaborator } from 'src/app/data/collaborator';
+import { LoginEvent } from 'src/app/data/login-event';
+import { LoginMode } from 'src/app/data/login-mode';
 import { traceOn } from 'src/app/global';
 import { BackendSetupService } from 'src/app/service/backend-setup/backend-setup.service';
 import { ReferentialService } from 'src/app/service/referential/referential.service';
@@ -95,26 +97,30 @@ export class StartingSetupComponent extends BaseDirective implements OnDestroy {
 	/**
 	 * Catch the staff identifier created the registerUserComponent.
 	 */
-	setRegisteredUser($event: number) {
+	setRegisteredUser($event: LoginEvent) {
 
 		if (traceOn()) {
 			console.log('idStaff created :', $event);
 		}
 
 		// Operation has been cancelled. We skip backward.
-		if ($event === -1) {
+		if ($event.idStaff === -1) {
 			this.completed[1] = false;
 			setTimeout(() => { this.stepper.previous(); }, 0);
 			return;
 		}
 
-		this.idStaff = $event;
+		this.idStaff = $event.idStaff;
 		this.ngZone.run(() => {
 			this.completed[1] = true;
-			this.completed[2] = true;
+			// If we are in openID mode we can skip the connection tab. We are already connected after the registration.
+			if ($event.loginMode == LoginMode.OPENID) {
+				this.completed[2] = true;
+			}
 			setTimeout(() => {
 				this.stepper.next();
-				this.stepper.next();
+				// Same reason as before.
+				if ($event.loginMode == LoginMode.OPENID) { this.stepper.next(); }
 			}, 0);
 		});    
 	}

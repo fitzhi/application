@@ -18,7 +18,7 @@ export class ConnectUserFormComponent implements OnInit {
 	/**
 	 * We'll send to the parent component (startingSetup) the new user is connected.
 	 */
-	 @Output() messengerUserConnected = new EventEmitter<boolean>();
+	 @Output() messengerUserConnected$ = new EventEmitter<boolean>();
 
 	/**
 	 * Are we entering in this component, just by routing directly into '/login'
@@ -82,7 +82,7 @@ export class ConnectUserFormComponent implements OnInit {
 		const password: string = this.connectionGroup.get('password').value;
 		this.authService.connect$(username, password).subscribe({
 			next: connectionStatus => {
-				this.messengerUserConnected.emit(connectionStatus);
+				this.messengerUserConnected$.emit(connectionStatus);
 				//
 				// If the connection has succeeded, we load the projects and the staff members.
 				//

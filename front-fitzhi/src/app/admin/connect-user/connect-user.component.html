@@ -13,7 +13,10 @@
 	<ng-template #localOauthOnly>
 		<div id="localOnly" class="row text-center">
 			<div class="col-12 text-center">
-				<app-connect-user-form [directLogin]="directLogin"></app-connect-user-form>
+				<app-connect-user-form 
+					[directLogin]="directLogin"
+					(messengerUserConnected$)="onUserConnected($event)" >
+				</app-connect-user-form>
 			</div>
 		</div>
 	</ng-template>
@@ -23,7 +26,10 @@
 				<app-alternative-openid-connection></app-alternative-openid-connection>
 			</div>
 			<div class="col-7 text-center">
-				<app-connect-user-form [directLogin]="directLogin"></app-connect-user-form>
+				<app-connect-user-form 
+					[directLogin]="directLogin"
+					(messengerUserConnected$)="onUserConnected($event)" >
+				</app-connect-user-form>
 			</div>
 		</div>
 	</ng-template>

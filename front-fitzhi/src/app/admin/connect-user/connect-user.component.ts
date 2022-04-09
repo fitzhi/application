@@ -1,4 +1,5 @@
-import { Component, Input, OnDestroy, OnInit } from '@angular/core';
+import { Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angular/core';
+import { SlowBuffer } from 'buffer';
 import { BehaviorSubject, EMPTY } from 'rxjs';
 import { switchMap } from 'rxjs/operators';
 import { BaseDirective } from 'src/app/base/base-directive.directive';
@@ -18,7 +19,12 @@ export class ConnectUserComponent extends BaseDirective implements OnInit, OnDes
 	 */
 	@Input() directLogin = false;
 
-	private localOnlyOauthSubject$ = new BehaviorSubject<boolean>(true);
+	/**
+	 * We'll send to the parent component (startingSetup) the new user is connected.
+	 */
+	 @Output() messengerUserConnected$ = new EventEmitter<boolean>();
+
+	 private localOnlyOauthSubject$ = new BehaviorSubject<boolean>(true);
 
 	public localOnlyOauth$ = this.localOnlyOauthSubject$.asObservable();
 
@@ -59,6 +65,16 @@ export class ConnectUserComponent extends BaseDirective implements OnInit, OnDes
 		);
 	}
 
+	/**
+	 * We transfert the connection status to the parent.
+	 * @param connected boolean corresponding to the connection status
+	 */
+	public onUserConnected(connected) {
+		if (traceOn()) {
+			console.log ('Tranferring the connections status %d', connected);
+		}
+		this.messengerUserConnected$.emit(connected);
+	}
 
 	/**
 	 * Calling the base class to unsubscribe all subscriptions.

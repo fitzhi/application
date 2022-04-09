@@ -48,7 +48,7 @@ describe('ConnectUserComponent', () => {
 		googleService = TestBed.inject(GoogleService);
 		fixture.detectChanges();
 	});
-/*
+
 	it('should be created without error.', () => {
 		expect(component).toBeTruthy();
 	});
@@ -61,7 +61,7 @@ describe('ConnectUserComponent', () => {
 		const openidOauth = fixture.debugElement.nativeElement.querySelector('#openidOauth');
 		expect(openidOauth).toBeNull();
 	});
-*/
+
 	it('should display the OpenId panel if an openId authentication server has been declared.', () => {
 		referentialService.openidServers = [];
 		referentialService.openidServers.push(new OpenidServer());

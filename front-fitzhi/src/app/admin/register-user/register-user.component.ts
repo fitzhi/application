@@ -1,6 +1,8 @@
 import { Component, EventEmitter, Input, OnDestroy, OnInit, Output, ViewChild } from '@angular/core';
 import { BehaviorSubject, EMPTY } from 'rxjs';
 import { switchMap } from 'rxjs/operators';
+import { LoginEvent } from 'src/app/data/login-event';
+import { LoginMode } from 'src/app/data/login-mode';
 import { traceOn } from 'src/app/global';
 import { GoogleService } from 'src/app/service/google/google.service';
 import { ReferentialService } from 'src/app/service/referential/referential.service';
@@ -28,7 +30,7 @@ export class RegisterUserComponent extends BaseDirective implements OnInit, OnDe
 	/**
 	 * We'll send to the parent component (startingSetup) the new user has been created.
 	 */
-	@Output() messengerUserRegistered$ = new EventEmitter<number>();
+	@Output() messengerUserRegistered$ = new EventEmitter<LoginEvent>();
 
 	/**
 	* We'll send to the parent component (startingSetup) the new user has been created.
@@ -84,7 +86,7 @@ export class RegisterUserComponent extends BaseDirective implements OnInit, OnDe
 									// We use the JWT as access token for this authenticated user.
 									token.access_token = this.googleService.googleToken.sub;
 									this.tokenService.saveToken(token);
-									this.messengerUserRegistered$.emit(staff.idStaff);			
+									this.messengerUserRegistered$.emit(new LoginEvent(staff.idStaff, LoginMode.OPENID));			
 								}
 							})
 						}
@@ -103,11 +105,11 @@ export class RegisterUserComponent extends BaseDirective implements OnInit, OnDe
 	}
 
 
-	public onRegisterUser(idStaff: number) {
+	public onRegisterUser($event: LoginEvent) {
 		if (traceOn()) {
-			console.log('onRegisterUser(%d)', idStaff);
+			console.log('onRegisterUser(%d)', $event.idStaff);
 		}
-		this.messengerUserRegistered$.emit(idStaff);
+		this.messengerUserRegistered$.emit($event);
 	}
 
 	/**
