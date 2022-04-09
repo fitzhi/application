@@ -8,7 +8,7 @@ import { HttpClient } from '@angular/common/http';
 declare var google: any;
 
 class GoogleToken {
-	jti: string;
+	sub: string;
 	given_name: string;
 	family_name: string;
 	name: string;
@@ -21,7 +21,6 @@ class GoogleToken {
 export class GoogleService {
 
 	public GOOGLE_SERVER_ID = 'GOOGLE';
-
 
 	private registeredSubject$ = new BehaviorSubject<boolean>(false); 
 	public isRegistered$ = this.registeredSubject$.asObservable();
@@ -40,6 +39,9 @@ export class GoogleService {
 	 * The decoded authentication token
 	 */
 	public googleToken: GoogleToken = null;
+
+	private googleClientLoadedSubject$ = new BehaviorSubject<boolean>(false);
+	private googleClientLoaded$ = this.googleClientLoadedSubject$.asObservable();
 
 	constructor(private httpClient: HttpClient) { }
 
@@ -61,10 +63,6 @@ export class GoogleService {
 			this.register();
 		}
 	}
-
-	private googleClientLoadedSubject$ = new BehaviorSubject<boolean>(false);
-
-	private googleClientLoaded$ = this.googleClientLoadedSubject$.asObservable();
 
 	/**
 	 * Initialize the Google workplace.
@@ -139,10 +137,11 @@ export class GoogleService {
 	 * @param jwt the Json Web Token
 	 */
 	public loginCheckSocial (jwt: any) {
+		console.log (jwt_decode(jwt));
 		this.googleToken = jwt_decode(jwt) as GoogleToken;
 		this.jwt = jwt;
 		if (traceOn()) {
-			console.log ('login %s %s %s @', this.googleToken.jti, this.googleToken.given_name, this.googleToken.family_name, this.googleToken.email);
+			console.log ('login %s %s %s @', this.googleToken.sub, this.googleToken.given_name, this.googleToken.family_name, this.googleToken.email);
 		}
 		this.signIn();
 	}

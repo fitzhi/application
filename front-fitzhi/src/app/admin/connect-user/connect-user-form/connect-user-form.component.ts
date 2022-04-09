@@ -86,6 +86,9 @@ export class ConnectUserFormComponent implements OnInit {
 				//
 				// If the connection has succeeded, we load the projects and the staff members.
 				//
+				if (traceOn()) {
+					console.log ('Successful connection')
+				}
 				if (connectionStatus) {
 					// We load the projects and start the refresh process.
 					this.projectService.startLoadingProjects();
@@ -94,6 +97,9 @@ export class ConnectUserFormComponent implements OnInit {
 				}
 
 				if (this.directLogin) {
+					if (traceOn()) {
+						console.log ('Redirecting to /welcome')
+					}
 					this.router.navigate(['/welcome'], {});
 				}
 			}

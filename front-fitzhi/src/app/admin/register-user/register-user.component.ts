@@ -7,6 +7,8 @@ import { ReferentialService } from 'src/app/service/referential/referential.serv
 import { StaffService } from 'src/app/tabs-staff/service/staff.service';
 import { BaseDirective } from '../../base/base-directive.directive';
 import { InstallService } from '../service/install/install.service';
+import { Token } from '../service/token/token';
+import { TokenService } from '../service/token/token.service';
 import { RegisterUserFormComponent } from './register-user-form/register-user-form.component';
 
 @Component({
@@ -45,6 +47,7 @@ export class RegisterUserComponent extends BaseDirective implements OnInit, OnDe
 		private installService: InstallService,
 		private referentialService: ReferentialService,
 		private staffService: StaffService,
+		private tokenService: TokenService,
 		private googleService: GoogleService) {
 		super();
 	}
@@ -73,8 +76,14 @@ export class RegisterUserComponent extends BaseDirective implements OnInit, OnDe
 							}
 							this.staffService.openIdRegisterUser$(this.veryFirstConnection, "GOOGLE", this.googleService.jwt).subscribe({
 								next: staff => {
-									console.log ('%s has been created in Fitzi from its Google token', staff.lastName)
+									if (traceOn()) {
+										console.log ('%s has been created in Fitzi from its Google token', staff.lastName)
+									}
 									this.staffService.changeCollaborator(staff);
+									const token = new Token();
+									// We use the JWT as access token for this authenticated user.
+									token.access_token = this.googleService.googleToken.sub;
+									this.tokenService.saveToken(token);
 									this.messengerUserRegistered$.emit(staff.idStaff);			
 								}
 							})

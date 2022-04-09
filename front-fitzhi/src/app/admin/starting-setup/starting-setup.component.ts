@@ -111,7 +111,9 @@ export class StartingSetupComponent extends BaseDirective implements OnDestroy {
 		this.idStaff = $event;
 		this.ngZone.run(() => {
 			this.completed[1] = true;
+			this.completed[2] = true;
 			setTimeout(() => {
+				this.stepper.next();
 				this.stepper.next();
 			}, 0);
 		});    

@@ -34,7 +34,9 @@ export class ConnectUserComponent extends BaseDirective implements OnInit, OnDes
 				.subscribe({
 					next: doneAndOk => {
 						if (doneAndOk) {
-							console.log (this.referentialService.openidServers.length);
+							if (traceOn()) {
+								console.log ('%d declared openID server(s)', this.referentialService.openidServers.length);
+							}
 							this.localOnlyOauthSubject$.next((this.referentialService.openidServers.length === 0));
 						}
 					}
