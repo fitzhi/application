@@ -4,16 +4,9 @@ import { OpenidServer } from 'src/app/data/openid-server';
 import { traceOn } from 'src/app/global';
 import jwt_decode from 'jwt-decode';
 import { HttpClient } from '@angular/common/http';
+import { GoogleToken } from 'src/app/data/google-token';
 
 declare var google: any;
-
-class GoogleToken {
-	sub: string;
-	given_name: string;
-	family_name: string;
-	name: string;
-	email: string;
-}
 
 @Injectable({
 	providedIn: 'root'
