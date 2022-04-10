@@ -3,36 +3,39 @@ package com.fitzhi.security.google.util;
 import java.util.Arrays;
 import java.util.Collection;
 
+import com.fitzhi.data.internal.Staff;
+
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 
+import static com.fitzhi.Global.GOOGLE_OPENID_SERVER;
+import static com.fitzhi.Global.ROLE_TRUSTED_USER;
+
 /**
- * Google authentication object representing the authenticating request.
+ * Google authentication object representing the authentication request.
  * @author Fr&eacute;d&eacute;ric VIDAL
  */
 public class GoogleAuthentication implements Authentication  {
     
     boolean isAuthenticated;
 
-    String userId;
+    private final Staff staff;
 
-    String name;
-
-    public GoogleAuthentication (String userId, String name) {
-        this.userId = userId;
-        this.name = name;
+    public GoogleAuthentication (Staff staff) {
+        this.staff = staff;
         this.isAuthenticated = true;
     }
 
     @Override
     public String getName() {
-        return name;
+        return ((staff.getFirstName() != null) ? staff.getFirstName() : "") 
+             + ((staff.getLastName() != null) ? staff.getLastName() : "");
     }
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return Arrays.asList(new SimpleGrantedAuthority("ROLE_TRUSTED_CLIENT"));
+        return Arrays.asList(new SimpleGrantedAuthority(ROLE_TRUSTED_USER));
     }
 
     @Override
@@ -42,12 +45,12 @@ public class GoogleAuthentication implements Authentication  {
 
     @Override
     public Object getDetails() {
-        return null;
+        return staff;
     }
 
     @Override
     public Object getPrincipal() {
-        return this.userId;
+        return this.staff.getPrincipal(GOOGLE_OPENID_SERVER);
     }
 
     @Override

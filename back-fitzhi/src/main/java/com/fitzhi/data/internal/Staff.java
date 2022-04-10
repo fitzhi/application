@@ -1,17 +1,15 @@
 package com.fitzhi.data.internal;
 
+import static com.fitzhi.Global.ROLE_TRUSTED_USER;
+
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.userdetails.UserDetails;
-
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fitzhi.Global;
 import com.fitzhi.bean.impl.StaffHandlerImpl;
 import com.fitzhi.data.encryption.DataEncryption;
 import com.fitzhi.data.source.Contributor;
@@ -19,7 +17,10 @@ import com.fitzhi.exception.ApplicationException;
 import com.fitzhi.security.CustomGrantedAuthority;
 import com.fitzhi.service.FileType;
 
-import static com.fitzhi.Global.ROLE_TRUSTED_USER;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
 
 import lombok.Data;
 
@@ -273,6 +274,20 @@ public @Data class Staff implements UserDetails {
 		return passwordEncrypted.equals(this.password);
 	}
 
+	/**
+	 * Retrieve the principal associated to this staff member.
+	 * 
+	 * @param serverId the Open server identifier. {@link Global#GOOGLE_OPENID_SERVER} might be the value.
+	 * @return the principal associated with this staff for the given server, or {@code null} if none exists.
+	 */
+	public String getPrincipal(String serverId) {
+		Optional<String> oServerId = this.getOpenIds()
+			.stream()
+			.filter(openId -> serverId.equals(openId.getServerId()))
+			.map(OpenId::getUserId)
+			.findFirst();
+		return oServerId.orElse(null);
+	}
 
 	@Override
 	public Collection<? extends GrantedAuthority> getAuthorities() {

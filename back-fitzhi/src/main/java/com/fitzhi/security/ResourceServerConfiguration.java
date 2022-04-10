@@ -10,6 +10,8 @@ import org.springframework.security.oauth2.provider.error.OAuth2AccessDeniedHand
 import org.springframework.web.multipart.MultipartResolver;
 import org.springframework.web.multipart.support.StandardServletMultipartResolver;
 
+import static com.fitzhi.Global.TRUSTED_USER;
+
 @Configuration
 @EnableResourceServer
 public class ResourceServerConfiguration extends ResourceServerConfigurerAdapter {
@@ -62,7 +64,7 @@ public class ResourceServerConfiguration extends ResourceServerConfigurerAdapter
 
 				"/api/referential/**")
 			.permitAll()
-			.antMatchers("/**").hasRole("TRUSTED_USER")
+			.antMatchers("/**").hasRole(TRUSTED_USER)
 			.and().exceptionHandling().accessDeniedHandler(new OAuth2AccessDeniedHandler());
 		}
 	}

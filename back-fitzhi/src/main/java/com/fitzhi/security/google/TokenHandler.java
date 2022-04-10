@@ -1,6 +1,7 @@
 package com.fitzhi.security.google;
 
 import com.fitzhi.data.internal.OpenIdToken;
+import com.fitzhi.data.internal.Staff;
 import com.fitzhi.exception.ApplicationException;
 import com.google.api.client.http.HttpTransport;
 import com.google.api.client.json.JsonFactory;
@@ -29,4 +30,13 @@ public interface TokenHandler {
      * @throws ApplicationException thrown if any technical problem occurs
      */
     OpenIdToken takeInAccountToken(String idTokenString, HttpTransport transport, JsonFactory jsonFactory) throws ApplicationException;
+
+    /**
+     * Store the authenticated user in the token store.
+     * 
+     * @param staff the authenticated staff member
+     * @param openIdToken the decoded JWT
+     * @throws ApplicationException thrown if any problem occurs
+     */
+    void storeStaffToken (Staff staff, OpenIdToken openIdToken) throws ApplicationException;
 }

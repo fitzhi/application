@@ -42,6 +42,11 @@ public class Global {
 	/**
 	 * Role given to all user who are allowed to connect to Fitzhi.
 	 */
+	public static final String TRUSTED_USER = "TRUSTED_USER";
+
+	/**
+	 * Role given to all user who are allowed to connect to Fitzhi.
+	 */
 	public static final String ROLE_TRUSTED_USER = "ROLE_TRUSTED_USER";
 
 	/**

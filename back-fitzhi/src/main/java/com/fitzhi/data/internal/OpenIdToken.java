@@ -33,6 +33,11 @@ public @Data class OpenIdToken {
     private Date issuedDate;
     
     /**
+     * Origin of the content. First implemented origin is GooleToken;
+     */
+    private Object origin;
+
+    /**
      * Create an OpenId Token in error if the decoding process failed.
      * @return the openId token in error
      */

@@ -3,9 +3,12 @@ package com.fitzhi.security.google;
 import static com.fitzhi.Error.CODE_GOOGLE_TOKEN_ERROR;
 import static com.fitzhi.Error.MESSAGE_GOOGLE_TOKEN_ERROR;
 import static com.fitzhi.Global.GOOGLE_OPENID_SERVER;
+import static com.fitzhi.Error.CODE_INCONSISTENCY_ERROR_OPENID_SERVER;
+import static com.fitzhi.Error.MESSAGE_INCONSISTENCY_ERROR_OPENID_SERVER;
 
 import java.io.IOException;
 import java.security.GeneralSecurityException;
+import java.text.MessageFormat;
 import java.util.Arrays;
 import java.util.Calendar;
 import java.util.List;
@@ -16,8 +19,10 @@ import javax.annotation.PostConstruct;
 
 import com.fitzhi.ApplicationRuntimeException;
 import com.fitzhi.bean.ReferentialHandler;
+import com.fitzhi.data.internal.OpenId;
 import com.fitzhi.data.internal.OpenIdServer;
 import com.fitzhi.data.internal.OpenIdToken;
+import com.fitzhi.data.internal.Staff;
 import com.fitzhi.exception.ApplicationException;
 import com.fitzhi.security.google.util.GoogleAuthentication;
 import com.fitzhi.security.google.util.OAuth2AuthenticationBuilder;
@@ -100,9 +105,9 @@ public class GoogleTokenHandlerImpl implements TokenHandler {
 
 		// (Receive idTokenString by HTTPS POST)
 		try {
-			GoogleIdToken idToken = verifier.verify(idTokenString);
-			if (idToken != null) {
-				Payload payload = idToken.getPayload();
+			GoogleIdToken googleToken = verifier.verify(idTokenString);
+			if (googleToken != null) {
+				Payload payload = googleToken.getPayload();
 
 				OpenIdToken oit = OpenIdToken.of();
 
@@ -123,15 +128,11 @@ public class GoogleTokenHandlerImpl implements TokenHandler {
 				calendar.setTimeInMillis(payload.getIssuedAtTimeSeconds() * 1000);
 				oit.setIssuedDate(calendar.getTime());
 
+				oit.setOrigin(googleToken);
+
 				if (log.isDebugEnabled()) {
 					log.debug("Token validation for %s %s %d", oit.getUserId(), oit.getName(), oit.getExpirationDate());
 				}
-
-				tokenStore.storeAccessToken(
-					new OpenIdToOauth2Converter(idTokenString, idToken), 
-					OAuth2AuthenticationBuilder.getInstance(
-						OAuth2RequestBuilder.getInstance(oit.getUserId(), Set.of("read", "write", "trust")), 
-						new GoogleAuthentication(oit.getUserId(), oit.getName())));
 
 				return oit;
 
@@ -148,4 +149,31 @@ public class GoogleTokenHandlerImpl implements TokenHandler {
 		return clientId;
 	}
 
+	@Override
+	public void storeStaffToken(Staff staff, OpenIdToken openIdToken) throws ApplicationException {
+
+		Optional<OpenId> oOpenId = staff.getOpenIds()
+			.stream()
+			.filter(openId -> GOOGLE_OPENID_SERVER.equals(openId.getServerId()))
+			.findFirst();
+		if (oOpenId.isEmpty()) {
+			throw new ApplicationRuntimeException("DATA INCONSISTENCY!");
+		}
+
+		OpenId openId = oOpenId.get();
+
+		if (openIdToken.getOrigin() instanceof GoogleIdToken) {
+			GoogleIdToken googleIdToken = (GoogleIdToken) openIdToken.getOrigin();
+			tokenStore.storeAccessToken(
+				new OpenIdToOauth2Converter(googleIdToken), 
+				OAuth2AuthenticationBuilder.getInstance(
+					OAuth2RequestBuilder.getInstance(openId.getUserId(), Set.of("read", "write", "trust")), 
+					new GoogleAuthentication(staff)));
+		} else {
+			throw new ApplicationException(
+				CODE_INCONSISTENCY_ERROR_OPENID_SERVER, 
+				MessageFormat.format(MESSAGE_INCONSISTENCY_ERROR_OPENID_SERVER, GOOGLE_OPENID_SERVER, staff.getIdStaff(), staff.getFirstName(), staff.getLastName()));
+		}
+
+    }
 }

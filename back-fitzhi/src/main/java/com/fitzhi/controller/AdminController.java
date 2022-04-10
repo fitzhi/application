@@ -150,6 +150,7 @@ public class AdminController {
 			HttpTransport HTTP_TRANSPORT = new NetHttpTransport();
 			OpenIdToken oit = googleTokenHandler.takeInAccountToken(openIdToken.getIdToken(), HTTP_TRANSPORT, GsonFactory.getDefaultInstance());
 			Staff staff = staffHandler.createStaffMember(oit);
+			googleTokenHandler.storeStaffToken(staff, oit);
 			return staff;
 		}
 
