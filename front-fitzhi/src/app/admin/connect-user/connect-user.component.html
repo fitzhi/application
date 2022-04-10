@@ -12,25 +12,29 @@
 	<div *ngIf="localOnlyOauth$|async;then localOauthOnly else openIdOauth"></div>
 	<ng-template #localOauthOnly>
 		<div id="localOnly" class="row text-center">
-			<div class="col-12 text-center">
+			<div class="col-3"></div>
+			<div class="col-6 text-center">
 				<app-connect-user-form 
 					[directLogin]="directLogin"
 					(messengerUserConnected$)="onUserConnected($event)" >
 				</app-connect-user-form>
 			</div>
+			<div class="col-3"></div>
 		</div>
 	</ng-template>
 	<ng-template #openIdOauth>
 		<div id="openidOauth" class="row">
-			<div class="col-5 text-center">
+			<div class="col-4 text-center">
 				<app-alternative-openid-connection></app-alternative-openid-connection>
 			</div>
-			<div class="col-7 text-center">
+			<div class="col-1"></div>
+			<div class="col-6 text-center">
 				<app-connect-user-form 
 					[directLogin]="directLogin"
 					(messengerUserConnected$)="onUserConnected($event)" >
 				</app-connect-user-form>
 			</div>
+			<div class="col-1"></div>
 		</div>
 	</ng-template>
 </div>
