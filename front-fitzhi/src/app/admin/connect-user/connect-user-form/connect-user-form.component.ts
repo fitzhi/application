@@ -18,7 +18,7 @@ export class ConnectUserFormComponent implements OnInit {
 	/**
 	 * We'll send to the parent component (startingSetup) the new user is connected.
 	 */
-	 @Output() messengerUserConnected$ = new EventEmitter<boolean>();
+	@Output() messengerUserConnected$ = new EventEmitter<boolean>();
 
 	/**
 	 * Are we entering in this component, just by routing directly into '/login'
@@ -38,7 +38,7 @@ export class ConnectUserFormComponent implements OnInit {
 		private formBuilder: FormBuilder) { 
 		this.connectionGroup = this.formBuilder.group({
 			username: new FormControl('', [Validators.required, Validators.maxLength(16)]),
-			password: new FormControl('', [Validators.required, Validators.minLength(6), Validators.maxLength(16)])
+			password: new FormControl('', [Validators.required, Validators.minLength(8), Validators.maxLength(16)])
 		});
 	}
 
@@ -75,7 +75,7 @@ export class ConnectUserFormComponent implements OnInit {
 	}
 
 	/**
-	 * Cancel the installation
+	 * Submit the installation
 	 */
 	onSubmit() {
 		const username: string = this.connectionGroup.get('username').value;

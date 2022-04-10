@@ -35,8 +35,6 @@ describe('RegisterUserFormComponent', () => {
 		constructor() {}
 	}
 
-
-
 	function setUser(value: string) {
 		const user = fixture.debugElement.query(By.css('#user'));
 		user.nativeElement.value = value;

@@ -69,11 +69,11 @@ export class ConnectUserComponent extends BaseDirective implements OnInit, OnDes
 	 * We transfert the connection status to the parent.
 	 * @param connected boolean corresponding to the connection status
 	 */
-	public onUserConnected(connected) {
+	public onUserConnected($event) {
 		if (traceOn()) {
-			console.log ('Tranferring the connections status %d', connected);
+			console.log ('Tranfering the connection status %d', $event);
 		}
-		this.messengerUserConnected$.emit(connected);
+		this.messengerUserConnected$.emit($event);
 	}
 
 	/**

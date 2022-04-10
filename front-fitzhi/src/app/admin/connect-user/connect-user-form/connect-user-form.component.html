@@ -6,7 +6,7 @@
 				<label for="username" class="required float-right labelConnection">Username :</label>
 			</div>
 			<div class="col-7">
-				<input type="text" class="form-control required" id="username" name="username"
+				<input type="text" class="form-control required" id="user" name="username"
 					placeholder="Username (Required)" formControlName="username" />
 				<label *ngIf="username.touched && username.invalid" class="alert alert-warning warning-text">
 					Username is required and cannot exceed 16 chars max.
@@ -19,7 +19,7 @@
 				<label for="password" class="required float-right labelConnection">Password :</label>
 			</div>
 			<div class="col-7">
-				<input type="password" class="form-control required" id="connect-password" name="password"
+				<input type="password" class="form-control required" id="password" name="password"
 					placeholder="Password (Required)" formControlName="password" />
 				<label *ngIf="password.touched && password.invalid" ngClass="alert alert-warning warning-text">
 					Password is required<br/>
@@ -31,11 +31,13 @@
 		<div class="row">
 			<div class="col-6"></div>
 			<div class="col-3">
-				<button class="btn btn-outline-secondary rounded connection-cancel" type="reset" alt="cancel this operation"
+				<button id="cancelButton" class="btn btn-outline-secondary rounded connection-cancel" type="reset" alt="cancel this operation"
 					(click)="onCancel()">Cancel</button>
 			</div>
 			<div class="col-3">
-				<button class="btn btn-outline-secondary rounded connection-ok" 
+				<button 
+					id="okButton"
+					class="btn btn-outline-secondary rounded connection-ok" 
 					(click)="onSubmit()" 
 					[disabled]="connectionGroup.invalid">Sign in</button>
 			</div>
