@@ -46,14 +46,14 @@ describe('ConnectUserFormComponent', () => {
 	}
 
 	function setUser(value: string) {
-		const user = fixture.debugElement.query(By.css('#user'));
+		const user = fixture.debugElement.query(By.css('#userConnection'));
 		user.nativeElement.value = value;
 		user.nativeElement.dispatchEvent(new Event('input'));
 		fixture.detectChanges();
 	}
 
 	function setPassword(value: string) {
-		const password = fixture.debugElement.query(By.css('#password'));
+		const password = fixture.debugElement.query(By.css('#passwordConnection'));
 		password.nativeElement.value = value; // This is not a credential. //NOSONAR
 		password.nativeElement.dispatchEvent(new Event('input'));
 		fixture.detectChanges();
@@ -84,7 +84,7 @@ describe('ConnectUserFormComponent', () => {
 	});
 
 	it('should have by default the sign-in button disabled.', () => {
-		const btnOk = fixture.debugElement.query(By.css('#okButton'));
+		const btnOk = fixture.debugElement.query(By.css('#submitConnection'));
 		expect(btnOk).toBeDefined();
 		expect(btnOk.nativeElement.disabled).toBeTrue();
 	});
@@ -93,7 +93,7 @@ describe('ConnectUserFormComponent', () => {
 		setUser("frvidal");
 		setPassword("1234567");
 		fixture.detectChanges();
-		const btnOk = fixture.debugElement.query(By.css('#okButton'));
+		const btnOk = fixture.debugElement.query(By.css('#submitConnection'));
 		expect(btnOk).toBeDefined();
 		expect(btnOk.nativeElement.disabled).toBeTrue();
 	});
@@ -102,7 +102,7 @@ describe('ConnectUserFormComponent', () => {
 		setUser("frvidal");
 		setPassword("12345678");
 		fixture.detectChanges();
-		const btnOk = fixture.debugElement.query(By.css('#okButton'));
+		const btnOk = fixture.debugElement.query(By.css('#submitConnection'));
 		expect(btnOk).toBeDefined();
 		expect(btnOk.nativeElement.disabled).toBeFalse();
 	});
@@ -118,7 +118,7 @@ describe('ConnectUserFormComponent', () => {
 		setPassword("12345678");
 		fixture.detectChanges();
 
-		const btnOk = fixture.debugElement.query(By.css('#okButton'));
+		const btnOk = fixture.debugElement.query(By.css('#submitConnection'));
 		expect(btnOk).toBeDefined();
 		expect(btnOk.nativeElement.disabled).toBeFalse();
 		btnOk.nativeElement.click();
@@ -142,7 +142,7 @@ describe('ConnectUserFormComponent', () => {
 		setPassword("12345678");
 		fixture.detectChanges();
 
-		const btnOk = fixture.debugElement.query(By.css('#okButton'));
+		const btnOk = fixture.debugElement.query(By.css('#submitConnection'));
 		expect(btnOk).toBeDefined();
 		expect(btnOk.nativeElement.disabled).toBeFalse();
 		btnOk.nativeElement.click();
@@ -162,7 +162,7 @@ describe('ConnectUserFormComponent', () => {
 		const spyProjectService = spyOn(projectService, 'startLoadingProjects').and.returnValue(null);
 		spyOn(component.connectUserForm.messengerUserConnected$, 'emit');
 
-		const btnCancel= fixture.debugElement.query(By.css('#cancelButton'));
+		const btnCancel= fixture.debugElement.query(By.css('#cancelConnection'));
 		expect(btnCancel).toBeDefined();
 		btnCancel.nativeElement.click();
 		fixture.detectChanges();

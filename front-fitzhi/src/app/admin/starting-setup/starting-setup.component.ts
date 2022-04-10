@@ -143,9 +143,7 @@ export class StartingSetupComponent extends BaseDirective implements OnDestroy {
 	setConnection($event: boolean) {
 		if ($event) {
 			this.completed[2] = true;
-			setTimeout(() => {
-				this.stepper.next();
-			}, 0);
+			setTimeout(() => this.stepper.next(), 0);
 		} else {
 			this.completed[2] = false;
 			this.completed[3] = false;

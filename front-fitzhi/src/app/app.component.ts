@@ -4,6 +4,7 @@ import { take } from 'rxjs/operators';
 import { environment } from '../environments/environment';
 import { AuthService } from './admin/service/auth/auth.service';
 import { InstallService } from './admin/service/install/install.service';
+import { TokenService } from './admin/service/token/token.service';
 import { BaseDirective } from './base/base-directive.directive';
 import { Constants } from './constants';
 import { ListCriteria } from './data/listCriteria';
@@ -63,6 +64,7 @@ export class AppComponent extends BaseDirective implements OnInit, AfterViewInit
 		private cinematicService: CinematicService,
 		private sonarService: SonarService,
 		private authService: AuthService,
+		private tokenService: TokenService,
 		private tabsStaffListService: TabsStaffListService,
 		private skillService: SkillService,
 		private listProjectsService: ListProjectsService,

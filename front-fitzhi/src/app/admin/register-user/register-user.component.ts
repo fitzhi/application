@@ -5,9 +5,12 @@ import { LoginEvent } from 'src/app/data/login-event';
 import { LoginMode } from 'src/app/data/login-mode';
 import { traceOn } from 'src/app/global';
 import { GoogleService } from 'src/app/service/google/google.service';
+import { ProjectService } from 'src/app/service/project/project.service';
 import { ReferentialService } from 'src/app/service/referential/referential.service';
+import { StaffListService } from 'src/app/service/staff-list-service/staff-list.service';
 import { StaffService } from 'src/app/tabs-staff/service/staff.service';
 import { BaseDirective } from '../../base/base-directive.directive';
+import { AuthService } from '../service/auth/auth.service';
 import { InstallService } from '../service/install/install.service';
 import { Token } from '../service/token/token';
 import { TokenService } from '../service/token/token.service';
@@ -50,7 +53,10 @@ export class RegisterUserComponent extends BaseDirective implements OnInit, OnDe
 		private referentialService: ReferentialService,
 		private staffService: StaffService,
 		private tokenService: TokenService,
-		private googleService: GoogleService) {
+		private authService: AuthService,
+		private googleService: GoogleService,
+		private projectService: ProjectService,
+		private staffListService: StaffListService) {
 		super();
 	}
 
@@ -86,6 +92,15 @@ export class RegisterUserComponent extends BaseDirective implements OnInit, OnDe
 									// We use the JWT as access token for this authenticated user.
 									token.access_token = this.googleService.googleToken.sub;
 									this.tokenService.saveToken(token);
+
+									// This registration through the mechanism of openid tokens, automatically connects the user.
+									this.authService.setConnect();
+
+									// We load the projects and start the refresh process.
+									this.projectService.startLoadingProjects();
+									// We load the staff and start the refresh process.
+									this.staffListService.startLoadingStaff();
+
 									this.messengerUserRegistered$.emit(new LoginEvent(staff.idStaff, LoginMode.OPENID));			
 								}
 							})
