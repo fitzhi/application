@@ -137,7 +137,6 @@ export class GoogleService {
 	 * @param jwt the Json Web Token
 	 */
 	public loginCheckSocial (jwt: any) {
-		console.log (jwt_decode(jwt));
 		this.googleToken = jwt_decode(jwt) as GoogleToken;
 		this.jwt = jwt;
 		if (traceOn()) {
