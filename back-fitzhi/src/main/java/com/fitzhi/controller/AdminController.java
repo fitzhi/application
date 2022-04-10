@@ -172,7 +172,7 @@ public class AdminController {
 	@PostMapping("/classic/register")
 	public Staff autoRegister(@RequestBody ClassicCredentials credentials) throws ApplicationException {
 		return this.internalCreateNewUser(credentials.getLogin(), credentials.getPassword());	
-	}	
+	}
 	
 	@ResponseBody
 	@ApiOperation(
@@ -184,24 +184,19 @@ public class AdminController {
 			@RequestParam("password") String password)  throws ApplicationException {
 		return internalCreateNewUser(login, password);
 	}
-		
+			
 	/**
-	 * Connect a user
-	 * @param login the given login 
-	 * @param password the given password
-	 * @return the staff retrieved if the server is sends back a 200 code,
-	 * @throws ApplicationException
+	 * This method connects a user by its JWT
+	 * @param credentials the openID credential 
+	 * @return the staff retrieved if the server sends back a 200 code,
 	 */
 	@ResponseBody
 	@ApiOperation(
-		value="Connect a user and return the corresponding staff."
+		value="Connect a user based on his OpenID JWT and return the corresponding connected Staff."
 	)
-	@GetMapping("/connect")
-	public Staff connect(
-			@RequestParam("login") String login,
-			@RequestParam("password") String password) throws ApplicationException {
-		Staff staff = administration.connect(login, password);
-		return staff;
+	@PostMapping("/openId/connect")
+	public Staff connect(@RequestBody OpenIdCredentials credentials) throws ApplicationException {
+		return new Staff();	
 	}	
 
 	/**
