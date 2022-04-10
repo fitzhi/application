@@ -31,7 +31,8 @@ public class StaffHandlerUpdateExperienceTest {
 	public void before() {
 		Staff st =  new Staff(1000,"Christian Aligato", "Chavez Tugo", "cact" , "cact", "cact@void.com", "");
 		st.getExperiences().add(new Experience(1, 0));
-		staffHandler.getStaff().put(1000, st);
+		System.out.println(staffHandler.getStaff());
+		staffHandler.put(1000, st);
 	}
 
 	@Test
