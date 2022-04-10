@@ -114,15 +114,15 @@ export class StartingSetupComponent extends BaseDirective implements OnDestroy {
 		this.ngZone.run(() => {
 			this.completed[1] = true;
 			// If we are in openID mode we can skip the connection tab. We are already connected after the registration.
-			if ($event.loginMode == LoginMode.OPENID) {
+			if ($event.loginMode === LoginMode.OPENID) {
 				this.completed[2] = true;
 			}
 			setTimeout(() => {
 				this.stepper.next();
 				// Same reason as before.
-				if ($event.loginMode == LoginMode.OPENID) { this.stepper.next(); }
+				if ($event.loginMode === LoginMode.OPENID) { this.stepper.next(); }
 			}, 0);
-		});    
+		});
 	}
 
 	/**

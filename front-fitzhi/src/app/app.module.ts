@@ -211,7 +211,7 @@ import { ConnectUserFormComponent } from './admin/connect-user/connect-user-form
 		SummaryComponent,
 		RegisterUserFormComponent,
 		AlternativeOpenidConnectionComponent,
-  ConnectUserFormComponent
+		ConnectUserFormComponent
 	],
 	imports: [
 		BsDropdownModule.forRoot(),

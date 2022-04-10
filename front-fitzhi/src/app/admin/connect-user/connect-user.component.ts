@@ -22,9 +22,9 @@ export class ConnectUserComponent extends BaseDirective implements OnInit, OnDes
 	/**
 	 * We'll send to the parent component (startingSetup) the new user is connected.
 	 */
-	 @Output() messengerUserConnected$ = new EventEmitter<boolean>();
+	@Output() messengerUserConnected$ = new EventEmitter<boolean>();
 
-	 private localOnlyOauthSubject$ = new BehaviorSubject<boolean>(true);
+	private localOnlyOauthSubject$ = new BehaviorSubject<boolean>(true);
 
 	public localOnlyOauth$ = this.localOnlyOauthSubject$.asObservable();
 
@@ -79,7 +79,7 @@ export class ConnectUserComponent extends BaseDirective implements OnInit, OnDes
 	/**
 	 * Calling the base class to unsubscribe all subscriptions.
 	 */
-	 ngOnDestroy() {
+	ngOnDestroy() {
 		super.ngOnDestroy();
 	}
 

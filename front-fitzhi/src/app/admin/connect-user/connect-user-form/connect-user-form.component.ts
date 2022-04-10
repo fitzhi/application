@@ -24,18 +24,18 @@ export class ConnectUserFormComponent implements OnInit {
 	 * Are we entering in this component, just by routing directly into '/login'
 	 */
 	@Input() private directLogin: boolean;
- 
+
 	/**
 	 * Group of the components present in the form.
 	 */
-	 public connectionGroup: FormGroup;
+	public connectionGroup: FormGroup;
 
 	constructor(private authService: AuthService,
 		private projectService: ProjectService,
 		private staffListService: StaffListService,
 		private backendSetupService: BackendSetupService,
 		private router: Router,
-		private formBuilder: FormBuilder) { 
+		private formBuilder: FormBuilder) {
 		this.connectionGroup = this.formBuilder.group({
 			username: new FormControl('', [Validators.required, Validators.maxLength(16)]),
 			password: new FormControl('', [Validators.required, Validators.minLength(8), Validators.maxLength(16)])
@@ -87,7 +87,7 @@ export class ConnectUserFormComponent implements OnInit {
 				// If the connection has succeeded, we load the projects and the staff members.
 				//
 				if (traceOn()) {
-					console.log ('Successful connection')
+					console.log ('Successful connection');
 				}
 				if (connectionStatus) {
 					// We load the projects and start the refresh process.
@@ -98,7 +98,7 @@ export class ConnectUserFormComponent implements OnInit {
 
 				if (this.directLogin) {
 					if (traceOn()) {
-						console.log ('Redirecting to /welcome')
+						console.log ('Redirecting to /welcome');
 					}
 					this.router.navigate(['/welcome'], {});
 				}

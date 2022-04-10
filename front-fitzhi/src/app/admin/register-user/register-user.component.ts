@@ -82,10 +82,10 @@ export class RegisterUserComponent extends BaseDirective implements OnInit, OnDe
 							if (traceOn()) {
 								console.log ('%s is logged in', this.googleService.googleToken.name);
 							}
-							this.staffService.openIdRegisterUser$(this.veryFirstConnection, "GOOGLE", this.googleService.jwt).subscribe({
+							this.staffService.openIdRegisterUser$(this.veryFirstConnection, 'GOOGLE', this.googleService.jwt).subscribe({
 								next: staff => {
 									if (traceOn()) {
-										console.log ('%s has been created in Fitzi from its Google token', staff.lastName)
+										console.log ('%s has been created in Fitzi from its Google token', staff.lastName);
 									}
 									this.staffService.changeCollaborator(staff);
 									const token = new Token();
@@ -101,9 +101,9 @@ export class RegisterUserComponent extends BaseDirective implements OnInit, OnDe
 									// We load the staff and start the refresh process.
 									this.staffListService.startLoadingStaff();
 
-									this.messengerUserRegistered$.emit(new LoginEvent(staff.idStaff, LoginMode.OPENID));			
+									this.messengerUserRegistered$.emit(new LoginEvent(staff.idStaff, LoginMode.OPENID));
 								}
-							})
+							});
 						}
 					}
 				})

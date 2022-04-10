@@ -15,10 +15,10 @@ export class GoogleService {
 
 	public GOOGLE_SERVER_ID = 'GOOGLE';
 
-	private registeredSubject$ = new BehaviorSubject<boolean>(false); 
+	private registeredSubject$ = new BehaviorSubject<boolean>(false);
 	public isRegistered$ = this.registeredSubject$.asObservable();
 
-	private authenticatedSubject$ = new BehaviorSubject<boolean>(false); 
+	private authenticatedSubject$ = new BehaviorSubject<boolean>(false);
 	public isAuthenticated$ = this.authenticatedSubject$.asObservable();
 
 	public clientId: string;
@@ -26,7 +26,7 @@ export class GoogleService {
 	/**
 	 * The raw JWT retrieved from Google.
 	 */
-	 public jwt = null;
+	public jwt = null;
 
 	/**
 	 * The decoded authentication token
@@ -59,7 +59,7 @@ export class GoogleService {
 
 	/**
 	 * Initialize the Google workplace.
-	 * 
+	 *
 	 * @param document the current HTML document
 	 */
 	initialize (document) {
@@ -88,7 +88,7 @@ export class GoogleService {
 				this.googleClientLoadedSubject$.next(true);
 				if (traceOn()) {
 					console.log ('...googleService is initialized');
-				}	
+				}
 				google.accounts.id.initialize({
 					client_id: this.clientId,
 					callback: handleCredentialResponse
@@ -106,7 +106,7 @@ export class GoogleService {
 						});
 					}
 				}
-			})
+			});
 		}
 	}
 
@@ -133,7 +133,8 @@ export class GoogleService {
 		this.googleToken = jwt_decode(jwt) as GoogleToken;
 		this.jwt = jwt;
 		if (traceOn()) {
-			console.log ('login %s %s %s @', this.googleToken.sub, this.googleToken.given_name, this.googleToken.family_name, this.googleToken.email);
+			console.log ('login %s %s %s @', this.googleToken.sub, this.googleToken.given_name,
+				this.googleToken.family_name, this.googleToken.email);
 		}
 		this.signIn();
 	}

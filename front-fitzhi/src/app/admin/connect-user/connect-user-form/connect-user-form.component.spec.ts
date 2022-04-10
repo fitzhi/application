@@ -40,7 +40,7 @@ describe('ConnectUserFormComponent', () => {
 
 		constructor() {
 		}
-		onRegister($event){
+		onRegister($event) {
 			console.log($event);
 		}
 	}
@@ -90,8 +90,8 @@ describe('ConnectUserFormComponent', () => {
 	});
 
 	it('should NOT activate the signin button if the password does not contain 8 characters".', () => {
-		setUser("frvidal");
-		setPassword("1234567");
+		setUser('frvidal');
+		setPassword('1234567');
 		fixture.detectChanges();
 		const btnOk = fixture.debugElement.query(By.css('#submitConnection'));
 		expect(btnOk).toBeDefined();
@@ -99,8 +99,8 @@ describe('ConnectUserFormComponent', () => {
 	});
 
 	it('should activate the signin button if the couple user/password is correctly filled".', () => {
-		setUser("frvidal");
-		setPassword("12345678");
+		setUser('frvidal');
+		setPassword('12345678');
 		fixture.detectChanges();
 		const btnOk = fixture.debugElement.query(By.css('#submitConnection'));
 		expect(btnOk).toBeDefined();
@@ -114,8 +114,8 @@ describe('ConnectUserFormComponent', () => {
 		const spyProjectService = spyOn(projectService, 'startLoadingProjects').and.returnValue(null);
 		spyOn(component.connectUserForm.messengerUserConnected$, 'emit');
 
-		setUser("frvidal");
-		setPassword("12345678");
+		setUser('frvidal');
+		setPassword('12345678');
 		fixture.detectChanges();
 
 		const btnOk = fixture.debugElement.query(By.css('#submitConnection'));
@@ -138,8 +138,8 @@ describe('ConnectUserFormComponent', () => {
 		const spyProjectService = spyOn(projectService, 'startLoadingProjects').and.returnValue(null);
 		spyOn(component.connectUserForm.messengerUserConnected$, 'emit');
 
-		setUser("frvidal");
-		setPassword("12345678");
+		setUser('frvidal');
+		setPassword('12345678');
 		fixture.detectChanges();
 
 		const btnOk = fixture.debugElement.query(By.css('#submitConnection'));
@@ -162,7 +162,7 @@ describe('ConnectUserFormComponent', () => {
 		const spyProjectService = spyOn(projectService, 'startLoadingProjects').and.returnValue(null);
 		spyOn(component.connectUserForm.messengerUserConnected$, 'emit');
 
-		const btnCancel= fixture.debugElement.query(By.css('#cancelConnection'));
+		const btnCancel = fixture.debugElement.query(By.css('#cancelConnection'));
 		expect(btnCancel).toBeDefined();
 		btnCancel.nativeElement.click();
 		fixture.detectChanges();

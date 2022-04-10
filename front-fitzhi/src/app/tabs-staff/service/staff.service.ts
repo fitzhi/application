@@ -466,7 +466,7 @@ export class StaffService {
 	 * @param serverId the openId server identifier _(like "GOOGLE" for instance)_
 	 * @param idToken the JWT token
 	 */
-	 openIdRegisterUser$(veryFirstConnection: boolean, openIdServer: string, idToken: string): Observable<Collaborator> {
+	openIdRegisterUser$(veryFirstConnection: boolean, openIdServer: string, idToken: string): Observable<Collaborator> {
 
 		const body = { openIdServer: openIdServer, idToken: idToken};
 

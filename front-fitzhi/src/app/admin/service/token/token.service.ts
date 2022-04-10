@@ -11,7 +11,6 @@ export class TokenService {
 
 	private token: Token = null;
 
-	private isConnec
 	constructor(private httpClient: HttpClient) { }
 
 	/**

@@ -84,17 +84,17 @@ describe('registerUserComponent in the openID authentication scenario', () => {
 		const googleToken = new GoogleToken();
 		googleToken.name = 'Frédéric VIDAL';
 		googleService.googleToken = googleToken;
-		
+
 		const staff = new Collaborator();
 		staff.idStaff = 1789;
 		staff.firstName = 'Frédéric';
 		staff.lastName = 'Vidal';
 		const spyStaffService = spyOn(staffService, 'openIdRegisterUser$').and.returnValue(of(staff));
-		
+
 		const spyStaffService2 = spyOn(staffService, 'changeCollaborator');
 		const spyAuthService = spyOn(authService, 'setConnect');
 		const spyProjectService = spyOn(projectService, 'startLoadingProjects');
-		const spyStaffListService= spyOn(staffListService, 'startLoadingStaff');
+		const spyStaffListService = spyOn(staffListService, 'startLoadingStaff');
 
 		spyOn(component.messengerUserRegistered$, 'emit');
 
