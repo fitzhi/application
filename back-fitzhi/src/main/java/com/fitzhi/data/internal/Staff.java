@@ -107,6 +107,7 @@ public @Data class Staff implements UserDetails {
 		authorities.add(new CustomGrantedAuthority(ROLE_TRUSTED_USER));
 		missions = new ArrayList<>();
 		experiences = new ArrayList<>();
+		openIds = new ArrayList<>();
 	}
 
 
@@ -124,6 +125,7 @@ public @Data class Staff implements UserDetails {
 		missions = new ArrayList<>();
 		experiences = new ArrayList<>();
 		authorities.add(new CustomGrantedAuthority(ROLE_TRUSTED_USER));
+		openIds = new ArrayList<>();
 	}
 
 	/**
@@ -149,6 +151,7 @@ public @Data class Staff implements UserDetails {
 		missions = new ArrayList<>();
 		experiences = new ArrayList<>();
 		authorities.add(new CustomGrantedAuthority(ROLE_TRUSTED_USER));
+		openIds = new ArrayList<>();
 	}
 
 	/**
@@ -181,6 +184,7 @@ public @Data class Staff implements UserDetails {
 		missions = new ArrayList<>();
 		experiences = new ArrayList<>();
 		authorities.add(new CustomGrantedAuthority(ROLE_TRUSTED_USER));
+		openIds = new ArrayList<>();
 	}
 
 	/**
@@ -287,6 +291,19 @@ public @Data class Staff implements UserDetails {
 			.map(OpenId::getUserId)
 			.findFirst();
 		return oServerId.orElse(null);
+	}
+
+	/**
+	 * Test if the given openID authenticates this staff member.
+	 * 
+	 * @param serverId the given authentication server
+	 * @param userId the given Open Identifier
+	 * @return {@code true} if this staff member is linked with this open identifier, {@code false} otherwise
+	 */
+	public boolean isAuthByOpenId(String serverId, String userId) {
+		return this.getOpenIds()
+			.stream()
+			.anyMatch(openId -> (serverId.equals(openId.getServerId()) && userId.equals(openId.getUserId())) );
 	}
 
 	@Override

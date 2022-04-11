@@ -15,6 +15,7 @@ import com.fitzhi.data.internal.Author;
 import com.fitzhi.data.internal.Constellation;
 import com.fitzhi.data.internal.Experience;
 import com.fitzhi.data.internal.Mission;
+import com.fitzhi.data.internal.OpenId;
 import com.fitzhi.data.internal.OpenIdToken;
 import com.fitzhi.data.internal.PeopleCountExperienceMap;
 import com.fitzhi.data.internal.Project;
@@ -120,6 +121,17 @@ public interface StaffHandler extends DataSaverLifeCycle {
 	 * @return the selected staff or {@code null} if none exists.
 	 */
 	Staff lookup(int idStaff);
+
+ 	/**
+	 * <p>
+	 * Retrieve ths staff member, if any, linked with the given credentials.
+	 * </p>
+	 * 
+	 * @param openId the given openId
+	 * @return the selected staff or {@code null} if none exists.
+	 * @throws ApplicationException thrown if any problem occurs
+	 */
+	Staff lookup(OpenId openId) throws ApplicationException;
 
  	/**
 	 * <p>

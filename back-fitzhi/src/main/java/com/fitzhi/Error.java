@@ -130,9 +130,11 @@ public class Error {
 	public static final int CODE_INVALID_OPENID_SERVER = -1038;
 	public static final String MESSAGE_INVALID_OPENID_SERVER = "Invalid OpenId server {0}.";
 
-
 	public static final int CODE_INCONSISTENCY_ERROR_OPENID_SERVER = -1039;
 	public static final String MESSAGE_INCONSISTENCY_ERROR_OPENID_SERVER = "Data inconsistency error with the OpenId server {0} for staff memver {1} {2} {3}.";
+
+	public static final int CODE_INCONSISTENCY_ERROR_MULTI_OPENIDS = -1040;
+	public static final String MESSAGE_INCONSISTENCY_ERROR_MULTI_OPENIDS = "Data inconsistency error with the OpenId server {0} and ID {1}.";
 
 	private Error() {
 	}

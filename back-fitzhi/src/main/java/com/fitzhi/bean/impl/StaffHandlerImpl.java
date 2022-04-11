@@ -1,11 +1,13 @@
 package com.fitzhi.bean.impl;
 
+import static com.fitzhi.Error.CODE_INCONSISTENCY_ERROR_MULTI_OPENIDS;
 import static com.fitzhi.Error.CODE_LOGIN_ALREADY_EXIST;
-import static com.fitzhi.Error.CODE_STAFF_NOFOUND;
-import static com.fitzhi.Error.MESSAGE_LOGIN_ALREADY_EXIST;
-import static com.fitzhi.Error.MESSAGE_STAFF_NOFOUND;
 import static com.fitzhi.Error.CODE_MONTH_SKILLS_CONSTELLATION_NOFOUND;
+import static com.fitzhi.Error.CODE_STAFF_NOFOUND;
+import static com.fitzhi.Error.MESSAGE_INCONSISTENCY_ERROR_MULTI_OPENIDS;
+import static com.fitzhi.Error.MESSAGE_LOGIN_ALREADY_EXIST;
 import static com.fitzhi.Error.MESSAGE_MONTH_SKILLS_CONSTELLATION_NOFOUND;
+import static com.fitzhi.Error.MESSAGE_STAFF_NOFOUND;
 import static com.fitzhi.Global.UNKNOWN;
 
 import java.text.MessageFormat;
@@ -1023,6 +1025,22 @@ public class StaffHandlerImpl extends AbstractDataSaverLifeCycleImpl implements 
 			}
 			dataSaver.saveSkillsConstellations(currentMonth, List.copyOf(constellations.values()));
 		}
+	}
+
+	@Override
+	public Staff lookup(OpenId openId) throws ApplicationException {
+		final List<Staff> selected = getStaff().values()
+			.stream()
+			.filter(staff -> staff.isAuthByOpenId(openId.getServerId(), openId.getUserId()))
+			.collect(Collectors.toList());
+		if (selected.isEmpty()) {
+			return null;
+		}
+		if (selected.size() >= 2) {
+			throw new ApplicationException(CODE_INCONSISTENCY_ERROR_MULTI_OPENIDS, 
+			MessageFormat.format(MESSAGE_INCONSISTENCY_ERROR_MULTI_OPENIDS, openId.getServerId(), openId.getUserId()));
+		}
+		return selected.get(0);
 	}
 
 }
