@@ -96,12 +96,18 @@ export class ConnectUserComponent extends BaseDirective implements OnInit, OnDes
 
 										this.ngZone.run(() => { this.router.navigate(['/welcome'], {}) });
 									},
-									error: error => this.messageService.error(error.statusText)
+									error: response => {
+										if (traceOn){
+											console.log ('connection error', response.error.message);
+										}
+										this.ngZone.run(() => { this.messageService.error(response.error.message) } );
+									}
 								})
 
 						}
-					}
-				})
+					},
+				error: error => this.messageService.error(error.statusText)
+			})
 		);
 	}
 
