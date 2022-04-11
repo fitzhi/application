@@ -1037,8 +1037,9 @@ public class StaffHandlerImpl extends AbstractDataSaverLifeCycleImpl implements 
 			return null;
 		}
 		if (selected.size() >= 2) {
-			throw new ApplicationException(CODE_INCONSISTENCY_ERROR_MULTI_OPENIDS, 
-			MessageFormat.format(MESSAGE_INCONSISTENCY_ERROR_MULTI_OPENIDS, openId.getServerId(), openId.getUserId()));
+			throw new ApplicationException(
+				CODE_INCONSISTENCY_ERROR_MULTI_OPENIDS, 
+				MessageFormat.format(MESSAGE_INCONSISTENCY_ERROR_MULTI_OPENIDS, openId.getServerId(), openId.getUserId()));
 		}
 		return selected.get(0);
 	}
