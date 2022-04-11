@@ -9,5 +9,6 @@ export const environment = {
 	version: require('../../package.json').version,
 	apiUrl: 'http://localhost',
 	buildTime: RunTimeFile.buildtime,
-	autoConnect: false
+	autoConnect: false,
+	test: false,
 };

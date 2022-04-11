@@ -34,7 +34,7 @@ export class GoogleService {
 	public googleToken: GoogleToken = null;
 
 	private googleClientLoadedSubject$ = new BehaviorSubject<boolean>(false);
-	private googleClientLoaded$ = this.googleClientLoadedSubject$.asObservable();
+	public googleClientLoaded$ = this.googleClientLoadedSubject$.asObservable();
 
 	constructor(private httpClient: HttpClient) { }
 

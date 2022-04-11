@@ -9,6 +9,7 @@ import { ProjectService } from 'src/app/service/project/project.service';
 import { ReferentialService } from 'src/app/service/referential/referential.service';
 import { StaffListService } from 'src/app/service/staff-list-service/staff-list.service';
 import { StaffService } from 'src/app/tabs-staff/service/staff.service';
+import { environment } from 'src/environments/environment';
 import { BaseDirective } from '../../base/base-directive.directive';
 import { AuthService } from '../service/auth/auth.service';
 import { InstallService } from '../service/install/install.service';
@@ -66,6 +67,9 @@ export class RegisterUserComponent extends BaseDirective implements OnInit, OnDe
 				.subscribe({
 					next: doneAndOk => {
 						if (doneAndOk) {
+							if (traceOn()) {
+								console.log ('Show or Hide the %d openID panel.', this.referentialService.openidServers.length);
+							}
 							this.localOnly$.next((this.referentialService.openidServers.length === 0));
 						}
 					}
@@ -114,9 +118,12 @@ export class RegisterUserComponent extends BaseDirective implements OnInit, OnDe
 	 * Skip the registration of a new user.
 	 */
 	public skip() {
-		// We do know at this point the staff identifier corresponding to this user.
 		this.installService.installComplete();
-		this.messengerSkipAndConnect.emit(true);
+		// We do know at this point the staff identifier corresponding to this user.
+		// We reload the application in production mode the production mode.
+		if (!environment.test) {
+			window.location.reload();
+		}
 	}
 
 

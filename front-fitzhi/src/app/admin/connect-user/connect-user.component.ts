@@ -46,7 +46,7 @@ export class ConnectUserComponent extends BaseDirective implements OnInit, OnDes
 		private tokenService: TokenService,
 		private projectService: ProjectService,
 		private staffListService: StaffListService,
-		private googleService: GoogleService) {
+		public googleService: GoogleService) {
 		super();
 	}
 

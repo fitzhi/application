@@ -14,6 +14,7 @@ import { RunTimeFile } from './runtime-file';
  * - autoConnect : automatic connection mode `TRUE`/`FALSE`.
  * This setting is actually only `TRUE` for the demo version of Fitzhi in the website.
  * - doNotHackCss: security issue with accessing the cssRules. check https://github.com/tsayen/dom-to-image/issues/210_
+ * - test: Test mode
  */
 export const environment = {
 	production: false,
@@ -23,6 +24,7 @@ export const environment = {
 	apiUrl: 'URL_OF_SERVER',
 	autoConnect: false,
 	doNotHackCss: true,
+	test: true,
 };
 
 /*

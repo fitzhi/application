@@ -21,6 +21,7 @@ export const environment = {
 	buildTime: RunTimeFile.buildtime,
 	apiUrl: 'http://localhost:8080',
 	autoConnect: false,
+	test: false,
 };
 
 /*
