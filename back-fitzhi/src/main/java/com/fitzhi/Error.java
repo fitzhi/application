@@ -137,7 +137,7 @@ public class Error {
 	public static final String MESSAGE_INCONSISTENCY_ERROR_MULTI_OPENIDS = "Data inconsistency error with the OpenId server {0} and ID {1}.";
 
 	public static final int CODE_OPENID_NOT_FOUND = -1041;
-	public static final String MESSAGE_OPENID_NOT_FOUND = "The email '{0}'' is not linked with any staff member.";
+	public static final String MESSAGE_OPENID_NOT_FOUND = "The email {0} is not linked with any staff member.";
 
 	private Error() {
 	}

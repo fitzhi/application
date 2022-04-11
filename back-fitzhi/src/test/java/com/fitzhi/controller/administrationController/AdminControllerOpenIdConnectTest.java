@@ -104,7 +104,7 @@ public class AdminControllerOpenIdConnectTest {
 				.andExpect(status().isNotFound())
 				.andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
 				.andExpect(jsonPath("$.code", is(CODE_OPENID_NOT_FOUND)))
-				.andExpect(jsonPath("$.message", is("The email userid@nope.com is not associated with any staff member.")));
+				.andExpect(jsonPath("$.message", is("The email userid@nope.com is not linked with any staff member.")));
 	}
 
 	@Test
