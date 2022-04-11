@@ -5,7 +5,6 @@ import { FormBuilder, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MatDialogModule } from '@angular/material/dialog';
 import { By } from '@angular/platform-browser';
 import { RouterTestingModule } from '@angular/router/testing';
-import { doesNotReject } from 'assert';
 import { of } from 'rxjs';
 import { MessageBoxService } from 'src/app/interaction/message-box/service/message-box.service';
 import { BackendSetupService } from 'src/app/service/backend-setup/backend-setup.service';
@@ -109,7 +108,7 @@ describe('ConnectUserFormComponent', () => {
 
 	it('should process the connection request if end-user clicks on the "sign-in" button (successfull case).', () => {
 
-		const spyConnect = spyOn(authService, 'connect$').and.returnValue(of(true));
+		const spyConnect = spyOn(authService, 'connectClassic$').and.returnValue(of(true));
 		const spyStaffListService = spyOn(staffListService, 'startLoadingStaff').and.returnValue(null);
 		const spyProjectService = spyOn(projectService, 'startLoadingProjects').and.returnValue(null);
 		spyOn(component.connectUserForm.messengerUserConnected$, 'emit');
@@ -133,7 +132,7 @@ describe('ConnectUserFormComponent', () => {
 
 	it('should process the connection request (in error) if end-user clicks on the "sign-in" button (connection failure case).', () => {
 
-		const spyConnect = spyOn(authService, 'connect$').and.returnValue(of(false));
+		const spyConnect = spyOn(authService, 'connectClassic$').and.returnValue(of(false));
 		const spyStaffListService = spyOn(staffListService, 'startLoadingStaff').and.returnValue(null);
 		const spyProjectService = spyOn(projectService, 'startLoadingProjects').and.returnValue(null);
 		spyOn(component.connectUserForm.messengerUserConnected$, 'emit');
@@ -157,7 +156,7 @@ describe('ConnectUserFormComponent', () => {
 
 	it('should abort everything if end-user clicks on the "btnCancel" button).', () => {
 
-		const spyConnect = spyOn(authService, 'connect$').and.returnValue(of(true));
+		const spyConnect = spyOn(authService, 'connectClassic$').and.returnValue(of(true));
 		const spyStaffListService = spyOn(staffListService, 'startLoadingStaff').and.returnValue(null);
 		const spyProjectService = spyOn(projectService, 'startLoadingProjects').and.returnValue(null);
 		spyOn(component.connectUserForm.messengerUserConnected$, 'emit');

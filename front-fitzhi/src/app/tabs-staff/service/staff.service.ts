@@ -464,11 +464,11 @@ export class StaffService {
 	 * Register a new user inside the application
 	 * @param veryFirstConnection TRUE if the is the VERY FIRST USER to be created, and subsequently the FIRST ADMIN USER.
 	 * @param serverId the openId server identifier _(like "GOOGLE" for instance)_
-	 * @param idToken the JWT token
+	 * @param jwt the JWT token
 	 */
-	openIdRegisterUser$(veryFirstConnection: boolean, openIdServer: string, idToken: string): Observable<Collaborator> {
+	openIdRegisterUser$(veryFirstConnection: boolean, openIdServer: string, jwt: string): Observable<Collaborator> {
 
-		const body = { openIdServer: openIdServer, idToken: idToken};
+		const body = { openIdServer: openIdServer, idToken: jwt};
 
 		return this.httpClient.post<Collaborator>(
 			this.backendSetupService.url() + '/admin/openId/' + (veryFirstConnection ? 'primeRegister' : 'register'),

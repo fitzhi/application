@@ -26,7 +26,7 @@ const context = require.context('./', true, /\.spec\.ts$/);
 
 // const context = require.context('./', true,  /skill\.service\.spec\.ts$/);
 // const context = require.context('./', true,  /google\.service\.spec\.ts$/);
-// const context = require.context('./', true,  /staff\.service\.spec\.ts$/);
+// const context = require.context('./', true,  /auth\.service\.spec\.ts$/);
 // const context = require.context('./', true,  /register-user-multi-oauth\.component\.spec\.ts$/);
 // const context = require.context('./', true,  /connect-user-form\.component\.spec\.ts$/);
 // const context = require.context('./', true,  /app\.component\.spec\.ts$/);

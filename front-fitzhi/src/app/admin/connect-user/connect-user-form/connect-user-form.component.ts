@@ -80,7 +80,7 @@ export class ConnectUserFormComponent implements OnInit {
 	onSubmit() {
 		const username: string = this.connectionGroup.get('username').value;
 		const password: string = this.connectionGroup.get('password').value;
-		this.authService.connect$(username, password).subscribe({
+		this.authService.connectClassic$(username, password).subscribe({
 			next: connectionStatus => {
 				this.messengerUserConnected$.emit(connectionStatus);
 				//
