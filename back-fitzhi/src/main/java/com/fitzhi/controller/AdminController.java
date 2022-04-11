@@ -4,14 +4,18 @@ import static com.fitzhi.Error.CODE_INVALID_FIRST_USER_ADMIN_ALREADY_CREATED;
 import static com.fitzhi.Error.MESSAGE_INVALID_FIRST_USER_ADMIN_ALREADY_CREATED;
 import static com.fitzhi.Error.CODE_INVALID_OPENID_SERVER;
 import static com.fitzhi.Error.MESSAGE_INVALID_OPENID_SERVER;
+import static com.fitzhi.Error.CODE_OPENID_NOT_FOUND;
+import static com.fitzhi.Error.MESSAGE_OPENID_NOT_FOUND;
 
 import com.fitzhi.bean.Administration;
 import com.fitzhi.bean.StaffHandler;
 import com.fitzhi.data.internal.ClassicCredentials;
+import com.fitzhi.data.internal.OpenId;
 import com.fitzhi.data.internal.OpenIdCredentials;
 import com.fitzhi.data.internal.OpenIdToken;
 import com.fitzhi.data.internal.Staff;
 import com.fitzhi.exception.ApplicationException;
+import com.fitzhi.exception.NotFoundException;
 import com.fitzhi.security.google.TokenHandler;
 import com.google.api.client.http.HttpTransport;
 import com.google.api.client.http.javanet.NetHttpTransport;
@@ -144,17 +148,17 @@ public class AdminController {
 		value="Create the FIRST admin user for Fitzhi from the OpenId JWT. This creation is executed during the installation."
 	)
 	@PostMapping("/openId/primeRegister")
-	public Staff veryFirstUser(@RequestBody OpenIdCredentials openIdToken) throws ApplicationException {
+	public Staff veryFirstUser(@RequestBody OpenIdCredentials credentials) throws ApplicationException {
 
-		if (GOOGLE_OPENID_SERVER.equals(openIdToken.getOpenIdServer())) {
+		if (GOOGLE_OPENID_SERVER.equals(credentials.getOpenIdServer())) {
 			HttpTransport HTTP_TRANSPORT = new NetHttpTransport();
-			OpenIdToken oit = googleTokenHandler.takeInAccountToken(openIdToken.getIdToken(), HTTP_TRANSPORT, GsonFactory.getDefaultInstance());
+			OpenIdToken oit = googleTokenHandler.takeInAccountToken(credentials.getIdToken(), HTTP_TRANSPORT, GsonFactory.getDefaultInstance());
 			Staff staff = staffHandler.createStaffMember(oit);
 			googleTokenHandler.storeStaffToken(staff, oit);
 			return staff;
 		}
 
-		throw new ApplicationException(CODE_INVALID_OPENID_SERVER, MessageFormat.format(MESSAGE_INVALID_OPENID_SERVER, openIdToken.getOpenIdServer()));
+		throw new ApplicationException(CODE_INVALID_OPENID_SERVER, MessageFormat.format(MESSAGE_INVALID_OPENID_SERVER, credentials.getOpenIdServer()));
 	}
 
 	/**
@@ -192,11 +196,24 @@ public class AdminController {
 	 */
 	@ResponseBody
 	@ApiOperation(
-		value="Connect a user based on his OpenID JWT and return the corresponding connected Staff."
+		value="Connect a user based on his OpenID JWT and return the corresponding staff. Connection is successful"
 	)
 	@PostMapping("/openId/connect")
 	public Staff connect(@RequestBody OpenIdCredentials credentials) throws ApplicationException {
-		return new Staff();	
+
+		if (GOOGLE_OPENID_SERVER.equals(credentials.getOpenIdServer())) {
+			HttpTransport HTTP_TRANSPORT = new NetHttpTransport();
+			OpenIdToken oit = googleTokenHandler.takeInAccountToken(credentials.getIdToken(), HTTP_TRANSPORT, GsonFactory.getDefaultInstance());
+			
+			Staff staff = staffHandler.lookup(OpenId.of(GOOGLE_OPENID_SERVER, oit.getUserId()));
+			if (staff == null) {
+				throw new NotFoundException(CODE_OPENID_NOT_FOUND, MessageFormat.format(MESSAGE_OPENID_NOT_FOUND, oit.getEmail()));
+			}
+			googleTokenHandler.storeStaffToken(staff, oit);
+			return staff;
+		}
+
+		throw new ApplicationException(CODE_INVALID_OPENID_SERVER, MessageFormat.format(MESSAGE_INVALID_OPENID_SERVER, credentials.getOpenIdServer()));
 	}	
 
 	/**

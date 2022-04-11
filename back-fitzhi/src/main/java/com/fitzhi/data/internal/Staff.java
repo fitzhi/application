@@ -110,7 +110,6 @@ public @Data class Staff implements UserDetails {
 		openIds = new ArrayList<>();
 	}
 
-
 	/**
 	 * Creation of a empty staff member just on a his login/password
 	 * 
