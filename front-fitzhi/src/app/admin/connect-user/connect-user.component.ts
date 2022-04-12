@@ -51,9 +51,6 @@ export class ConnectUserComponent extends BaseDirective implements OnInit, OnDes
 	}
 
 	ngOnInit() {
-
-		console.log ('ngOnInit()');
-
 		this.subscriptions.add(
 			this.installService.installComplete$
 				.pipe(switchMap(doneAndOk => (doneAndOk ? this.referentialService.referentialLoaded$ : EMPTY)))
