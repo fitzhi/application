@@ -1,9 +1,10 @@
-import { Component, EventEmitter, Input, OnDestroy, OnInit, Output, ViewChild } from '@angular/core';
+import { Component, EventEmitter, Input, NgZone, OnDestroy, OnInit, Output, ViewChild } from '@angular/core';
 import { BehaviorSubject, EMPTY } from 'rxjs';
 import { switchMap } from 'rxjs/operators';
 import { LoginEvent } from 'src/app/data/login-event';
 import { LoginMode } from 'src/app/data/login-mode';
 import { traceOn } from 'src/app/global';
+import { MessageService } from 'src/app/interaction/message/message.service';
 import { GoogleService } from 'src/app/service/google/google.service';
 import { ProjectService } from 'src/app/service/project/project.service';
 import { ReferentialService } from 'src/app/service/referential/referential.service';
@@ -57,6 +58,8 @@ export class RegisterUserComponent extends BaseDirective implements OnInit, OnDe
 		private authService: AuthService,
 		private googleService: GoogleService,
 		private projectService: ProjectService,
+		private messageService: MessageService,
+		private ngZone: NgZone,
 		private staffListService: StaffListService) {
 		super();
 	}
@@ -105,11 +108,21 @@ export class RegisterUserComponent extends BaseDirective implements OnInit, OnDe
 									// We load the staff and start the refresh process.
 									this.staffListService.startLoadingStaff();
 
+									this.messageService.error(`{staff.firtName} {staff.lastName} is successfully created.`);
+
 									this.messengerUserRegistered$.emit(new LoginEvent(staff.idStaff, LoginMode.OPENID));
+								},
+								error: response => {
+									if (traceOn()) {
+										console.log ('error', response.error.message);
+									}
+									setTimeout(() => {
+										this.ngZone.run(() => { this.messageService.error(response.error.message) });
+									}, 0);
 								}
 							});
 						}
-					}
+					},
 				})
 		);
 	}

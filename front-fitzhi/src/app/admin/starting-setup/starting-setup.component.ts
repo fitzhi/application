@@ -77,6 +77,7 @@ export class StartingSetupComponent extends BaseDirective implements OnDestroy {
 	 * Setup the fact that this is the very first connection.
 	 */
 	onChangeVeryFirstConnection($event: boolean) {
+
 		if (traceOn()) {
 			console.log('veryFirstConnection :', $event);
 		}
@@ -100,7 +101,7 @@ export class StartingSetupComponent extends BaseDirective implements OnDestroy {
 	setRegisteredUser($event: LoginEvent) {
 
 		if (traceOn()) {
-			console.log('idStaff created :', $event);
+			console.log(`idStaff created : ${$event.idStaff}`);
 		}
 
 		// Operation has been cancelled. We skip backward.
@@ -183,6 +184,9 @@ export class StartingSetupComponent extends BaseDirective implements OnDestroy {
 		}
 	}
 
+	/**
+	 * @param staff the staff saved
+	 */
 	private nextStepAfterStaffUpdate(staff: Collaborator): void {
 		this.completed[3] = true;
 		this.installService.installComplete();

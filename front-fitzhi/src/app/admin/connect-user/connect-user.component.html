@@ -9,7 +9,9 @@
 			<span class="welcome">Welcome to Fitzhì !</span>
 		</div>
 	</div>
+
 	<div *ngIf="localOnlyOauth$|async;then localOauthOnly else openIdOauth"></div>
+
 	<ng-template #localOauthOnly>
 		<div id="localOnly" class="row text-center">
 			<div class="col-3"></div>
@@ -22,6 +24,7 @@
 			<div class="col-3"></div>
 		</div>
 	</ng-template>
+
 	<ng-template #openIdOauth>
 		<div id="openidOauth" class="row">
 			<div class="col-4 text-center">
@@ -37,4 +40,5 @@
 			<div class="col-1"></div>
 		</div>
 	</ng-template>
+
 </div>
