@@ -140,7 +140,7 @@ public class Error {
 	public static final String MESSAGE_OPENID_NOT_FOUND = "The email {0} is not linked with any staff member.";
 
 	public static final int CODE_OPENID_ALREADY_REGISTERED = -1042;
-	public static final String MESSAGE_OPENID_ALREADY_REGISTERED = "The email {0} is already registered with {1} {2} {3}.";
+	public static final String MESSAGE_OPENID_ALREADY_REGISTERED = "The login openID \"{0}\" is already registered with {2} {3} ({1}).";
 	
 	private Error() {
 	}

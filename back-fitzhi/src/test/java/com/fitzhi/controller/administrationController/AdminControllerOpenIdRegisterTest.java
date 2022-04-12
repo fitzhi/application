@@ -137,7 +137,7 @@ public class AdminControllerOpenIdRegisterTest {
 				.content(gson.toJson(oic)))
 				.andExpect(status().isInternalServerError())
 				.andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
-				.andExpect(jsonPath("$.message").value("The email fv@nope.com is already registered with 1789 Frédéric VIDAL."))
+				.andExpect(jsonPath("$.message").value("The login openID \"fv@nope.com\" is already registered with Frédéric VIDAL (1789)."))
 				.andExpect(jsonPath("$.code", is(CODE_OPENID_ALREADY_REGISTERED)));
 	}
 }
