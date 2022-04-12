@@ -1,7 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { BehaviorSubject } from 'rxjs';
-import { switchMap, take } from 'rxjs/operators';
+import { catchError, switchMap, take } from 'rxjs/operators';
 import { OpenidServer } from 'src/app/data/openid-server';
 import { DeclaredSonarServer } from '../../data/declared-sonar-server';
 import { Ecosystem } from '../../data/ecosystem';
@@ -120,7 +120,12 @@ export class ReferentialService {
 						this.openidServers.push(...servers);
 						this.googleService.takeInAccountDeclaredServers(servers);
 						return this.httpClient.get<Profile[]> 	(this.backendSetupService.url() + '/referential/profiles');
-					}))
+					}),
+				catchError((e) => {
+					// The OpenId servers array is not mandatory.
+					console.log ('Just a warning : ' + e.error.message);
+					return this.httpClient.get<Profile[]> 	(this.backendSetupService.url() + '/referential/profiles');
+				}))
 			.pipe(
 				take(1),
 				switchMap(
