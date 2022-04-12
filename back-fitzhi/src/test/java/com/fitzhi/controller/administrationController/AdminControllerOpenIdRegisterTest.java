@@ -1,6 +1,7 @@
 package com.fitzhi.controller.administrationController;
 
 import static com.fitzhi.Error.CODE_INVALID_OPENID_SERVER;
+import static com.fitzhi.Error.CODE_OPENID_ALREADY_REGISTERED;
 import static com.fitzhi.Global.GOOGLE_OPENID_SERVER;
 import static org.hamcrest.Matchers.is;
 import static org.mockito.ArgumentMatchers.any;
@@ -15,6 +16,7 @@ import java.time.LocalDate;
 import com.fitzhi.bean.StaffHandler;
 import com.fitzhi.controller.AdminController;
 import com.fitzhi.controller.util.LocalDateAdapter;
+import com.fitzhi.data.internal.OpenId;
 import com.fitzhi.data.internal.OpenIdCredentials;
 import com.fitzhi.data.internal.OpenIdToken;
 import com.fitzhi.data.internal.Staff;
@@ -36,14 +38,14 @@ import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
 
 /**
- * Test the method {@link AdminController#veryFirstUser(com.fitzhi.data.internal.OpenIdCredentials)}.
+ * Test the method {@link AdminController#openidRegister(OpenIdCredentials)}.
  * 
  * @author Fr&eacute;d&eacute;ric VIDAL
  */
 @RunWith(SpringRunner.class)
 @SpringBootTest
 @AutoConfigureMockMvc
-public class AdminControllerOpenIdCreationTest {
+public class AdminControllerOpenIdRegisterTest {
 	
 	@Autowired
 	private MockMvc mvc;
@@ -72,7 +74,7 @@ public class AdminControllerOpenIdCreationTest {
 
 		OpenIdCredentials oic = OpenIdCredentials.of(GOOGLE_OPENID_SERVER, "idToken"); 
 
-		this.mvc.perform(post("/api/admin/openId/primeRegister")
+		this.mvc.perform(post("/api/admin/openId/register")
 				.header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON)
 				.content(gson.toJson(oic)))
 				.andExpect(status().isOk())
@@ -87,7 +89,7 @@ public class AdminControllerOpenIdCreationTest {
 
 		OpenIdCredentials oic = OpenIdCredentials.of("UNKNOWN", "idToken"); 
 
-		this.mvc.perform(post("/api/admin/openId/primeRegister")
+		this.mvc.perform(post("/api/admin/openId/register")
 				.header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON)
 				.content(gson.toJson(oic)))
 				.andExpect(status().isInternalServerError())
@@ -103,7 +105,7 @@ public class AdminControllerOpenIdCreationTest {
 
 		when(tokenHandler.takeInAccountToken(any(), any(), any())).thenThrow(new ApplicationException(1789, "Error 1789"));
 
-		this.mvc.perform(post("/api/admin/openId/primeRegister")
+		this.mvc.perform(post("/api/admin/openId/register")
 				.header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON)
 				.content(gson.toJson(oic)))
 				.andExpect(status().isInternalServerError())
@@ -112,4 +114,30 @@ public class AdminControllerOpenIdCreationTest {
 				.andExpect(jsonPath("$.code", is(1789)));
 	}
 
+	@Test
+	public void tokenAlreadyRegistered() throws Exception {
+
+		Staff staff = new Staff();
+		staff.setIdStaff(1789);
+		staff.setLastName("VIDAL");
+		staff.setFirstName("Frédéric");
+		staff.setEmail("fv@nope.com");
+		when(staffHandler.lookup(any(OpenId.class))).thenReturn(staff);
+
+		OpenIdCredentials oic = OpenIdCredentials.of(GOOGLE_OPENID_SERVER, "idToken"); 
+
+		OpenIdToken oit = OpenIdToken.of();
+		oit.serverId = GOOGLE_OPENID_SERVER;
+		oit.setUserId("testUserId");
+		oit.setEmail("fv@nope.com");
+		when(tokenHandler.takeInAccountToken(any(), any(), any())).thenReturn(oit);
+
+		this.mvc.perform(post("/api/admin/openId/register")
+				.header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON)
+				.content(gson.toJson(oic)))
+				.andExpect(status().isInternalServerError())
+				.andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
+				.andExpect(jsonPath("$.message").value("The email fv@nope.com is already registered with 1789 Frédéric VIDAL."))
+				.andExpect(jsonPath("$.code", is(CODE_OPENID_ALREADY_REGISTERED)));
+	}
 }

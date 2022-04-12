@@ -6,6 +6,9 @@ import static com.fitzhi.Error.CODE_INVALID_OPENID_SERVER;
 import static com.fitzhi.Error.MESSAGE_INVALID_OPENID_SERVER;
 import static com.fitzhi.Error.CODE_OPENID_NOT_FOUND;
 import static com.fitzhi.Error.MESSAGE_OPENID_NOT_FOUND;
+import static com.fitzhi.Error.CODE_OPENID_ALREADY_REGISTERED;
+import static com.fitzhi.Error.MESSAGE_OPENID_ALREADY_REGISTERED;
+
 
 import com.fitzhi.bean.Administration;
 import com.fitzhi.bean.StaffHandler;
@@ -103,7 +106,7 @@ public class AdminController {
 		value="Create the FIRST admin user for Fitzhi with the classic way (user/password). This creation is executed during the installation."
 	)
 	@PostMapping("/classic/primeRegister")
-	public Staff veryFirstUser(@RequestBody ClassicCredentials classicCredentials) throws ApplicationException {
+	public Staff classicPrimeRegister(@RequestBody ClassicCredentials classicCredentials) throws ApplicationException {
 		
 		if (log.isDebugEnabled() && !this.staffHandler.getStaff().isEmpty()) {
 			log.debug ("the staff collection is not empty and has 'may-be' already registered users, see below...");
@@ -148,12 +151,46 @@ public class AdminController {
 		value="Create the FIRST admin user for Fitzhi from the OpenId JWT. This creation is executed during the installation."
 	)
 	@PostMapping("/openId/primeRegister")
-	public Staff veryFirstUser(@RequestBody OpenIdCredentials credentials) throws ApplicationException {
+	public Staff openidPrimeRegister(@RequestBody OpenIdCredentials credentials) throws ApplicationException {
 
 		if (GOOGLE_OPENID_SERVER.equals(credentials.getOpenIdServer())) {
 			HttpTransport HTTP_TRANSPORT = new NetHttpTransport();
 			OpenIdToken oit = googleTokenHandler.takeInAccountToken(credentials.getIdToken(), HTTP_TRANSPORT, GsonFactory.getDefaultInstance());
 			Staff staff = staffHandler.createStaffMember(oit);
+			googleTokenHandler.storeStaffToken(staff, oit);
+			return staff;
+		}
+
+		throw new ApplicationException(CODE_INVALID_OPENID_SERVER, MessageFormat.format(MESSAGE_INVALID_OPENID_SERVER, credentials.getOpenIdServer()));
+	}
+
+	/**
+	 * This method is used to create the first admin user.
+	 * @param login the first admin user login
+	 * @param password this first admin user password
+	 * @throws ApplicationException thrown if any problem occurs.
+	 * @return the newly created staff entry
+	 */
+	@ResponseBody
+	@ApiOperation(
+		value="Create a user in Fitzhi based on an OpenId JWT. This creation is processed when installing the Front Client."
+	)
+	@PostMapping("/openId/register")
+	public Staff openIdRegister(@RequestBody OpenIdCredentials credentials) throws ApplicationException {
+
+		
+		if (GOOGLE_OPENID_SERVER.equals(credentials.getOpenIdServer())) {
+			HttpTransport HTTP_TRANSPORT = new NetHttpTransport();
+			OpenIdToken oit = googleTokenHandler.takeInAccountToken(credentials.getIdToken(), HTTP_TRANSPORT, GsonFactory.getDefaultInstance());
+
+			Staff staff = staffHandler.lookup(OpenId.of(GOOGLE_OPENID_SERVER, oit.getUserId()));
+			if (staff != null) {
+				throw new ApplicationException(
+					CODE_OPENID_ALREADY_REGISTERED, 
+					MessageFormat.format(MESSAGE_OPENID_ALREADY_REGISTERED, 
+						oit.getEmail(), String.valueOf(staff.getIdStaff()), staff.getFirstName(), staff.getLastName()));
+			}
+			staff = staffHandler.createStaffMember(oit);
 			googleTokenHandler.storeStaffToken(staff, oit);
 			return staff;
 		}

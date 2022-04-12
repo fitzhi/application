@@ -139,6 +139,9 @@ public class Error {
 	public static final int CODE_OPENID_NOT_FOUND = -1041;
 	public static final String MESSAGE_OPENID_NOT_FOUND = "The email {0} is not linked with any staff member.";
 
+	public static final int CODE_OPENID_ALREADY_REGISTERED = -1042;
+	public static final String MESSAGE_OPENID_ALREADY_REGISTERED = "The email {0} is already registered with {1} {2} {3}.";
+	
 	private Error() {
 	}
 	

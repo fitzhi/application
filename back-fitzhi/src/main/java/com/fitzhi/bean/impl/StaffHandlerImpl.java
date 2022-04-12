@@ -8,6 +8,7 @@ import static com.fitzhi.Error.MESSAGE_INCONSISTENCY_ERROR_MULTI_OPENIDS;
 import static com.fitzhi.Error.MESSAGE_LOGIN_ALREADY_EXIST;
 import static com.fitzhi.Error.MESSAGE_MONTH_SKILLS_CONSTELLATION_NOFOUND;
 import static com.fitzhi.Error.MESSAGE_STAFF_NOFOUND;
+
 import static com.fitzhi.Global.UNKNOWN;
 
 import java.text.MessageFormat;
