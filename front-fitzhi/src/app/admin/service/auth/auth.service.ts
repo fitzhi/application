@@ -83,11 +83,11 @@ export class AuthService extends InternalService {
 	 * @param credentials the openID credentials loaded from the authentication server
 	 * @returns an observable containing the staff linked to the credentials
 	 */
-	 public connectOpenId$(credentials: OpenIdCredentials): Observable<Collaborator> {
+	public connectOpenId$(credentials: OpenIdCredentials): Observable<Collaborator> {
 
 		const body = { openIdServer: credentials.serverId, idToken: credentials.jwt};
 
-		return this.httpClient.post<Collaborator>(this.backendSetupService.url() + '/admin/openId/connect', body)	
+		return this.httpClient.post<Collaborator>(this.backendSetupService.url() + '/admin/openId/connect', body)
 			.pipe(
 				take(1),
 				tap({

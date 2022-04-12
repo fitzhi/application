@@ -117,7 +117,7 @@ export class RegisterUserComponent extends BaseDirective implements OnInit, OnDe
 										console.log ('error', response.error.message);
 									}
 									setTimeout(() => {
-										this.ngZone.run(() => { this.messageService.error(response.error.message) });
+										this.ngZone.run(() => this.messageService.error(response.error.message) );
 									}, 0);
 								}
 							});

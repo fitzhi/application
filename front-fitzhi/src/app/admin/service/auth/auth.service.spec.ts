@@ -80,9 +80,9 @@ describe('AuthService', () => {
 		const spy = spyOn(service, 'setConnect').and.returnValue(null);
 
 		service.connectOpenId$(new OpenIdCredentials('GOOGLE', 'google-jwt')).subscribe({
-			next: staff => {
-				expect(staff.idStaff).toBe(1789);
-				expect(staff.lastName).toBe('VIDAL');
+			next: st => {
+				expect(st.idStaff).toBe(1789);
+				expect(st.lastName).toBe('VIDAL');
 				done();
 			}
 		});
@@ -106,8 +106,8 @@ describe('AuthService', () => {
 
 		service.connectOpenId$(new OpenIdCredentials('GOOGLE', 'google-jwt')).subscribe({
 			next: staff => null,
-			error: error => {
-				console.log ('error', error);
+			error: err => {
+				console.log ('error', err);
 				done();
 			}
 		});

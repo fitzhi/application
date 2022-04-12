@@ -53,7 +53,7 @@ export class ConnectUserComponent extends BaseDirective implements OnInit, OnDes
 	ngOnInit() {
 
 		console.log ('ngOnInit()');
-		
+
 		this.subscriptions.add(
 			this.installService.installComplete$
 				.pipe(switchMap(doneAndOk => (doneAndOk ? this.referentialService.referentialLoaded$ : EMPTY)))
@@ -89,24 +89,23 @@ export class ConnectUserComponent extends BaseDirective implements OnInit, OnDes
 										// We use the JWT as access token for this authenticated user.
 										token.access_token = this.googleService.googleToken.sub;
 										this.tokenService.saveToken(token);
-									
+
 										this.authService.setConnect();
-										
+
 										// We load the projects and start the refresh process.
 										this.projectService.startLoadingProjects();
 										// We load the staff and start the refresh process.
 										this.staffListService.startLoadingStaff();
 
-										this.ngZone.run(() => { this.router.navigate(['/welcome'], {}) });
+										this.ngZone.run(() => { this.router.navigate(['/welcome'], {}); });
 									},
 									error: response => {
-										if (traceOn){
+										if (traceOn()) {
 											console.log ('connection error', response.error.message);
 										}
-										this.ngZone.run(() => { this.messageService.error(response.error.message) } );
+										this.ngZone.run(() => this.messageService.error(response.error.message) );
 									}
-								})
-
+								});
 						}
 					},
 				error: error => this.messageService.error(error.statusText)

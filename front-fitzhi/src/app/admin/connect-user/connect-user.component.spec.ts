@@ -50,9 +50,9 @@ describe('ConnectUserComponent', () => {
 	beforeEach(async () => {
 		await TestBed.configureTestingModule({
 			declarations: [ ConnectUserFormComponent, ConnectUserComponent, TestHostComponent, AlternativeOpenidConnectionComponent ],
-			providers: [ProjectService, CinematicService, FileService, MessageBoxService, FormBuilder, ReferentialService, 
+			providers: [ProjectService, CinematicService, FileService, MessageBoxService, FormBuilder, ReferentialService,
 					GoogleService, AuthService, ProjectService, StaffListService],
-			imports: [HttpClientTestingModule, MatDialogModule, RouterTestingModule, FormsModule, ReactiveFormsModule, 
+			imports: [HttpClientTestingModule, MatDialogModule, RouterTestingModule, FormsModule, ReactiveFormsModule,
 				RouterTestingModule.withRoutes([
 					{ path: 'welcome', component: WelcomeComponent }
 				])]
@@ -65,7 +65,7 @@ describe('ConnectUserComponent', () => {
 		component = fixture.componentInstance;
 		referentialService = TestBed.inject(ReferentialService);
 		googleService = TestBed.inject(GoogleService);
-		authService = TestBed.inject(AuthService)
+		authService = TestBed.inject(AuthService);
 		tokenService = TestBed.inject(TokenService);
 		projectService = TestBed.inject(ProjectService);
 		staffListService = TestBed.inject(StaffListService);
@@ -90,7 +90,7 @@ describe('ConnectUserComponent', () => {
 	});
 
 	it('should display the OpenId panel if an openId authentication server has been declared.', () => {
-		
+
 		referentialService.openidServers = [];
 		referentialService.openidServers.push(new OpenidServer());
 		referentialService.referentialLoaded$.next(true);
@@ -116,7 +116,6 @@ describe('ConnectUserComponent', () => {
 		const spy3 = spyOn(authService, 'setConnect').and.returnValue(null);
 		const spy4 = spyOn(projectService, 'startLoadingProjects').and.returnValue(null);
 		const spy5 = spyOn(staffListService, 'startLoadingStaff').and.returnValue(null);
-									
 
 		googleService.googleToken = new GoogleToken();
 		googleService.googleToken.name = 'Frédéric VIDAL';

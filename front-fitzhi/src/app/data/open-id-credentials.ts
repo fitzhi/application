@@ -1,8 +1,8 @@
-import { isConstructorDeclaration } from "typescript"
+import { isConstructorDeclaration } from 'typescript';
 
 /**
  * JWT Credentials.
  */
-export class OpenIdCredentials{
-    constructor(public serverId: string, public jwt: string) {}
+export class OpenIdCredentials {
+	constructor(public serverId: string, public jwt: string) { }
 }
