@@ -1,4 +1,4 @@
-package com.fitzhi.security.google.util;
+package com.fitzhi.security.token.google.util;
 
 import java.util.Calendar;
 import java.util.Date;

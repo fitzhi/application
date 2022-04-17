@@ -1,4 +1,4 @@
-package com.fitzhi.security.google.util;
+package com.fitzhi.security.token.google.util;
 
 import org.springframework.security.core.Authentication;
 import org.springframework.security.oauth2.provider.OAuth2Authentication;

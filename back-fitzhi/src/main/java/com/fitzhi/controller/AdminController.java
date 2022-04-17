@@ -1,14 +1,16 @@
 package com.fitzhi.controller;
 
 import static com.fitzhi.Error.CODE_INVALID_FIRST_USER_ADMIN_ALREADY_CREATED;
-import static com.fitzhi.Error.MESSAGE_INVALID_FIRST_USER_ADMIN_ALREADY_CREATED;
 import static com.fitzhi.Error.CODE_INVALID_OPENID_SERVER;
-import static com.fitzhi.Error.MESSAGE_INVALID_OPENID_SERVER;
-import static com.fitzhi.Error.CODE_OPENID_NOT_FOUND;
-import static com.fitzhi.Error.MESSAGE_OPENID_NOT_FOUND;
 import static com.fitzhi.Error.CODE_OPENID_ALREADY_REGISTERED;
+import static com.fitzhi.Error.CODE_OPENID_NOT_FOUND;
+import static com.fitzhi.Error.MESSAGE_INVALID_FIRST_USER_ADMIN_ALREADY_CREATED;
+import static com.fitzhi.Error.MESSAGE_INVALID_OPENID_SERVER;
 import static com.fitzhi.Error.MESSAGE_OPENID_ALREADY_REGISTERED;
+import static com.fitzhi.Error.MESSAGE_OPENID_NOT_FOUND;
+import static com.fitzhi.Global.GOOGLE_OPENID_SERVER;
 
+import java.text.MessageFormat;
 
 import com.fitzhi.bean.Administration;
 import com.fitzhi.bean.StaffHandler;
@@ -19,10 +21,7 @@ import com.fitzhi.data.internal.OpenIdToken;
 import com.fitzhi.data.internal.Staff;
 import com.fitzhi.exception.ApplicationException;
 import com.fitzhi.exception.NotFoundException;
-import com.fitzhi.security.google.TokenHandler;
-import com.google.api.client.http.HttpTransport;
-import com.google.api.client.http.javanet.NetHttpTransport;
-import com.google.api.client.json.gson.GsonFactory;
+import com.fitzhi.security.token.TokenHandler;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -34,10 +33,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
-
-import static com.fitzhi.Global.GOOGLE_OPENID_SERVER;
-
-import java.text.MessageFormat;
 
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -154,8 +149,7 @@ public class AdminController {
 	public Staff openidPrimeRegister(@RequestBody OpenIdCredentials credentials) throws ApplicationException {
 
 		if (GOOGLE_OPENID_SERVER.equals(credentials.getOpenIdServer())) {
-			HttpTransport HTTP_TRANSPORT = new NetHttpTransport();
-			OpenIdToken oit = googleTokenHandler.takeInAccountToken(credentials.getIdToken(), HTTP_TRANSPORT, GsonFactory.getDefaultInstance());
+			OpenIdToken oit = googleTokenHandler.takeInAccountToken(credentials.getIdToken());
 			Staff staff = staffHandler.createStaffMember(oit);
 			googleTokenHandler.storeStaffToken(staff, oit);
 			return staff;
@@ -180,8 +174,7 @@ public class AdminController {
 
 		
 		if (GOOGLE_OPENID_SERVER.equals(credentials.getOpenIdServer())) {
-			HttpTransport HTTP_TRANSPORT = new NetHttpTransport();
-			OpenIdToken oit = googleTokenHandler.takeInAccountToken(credentials.getIdToken(), HTTP_TRANSPORT, GsonFactory.getDefaultInstance());
+			OpenIdToken oit = googleTokenHandler.takeInAccountToken(credentials.getIdToken());
 
 			Staff staff = staffHandler.lookup(OpenId.of(GOOGLE_OPENID_SERVER, oit.getUserId()));
 			if (staff != null) {
@@ -239,8 +232,7 @@ public class AdminController {
 	public Staff connect(@RequestBody OpenIdCredentials credentials) throws ApplicationException {
 
 		if (GOOGLE_OPENID_SERVER.equals(credentials.getOpenIdServer())) {
-			HttpTransport HTTP_TRANSPORT = new NetHttpTransport();
-			OpenIdToken oit = googleTokenHandler.takeInAccountToken(credentials.getIdToken(), HTTP_TRANSPORT, GsonFactory.getDefaultInstance());
+			OpenIdToken oit = googleTokenHandler.takeInAccountToken(credentials.getIdToken());
 			
 			Staff staff = staffHandler.lookup(OpenId.of(GOOGLE_OPENID_SERVER, oit.getUserId()));
 			if (staff == null) {

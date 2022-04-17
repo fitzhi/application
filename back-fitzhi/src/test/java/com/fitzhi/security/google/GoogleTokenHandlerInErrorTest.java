@@ -1,6 +1,8 @@
 package com.fitzhi.security.google;
 
 import com.fitzhi.exception.ApplicationException;
+import com.fitzhi.security.token.TokenHandler;
+import com.fitzhi.security.token.google.GoogleTokenHandlerImpl;
 
 import org.junit.Assert;
 import org.junit.Test;
@@ -32,7 +34,7 @@ public class GoogleTokenHandlerInErrorTest {
 	 */
 	@Test (expected = ApplicationException.class)
 	public void initInErrorTakeInAccountToken() throws ApplicationException {
-		tokenHandler.takeInAccountToken("idTokenString", null, null);
+		tokenHandler.takeInAccountToken("idTokenString");
 	}
 
 	/**

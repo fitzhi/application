@@ -21,7 +21,7 @@ import com.fitzhi.data.internal.OpenIdCredentials;
 import com.fitzhi.data.internal.OpenIdToken;
 import com.fitzhi.data.internal.Staff;
 import com.fitzhi.exception.ApplicationException;
-import com.fitzhi.security.google.TokenHandler;
+import com.fitzhi.security.token.TokenHandler;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
@@ -70,7 +70,7 @@ public class AdminControllerOpenIdRegisterTest {
 
 		OpenIdToken oit = OpenIdToken.of();
 		oit.setServerId(GOOGLE_OPENID_SERVER);
-		when(tokenHandler.takeInAccountToken(any(), any(), any())).thenReturn(oit);
+		when(tokenHandler.takeInAccountToken(any(String.class))).thenReturn(oit);
 
 		OpenIdCredentials oic = OpenIdCredentials.of(GOOGLE_OPENID_SERVER, "idToken"); 
 
@@ -103,7 +103,7 @@ public class AdminControllerOpenIdRegisterTest {
 
 		OpenIdCredentials oic = OpenIdCredentials.of(GOOGLE_OPENID_SERVER, "idToken"); 
 
-		when(tokenHandler.takeInAccountToken(any(), any(), any())).thenThrow(new ApplicationException(1789, "Error 1789"));
+		when(tokenHandler.takeInAccountToken(any(String.class))).thenThrow(new ApplicationException(1789, "Error 1789"));
 
 		this.mvc.perform(post("/api/admin/openId/register")
 				.header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON)
@@ -130,7 +130,7 @@ public class AdminControllerOpenIdRegisterTest {
 		oit.serverId = GOOGLE_OPENID_SERVER;
 		oit.setUserId("testUserId");
 		oit.setEmail("fv@nope.com");
-		when(tokenHandler.takeInAccountToken(any(), any(), any())).thenReturn(oit);
+		when(tokenHandler.takeInAccountToken(any(String.class))).thenReturn(oit);
 
 		this.mvc.perform(post("/api/admin/openId/register")
 				.header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON)

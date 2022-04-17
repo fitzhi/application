@@ -1,10 +1,10 @@
-package com.fitzhi.security.google;
+package com.fitzhi.security.token.google;
 
 import static com.fitzhi.Error.CODE_GOOGLE_TOKEN_ERROR;
-import static com.fitzhi.Error.MESSAGE_GOOGLE_TOKEN_ERROR;
-import static com.fitzhi.Global.GOOGLE_OPENID_SERVER;
 import static com.fitzhi.Error.CODE_INCONSISTENCY_ERROR_OPENID_SERVER;
+import static com.fitzhi.Error.MESSAGE_GOOGLE_TOKEN_ERROR;
 import static com.fitzhi.Error.MESSAGE_INCONSISTENCY_ERROR_OPENID_SERVER;
+import static com.fitzhi.Global.GOOGLE_OPENID_SERVER;
 
 import java.io.IOException;
 import java.security.GeneralSecurityException;
@@ -24,15 +24,17 @@ import com.fitzhi.data.internal.OpenIdServer;
 import com.fitzhi.data.internal.OpenIdToken;
 import com.fitzhi.data.internal.Staff;
 import com.fitzhi.exception.ApplicationException;
-import com.fitzhi.security.google.util.GoogleAuthentication;
-import com.fitzhi.security.google.util.OAuth2AuthenticationBuilder;
-import com.fitzhi.security.google.util.OAuth2RequestBuilder;
-import com.fitzhi.security.google.util.OpenIdToOauth2Converter;
+import com.fitzhi.security.token.TokenHandler;
+import com.fitzhi.security.token.google.util.GoogleAuthentication;
+import com.fitzhi.security.token.google.util.OAuth2AuthenticationBuilder;
+import com.fitzhi.security.token.google.util.OAuth2RequestBuilder;
+import com.fitzhi.security.token.google.util.OpenIdToOauth2Converter;
 import com.google.api.client.googleapis.auth.oauth2.GoogleIdToken;
 import com.google.api.client.googleapis.auth.oauth2.GoogleIdToken.Payload;
 import com.google.api.client.googleapis.auth.oauth2.GoogleIdTokenVerifier;
 import com.google.api.client.http.HttpTransport;
-import com.google.api.client.json.JsonFactory;
+import com.google.api.client.http.javanet.NetHttpTransport;
+import com.google.api.client.json.gson.GsonFactory;
 import com.google.gson.reflect.TypeToken;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -86,7 +88,7 @@ public class GoogleTokenHandlerImpl implements TokenHandler {
 	}
 
 	@Override
-	public OpenIdToken takeInAccountToken(String idTokenString, HttpTransport transport, JsonFactory jsonFactory) throws ApplicationException {
+	public OpenIdToken takeInAccountToken(String idTokenString) throws ApplicationException {
 
 		// If an error occurs at startup.
 		if (applicationException != null) {
@@ -98,8 +100,10 @@ public class GoogleTokenHandlerImpl implements TokenHandler {
 			throw new ApplicationRuntimeException("SHOULD NOT PASS HERE");
 		}
 
-		// "690807651852-sqjienqot7ui0pufj4ie4n320pss5ipc.apps.googleusercontent.com"
-		GoogleIdTokenVerifier verifier = new GoogleIdTokenVerifier.Builder(transport, jsonFactory)
+		HttpTransport HTTP_TRANSPORT = new NetHttpTransport();
+		final GsonFactory jsonFactory = GsonFactory.getDefaultInstance();
+
+		GoogleIdTokenVerifier verifier = new GoogleIdTokenVerifier.Builder(HTTP_TRANSPORT, jsonFactory)
 			.setAudience(Arrays.asList(this.clientId)) // Specify the list of CLIENT_IDs that accesses the backend:
 			.build();
 

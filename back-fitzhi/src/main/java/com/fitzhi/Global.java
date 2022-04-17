@@ -54,6 +54,10 @@ public class Global {
 	 */
 	public final static String GOOGLE_OPENID_SERVER = "GOOGLE";
 
+	/**
+	 * Identifiant for the Github authentication server.
+	 */
+	public final static String GITHUB_OPENID_SERVER = "GITHUB";
 
 	private Global() {
 	}

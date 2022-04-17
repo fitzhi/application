@@ -20,7 +20,7 @@ public class Error {
 	public static final int UNKNOWN_PROJECT = -1;
 			
 	public static final int CODE_IO_ERROR = -1003;
-	public static final String MESSAGE_IO_ERROR = "IO Error with file or dir {0}";
+	public static final String MESSAGE_IO_ERROR = "IO Error with file, url or dir {0}";
 
 	public static final int CODE_SKILL_NOFOUND = -1004;
 	public static final String MESSAGE_SKILL_NOFOUND = "There is no skill for the identifier {0}";
@@ -141,6 +141,9 @@ public class Error {
 
 	public static final int CODE_OPENID_ALREADY_REGISTERED = -1042;
 	public static final String MESSAGE_OPENID_ALREADY_REGISTERED = "The login openID \"{0}\" is already registered with {2} {3} ({1}).";
+
+	public static final int CODE_OPENID_HTTP_ERROR = -1043;
+	public static final String MESSAGE_OPENID_HTTP_ERROR = "The HTTP error \"{0}\" {1} occurs when accessing the url \"{2}\".";
 	
 	private Error() {
 	}
