@@ -33,9 +33,13 @@ public class TokenUtility<T> {
 	private static Gson gson = new GsonBuilder().create();
 
 	public T httpLoadToken(String url, Class<T> sample, String... params) throws ApplicationException {
+		CloseableHttpClient client = HttpClients.createDefault();
+		return this.httpLoadToken(client, url, sample, params);
+	}
+	
+	public T httpLoadToken(CloseableHttpClient client, String url, Class<T> sample, String... params) throws ApplicationException {
 
 		try {
-			CloseableHttpClient client = HttpClients.createDefault();
 
 			HttpPost httpPost = new HttpPost(url);
 			httpPost.setHeader("Accept", "application/json");
