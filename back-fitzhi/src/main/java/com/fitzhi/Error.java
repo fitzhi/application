@@ -144,7 +144,10 @@ public class Error {
 
 	public static final int CODE_OPENID_HTTP_ERROR = -1043;
 	public static final String MESSAGE_OPENID_HTTP_ERROR = "The HTTP error \"{0}\" {1} occurs when accessing the url \"{2}\".";
-	
+
+	public static final int CODE_INVALID_HTTP_VERB = -1044;
+	public static final String MESSAGE_INVALID_HTTP_VERB = "Invalid HTTP verb \"{0}\".";
+
 	private Error() {
 	}
 	

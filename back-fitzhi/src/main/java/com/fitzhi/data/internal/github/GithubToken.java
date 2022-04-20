@@ -1,4 +1,4 @@
-package com.fitzhi.data.internal;
+package com.fitzhi.data.internal.github;
 
 import lombok.Data;
 
@@ -9,7 +9,6 @@ import lombok.Data;
  * 
  * @author Fr&eacute;d&eacute;ric VIDAL
  */
-
 public @Data class GithubToken {
 
 	String access_token;

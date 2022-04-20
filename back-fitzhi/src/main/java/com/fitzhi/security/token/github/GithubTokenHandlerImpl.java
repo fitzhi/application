@@ -3,9 +3,13 @@ package com.fitzhi.security.token.github;
 import static com.fitzhi.Error.CODE_INCONSISTENCY_ERROR_OPENID_SERVER;
 import static com.fitzhi.Error.MESSAGE_INCONSISTENCY_ERROR_OPENID_SERVER;
 import static com.fitzhi.Global.GITHUB_OPENID_SERVER;
+import static org.springframework.http.HttpMethod.GET;
+import static org.springframework.http.HttpMethod.POST;
 
 import java.text.MessageFormat;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
 
@@ -13,11 +17,12 @@ import javax.annotation.PostConstruct;
 
 import com.fitzhi.ApplicationRuntimeException;
 import com.fitzhi.bean.ReferentialHandler;
-import com.fitzhi.data.internal.GithubToken;
 import com.fitzhi.data.internal.OpenId;
 import com.fitzhi.data.internal.OpenIdServer;
 import com.fitzhi.data.internal.OpenIdToken;
 import com.fitzhi.data.internal.Staff;
+import com.fitzhi.data.internal.github.GithubIdentity;
+import com.fitzhi.data.internal.github.GithubToken;
 import com.fitzhi.exception.ApplicationException;
 import com.fitzhi.security.token.TokenHandler;
 import com.fitzhi.security.token.TokenUtility;
@@ -96,9 +101,33 @@ public class GithubTokenHandlerImpl implements TokenHandler {
 			throw new ApplicationRuntimeException("SHOULD NOT PASS HERE");
 		}
 
-		GithubToken token = new TokenUtility<GithubToken>().httpLoadToken("url", GithubToken.class);
+		final Map<String, String> headers = new HashMap<>();
+		headers.put("Accept", "application/json");
+		headers.put("Content-type", "application/json");
 
-		return null;
+		String url = MessageFormat.format(
+			"https://github.com/login/oauth/access_token?code={0}&client_id={1}&client_secret={2}",
+			idTokenString,
+			"37e824ec4f90dcafe68e",
+			"2f7c46c2c9fde5b1c7713f19e787f9b1243c6f6e");
+		if (log.isDebugEnabled()) {
+			log.debug("Accessing the url " + url);
+		}
+
+		GithubToken token = new TokenUtility<GithubToken>().httpLoadToken(POST, url, GithubToken.class, headers);
+	
+		url = "https://api.github.com/user";
+		headers.put("Authorization", "token " + token.getAccess_token());
+		GithubIdentity identity = new TokenUtility<GithubIdentity>().httpLoadToken(GET, url, GithubIdentity.class, headers);
+
+		OpenIdToken openIdToken = OpenIdToken.of();
+		openIdToken.setServerId(GITHUB_OPENID_SERVER);
+		openIdToken.setUserId(identity.getId());
+		openIdToken.setEmail(identity.getEmail());
+		openIdToken.setName(identity.getName());
+		openIdToken.setFamilyName(identity.getName());
+
+		return openIdToken;
 	}
 
 	@Override
