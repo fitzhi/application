@@ -1,8 +1,7 @@
 package com.fitzhi.controller.administrationController;
 
 import static com.fitzhi.Error.CODE_INVALID_OPENID_SERVER;
-import static com.fitzhi.Error.CODE_OPENID_NOT_FOUND;
-import static com.fitzhi.Global.GOOGLE_OPENID_SERVER;
+import static com.fitzhi.Global.GITHUB_OPENID_SERVER;
 import static org.hamcrest.Matchers.is;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
@@ -16,7 +15,6 @@ import java.time.LocalDate;
 import com.fitzhi.bean.StaffHandler;
 import com.fitzhi.controller.AdminController;
 import com.fitzhi.controller.util.LocalDateAdapter;
-import com.fitzhi.data.internal.OpenId;
 import com.fitzhi.data.internal.OpenIdCredentials;
 import com.fitzhi.data.internal.OpenIdToken;
 import com.fitzhi.data.internal.Staff;
@@ -37,15 +35,19 @@ import org.springframework.http.MediaType;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
 
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.never;
+import static org.mockito.Mockito.times;
+
 /**
- * Test the method {@link AdminController#connect(OpenIdCredentials)}.
+ * Test the method {@link AdminController#openidPrimeRegister(OpenIdCredentials)} with GITHUB.
  * 
  * @author Fr&eacute;d&eacute;ric VIDAL
  */
 @RunWith(SpringRunner.class)
 @SpringBootTest
 @AutoConfigureMockMvc
-public class AdminControllerOpenIdConnectTest {
+public class AdminControllerOpenIdGithubPrimeRegisterTest {
 	
 	@Autowired
 	private MockMvc mvc;
@@ -54,7 +56,7 @@ public class AdminControllerOpenIdConnectTest {
 	private StaffHandler staffHandler;
 
 	@MockBean
-	@Qualifier("GOOGLE")
+	@Qualifier("GITHUB")
 	private TokenHandler tokenHandler;
 
 	/**
@@ -64,18 +66,17 @@ public class AdminControllerOpenIdConnectTest {
 		registerTypeAdapter(LocalDate.class, new LocalDateAdapter().nullSafe()).create();
 
 	@Test
-	public void connectSuccessful() throws Exception {
+	public void nominalPrimeRegister() throws Exception {
 
-		when(staffHandler.lookup(any(OpenId.class))).thenReturn(new Staff (1789, "...login", "nope..."));
-		
+		when(staffHandler.createStaffMember(any())).thenReturn(new Staff (1789, "...login", "nope..."));
+
 		OpenIdToken oit = OpenIdToken.of();
-		oit.setServerId(GOOGLE_OPENID_SERVER);
-		oit.setUserId("userId");
+		oit.setServerId(GITHUB_OPENID_SERVER);
 		when(tokenHandler.takeInAccountToken(any(String.class))).thenReturn(oit);
 
-		OpenIdCredentials oic = OpenIdCredentials.of(GOOGLE_OPENID_SERVER, "idToken"); 
+		OpenIdCredentials oic = OpenIdCredentials.of(GITHUB_OPENID_SERVER, "idToken"); 
 
-		this.mvc.perform(post("/api/admin/openId/connect")
+		this.mvc.perform(post("/api/admin/openId/primeRegister")
 				.header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON)
 				.content(gson.toJson(oic)))
 				.andExpect(status().isOk())
@@ -83,28 +84,8 @@ public class AdminControllerOpenIdConnectTest {
 				.andExpect(jsonPath("$.login", is("...login")))
 				.andExpect(jsonPath("$.password", is("nope...")))
 				.andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE));
-	}
 
-	@Test
-	public void connectFailure() throws Exception {
-
-		when(staffHandler.lookup(any(OpenId.class))).thenReturn(null);
-		
-		OpenIdToken oit = OpenIdToken.of();
-		oit.setServerId(GOOGLE_OPENID_SERVER);
-		oit.setUserId("userId");
-		oit.setEmail("userid@nope.com");
-		when(tokenHandler.takeInAccountToken(any(String.class))).thenReturn(oit);
-
-		OpenIdCredentials oic = OpenIdCredentials.of(GOOGLE_OPENID_SERVER, "idToken"); 
-
-		this.mvc.perform(post("/api/admin/openId/connect")
-				.header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON)
-				.content(gson.toJson(oic)))
-				.andExpect(status().isNotFound())
-				.andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
-				.andExpect(jsonPath("$.code", is(CODE_OPENID_NOT_FOUND)))
-				.andExpect(jsonPath("$.message", is("The email userid@nope.com is not linked with any staff member.")));
+		verify(tokenHandler, times(1)).takeInAccountToken(any(String.class));
 	}
 
 	@Test
@@ -112,29 +93,33 @@ public class AdminControllerOpenIdConnectTest {
 
 		OpenIdCredentials oic = OpenIdCredentials.of("UNKNOWN", "idToken"); 
 
-		this.mvc.perform(post("/api/admin/openId/connect")
+		this.mvc.perform(post("/api/admin/openId/primeRegister")
 				.header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON)
 				.content(gson.toJson(oic)))
 				.andExpect(status().isInternalServerError())
 				.andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
 				.andExpect(jsonPath("$.message", is("Invalid OpenId server UNKNOWN.")))
 				.andExpect(jsonPath("$.code", is(CODE_INVALID_OPENID_SERVER)));
+
+		verify(tokenHandler, never()).takeInAccountToken(any(String.class));
 	}
 
 	@Test
 	public void invalidToken() throws Exception {
 
-		OpenIdCredentials oic = OpenIdCredentials.of(GOOGLE_OPENID_SERVER, "idToken"); 
+		OpenIdCredentials oic = OpenIdCredentials.of(GITHUB_OPENID_SERVER, "idToken"); 
 
 		when(tokenHandler.takeInAccountToken(any(String.class))).thenThrow(new ApplicationException(1789, "Error 1789"));
 
-		this.mvc.perform(post("/api/admin/openId/connect")
+		this.mvc.perform(post("/api/admin/openId/primeRegister")
 				.header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON)
 				.content(gson.toJson(oic)))
 				.andExpect(status().isInternalServerError())
 				.andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
 				.andExpect(jsonPath("$.message", is("Error 1789")))
 				.andExpect(jsonPath("$.code", is(1789)));
+
+		verify(tokenHandler, times(1)).takeInAccountToken(any(String.class));
 	}
 
 }

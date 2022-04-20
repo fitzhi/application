@@ -8,6 +8,7 @@ import static com.fitzhi.Error.MESSAGE_INVALID_FIRST_USER_ADMIN_ALREADY_CREATED;
 import static com.fitzhi.Error.MESSAGE_INVALID_OPENID_SERVER;
 import static com.fitzhi.Error.MESSAGE_OPENID_ALREADY_REGISTERED;
 import static com.fitzhi.Error.MESSAGE_OPENID_NOT_FOUND;
+import static com.fitzhi.Global.GITHUB_OPENID_SERVER;
 import static com.fitzhi.Global.GOOGLE_OPENID_SERVER;
 
 import java.text.MessageFormat;
@@ -59,6 +60,10 @@ public class AdminController {
 	@Autowired
 	@Qualifier("GOOGLE")
 	private TokenHandler googleTokenHandler;
+
+	@Autowired
+	@Qualifier("GITHUB")
+	private TokenHandler githubTokenHandler;
 
 	/**
 	 * Does Fitzhi allow self registration ?
@@ -143,7 +148,7 @@ public class AdminController {
 	 */
 	@ResponseBody
 	@ApiOperation(
-		value="Create the FIRST admin user for Fitzhi from the OpenId JWT. This creation is executed during the installation."
+		value="Create the FIRST admin user for Fitzhi based on either an OpenId JWT, or a OAuth token. This creation is executed during the installation."
 	)
 	@PostMapping("/openId/primeRegister")
 	public Staff openidPrimeRegister(@RequestBody OpenIdCredentials credentials) throws ApplicationException {
@@ -152,6 +157,13 @@ public class AdminController {
 			OpenIdToken oit = googleTokenHandler.takeInAccountToken(credentials.getIdToken());
 			Staff staff = staffHandler.createStaffMember(oit);
 			googleTokenHandler.storeStaffToken(staff, oit);
+			return staff;
+		}
+
+		if (GITHUB_OPENID_SERVER.equals(credentials.getOpenIdServer())) {
+			OpenIdToken oit = githubTokenHandler.takeInAccountToken(credentials.getIdToken());
+			Staff staff = staffHandler.createStaffMember(oit);
+			githubTokenHandler.storeStaffToken(staff, oit);
 			return staff;
 		}
 
