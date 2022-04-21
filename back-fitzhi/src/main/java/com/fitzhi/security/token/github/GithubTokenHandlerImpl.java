@@ -29,7 +29,7 @@ import com.fitzhi.security.token.TokenUtility;
 import com.fitzhi.security.token.google.util.StaffAuthentication;
 import com.fitzhi.security.token.google.util.OAuth2AuthenticationBuilder;
 import com.fitzhi.security.token.google.util.OAuth2RequestBuilder;
-import com.fitzhi.security.token.google.util.OpenIdToOauth2Converter;
+import com.fitzhi.security.token.google.util.GoogleIdTokenToOauth2Converter;
 import com.google.api.client.googleapis.auth.oauth2.GoogleIdToken;
 import com.google.gson.reflect.TypeToken;
 
@@ -151,7 +151,7 @@ public class GithubTokenHandlerImpl implements TokenHandler {
 		if (openIdToken.getOrigin() instanceof GoogleIdToken) {
 			GoogleIdToken googleIdToken = (GoogleIdToken) openIdToken.getOrigin();
 			tokenStore.storeAccessToken(
-				new OpenIdToOauth2Converter(googleIdToken), 
+				new GoogleIdTokenToOauth2Converter(googleIdToken), 
 				OAuth2AuthenticationBuilder.getInstance(
 					OAuth2RequestBuilder.getInstance(openId.getUserId(), Set.of("read", "write", "trust")), 
 					new StaffAuthentication(staff)));

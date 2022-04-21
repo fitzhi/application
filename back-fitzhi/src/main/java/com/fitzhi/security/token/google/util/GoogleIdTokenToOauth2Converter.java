@@ -14,7 +14,7 @@ import org.springframework.security.oauth2.common.OAuth2RefreshToken;
  * Simple OAuth2AccessToken builder.
  * @author Fr&eacute;d&eacute;ric VIDAL
  */
-public class OpenIdToOauth2Converter implements OAuth2AccessToken {
+public class GoogleIdTokenToOauth2Converter implements OAuth2AccessToken {
 
 	final GoogleIdToken googleIdToken;
 
@@ -22,7 +22,7 @@ public class OpenIdToOauth2Converter implements OAuth2AccessToken {
 	 * Creation of an instance of {@link OAuth2AccessToken} based on a Google token.
 	 * @param googleIdToken the Goggle Identifer token decoded from the JWT
 	 */
-	public OpenIdToOauth2Converter(GoogleIdToken googleIdToken) {
+	public GoogleIdTokenToOauth2Converter(GoogleIdToken googleIdToken) {
 		this.googleIdToken = googleIdToken;
 	}
 
