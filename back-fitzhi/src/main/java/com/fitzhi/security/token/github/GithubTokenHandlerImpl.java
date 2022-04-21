@@ -26,7 +26,7 @@ import com.fitzhi.data.internal.github.GithubToken;
 import com.fitzhi.exception.ApplicationException;
 import com.fitzhi.security.token.TokenHandler;
 import com.fitzhi.security.token.TokenUtility;
-import com.fitzhi.security.token.google.util.GoogleAuthentication;
+import com.fitzhi.security.token.google.util.StaffAuthentication;
 import com.fitzhi.security.token.google.util.OAuth2AuthenticationBuilder;
 import com.fitzhi.security.token.google.util.OAuth2RequestBuilder;
 import com.fitzhi.security.token.google.util.OpenIdToOauth2Converter;
@@ -154,7 +154,7 @@ public class GithubTokenHandlerImpl implements TokenHandler {
 				new OpenIdToOauth2Converter(googleIdToken), 
 				OAuth2AuthenticationBuilder.getInstance(
 					OAuth2RequestBuilder.getInstance(openId.getUserId(), Set.of("read", "write", "trust")), 
-					new GoogleAuthentication(staff)));
+					new StaffAuthentication(staff)));
 		} else {
 			throw new ApplicationException(
 				CODE_INCONSISTENCY_ERROR_OPENID_SERVER, 
