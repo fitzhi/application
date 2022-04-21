@@ -4,4 +4,12 @@
 			<div id="btnGoogle" (click)="googleService.render()"></div>
 		</div>
 	</div>
+	<div class="row mt-3" *ngIf="githubService.isRegistered$|async">
+		<div class="col-12">
+			<div id="btnGithub" class="d-inline-flex" (click)="githubService.render()">
+				<div class="m-3 h5">Github</div>
+				<div class="m-2 h2"><i class="fab fa-github"></i></div>
+			</div>
+		</div>
+	</div>
 </div>
