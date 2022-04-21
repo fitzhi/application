@@ -13,6 +13,7 @@ import { SupportedMetric } from '../../data/supported-metric';
 import { TopicLegend } from '../../data/topic-legend';
 import { traceOn } from '../../global';
 import { BackendSetupService } from '../backend-setup/backend-setup.service';
+import { GithubService } from '../github/github.service';
 import { GoogleService } from '../google/google.service';
 
 @Injectable({providedIn: 'root'})
@@ -84,6 +85,7 @@ export class ReferentialService {
 	constructor (
 		private httpClient: HttpClient,
 		private googleService: GoogleService,
+		private githubService: GithubService,
 		private backendSetupService: BackendSetupService) {}
 
 	/**
@@ -119,6 +121,7 @@ export class ReferentialService {
 						}
 						this.openidServers.push(...servers);
 						this.googleService.takeInAccountDeclaredServers(servers);
+						this.githubService.takeInAccountDeclaredServers(servers);
 						return this.httpClient.get<Profile[]> 	(this.backendSetupService.url() + '/referential/profiles');
 					}),
 				catchError((e) => {

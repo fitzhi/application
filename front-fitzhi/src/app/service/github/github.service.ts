@@ -39,6 +39,8 @@ export class GithubService {
 		}
 	}
 
-
+	render() {
+		console.log ("render");
+	}
 
 }
