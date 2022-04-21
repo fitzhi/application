@@ -129,6 +129,7 @@ import { StaffRemoveComponent } from './tabs-staff/staff-remove/staff-remove.com
 import { StaffComponent } from './tabs-staff/staff.component';
 import { WelcomeComponent } from './welcome/welcome.component';
 import { ConnectUserFormComponent } from './admin/connect-user/connect-user-form/connect-user-form.component';
+import { CallbackGithubComponent } from './interaction/callback-github/callback-github.component';
 
 
 @NgModule({
@@ -211,7 +212,8 @@ import { ConnectUserFormComponent } from './admin/connect-user/connect-user-form
 		SummaryComponent,
 		RegisterUserFormComponent,
 		AlternativeOpenidConnectionComponent,
-		ConnectUserFormComponent
+		ConnectUserFormComponent,
+  CallbackGithubComponent
 	],
 	imports: [
 		BsDropdownModule.forRoot(),

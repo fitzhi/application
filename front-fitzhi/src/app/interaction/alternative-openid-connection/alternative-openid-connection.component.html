@@ -3,7 +3,7 @@
 		<div id="btnGoogle" (click)="googleService.render()"></div>
 	</div>
 	<div class="mt-3 p-0 google-like" *ngIf="githubService.isRegistered$|async">
-		<a href="javascript:void(0)" (click)="githubService.render()">
+		<a href="javascript:void(0)" (click)="githubService.githubConnect()">
 			<div id="btnGithub" class="d-inline-flex" >
 				<div class="mt-1 mx-1 px-1 h4">
 					<i class="fab fa-github"></i>

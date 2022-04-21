@@ -1,0 +1,22 @@
+:host {
+
+	background-color: white;
+	
+	left: 0;
+
+	width: 100%;
+	height: 100%;
+
+	display: flex;
+	align-items:center;
+	justify-content: center;
+}
+
+div.message {
+	background-color: whitesmoke;
+	width: fit-content;
+	height: fit-content;
+	border: 1px solid grey;
+	border-radius: 2px;
+	padding: 10px;
+}

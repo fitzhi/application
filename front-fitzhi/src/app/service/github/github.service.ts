@@ -39,8 +39,11 @@ export class GithubService {
 		}
 	}
 
-	render() {
-		console.log ("render");
+	/**
+	 * Connect the end-user into Github.
+	 */
+	githubConnect() {
+		window.location.href = `https://github.com/login/oauth/authorize?client_id=${this.clientId}`;
 	}
 
 }

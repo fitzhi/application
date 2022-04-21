@@ -15,11 +15,13 @@ import { StaffFormComponent } from './tabs-staff/staff-form/staff-form.component
 import { ConnectUserComponent } from './admin/connect-user/connect-user.component';
 import { CiaoComponent } from './admin/ciao/ciao.component';
 import { DevOnOffComponent } from './admin/dev-on-off/dev-on-off.component';
+import { CallbackGithubComponent } from './interaction/callback-github/callback-github.component';
 
 const routes: Routes = [
 	{ path: '', redirectTo: '/welcome', pathMatch: 'full' },
 	{ path: 'welcome', component: WelcomeComponent },
 	{ path: 'login', component: ConnectUserComponent },
+	{ path: 'callback/github', component: CallbackGithubComponent },
 	{ path: 'ciao', component: CiaoComponent },
 	{ path: 'dev-on-off', component: DevOnOffComponent },
 	{ path: 'searchSkill', component: ListSkillComponent, canActivate: [AuthGuardService] },
