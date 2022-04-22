@@ -70,9 +70,9 @@ export class CallbackGithubComponent implements OnInit, AfterViewInit {
 					// We load the staff and start the refresh process.
 					this.staffListService.startLoadingStaff();
 
-					this.messageService.success(`{staff.firtName} {staff.lastName} is successfully created.`);
+					this.messageService.success(`${staff.firstName} ${staff.lastName} is successfully created.`);
 
-//					this.router.navigateByUrl('/user/' + staff.idStaff);
+					this.router.navigateByUrl(`/user/${staff.idStaff}`);
 				}
 		});
 	}
