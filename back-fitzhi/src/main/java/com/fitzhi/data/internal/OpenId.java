@@ -7,6 +7,6 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor(staticName = "of")
 @AllArgsConstructor(staticName = "of")
 public @Data class OpenId {
-    private String serverId;
-    private String userId;
+	private String serverId;
+	private String userId;
 }

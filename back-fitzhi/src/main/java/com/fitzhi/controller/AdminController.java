@@ -161,7 +161,7 @@ public class AdminController {
 
 		if (GITHUB_OPENID_SERVER.equals(credentials.getOpenIdServer())) {
 			OpenIdToken oit = githubTokenHandler.takeInAccountToken(credentials.getIdToken());
-			Staff staff = staffHandler.createStaffMember(oit);
+			final Staff staff = staffHandler.createStaffMember(oit);
 			githubTokenHandler.storeStaffToken(staff, oit);
 			return OpenIdTokenStaff.of(oit, staff);
 		}
@@ -178,7 +178,7 @@ public class AdminController {
 	 */
 	@ResponseBody
 	@ApiOperation(
-		value="Create a user in Fitzhi based on an OpenId JWT. This creation is processed when installing the Front Client."
+		value="Create a user in Fitzhi based on an OpenId credential. This creation is processed when installing the Front Client."
 	)
 	@PostMapping("/openId/register")
 	public Staff openIdRegister(@RequestBody OpenIdCredentials credentials) throws ApplicationException {

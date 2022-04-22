@@ -167,23 +167,4 @@ public class AdministrationImpl implements Administration {
 		}		
 	}
 
-/*
-	@Override
-	public Staff connect(String login, String password) throws ApplicationException {
-		
-		Staff staff = staffHandler.findStaffOnLogin(login)
-				.orElseThrow(() -> new ApplicationException(CODE_INVALID_LOGIN_PASSWORD, MESSAGE_INVALID_LOGIN_PASSWORD));
-		
-		if (log.isDebugEnabled()) {
-			log.debug(String.format("login found %s", staff.fullName()));
-		}
-		
-		if (!passwordEncoder.matches(password, staff.getPassword())) {
-			throw new ApplicationException(CODE_INVALID_LOGIN_PASSWORD, MESSAGE_INVALID_LOGIN_PASSWORD);
-		}
-		
-		return staff;
-	}
-*/
-	
 }

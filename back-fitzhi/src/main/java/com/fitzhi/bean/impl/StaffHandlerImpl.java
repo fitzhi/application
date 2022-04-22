@@ -639,6 +639,7 @@ public class StaffHandlerImpl extends AbstractDataSaverLifeCycleImpl implements 
 
 	@Override
 	public Staff createStaffMember(OpenIdToken openIdToken) throws ApplicationException {
+
 		Staff staff = new Staff();
 		staff.setFirstName(openIdToken.getGivenName());
 		staff.setLastName(openIdToken.getFamilyName());
