@@ -1,9 +1,11 @@
 import { HttpClientTestingModule, HttpTestingController } from '@angular/common/http/testing';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { MatDialogModule } from '@angular/material/dialog';
 import { ActivatedRoute } from '@angular/router';
 import { RouterTestingModule } from '@angular/router/testing';
 import { GithubToken } from 'src/app/data/github-token';
 import { BackendSetupService } from 'src/app/service/backend-setup/backend-setup.service';
+import { CinematicService } from 'src/app/service/cinematic.service';
 import { CallbackGithubComponent } from './callback-github.component';
 
 
@@ -21,9 +23,11 @@ describe('CallbackGithubComponent', () => {
 					useValue: {
 						snapshot: {queryParams: {code: 'thecode'}}
 					}
-				}
+				},
+				CinematicService,
 			],
 			imports: [
+				MatDialogModule,
 				HttpClientTestingModule,
 				RouterTestingModule.withRoutes([])
 			],

@@ -91,7 +91,8 @@ describe('registerUserComponent in the openID authentication scenario', () => {
 		staff.idStaff = 1789;
 		staff.firstName = 'Frédéric';
 		staff.lastName = 'Vidal';
-		const spyStaffService = spyOn(staffService, 'openIdRegisterUser$').and.returnValue(of(new OpenIdTokenStaff(new OpenIdToken(), staff)));
+		const spyStaffService = spyOn(staffService, 'openIdRegisterUser$').and.returnValue(of(
+			new OpenIdTokenStaff(new OpenIdToken(), staff)));
 
 		const spyStaffService2 = spyOn(staffService, 'changeCollaborator');
 		const spyAuthService = spyOn(authService, 'setConnect');

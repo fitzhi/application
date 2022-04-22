@@ -109,7 +109,7 @@ export class RegisterUserComponent extends BaseDirective implements OnInit, OnDe
 									// We load the staff and start the refresh process.
 									this.staffListService.startLoadingStaff();
 
-									this.messageService.error(`{staff.firtName} {staff.lastName} is successfully created.`);
+									this.messageService.success(`{staff.firtName} {staff.lastName} is successfully created.`);
 
 									this.messengerUserRegistered$.emit(new LoginEvent(staff.idStaff, LoginMode.OPENID));
 								},
