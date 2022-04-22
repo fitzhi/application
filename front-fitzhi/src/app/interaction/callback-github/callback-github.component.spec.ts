@@ -58,7 +58,7 @@ describe('CallbackGithubComponent', () => {
 		expect(component).toBeTruthy();
 	});
 
-	it('should call the Fitzhi backend server with the code sent by Github!', () => {
+	it('should call the Fitzhi backend server with the code sent by Github.', () => {
 
 		// We do not need to load the skills.
 		const skillService = TestBed.inject(SkillService);

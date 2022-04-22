@@ -1,12 +1,28 @@
+import { HttpClientModule } from '@angular/common/http';
+import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { TestBed } from '@angular/core/testing';
-
+import { MatDialogModule } from '@angular/material/dialog';
+import { MessageService } from 'src/app/interaction/message/message.service';
+import { SkillService } from 'src/app/skill/service/skill.service';
+import { SunburstCinematicService } from 'src/app/tabs-project/project-sunburst/service/sunburst-cinematic.service';
+import { BackendSetupService } from '../backend-setup/backend-setup.service';
+import { CinematicService } from '../cinematic.service';
+import { FileService } from '../file.service';
+import { ProjectService } from '../project/project.service';
+import { ReferentialService } from '../referential/referential.service';
 import { GithubService } from './github.service';
+
 
 describe('GithubService', () => {
 	let service: GithubService;
 
 	beforeEach(() => {
-		TestBed.configureTestingModule({});
+		TestBed.configureTestingModule({
+			declarations: [],
+			providers: [ProjectService, ReferentialService, SkillService, FileService, MessageService, SunburstCinematicService, 
+				BackendSetupService, CinematicService],
+			imports: [HttpClientTestingModule, HttpClientModule, MatDialogModule]
+		});
 		service = TestBed.inject(GithubService);
 	});
 

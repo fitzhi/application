@@ -1,14 +1,14 @@
+import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
+import { Observable, of, throwError } from 'rxjs';
+import { catchError, switchMap, take, tap } from 'rxjs/operators';
+import { Collaborator } from 'src/app/data/collaborator';
+import { OpenIdCredentials } from 'src/app/data/open-id-credentials';
+import { traceOn } from 'src/app/global';
 import { InternalService } from 'src/app/internal-service';
 import { BackendSetupService } from 'src/app/service/backend-setup/backend-setup.service';
-import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
-import { take, switchMap, catchError, tap } from 'rxjs/operators';
 import { Token } from '../token/token';
-import { EMPTY, Observable, of, throwError } from 'rxjs';
-import { traceOn } from 'src/app/global';
 import { TokenService } from '../token/token.service';
-import { OpenIdCredentials } from 'src/app/data/open-id-credentials';
-import { Collaborator } from 'src/app/data/collaborator';
 
 @Injectable({
 	providedIn: 'root'

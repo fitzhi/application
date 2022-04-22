@@ -7,6 +7,7 @@ import { TokenService } from 'src/app/admin/service/token/token.service';
 import { OpenIdTokenStaff } from 'src/app/data/openidtoken-staff';
 import { traceOn } from 'src/app/global';
 import { BackendSetupService } from 'src/app/service/backend-setup/backend-setup.service';
+import { GithubService } from 'src/app/service/github/github.service';
 import { ProjectService } from 'src/app/service/project/project.service';
 import { StaffListService } from 'src/app/service/staff-list-service/staff-list.service';
 import { StaffService } from 'src/app/tabs-staff/service/staff.service';
@@ -22,16 +23,17 @@ export class CallbackGithubComponent implements OnInit, AfterViewInit {
 	private code: string;
 
 	constructor(
-		private backendSetupService: BackendSetupService,
-		private tokenService: TokenService,
+		private githubService: GithubService,
+		private projectService: ProjectService,
+		private httpClient: HttpClient,
 		private authService: AuthService,
 		private staffService: StaffService,
-		private projectService: ProjectService,
 		private staffListService: StaffListService,
+		private backendSetupService: BackendSetupService,
 		private messageService: MessageService,
-		private httpClient: HttpClient,
-		private route: ActivatedRoute,
-		private router: Router) { }
+		private tokenService: TokenService,
+		private router: Router,
+		private route: ActivatedRoute) { }
 	
 	ngOnInit(): void {
 		if (this.route.snapshot.queryParams['code']) {
@@ -43,8 +45,16 @@ export class CallbackGithubComponent implements OnInit, AfterViewInit {
 	}
 	
 	ngAfterViewInit(): void {
+		this.primeRegister(this.code);
+	}
 
-		const body = { "openIdServer": "GITHUB", "idToken": this.code };
+	/**
+	 * Register the Github user associated with the given code
+	 * @param code the returned code
+	 */
+	 primeRegister(code: string) {
+
+		const body = { "openIdServer": this.githubService.GITHUB_SERVER_ID, "idToken": code };
 
 		this.httpClient.post<OpenIdTokenStaff>(this.backendSetupService.url() + '/admin/openId/primeRegister', body)
 			.subscribe({
@@ -76,4 +86,5 @@ export class CallbackGithubComponent implements OnInit, AfterViewInit {
 				}
 		});
 	}
+
 }
