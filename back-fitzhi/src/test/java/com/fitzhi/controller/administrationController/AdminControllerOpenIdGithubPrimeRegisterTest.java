@@ -9,6 +9,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 
 import java.time.LocalDate;
 
@@ -18,6 +19,7 @@ import com.fitzhi.controller.util.LocalDateAdapter;
 import com.fitzhi.data.internal.OpenIdCredentials;
 import com.fitzhi.data.internal.OpenIdToken;
 import com.fitzhi.data.internal.Staff;
+import com.fitzhi.data.internal.github.GithubToken;
 import com.fitzhi.exception.ApplicationException;
 import com.fitzhi.security.token.TokenHandler;
 import com.google.gson.Gson;
@@ -72,6 +74,7 @@ public class AdminControllerOpenIdGithubPrimeRegisterTest {
 
 		OpenIdToken oit = OpenIdToken.of();
 		oit.setServerId(GITHUB_OPENID_SERVER);
+		oit.setOrigin(GithubToken.of("theAccessToken", "theTokenType", "theScope"));
 		when(tokenHandler.takeInAccountToken(any(String.class))).thenReturn(oit);
 
 		OpenIdCredentials oic = OpenIdCredentials.of(GITHUB_OPENID_SERVER, "idToken"); 
@@ -83,6 +86,8 @@ public class AdminControllerOpenIdGithubPrimeRegisterTest {
 				.andExpect(jsonPath("$.staff.idStaff", is(1789)))
 				.andExpect(jsonPath("$.staff.login", is("...login")))
 				.andExpect(jsonPath("$.staff.password", is("nope...")))
+				.andExpect(jsonPath("$.openIdToken.origin.access_token", is("theAccessToken")))
+				.andDo(print())
 				.andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE));
 
 		verify(tokenHandler, times(1)).takeInAccountToken(any(String.class));
