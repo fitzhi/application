@@ -48,6 +48,9 @@ describe('CallbackGithubComponent', () => {
 		component = fixture.componentInstance;
 		httpTestingController = TestBed.inject(HttpTestingController);
 
+		const backendSetupService = TestBed.inject(BackendSetupService);
+		backendSetupService.saveUrl('URL_OF_SERVER');
+
 		fixture.detectChanges();
 	});
 
@@ -60,10 +63,6 @@ describe('CallbackGithubComponent', () => {
 		// We do not need to load the skills.
 		const skillService = TestBed.inject(SkillService);
 		spyOn(skillService,'loadSkills').and.returnValue(null);
-
-		const backendSetupService = TestBed.inject(BackendSetupService);
-		backendSetupService.saveUrl('URL_OF_SERVER');
-		fixture.detectChanges();
 
 		const staffService = TestBed.inject(StaffService);
 		const spyOnStaffService = spyOn(staffService,'changeCollaborator').and.returnValue(null);
