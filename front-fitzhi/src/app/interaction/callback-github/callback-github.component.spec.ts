@@ -3,17 +3,16 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { MatDialogModule } from '@angular/material/dialog';
 import { ActivatedRoute, Router } from '@angular/router';
 import { RouterTestingModule } from '@angular/router/testing';
-import { time } from 'console';
 import { AuthService } from 'src/app/admin/service/auth/auth.service';
 import { TokenService } from 'src/app/admin/service/token/token.service';
 import { Collaborator } from 'src/app/data/collaborator';
-import { GithubToken } from 'src/app/data/github-token';
 import { OpenIdToken, Origin } from 'src/app/data/OpenIdToken';
 import { OpenIdTokenStaff } from 'src/app/data/openidtoken-staff';
 import { BackendSetupService } from 'src/app/service/backend-setup/backend-setup.service';
 import { CinematicService } from 'src/app/service/cinematic.service';
 import { ProjectService } from 'src/app/service/project/project.service';
 import { StaffListService } from 'src/app/service/staff-list-service/staff-list.service';
+import { SkillService } from 'src/app/skill/service/skill.service';
 import { StaffService } from 'src/app/tabs-staff/service/staff.service';
 import { MessageService } from '../message/message.service';
 import { CallbackGithubComponent } from './callback-github.component';
@@ -57,6 +56,10 @@ describe('CallbackGithubComponent', () => {
 	});
 
 	it('should call the Fitzhi backend server with the code sent by Github!', () => {
+
+		// We do not need to load the skills.
+		const skillService = TestBed.inject(SkillService);
+		spyOn(skillService,'loadSkills').and.returnValue(null);
 
 		const backendSetupService = TestBed.inject(BackendSetupService);
 		backendSetupService.saveUrl('URL_OF_SERVER');
