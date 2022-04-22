@@ -88,7 +88,7 @@ describe('staffService', () => {
 		});
 	});
 
-	it('registerUser$() for the first connection', done => {
+	it('registerUser$() for the first connection.', done => {
 		service.classicRegisterUser$(true, 'myUser', 'myPass').subscribe({
 			next: createdStaff => {
 				expect(createdStaff.idStaff).toBe(1789);
@@ -104,7 +104,7 @@ describe('staffService', () => {
 		req.flush(staff);
 	});
 
-	it('registerUser$() during lifetime of the application', done => {
+	it('registerUser$() during lifetime of the application.', done => {
 		service.classicRegisterUser$(false, 'myUser', 'myPass').subscribe({
 			next: createdStaff => {
 				expect(createdStaff.idStaff).toBe(1789);

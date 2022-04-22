@@ -3,6 +3,7 @@ import { Injectable } from '@angular/core';
 import { NO_CONTENT } from 'http-status-codes';
 import { BehaviorSubject, EMPTY, Observable, of, Subject } from 'rxjs';
 import { switchMap, take } from 'rxjs/operators';
+import { OpenIdTokenStaff } from 'src/app/data/openidtoken-staff';
 import { Collaborator } from '../../data/collaborator';
 import { DeclaredExperience } from '../../data/declared-experience';
 import { Experience } from '../../data/experience';
@@ -463,14 +464,15 @@ export class StaffService {
 	/**
 	 * Register a new user inside the application
 	 * @param veryFirstConnection TRUE if the is the VERY FIRST USER to be created, and subsequently the FIRST ADMIN USER.
-	 * @param serverId the openId server identifier _(like "GOOGLE" for instance)_
+	 * @param openIdServer the openId server identifier _(like "GOOGLE" for instance)_
 	 * @param jwt the JWT token
+	 * @returns an observable emitting the pair of objects (OpenIdToken, Staff)
 	 */
-	openIdRegisterUser$(veryFirstConnection: boolean, openIdServer: string, jwt: string): Observable<Collaborator> {
+	openIdRegisterUser$(veryFirstConnection: boolean, openIdServer: string, jwt: string): Observable<OpenIdTokenStaff> {
 
 		const body = { openIdServer: openIdServer, idToken: jwt};
 
-		return this.httpClient.post<Collaborator>(
+		return this.httpClient.post<OpenIdTokenStaff>(
 			this.backendSetupService.url() + '/admin/openId/' + (veryFirstConnection ? 'primeRegister' : 'register'),
 			body);
 	}

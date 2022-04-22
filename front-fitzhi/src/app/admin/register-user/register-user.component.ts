@@ -90,7 +90,8 @@ export class RegisterUserComponent extends BaseDirective implements OnInit, OnDe
 								console.log ('%s is logged in', this.googleService.googleToken.name);
 							}
 							this.staffService.openIdRegisterUser$(this.veryFirstConnection, 'GOOGLE', this.googleService.jwt).subscribe({
-								next: staff => {
+								next: (openIdStaff) => {
+									const staff = openIdStaff.staff;
 									if (traceOn()) {
 										console.log ('%s has been created in Fitzi from its Google token', staff.lastName);
 									}

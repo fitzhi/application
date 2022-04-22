@@ -1,7 +1,8 @@
 import { HttpClient } from '@angular/common/http';
 import { AfterViewInit, Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { GithubToken } from 'src/app/data/github-token';
+import { Collaborator } from 'src/app/data/collaborator';
+import { OpenIdTokenStaff } from 'src/app/data/openidtoken-staff';
 import { traceOn } from 'src/app/global';
 import { BackendSetupService } from 'src/app/service/backend-setup/backend-setup.service';
 
@@ -33,17 +34,13 @@ export class CallbackGithubComponent implements OnInit, AfterViewInit {
 
 		const body = { "openIdServer": "GITHUB", "idToken": this.code };
 
-		this.httpClient
-			.post<GithubToken>(this.backendSetupService.url() + '/admin/openId/primeRegister', body)
-				.subscribe({
-					next: token => {
-						if (traceOn()) {
-							console.log( token);
-							console.log (token.access_token);
-							console.log (token.token_type);
-							console.log (token.scope);
-						}
+		this.httpClient.post<OpenIdTokenStaff>(this.backendSetupService.url() + '/admin/openId/primeRegister', body)
+			.subscribe({
+				next: oits => {
+					if (traceOn()) {
+						console.log(`${oits.staff.idStaff} ${oits.staff.firstName} ${oits.staff.lastName} has been created.`);
 					}
+				}
 		});
 	}
 }

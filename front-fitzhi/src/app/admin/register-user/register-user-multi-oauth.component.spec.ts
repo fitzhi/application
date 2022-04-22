@@ -14,6 +14,8 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { of } from 'rxjs';
 import { Collaborator } from 'src/app/data/collaborator';
 import { GoogleToken } from 'src/app/data/google-token';
+import { OpenIdToken } from 'src/app/data/OpenIdToken';
+import { OpenIdTokenStaff } from 'src/app/data/openidtoken-staff';
 import { AlternativeOpenidConnectionComponent } from 'src/app/interaction/alternative-openid-connection/alternative-openid-connection.component';
 import { CinematicService } from 'src/app/service/cinematic.service';
 import { GoogleService } from 'src/app/service/google/google.service';
@@ -89,7 +91,7 @@ describe('registerUserComponent in the openID authentication scenario', () => {
 		staff.idStaff = 1789;
 		staff.firstName = 'Frédéric';
 		staff.lastName = 'Vidal';
-		const spyStaffService = spyOn(staffService, 'openIdRegisterUser$').and.returnValue(of(staff));
+		const spyStaffService = spyOn(staffService, 'openIdRegisterUser$').and.returnValue(of(new OpenIdTokenStaff(new OpenIdToken(), staff)));
 
 		const spyStaffService2 = spyOn(staffService, 'changeCollaborator');
 		const spyAuthService = spyOn(authService, 'setConnect');

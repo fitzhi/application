@@ -2,7 +2,6 @@ import { HttpClientTestingModule, HttpTestingController } from '@angular/common/
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { ActivatedRoute } from '@angular/router';
 import { RouterTestingModule } from '@angular/router/testing';
-import { of } from 'rxjs';
 import { GithubToken } from 'src/app/data/github-token';
 import { BackendSetupService } from 'src/app/service/backend-setup/backend-setup.service';
 import { CallbackGithubComponent } from './callback-github.component';
