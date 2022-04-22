@@ -123,6 +123,7 @@ public class GithubTokenHandlerImpl implements TokenHandler {
 		openIdToken.setServerId(GITHUB_OPENID_SERVER);
 		openIdToken.setUserId(identity.getId());
 		openIdToken.setEmail(identity.getEmail());
+		openIdToken.setGivenName("");
 		openIdToken.setName(identity.getName());
 		openIdToken.setFamilyName(identity.getName());
 
