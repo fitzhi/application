@@ -1,11 +1,21 @@
 import { HttpClientTestingModule, HttpTestingController } from '@angular/common/http/testing';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { MatDialogModule } from '@angular/material/dialog';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { RouterTestingModule } from '@angular/router/testing';
+import { time } from 'console';
+import { AuthService } from 'src/app/admin/service/auth/auth.service';
+import { TokenService } from 'src/app/admin/service/token/token.service';
+import { Collaborator } from 'src/app/data/collaborator';
 import { GithubToken } from 'src/app/data/github-token';
+import { OpenIdToken, Origin } from 'src/app/data/OpenIdToken';
+import { OpenIdTokenStaff } from 'src/app/data/openidtoken-staff';
 import { BackendSetupService } from 'src/app/service/backend-setup/backend-setup.service';
 import { CinematicService } from 'src/app/service/cinematic.service';
+import { ProjectService } from 'src/app/service/project/project.service';
+import { StaffListService } from 'src/app/service/staff-list-service/staff-list.service';
+import { StaffService } from 'src/app/tabs-staff/service/staff.service';
+import { MessageService } from '../message/message.service';
 import { CallbackGithubComponent } from './callback-github.component';
 
 
@@ -46,19 +56,53 @@ describe('CallbackGithubComponent', () => {
 		expect(component).toBeTruthy();
 	});
 
-	it('should invoke the Fitzhi backend with the code sent by Github.', () => {
+	it('should call the Fitzhi backend server with the code sent by Github.', () => {
+
+
+		const staffService = TestBed.inject(StaffService);
+		const spyOnStaffService = spyOn(staffService,'changeCollaborator').and.returnValue(null);
+
+		const tokenService = TestBed.inject(TokenService);
+		const spyOnTokenService = spyOn(tokenService,'saveToken').and.returnValue(null);
+
+		const authService = TestBed.inject(AuthService);
+		const spyOnAuthService = spyOn(authService,'setConnect').and.returnValue(null);
+
+		const projectService = TestBed.inject(ProjectService);
+		const spyOnProjectService = spyOn(projectService,'startLoadingProjects').and.returnValue(null);
+
+		const staffListService = TestBed.inject(StaffListService);
+		const spyOnStaffListService = spyOn(staffListService,'startLoadingStaff').and.returnValue(null);
+
+		const messageService = TestBed.inject(MessageService);
+		const spyOnMessageService = spyOn(messageService, 'success').and.returnValue(null);
+
+		const router = TestBed.inject(Router);
+		const navigateSpy = spyOn(router, 'navigate');
+
 		const backendSetupService = TestBed.inject(BackendSetupService);
 		backendSetupService.saveUrl('URL_OF_SERVER');
 		fixture.detectChanges();
 
 		const req = httpTestingController.expectOne('URL_OF_SERVER/api/admin/openId/primeRegister');
 		expect(req.request.method).toBe('POST');
-		// expect(req.request.body).toBe('username=my-user&password=my-password&grant_type=password'); // This is not a credential. //NOSONAR
-		const t = new GithubToken();
-		t.access_token = '1234';
-		t.scope = 'read, write';
-		t.token_type = 'token'
-		req.flush(t);
+
+		const token = new OpenIdToken();
+		token.origin = new Origin('token_1234');
+		token.origin.scope = 'read, write';
+		token.origin.token_type = 'token'
+
+		const staff = new Collaborator();
+		staff.idStaff = 1789;
+		req.flush(new OpenIdTokenStaff(token, staff));
+
+		expect(spyOnStaffService).toHaveBeenCalled();
+		expect(spyOnTokenService).toHaveBeenCalled();
+		expect(spyOnAuthService).toHaveBeenCalled();
+		expect(spyOnProjectService).toHaveBeenCalled();
+		expect(spyOnStaffListService).toHaveBeenCalled();
+		expect(spyOnMessageService).toHaveBeenCalled();
+		expect(navigateSpy).toHaveBeenCalledWith('/user/1789');
 
 	});
 
