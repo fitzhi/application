@@ -56,8 +56,11 @@ describe('CallbackGithubComponent', () => {
 		expect(component).toBeTruthy();
 	});
 
-	it('should call the Fitzhi backend server with the code sent by Github.', () => {
+	it('should call the Fitzhi backend server with the code sent by Github!', () => {
 
+		const backendSetupService = TestBed.inject(BackendSetupService);
+		backendSetupService.saveUrl('URL_OF_SERVER');
+		fixture.detectChanges();
 
 		const staffService = TestBed.inject(StaffService);
 		const spyOnStaffService = spyOn(staffService,'changeCollaborator').and.returnValue(null);
@@ -78,11 +81,7 @@ describe('CallbackGithubComponent', () => {
 		const spyOnMessageService = spyOn(messageService, 'success').and.returnValue(null);
 
 		const router = TestBed.inject(Router);
-		const navigateSpy = spyOn(router, 'navigate');
-
-		const backendSetupService = TestBed.inject(BackendSetupService);
-		backendSetupService.saveUrl('URL_OF_SERVER');
-		fixture.detectChanges();
+		const navigateSpy = spyOn(router, 'navigateByUrl');
 
 		const req = httpTestingController.expectOne('URL_OF_SERVER/api/admin/openId/primeRegister');
 		expect(req.request.method).toBe('POST');
