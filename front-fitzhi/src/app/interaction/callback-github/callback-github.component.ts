@@ -55,8 +55,11 @@ export class CallbackGithubComponent implements OnInit, AfterViewInit {
 					}
 					this.staffService.changeCollaborator(staff);
 					const token = new Token();
-					// We use the JWT as access token for this authenticated user.
+					// We use the GITHUB token as access token for this authenticated user.
 					token.access_token = oits.openIdToken.origin.access_token;
+					if (traceOn()) {
+						console.log ('Storing the token %s', token.access_token);
+					}
 					this.tokenService.saveToken(token);
 
 					// This registration through the mechanism of openid tokens, automatically connects the user.
