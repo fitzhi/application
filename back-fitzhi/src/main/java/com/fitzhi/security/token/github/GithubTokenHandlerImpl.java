@@ -25,11 +25,11 @@ import com.fitzhi.data.internal.github.GithubIdentity;
 import com.fitzhi.data.internal.github.GithubToken;
 import com.fitzhi.exception.ApplicationException;
 import com.fitzhi.security.token.TokenHandler;
-import com.fitzhi.security.token.TokenUtility;
-import com.fitzhi.security.token.google.util.StaffAuthentication;
-import com.fitzhi.security.token.google.util.OAuth2AuthenticationBuilder;
-import com.fitzhi.security.token.google.util.OAuth2RequestBuilder;
 import com.fitzhi.security.token.google.util.GoogleIdTokenToOauth2Converter;
+import com.fitzhi.security.token.util.OAuth2AuthenticationBuilder;
+import com.fitzhi.security.token.util.OAuth2RequestBuilder;
+import com.fitzhi.security.token.util.StaffAuthentication;
+import com.fitzhi.security.token.util.TokenUtility;
 import com.google.api.client.googleapis.auth.oauth2.GoogleIdToken;
 import com.google.gson.reflect.TypeToken;
 

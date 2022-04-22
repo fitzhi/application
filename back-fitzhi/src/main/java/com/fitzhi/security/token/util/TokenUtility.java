@@ -1,4 +1,4 @@
-package com.fitzhi.security.token;
+package com.fitzhi.security.token.util;
 
 import static com.fitzhi.Error.CODE_IO_ERROR;
 import static com.fitzhi.Error.CODE_OPENID_HTTP_ERROR;

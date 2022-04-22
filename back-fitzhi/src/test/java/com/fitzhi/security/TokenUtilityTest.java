@@ -12,7 +12,7 @@ import java.util.stream.Collectors;
 import com.fitzhi.data.internal.github.GithubIdentity;
 import com.fitzhi.data.internal.github.GithubToken;
 import com.fitzhi.exception.ApplicationException;
-import com.fitzhi.security.token.TokenUtility;
+import com.fitzhi.security.token.util.TokenUtility;
 
 import org.apache.http.StatusLine;
 import org.apache.http.client.methods.CloseableHttpResponse;
@@ -29,7 +29,7 @@ import org.springframework.http.HttpMethod;
 
 /**
  * Test of the method {#link
- * {@link com.fitzhi.security.token.TokenUtility#httpLoadToken(String, Class, String...)}
+ * {@link com.fitzhi.security.token.util.TokenUtility#httpLoadToken(String, Class, String...)}
  * 
  * @author Fr&eacute;d&eacute;ric VIDAL
  */

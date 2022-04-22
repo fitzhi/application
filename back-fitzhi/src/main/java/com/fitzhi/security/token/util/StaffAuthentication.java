@@ -1,4 +1,4 @@
-package com.fitzhi.security.token.google.util;
+package com.fitzhi.security.token.util;
 
 import java.util.Arrays;
 import java.util.Collection;

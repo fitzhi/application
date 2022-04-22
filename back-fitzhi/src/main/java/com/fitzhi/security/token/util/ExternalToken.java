@@ -1,4 +1,4 @@
-package com.fitzhi.security.token.google.util;
+package com.fitzhi.security.token.util;
 
 import lombok.Data;
 import lombok.NoArgsConstructor;
