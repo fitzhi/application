@@ -76,9 +76,9 @@ public class AdminControllerOpenIdGooglePrimeRegisterTest {
 				.header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON)
 				.content(gson.toJson(oic)))
 				.andExpect(status().isOk())
-				.andExpect(jsonPath("$.idStaff", is(1789)))
-				.andExpect(jsonPath("$.login", is("...login")))
-				.andExpect(jsonPath("$.password", is("nope...")))
+				.andExpect(jsonPath("$.staff.idStaff", is(1789)))
+				.andExpect(jsonPath("$.staff.login", is("...login")))
+				.andExpect(jsonPath("$.staff.password", is("nope...")))
 				.andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE));
 	}
 

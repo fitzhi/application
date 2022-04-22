@@ -25,12 +25,11 @@ import com.fitzhi.data.internal.github.GithubIdentity;
 import com.fitzhi.data.internal.github.GithubToken;
 import com.fitzhi.exception.ApplicationException;
 import com.fitzhi.security.token.TokenHandler;
-import com.fitzhi.security.token.google.util.GoogleIdTokenToOauth2Converter;
+import com.fitzhi.security.token.github.util.GithubIdTokenToOauth2Converter;
 import com.fitzhi.security.token.util.OAuth2AuthenticationBuilder;
 import com.fitzhi.security.token.util.OAuth2RequestBuilder;
 import com.fitzhi.security.token.util.StaffAuthentication;
 import com.fitzhi.security.token.util.TokenUtility;
-import com.google.api.client.googleapis.auth.oauth2.GoogleIdToken;
 import com.google.gson.reflect.TypeToken;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -127,6 +126,8 @@ public class GithubTokenHandlerImpl implements TokenHandler {
 		openIdToken.setName(identity.getName());
 		openIdToken.setFamilyName(identity.getName());
 
+		openIdToken.setOrigin(token);
+
 		return openIdToken;
 	}
 
@@ -148,10 +149,10 @@ public class GithubTokenHandlerImpl implements TokenHandler {
 
 		OpenId openId = oOpenId.get();
 
-		if (openIdToken.getOrigin() instanceof GoogleIdToken) {
-			GoogleIdToken googleIdToken = (GoogleIdToken) openIdToken.getOrigin();
+		if (openIdToken.getOrigin() instanceof GithubToken) {
+			GithubToken googleIdToken = (GithubToken) openIdToken.getOrigin();
 			tokenStore.storeAccessToken(
-				new GoogleIdTokenToOauth2Converter(googleIdToken), 
+				new GithubIdTokenToOauth2Converter(googleIdToken, openId.getUserId()), 
 				OAuth2AuthenticationBuilder.getInstance(
 					OAuth2RequestBuilder.getInstance(openId.getUserId(), Set.of("read", "write", "trust")), 
 					new StaffAuthentication(staff)));

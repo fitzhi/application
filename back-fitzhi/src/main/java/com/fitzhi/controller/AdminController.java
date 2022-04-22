@@ -15,6 +15,7 @@ import java.text.MessageFormat;
 
 import com.fitzhi.bean.Administration;
 import com.fitzhi.bean.StaffHandler;
+import com.fitzhi.data.OpenIdTokenStaff;
 import com.fitzhi.data.internal.ClassicCredentials;
 import com.fitzhi.data.internal.OpenId;
 import com.fitzhi.data.internal.OpenIdCredentials;
@@ -141,30 +142,28 @@ public class AdminController {
 
 	/**
 	 * This method is used to create the first admin user.
-	 * @param login the first admin user login
-	 * @param password this first admin user password
 	 * @throws ApplicationException thrown if any problem occurs.
-	 * @return the newly created staff entry
+	 * @return an object containing the OpenId and the created staff member.
 	 */
 	@ResponseBody
 	@ApiOperation(
 		value="Create the FIRST admin user for Fitzhi based on either an OpenId JWT, or a OAuth token. This creation is executed during the installation."
 	)
 	@PostMapping("/openId/primeRegister")
-	public Staff openidPrimeRegister(@RequestBody OpenIdCredentials credentials) throws ApplicationException {
+	public OpenIdTokenStaff openidPrimeRegister(@RequestBody OpenIdCredentials credentials) throws ApplicationException {
 
 		if (GOOGLE_OPENID_SERVER.equals(credentials.getOpenIdServer())) {
 			OpenIdToken oit = googleTokenHandler.takeInAccountToken(credentials.getIdToken());
 			Staff staff = staffHandler.createStaffMember(oit);
 			googleTokenHandler.storeStaffToken(staff, oit);
-			return staff;
+			return OpenIdTokenStaff.of(oit, staff);
 		}
 
 		if (GITHUB_OPENID_SERVER.equals(credentials.getOpenIdServer())) {
 			OpenIdToken oit = githubTokenHandler.takeInAccountToken(credentials.getIdToken());
 			Staff staff = staffHandler.createStaffMember(oit);
 			githubTokenHandler.storeStaffToken(staff, oit);
-			return staff;
+			return OpenIdTokenStaff.of(oit, staff);
 		}
 
 		throw new ApplicationException(CODE_INVALID_OPENID_SERVER, MessageFormat.format(MESSAGE_INVALID_OPENID_SERVER, credentials.getOpenIdServer()));
