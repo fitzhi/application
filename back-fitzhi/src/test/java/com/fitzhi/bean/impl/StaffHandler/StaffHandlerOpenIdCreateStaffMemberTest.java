@@ -50,6 +50,7 @@ public class StaffHandlerOpenIdCreateStaffMemberTest {
 		oit.setGivenName("Frederic");
 		oit.setName("Frédéric VIDAL");
 		oit.setEmail("frederic.vidal@nope.com");
+		oit.setLogin("myLogin");
 
 		Staff st = staffHandler.createStaffMember(oit);
 		
@@ -57,7 +58,7 @@ public class StaffHandlerOpenIdCreateStaffMemberTest {
 		Assert.assertEquals("VIDAL", st.getLastName());
 		Assert.assertEquals("Frederic", st.getFirstName());
 		Assert.assertNull(st.getNickName());
-		Assert.assertNull(st.getLogin());
+		Assert.assertEquals("myLogin", st.getLogin());
 		Assert.assertEquals("frederic.vidal@nope.com", st.getEmail());
 
 		Assert.assertEquals(1, st.getOpenIds().size());

@@ -126,6 +126,7 @@ public class GithubTokenHandlerImpl implements TokenHandler {
 		openIdToken.setGivenName("");
 		openIdToken.setName(identity.getName());
 		openIdToken.setFamilyName(identity.getName());
+		openIdToken.setLogin(identity.getLogin());
 
 		openIdToken.setOrigin(token);
 

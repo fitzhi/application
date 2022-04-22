@@ -27,6 +27,8 @@ public @Data class OpenIdToken {
     private String familyName;
     private String name;
 
+    private String login;
+
     private String locale;
 
     private Date expirationDate;

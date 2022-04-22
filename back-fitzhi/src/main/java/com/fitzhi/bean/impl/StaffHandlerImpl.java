@@ -643,7 +643,7 @@ public class StaffHandlerImpl extends AbstractDataSaverLifeCycleImpl implements 
 		staff.setFirstName(openIdToken.getGivenName());
 		staff.setLastName(openIdToken.getFamilyName());
 		staff.setEmail(openIdToken.getEmail());
-
+		staff.setLogin(openIdToken.getLogin());
 		List<OpenId> list = new ArrayList<>();
 		list.add(OpenId.of(openIdToken.getServerId(), openIdToken.getUserId()));
 		staff.setOpenIds(list);

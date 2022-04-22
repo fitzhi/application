@@ -121,6 +121,7 @@ public class GoogleTokenHandlerImpl implements TokenHandler {
 				oit.setEmail(payload.getEmail());
 				oit.setEmailVerified(Boolean.valueOf(payload.getEmailVerified()));
 				oit.setName((String) payload.get("name"));
+				oit.setLogin("");
 				oit.setLocale((String) payload.get("locale"));
 				oit.setFamilyName((String) payload.get("family_name"));
 				oit.setGivenName((String) payload.get("given_name"));
