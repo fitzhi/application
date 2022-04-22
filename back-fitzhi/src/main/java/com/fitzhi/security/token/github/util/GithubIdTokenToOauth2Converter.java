@@ -18,8 +18,6 @@ public class GithubIdTokenToOauth2Converter implements OAuth2AccessToken {
 
 	final GithubToken githubToken;
 
-	final String userId;
-
 	/**
 	 * The GITHUB token is supposed to have an 8 hours lifetime.
 	 */
@@ -29,9 +27,8 @@ public class GithubIdTokenToOauth2Converter implements OAuth2AccessToken {
 	 * Creation of an instance of {@link OAuth2AccessToken} based on a Github token.
 	 * @param githubIdToken the Github  token
 	 */
-	public GithubIdTokenToOauth2Converter(GithubToken githubToken, String userId) {
+	public GithubIdTokenToOauth2Converter(GithubToken githubToken) {
 		this.githubToken = githubToken;
-		this.userId = userId;
 		expiration = Calendar.getInstance();
 		expiration.add(Calendar.HOUR_OF_DAY, 8);
 	}
@@ -75,7 +72,7 @@ public class GithubIdTokenToOauth2Converter implements OAuth2AccessToken {
 
 	@Override
 	public String getValue() {
-		return userId;
+		return githubToken.getAccess_token();
 	}
  
 }

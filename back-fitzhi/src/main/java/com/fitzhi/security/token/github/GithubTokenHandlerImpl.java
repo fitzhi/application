@@ -150,9 +150,9 @@ public class GithubTokenHandlerImpl implements TokenHandler {
 		OpenId openId = oOpenId.get();
 
 		if (openIdToken.getOrigin() instanceof GithubToken) {
-			GithubToken googleIdToken = (GithubToken) openIdToken.getOrigin();
+			GithubToken githubIdToken = (GithubToken) openIdToken.getOrigin();
 			tokenStore.storeAccessToken(
-				new GithubIdTokenToOauth2Converter(googleIdToken, openId.getUserId()), 
+				new GithubIdTokenToOauth2Converter(githubIdToken), 
 				OAuth2AuthenticationBuilder.getInstance(
 					OAuth2RequestBuilder.getInstance(openId.getUserId(), Set.of("read", "write", "trust")), 
 					new StaffAuthentication(staff)));
