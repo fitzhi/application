@@ -49,10 +49,6 @@ describe('CallbackGithubComponent', () => {
 		fixture.detectChanges();
 	});
 
-	it('should be successfully created.', () => {
-		expect(component).toBeTruthy();
-	});
-
 	it('should NOT register the curent user, if installation on the desktop is complete.', () => {
 		const spy = spyOn(component, 'register').and.returnValue(null);
 		expect(spy).not.toHaveBeenCalled();

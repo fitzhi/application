@@ -63,9 +63,13 @@ export class SkillService extends InternalService {
 		if (traceOn() && !this.backendSetupService.hasSavedAnUrl()) {
 			console.log('Skills loading is postponed due to the lack of backend URL.');
 		}
+
+		
 		if (this.backendSetupService.hasSavedAnUrl()) {
+			console.log ('nooooope');
 			this.loadSkills();
 		}
+		
 	}
 
 	/**

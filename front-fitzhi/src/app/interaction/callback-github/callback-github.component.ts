@@ -61,15 +61,19 @@ export class CallbackGithubComponent implements OnInit, AfterViewInit {
 	 */
 	register(code: string) {
 
+		console.log ('nope');
+
 		const body = { 'openIdServer': this.githubService.GITHUB_SERVER_ID, 'idToken': code };
 
+		console.log ('noope', this.installService.isVeryFirstInstall());
+
 		const url = this.backendSetupService.url() + '/admin/openId/' +
-			(this.installService.isVeryFirstInstall())  ? 'primeRegister' : 'register';
+			((this.installService.isVeryFirstInstall())  ? 'primeRegister' : 'register');
 		if (traceOn()) {
 			console.log ('Accessing %s to register this user', url);
 		}
 
-		this.httpClient.post<OpenIdTokenStaff>(this.backendSetupService.url() + '/admin/openId/primeRegister', body)
+		this.httpClient.post<OpenIdTokenStaff>(url, body)
 			.subscribe({
 				next: oits => {
 					const staff = oits.staff;
@@ -77,6 +81,8 @@ export class CallbackGithubComponent implements OnInit, AfterViewInit {
 						console.log (`${staff.idStaff} ${staff.firstName} ${staff.lastName} has been created in Fitzi from its Github token`);
 					}
 					this.staffService.changeCollaborator(staff);
+
+					
 					const token = new Token();
 					// We use the GITHUB token as access token for this authenticated user.
 					token.access_token = oits.openIdToken.origin.access_token;
@@ -96,18 +102,23 @@ export class CallbackGithubComponent implements OnInit, AfterViewInit {
 					this.messageService.success(`${staff.firstName} ${staff.lastName} is successfully created.`);
 
 					this.installService.installComplete();
-
 					if (this.installService.isVeryFirstInstall()) {
+						console.log ('nipe');
 						this.backendSetupService.saveVeryFirstConnection$().subscribe({
 							next: doneAndOk => {
 								if (doneAndOk) {
 									console.log ('Registration done');
 								}
-							}
+								console.log ('nupe');
+								this.router.navigateByUrl(`/user/${staff.idStaff}`);
+							},
+							error: error => console.log (error)
 						});
+					} else {
+						this.router.navigateByUrl(`/user/${staff.idStaff}`);
 					}
-					this.router.navigateByUrl(`/user/${staff.idStaff}`);
-				}
+				},
+				error: error => console.log (error)
 		});
 	}
 

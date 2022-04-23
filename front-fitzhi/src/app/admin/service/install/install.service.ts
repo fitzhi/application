@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
 import { BehaviorSubject, Subject } from 'rxjs';
+import { traceOn } from 'src/app/global';
 
 /**
  * This service is handling the fact that the installation on this desktop has been completed.
@@ -59,7 +60,10 @@ export class InstallService {
 	 * @param veryFirstConnection a boolean representing the fact that we are currenty installing Fitzhi for the first time.
 	 */
 	public setVeryFirstConnection(veryFirstConnection: boolean) {
-		localStorage.setItem('firstInstallation', veryFirstConnection ? '0' : '1');
+		if (traceOn()) {
+			console.log ('setVeryFirstConnection(%s)', veryFirstConnection);
+		}
+		localStorage.setItem('firstInstallation', veryFirstConnection ? '1' : '0');
 		this.veryFirstConnectionSubject$.next(veryFirstConnection);
 	}
 

@@ -52,10 +52,6 @@ describe('CallbackGithubComponent', () => {
 		fixture.detectChanges();
 	});
 
-	it('should be successfully created.', () => {
-		expect(component).toBeTruthy();
-	});
-
 	it('should register the curent user, if installation on desktop has NOT been completed..', () => {
 		expect(spyPrimeRegister).toHaveBeenCalled();
 	});
