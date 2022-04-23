@@ -47,7 +47,6 @@ const context = require.context('./', true, /\.spec\.ts$/);
 // const context = require.context('./', true,  /fitzhi-dashboard-help-popper-treemap-skills\.component\.spec\.ts$/);
 // const context = require.context('./', true,  /project-sunburst-reload-button\.component\.spec\.ts$/);
 
-
 // const context = require.context('./', true,  /dashboard\.service\.globalScoreSkillDistribution\.spec\.ts$/);
 // And load the modules.
 context.keys().map(context);

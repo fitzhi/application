@@ -50,12 +50,11 @@ export class StartingSetupComponent extends BaseDirective implements OnDestroy {
 	 */
 	labelUser = 'User';
 
-
 	constructor(
 		private backendSetupService: BackendSetupService,
 		private referentialService: ReferentialService,
 		private skillService: SkillService,
-		private installService: InstallService,
+		public installService: InstallService,
 		private router: Router,
 		private httpClient: HttpClient,
 		private ngZone: NgZone) { super(); }
