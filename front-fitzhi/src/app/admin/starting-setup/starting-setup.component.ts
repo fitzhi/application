@@ -154,18 +154,9 @@ export class StartingSetupComponent extends BaseDirective implements OnDestroy {
 			}
 			this.nextStepAfterStaffUpdate($event);
 		} else {
-			this.subscriptions.add(
-				this.httpClient.post<Boolean>(this.backendSetupService.url() + '/admin/saveVeryFirstConnection', '')
-					.subscribe({
-						next:  veryFirstConnectionIsRegistered => {
-							if (traceOn() && veryFirstConnectionIsRegistered) {
-								console.log('The very first connection is registered into Fitzhi.');
-							}
-							this.nextStepAfterStaffUpdate($event);
-						}
-					}
-				)
-			);
+			this.backendSetupService.saveVeryFirstConnection$().subscribe({
+				next: state => this.nextStepAfterStaffUpdate($event)
+			})
 		}
 	}
 

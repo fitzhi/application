@@ -26,7 +26,7 @@ describe('BackendSetupService', () => {
 
 		service.isVeryFirstConnection$('URL_OF_SERVER').subscribe(firstConnection => {
 			expect(firstConnection.connected).toBeTruthy();
-			expect(firstConnection.validUrl).toBeNull();
+			expect(firstConnection.validUrl).toBeUndefined();
 		});
 
 		const req = httpMock.expectOne('URL_OF_SERVER/api/admin/isVeryFirstConnection');
@@ -38,7 +38,7 @@ describe('BackendSetupService', () => {
 
 		service.isVeryFirstConnection$('URL_OF_SERVER').subscribe(firstConnection => {
 			expect(firstConnection.connected).toBeFalsy();
-			expect(firstConnection.validUrl).toBe(null);
+			expect(firstConnection.validUrl).toBeUndefined();
 		});
 
 		const response = httpMock.expectOne('URL_OF_SERVER/api/admin/isVeryFirstConnection');

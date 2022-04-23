@@ -17,7 +17,6 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { RouterTestingModule } from '@angular/router/testing';
 import { of } from 'rxjs';
 import { FirstConnection } from 'src/app/data/first-connection';
-import { Skill } from 'src/app/data/skill';
 import { BackendSetupService } from 'src/app/service/backend-setup/backend-setup.service';
 import { CinematicService } from 'src/app/service/cinematic.service';
 import { ReferentialService } from 'src/app/service/referential/referential.service';
@@ -73,7 +72,7 @@ describe('StartingSetupComponent', () => {
 
 	it('should jump to the register form if the given backend URL is valid.', () => {
 
-		const spy = spyOn(backendSetupService, 'isVeryFirstConnection$').and.returnValue(of(new FirstConnection(true, 'URL')));
+		const spy = spyOn(backendSetupService, 'isVeryFirstConnection$').and.returnValue(of(new FirstConnection(true, true, 'URL')));
 
 		const spyLoadReferentials = spyOn(referentialService, 'loadAllReferentials').and.returnValue();
 		const spySkillService = spyOn(skillService, 'loadSkills').and.returnValue();

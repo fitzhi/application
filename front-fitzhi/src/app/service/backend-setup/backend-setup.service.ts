@@ -1,8 +1,9 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable, of } from 'rxjs';
-import { catchError, switchMap } from 'rxjs/operators';
+import { catchError, switchMap, take, tap } from 'rxjs/operators';
 import { FirstConnection } from 'src/app/data/first-connection';
+import { traceOn } from 'src/app/global';
 import { environment } from '../../../environments/environment';
 
 @Injectable({
@@ -53,19 +54,38 @@ export class BackendSetupService {
 	 * Test the passed URL and check if it is the very first connection.
 	 *
 	 * @param urlCandidate the url candidate for hosting the backend.
-	 * @return an "boolean" observable which returns TRUE if this first connection, FALSE otherwise
+	 * @return an observable emitting a `FistConnection` object.
 	 */
 	public isVeryFirstConnection$(urlCandidate: string): Observable<FirstConnection> {
 		return this.httpClient.get<string>(
 			`${urlCandidate}/api/admin/isVeryFirstConnection`, { responseType: 'text' as 'json' }).
 			pipe(
 				switchMap(result => {
-					return of(new FirstConnection(((result === 'true') ? true : false), null));
+					return of(new FirstConnection(true, ((result === 'true') ? true : false)));
 				}),
 				catchError(error => {
 					// Either the Server is offline, or the given URL is wrong. No response
-					return of(new FirstConnection(false, null));
+					return of(new FirstConnection(false));
 				})
 			);
 	}
+
+	/**
+	 * Inform the backend server that the very first installation has been successfully completed.
+	 * The first user in Fitzhi has been registered.
+	 * @returns an **observable** emitting a **TRUE** if the Rest CALL is OK.
+	 */
+	public saveVeryFirstConnection$(): Observable<Boolean> {
+
+		return this.httpClient.post<Boolean>(`${this.url()}/admin/saveVeryFirstConnection`, '')
+				.pipe(
+					take(1),
+					tap(veryFirstConnectionIsRegistered => {
+						if (traceOn() && veryFirstConnectionIsRegistered) {
+							console.log('The very first connection is registered into Fitzhi.');
+						}
+					})
+				);
+	}
+
 }
