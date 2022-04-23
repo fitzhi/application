@@ -24,6 +24,15 @@ describe('CallbackGithubComponent', () => {
 	let fixture: ComponentFixture<CallbackGithubComponent>;
 	let httpTestingController: HttpTestingController;
 	let installService: InstallService;
+	let skillService: SkillService;
+	let staffService: StaffService;
+	let tokenService: TokenService;
+	let authService: AuthService;
+	let projectService: ProjectService;
+	let staffListService: StaffListService;
+	let messageService: MessageService;
+	let router: Router;
+	let backendSetupService: BackendSetupService;
 
 	beforeEach(async () => {
 		await TestBed.configureTestingModule({
@@ -50,46 +59,26 @@ describe('CallbackGithubComponent', () => {
 		component = fixture.componentInstance;
 		httpTestingController = TestBed.inject(HttpTestingController);
 
-		const backendSetupService = TestBed.inject(BackendSetupService);
+		backendSetupService = TestBed.inject(BackendSetupService);
 		backendSetupService.saveUrl('URL_OF_SERVER');
 
 		installService = TestBed.inject(InstallService);
 		spyOn(installService, 'isComplete').and.returnValue(false);
 
+		skillService = TestBed.inject(SkillService);
+		staffService = TestBed.inject(StaffService);
+		tokenService = TestBed.inject(TokenService);
+		authService = TestBed.inject(AuthService);
+		projectService = TestBed.inject(ProjectService);
+		staffListService = TestBed.inject(StaffListService);
+		messageService = TestBed.inject(MessageService);
+		router = TestBed.inject(Router);
+
+
 		fixture.detectChanges();
 	});
 
-	it('should be successfully created.', () => {
-		expect(component).toBeTruthy();
-	});
-
-	it('should call the Fitzhi backend server with the code sent by Github.', () => {
-
-		// We do not need to load the skills.
-		const skillService = TestBed.inject(SkillService);
-		spyOn(skillService, 'loadSkills').and.returnValue(null);
-
-		const staffService = TestBed.inject(StaffService);
-		const spyOnStaffService = spyOn(staffService, 'changeCollaborator').and.returnValue(null);
-
-		const tokenService = TestBed.inject(TokenService);
-		const spyOnTokenService = spyOn(tokenService, 'saveToken').and.returnValue(null);
-
-		const authService = TestBed.inject(AuthService);
-		const spyOnAuthService = spyOn(authService, 'setConnect').and.returnValue(null);
-
-		const projectService = TestBed.inject(ProjectService);
-		const spyOnProjectService = spyOn(projectService, 'startLoadingProjects').and.returnValue(null);
-
-		const staffListService = TestBed.inject(StaffListService);
-		const spyOnStaffListService = spyOn(staffListService, 'startLoadingStaff').and.returnValue(null);
-
-		const messageService = TestBed.inject(MessageService);
-		const spyOnMessageService = spyOn(messageService, 'success').and.returnValue(null);
-
-		const router = TestBed.inject(Router);
-		const navigateSpy = spyOn(router, 'navigateByUrl');
-
+	function mockRestCall() {
 		const req = httpTestingController.expectOne('URL_OF_SERVER/api/admin/openId/primeRegister');
 		expect(req.request.method).toBe('POST');
 
@@ -101,6 +90,27 @@ describe('CallbackGithubComponent', () => {
 		const staff = new Collaborator();
 		staff.idStaff = 1789;
 		req.flush(new OpenIdTokenStaff(token, staff));
+	}
+
+	it('should be successfully created.', () => {
+		expect(component).toBeTruthy();
+	});
+
+	it('should call the Fitzhi backend server with the code sent by Github.', () => {
+
+		// We do not need to load the skills.
+		spyOn(skillService, 'loadSkills').and.returnValue(null);
+		spyOn(installService, 'isVeryFirstInstall').and.returnValue(false);
+
+		const spyOnStaffService = spyOn(staffService, 'changeCollaborator').and.returnValue(null);
+		const spyOnTokenService = spyOn(tokenService, 'saveToken').and.returnValue(null);
+		const spyOnAuthService = spyOn(authService, 'setConnect').and.returnValue(null);
+		const spyOnProjectService = spyOn(projectService, 'startLoadingProjects').and.returnValue(null);
+		const spyOnStaffListService = spyOn(staffListService, 'startLoadingStaff').and.returnValue(null);
+		const spyOnMessageService = spyOn(messageService, 'success').and.returnValue(null);
+		const navigateSpy = spyOn(router, 'navigateByUrl');
+
+		mockRestCall();
 
 		expect(spyOnStaffService).toHaveBeenCalled();
 		expect(spyOnTokenService).toHaveBeenCalled();
@@ -110,6 +120,54 @@ describe('CallbackGithubComponent', () => {
 		expect(spyOnMessageService).toHaveBeenCalled();
 		expect(navigateSpy).toHaveBeenCalledWith('/user/1789');
 
+	});
+
+	it('should NOT have to save the "installation done" status, when this installation has already be executed.', () => {
+
+		// We do not need to load the skills.
+		spyOn(skillService, 'loadSkills').and.returnValue(null);
+
+		// This installation has already be executed.
+		// This is not the first installation.
+		spyOn(installService, 'isVeryFirstInstall').and.returnValue(false);
+
+		const spy = spyOn(backendSetupService, 'saveVeryFirstConnection$').and.returnValue(null);
+
+		spyOn(staffService, 'changeCollaborator').and.returnValue(null);
+		spyOn(tokenService, 'saveToken').and.returnValue(null);
+		spyOn(authService, 'setConnect').and.returnValue(null);
+		spyOn(projectService, 'startLoadingProjects').and.returnValue(null);
+		spyOn(staffListService, 'startLoadingStaff').and.returnValue(null);
+		spyOn(messageService, 'success').and.returnValue(null);
+		spyOn(router, 'navigateByUrl');
+
+		mockRestCall();
+
+		expect(spy).not.toHaveBeenCalled();
+
+	});
+
+	it('should save the "installation done" status, when the very first installation is executed.', () => {
+
+		// We do not need to load the skills.
+		spyOn(skillService, 'loadSkills').and.returnValue(null);
+
+		// This is the "use case" of the first install.
+		spyOn(installService, 'isVeryFirstInstall').and.returnValue(true);
+
+		const spy = spyOn(backendSetupService, 'saveVeryFirstConnection$').and.returnValue(null);
+
+		spyOn(staffService, 'changeCollaborator').and.returnValue(null);
+		spyOn(tokenService, 'saveToken').and.returnValue(null);
+		spyOn(authService, 'setConnect').and.returnValue(null);
+		spyOn(projectService, 'startLoadingProjects').and.returnValue(null);
+		spyOn(staffListService, 'startLoadingStaff').and.returnValue(null);
+		spyOn(messageService, 'success').and.returnValue(null);
+		spyOn(router, 'navigateByUrl');
+
+		mockRestCall();
+
+		expect(spy).toHaveBeenCalled();
 	});
 
 });

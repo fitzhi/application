@@ -97,6 +97,15 @@ export class CallbackGithubComponent implements OnInit, AfterViewInit {
 
 					this.installService.installComplete();
 
+					if (this.installService.isVeryFirstInstall()) {
+						this.backendSetupService.saveVeryFirstConnection$().subscribe({
+							next: doneAndOk => {
+								if (doneAndOk) {
+									console.log ('Registration done');
+								}
+							}
+						});
+					}
 					this.router.navigateByUrl(`/user/${staff.idStaff}`);
 				}
 		});
