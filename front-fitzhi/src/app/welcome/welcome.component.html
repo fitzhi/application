@@ -1,6 +1,7 @@
 <div id="setup" *ngIf="firstLaunch; else normalLaunch">
 	<app-starting-setup></app-starting-setup>
 </div>
+
 <ng-template #normalLaunch>
 	<div id="setup" *ngIf="connectionIsNeeded()">
 		<app-connect-user></app-connect-user>

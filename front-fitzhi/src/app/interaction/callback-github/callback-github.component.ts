@@ -2,6 +2,7 @@ import { HttpClient } from '@angular/common/http';
 import { AfterViewInit, Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { AuthService } from 'src/app/admin/service/auth/auth.service';
+import { InstallService } from 'src/app/admin/service/install/install.service';
 import { Token } from 'src/app/admin/service/token/token';
 import { TokenService } from 'src/app/admin/service/token/token.service';
 import { OpenIdTokenStaff } from 'src/app/data/openidtoken-staff';
@@ -23,6 +24,7 @@ export class CallbackGithubComponent implements OnInit, AfterViewInit {
 	private code: string;
 
 	constructor(
+		private installService: InstallService,
 		private githubService: GithubService,
 		private projectService: ProjectService,
 		private httpClient: HttpClient,
@@ -45,7 +47,10 @@ export class CallbackGithubComponent implements OnInit, AfterViewInit {
 	}
 	
 	ngAfterViewInit(): void {
-		this.primeRegister(this.code);
+		// This connection is either the first connection, or the VERY first connection.
+		if (this.installService.isComplete()) {
+			this.primeRegister(this.code);
+		}
 	}
 
 	/**
@@ -81,6 +86,8 @@ export class CallbackGithubComponent implements OnInit, AfterViewInit {
 					this.staffListService.startLoadingStaff();
 
 					this.messageService.success(`${staff.firstName} ${staff.lastName} is successfully created.`);
+
+					this.installService.installComplete();
 
 					this.router.navigateByUrl(`/user/${staff.idStaff}`);
 				}

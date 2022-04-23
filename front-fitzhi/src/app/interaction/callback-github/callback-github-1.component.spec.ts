@@ -4,6 +4,7 @@ import { MatDialogModule } from '@angular/material/dialog';
 import { ActivatedRoute, Router } from '@angular/router';
 import { RouterTestingModule } from '@angular/router/testing';
 import { AuthService } from 'src/app/admin/service/auth/auth.service';
+import { InstallService } from 'src/app/admin/service/install/install.service';
 import { TokenService } from 'src/app/admin/service/token/token.service';
 import { Collaborator } from 'src/app/data/collaborator';
 import { OpenIdToken, Origin } from 'src/app/data/OpenIdToken';
@@ -22,6 +23,7 @@ describe('CallbackGithubComponent', () => {
 	let component: CallbackGithubComponent;
 	let fixture: ComponentFixture<CallbackGithubComponent>;
 	let httpTestingController: HttpTestingController;
+	let installService: InstallService;
 
 	beforeEach(async () => {
 		await TestBed.configureTestingModule({
@@ -50,6 +52,9 @@ describe('CallbackGithubComponent', () => {
 
 		const backendSetupService = TestBed.inject(BackendSetupService);
 		backendSetupService.saveUrl('URL_OF_SERVER');
+
+		installService = TestBed.inject(InstallService);
+		spyOn(installService, 'isComplete').and.returnValue(true);
 
 		fixture.detectChanges();
 	});

@@ -1,8 +1,7 @@
 import { HttpClient } from '@angular/common/http';
-import { Component, ElementRef, NgZone, OnDestroy, ViewChild } from '@angular/core';
+import { Component, NgZone, OnDestroy, ViewChild } from '@angular/core';
 import { MatStepper } from '@angular/material/stepper';
 import { Router } from '@angular/router';
-import { Subject } from 'rxjs';
 import { BaseDirective } from 'src/app/base/base-directive.directive';
 import { Collaborator } from 'src/app/data/collaborator';
 import { LoginEvent } from 'src/app/data/login-event';
@@ -26,22 +25,10 @@ export class StartingSetupComponent extends BaseDirective implements OnDestroy {
 	 */
 	@ViewChild('stepper', { static: true }) stepper: MatStepper;
 
+	/**
+	 * The register form.
+	 */
 	@ViewChild(RegisterUserComponent) register;
-
-	/**
-	 * This status will be setup to TRUE, FALSE otherwise.
-	 */
-	public veryFirstConnection = true;
-
-	/**
-	 * Are we in the very first connection ?
-	 */
-	private _veryFirstConnection$ = new Subject<boolean>();
-
-	/**
-	 * Are we in the very first connection ?
-	 */
-	public veryFirstConnection$ = this._veryFirstConnection$.asObservable();
 
 	/**
 	 * Array representing the fact that each step has been completed.
@@ -82,8 +69,7 @@ export class StartingSetupComponent extends BaseDirective implements OnDestroy {
 			console.log('veryFirstConnection :', $event);
 		}
 
-		this.veryFirstConnection = $event;
-		this._veryFirstConnection$.next(this.veryFirstConnection);
+		this.installService.setVeryFirstConnection($event);
 
 		this.labelUser = ($event) ? 'First admin user' : 'First registration';
 
@@ -163,9 +149,9 @@ export class StartingSetupComponent extends BaseDirective implements OnDestroy {
 			console.log('staff updated for :', $event.lastName);
 		}
 
-		if (!this.veryFirstConnection) {
+		if (!this.installService.isComplete()) {
 			if (traceOn()) {
-				console.log('We are not in mode "very first connection".');
+				console.log('We have already installed Fitzhi. This is not the mode "very first connection".');
 			}
 			this.nextStepAfterStaffUpdate($event);
 		} else {

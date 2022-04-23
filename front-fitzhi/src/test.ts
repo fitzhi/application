@@ -16,6 +16,7 @@ getTestBed().initTestEnvironment(
 // Then we find all the tests
 
 const context = require.context('./', true, /\.spec\.ts$/);
+// const context = require.context('./', true,  /callback-github-3\.component\.spec\.ts$/);
 
 // const context = require.context('./', true,  /auth\.service\.spec\.ts$/);
 // const context = require.context('./', true,  /register-user\.component\.spec\.ts$/);
@@ -28,7 +29,6 @@ const context = require.context('./', true, /\.spec\.ts$/);
 // const context = require.context('./', true,  /github\.service\.spec\.ts$/);
 // const context = require.context('./', true,  /auth\.service\.spec\.ts$/);
 // const context = require.context('./', true,  /register-user-multi-oauth\.component\.spec\.ts$/)
-// const context = require.context('./', true,  /callback-github\.component\.spec\.ts$/);
 // const context = require.context('./', true,  /app\.component\.spec\.ts$/);
 // const context = require.context('./', true,  /http-refresh-token-error-interceptor\.component\.spec\.ts$/);
 // const context = require.context('./', true,  /project-inactivate\.component\.spec\.ts$/);
