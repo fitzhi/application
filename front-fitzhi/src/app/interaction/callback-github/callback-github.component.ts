@@ -47,19 +47,27 @@ export class CallbackGithubComponent implements OnInit, AfterViewInit {
 	}
 	
 	ngAfterViewInit(): void {
-		// This connection is either the first connection, or the VERY first connection.
-		if (this.installService.isComplete()) {
-			this.primeRegister(this.code);
+		// The use case is
+		// either the registration of a new user in the application.
+		if (!this.installService.isComplete()) {
+			this.register(this.code);
 		}
+		// or the connection of a registered user.
 	}
 
 	/**
 	 * Register the Github user associated with the given code
 	 * @param code the returned code
 	 */
-	 primeRegister(code: string) {
+	 register(code: string) {
 
 		const body = { "openIdServer": this.githubService.GITHUB_SERVER_ID, "idToken": code };
+
+		const url = this.backendSetupService.url() + '/admin/openId/' +
+			(this.installService.veryFirstConnection)  ? 'primeRegister' : 'register';
+		if (traceOn()) {
+			console.log ('Accessing %s to register this user', url);
+		}
 
 		this.httpClient.post<OpenIdTokenStaff>(this.backendSetupService.url() + '/admin/openId/primeRegister', body)
 			.subscribe({

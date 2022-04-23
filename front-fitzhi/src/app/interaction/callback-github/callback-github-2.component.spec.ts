@@ -44,7 +44,7 @@ describe('CallbackGithubComponent', () => {
 		backendSetupService.saveUrl('URL_OF_SERVER');
 
 		installService = TestBed.inject(InstallService);
-		spyOn(installService, 'isComplete').and.returnValue(false);
+		spyOn(installService, 'isComplete').and.returnValue(true);
 
 		fixture.detectChanges();
 	});
@@ -53,8 +53,8 @@ describe('CallbackGithubComponent', () => {
 		expect(component).toBeTruthy();
 	});
 
-	it('should NOT register the curent user if installation on the desktop is not complete.', () => {
-		const spy = spyOn(component,'primeRegister').and.returnValue(null);
+	it('should NOT register the curent user, if installation on the desktop is complete.', () => {
+		const spy = spyOn(component,'register').and.returnValue(null);
 		expect(spy).not.toHaveBeenCalled();
 	});
 

@@ -54,7 +54,7 @@ describe('CallbackGithubComponent', () => {
 		backendSetupService.saveUrl('URL_OF_SERVER');
 
 		installService = TestBed.inject(InstallService);
-		spyOn(installService, 'isComplete').and.returnValue(true);
+		spyOn(installService, 'isComplete').and.returnValue(false);
 
 		fixture.detectChanges();
 	});

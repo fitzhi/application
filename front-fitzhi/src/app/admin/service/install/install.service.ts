@@ -17,7 +17,9 @@ export class InstallService {
 	public installComplete$ = this.installCompleteSubject$.asObservable();
 
 	/**
-	 * This status will be setup to TRUE, FALSE otherwise.
+	 * This status can be **TRUE** or **FALSE**.
+	 * - If **TRUE**, this is the very first user connecting with Fitzhi.
+	 * - If **FALSE**, Fitzhi is already installed. This is just a new user.
 	 */
 	public veryFirstConnection = true;
 
