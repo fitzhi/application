@@ -10,7 +10,7 @@ import { BehaviorSubject, Subject } from 'rxjs';
 export class InstallService {
 
 	private installCompleteSubject$ = new BehaviorSubject<boolean>(false);
-	
+
 	/**
 	 * This `observable` will emit a **true** if the installation has been completed.
 	 */
@@ -20,12 +20,11 @@ export class InstallService {
 	 * Are we in the very first connection ?
 	 */
 	private veryFirstConnectionSubject$ = new Subject<boolean>();
- 
+
 	/**
 	 * Are we in the very first connection ?
 	 */
 	public veryFirstConnection$ = this.veryFirstConnectionSubject$.asObservable();
- 
 
 	constructor() {
 		this.installCompleteSubject$.next(('1' === localStorage.getItem('installation')));
@@ -50,23 +49,23 @@ export class InstallService {
 	}
 
 	/**
-	 * @returns **TRUE** is the installation is complete, **FALSE** otherwise. 
+	 * @returns **TRUE** is the installation is complete, **FALSE** otherwise.
 	 */
-	 public isComplete() {
+	public isComplete() {
 		return (localStorage.getItem('installation') === '1');
 	}
 
 	/**
 	 * @param veryFirstConnection a boolean representing the fact that we are currenty installing Fitzhi for the first time.
 	 */
-	 public setVeryFirstConnection(veryFirstConnection: boolean) {
+	public setVeryFirstConnection(veryFirstConnection: boolean) {
 		localStorage.setItem('firstInstallation', veryFirstConnection ? '0' : '1');
 		this.veryFirstConnectionSubject$.next(veryFirstConnection);
 	}
 
 	/**
-	 * @returns **TRUE** is this is the very first installation, _(this is the very first user connecting into Fitzhi)_, 
-	 * **FALSE** otherwise _(Fitzhi is already installed. This is just a new user.)_. 
+	 * @returns **TRUE** is this is the very first installation, _(this is the very first user connecting into Fitzhi)_,
+	 * **FALSE** otherwise _(Fitzhi is already installed. This is just a new user.)_.
 	 */
 	public isVeryFirstInstall() {
 		return (localStorage.getItem('firstInstallation') === '1');

@@ -19,7 +19,7 @@ describe('GithubService', () => {
 	beforeEach(() => {
 		TestBed.configureTestingModule({
 			declarations: [],
-			providers: [ProjectService, ReferentialService, SkillService, FileService, MessageService, SunburstCinematicService, 
+			providers: [ProjectService, ReferentialService, SkillService, FileService, MessageService, SunburstCinematicService,
 				BackendSetupService, CinematicService],
 			imports: [HttpClientTestingModule, HttpClientModule, MatDialogModule]
 		});

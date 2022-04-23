@@ -36,7 +36,7 @@ export class CallbackGithubComponent implements OnInit, AfterViewInit {
 		private tokenService: TokenService,
 		private router: Router,
 		private route: ActivatedRoute) { }
-	
+
 	ngOnInit(): void {
 		if (this.route.snapshot.queryParams['code']) {
 			this.code = this.route.snapshot.queryParams['code'];
@@ -45,7 +45,7 @@ export class CallbackGithubComponent implements OnInit, AfterViewInit {
 			}
 		}
 	}
-	
+
 	ngAfterViewInit(): void {
 		// The use case is
 		// either the registration of a new user in the application.
@@ -59,9 +59,9 @@ export class CallbackGithubComponent implements OnInit, AfterViewInit {
 	 * Register the Github user associated with the given code
 	 * @param code the returned code
 	 */
-	 register(code: string) {
+	register(code: string) {
 
-		const body = { "openIdServer": this.githubService.GITHUB_SERVER_ID, "idToken": code };
+		const body = { 'openIdServer': this.githubService.GITHUB_SERVER_ID, 'idToken': code };
 
 		const url = this.backendSetupService.url() + '/admin/openId/' +
 			(this.installService.isVeryFirstInstall())  ? 'primeRegister' : 'register';

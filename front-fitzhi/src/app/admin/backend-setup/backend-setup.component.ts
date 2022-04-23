@@ -79,7 +79,7 @@ export class BackendSetupComponent extends BaseDirective implements OnInit, OnDe
 						}
 
 						this.installService.setVeryFirstConnection(data.connected);
-						
+
 						this.backendSetupService.saveUrl(urlCandidate);
 						this.currentState = this.BUTTON_VALID_URL;
 						this.messengerVeryFirstConnection.emit(this.veryFirstConnection);

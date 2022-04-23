@@ -75,7 +75,6 @@ export class HttpTokenInterceptor implements HttpInterceptor {
 			// GitHub URL
 			|| (host && (host  === 'api.github.com'))) {
 
-				
 				return next.handle(req);
 		}
 

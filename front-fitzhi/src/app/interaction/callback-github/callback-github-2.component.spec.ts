@@ -54,7 +54,7 @@ describe('CallbackGithubComponent', () => {
 	});
 
 	it('should NOT register the curent user, if installation on the desktop is complete.', () => {
-		const spy = spyOn(component,'register').and.returnValue(null);
+		const spy = spyOn(component, 'register').and.returnValue(null);
 		expect(spy).not.toHaveBeenCalled();
 	});
 

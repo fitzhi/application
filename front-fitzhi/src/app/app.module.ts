@@ -213,7 +213,7 @@ import { CallbackGithubComponent } from './interaction/callback-github/callback-
 		RegisterUserFormComponent,
 		AlternativeOpenidConnectionComponent,
 		ConnectUserFormComponent,
-  CallbackGithubComponent
+		CallbackGithubComponent
 	],
 	imports: [
 		BsDropdownModule.forRoot(),

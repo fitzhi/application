@@ -46,8 +46,8 @@ describe('CallbackGithubComponent', () => {
 
 		installService = TestBed.inject(InstallService);
 		spyOn(installService, 'isComplete').and.returnValue(false);
-		
-		spyPrimeRegister = spyOn(component,'register').and.returnValue(null);
+
+		spyPrimeRegister = spyOn(component, 'register').and.returnValue(null);
 
 		fixture.detectChanges();
 	});

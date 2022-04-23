@@ -67,22 +67,22 @@ describe('CallbackGithubComponent', () => {
 
 		// We do not need to load the skills.
 		const skillService = TestBed.inject(SkillService);
-		spyOn(skillService,'loadSkills').and.returnValue(null);
+		spyOn(skillService, 'loadSkills').and.returnValue(null);
 
 		const staffService = TestBed.inject(StaffService);
-		const spyOnStaffService = spyOn(staffService,'changeCollaborator').and.returnValue(null);
+		const spyOnStaffService = spyOn(staffService, 'changeCollaborator').and.returnValue(null);
 
 		const tokenService = TestBed.inject(TokenService);
-		const spyOnTokenService = spyOn(tokenService,'saveToken').and.returnValue(null);
+		const spyOnTokenService = spyOn(tokenService, 'saveToken').and.returnValue(null);
 
 		const authService = TestBed.inject(AuthService);
-		const spyOnAuthService = spyOn(authService,'setConnect').and.returnValue(null);
+		const spyOnAuthService = spyOn(authService, 'setConnect').and.returnValue(null);
 
 		const projectService = TestBed.inject(ProjectService);
-		const spyOnProjectService = spyOn(projectService,'startLoadingProjects').and.returnValue(null);
+		const spyOnProjectService = spyOn(projectService, 'startLoadingProjects').and.returnValue(null);
 
 		const staffListService = TestBed.inject(StaffListService);
-		const spyOnStaffListService = spyOn(staffListService,'startLoadingStaff').and.returnValue(null);
+		const spyOnStaffListService = spyOn(staffListService, 'startLoadingStaff').and.returnValue(null);
 
 		const messageService = TestBed.inject(MessageService);
 		const spyOnMessageService = spyOn(messageService, 'success').and.returnValue(null);
@@ -96,7 +96,7 @@ describe('CallbackGithubComponent', () => {
 		const token = new OpenIdToken();
 		token.origin = new Origin('token_1234');
 		token.origin.scope = 'read, write';
-		token.origin.token_type = 'token'
+		token.origin.token_type = 'token';
 
 		const staff = new Collaborator();
 		staff.idStaff = 1789;
