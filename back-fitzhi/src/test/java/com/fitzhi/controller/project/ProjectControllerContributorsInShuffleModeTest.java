@@ -78,6 +78,7 @@ public class ProjectControllerContributorsInShuffleModeTest {
 			.andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
 			.andExpect(jsonPath("$.idProject").value(666))
 			.andExpect(jsonPath("$.contributors[0].idStaff").value(ID_STAFF))
+			.andDo(print())
 			.andReturn();
 		
 		if (log.isDebugEnabled()) {
