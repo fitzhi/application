@@ -17,13 +17,6 @@ export class InstallService {
 	public installComplete$ = this.installCompleteSubject$.asObservable();
 
 	/**
-	 * This status can be **TRUE** or **FALSE**.
-	 * - If **TRUE**, this is the very first user connecting with Fitzhi.
-	 * - If **FALSE**, Fitzhi is already installed. This is just a new user.
-	 */
-	public veryFirstConnection = true;
-
-	/**
 	 * Are we in the very first connection ?
 	 */
 	private veryFirstConnectionSubject$ = new Subject<boolean>();
@@ -59,15 +52,24 @@ export class InstallService {
 	/**
 	 * @returns **TRUE** is the installation is complete, **FALSE** otherwise. 
 	 */
-	isComplete() {
+	 public isComplete() {
 		return (localStorage.getItem('installation') === '1');
 	}
 
 	/**
 	 * @param veryFirstConnection a boolean representing the fact that we are currenty installing Fitzhi for the first time.
 	 */
-	setVeryFirstConnection(veryFirstConnection: boolean) {
-		this.veryFirstConnection = veryFirstConnection;
-		this.veryFirstConnectionSubject$.next(this.veryFirstConnection);
+	 public setVeryFirstConnection(veryFirstConnection: boolean) {
+		localStorage.setItem('firstInstallation', veryFirstConnection ? '0' : '1');
+		this.veryFirstConnectionSubject$.next(veryFirstConnection);
 	}
+
+	/**
+	 * @returns **TRUE** is this is the very first installation, _(this is the very first user connecting into Fitzhi)_, 
+	 * **FALSE** otherwise _(Fitzhi is already installed. This is just a new user.)_. 
+	 */
+	public isVeryFirstInstall() {
+		return (localStorage.getItem('firstInstallation') === '1');
+	}
+
 }

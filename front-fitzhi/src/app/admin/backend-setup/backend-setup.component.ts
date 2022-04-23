@@ -6,6 +6,7 @@ import { MessageService } from 'src/app/interaction/message/message.service';
 import { environment } from '../../../environments/environment';
 import { BaseDirective } from '../../base/base-directive.directive';
 import { BackendSetupService } from '../../service/backend-setup/backend-setup.service';
+import { InstallService } from '../service/install/install.service';
 
 @Component({
 	selector: 'app-backend-setup',
@@ -46,6 +47,7 @@ export class BackendSetupComponent extends BaseDirective implements OnInit, OnDe
 
 	constructor(
 		private messageService: MessageService,
+		private installService: InstallService,
 		private backendSetupService: BackendSetupService) { super(); }
 
 	ngOnInit() {
@@ -76,7 +78,8 @@ export class BackendSetupComponent extends BaseDirective implements OnInit, OnDe
 							console.log('This is the very first connection into fitzhì');
 						}
 
-						this.veryFirstConnection = data.connected;
+						this.installService.setVeryFirstConnection(data.connected);
+						
 						this.backendSetupService.saveUrl(urlCandidate);
 						this.currentState = this.BUTTON_VALID_URL;
 						this.messengerVeryFirstConnection.emit(this.veryFirstConnection);

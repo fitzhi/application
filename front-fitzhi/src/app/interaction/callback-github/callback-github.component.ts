@@ -64,7 +64,7 @@ export class CallbackGithubComponent implements OnInit, AfterViewInit {
 		const body = { "openIdServer": this.githubService.GITHUB_SERVER_ID, "idToken": code };
 
 		const url = this.backendSetupService.url() + '/admin/openId/' +
-			(this.installService.veryFirstConnection)  ? 'primeRegister' : 'register';
+			(this.installService.isVeryFirstInstall())  ? 'primeRegister' : 'register';
 		if (traceOn()) {
 			console.log ('Accessing %s to register this user', url);
 		}
