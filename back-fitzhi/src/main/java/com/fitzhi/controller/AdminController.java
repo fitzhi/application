@@ -260,7 +260,6 @@ public class AdminController {
 
 		if (GOOGLE_OPENID_SERVER.equals(credentials.getOpenIdServer())) {
 			OpenIdToken oit = googleTokenHandler.takeInAccountToken(credentials.getIdToken());
-			
 			Staff staff = staffHandler.lookup(OpenId.of(GOOGLE_OPENID_SERVER, oit.getUserId()));
 			if (staff == null) {
 				throw new NotFoundException(CODE_OPENID_NOT_FOUND, MessageFormat.format(MESSAGE_OPENID_NOT_FOUND, oit.getEmail()));
@@ -271,7 +270,6 @@ public class AdminController {
 
 		if (GITHUB_OPENID_SERVER.equals(credentials.getOpenIdServer())) {
 			OpenIdToken oit = githubTokenHandler.takeInAccountToken(credentials.getIdToken());
-			
 			Staff staff = staffHandler.lookup(OpenId.of(GITHUB_OPENID_SERVER, oit.getUserId()));
 			if (staff == null) {
 				throw new NotFoundException(CODE_OPENID_NOT_FOUND, MessageFormat.format(MESSAGE_OPENID_NOT_FOUND, oit.getEmail()));
