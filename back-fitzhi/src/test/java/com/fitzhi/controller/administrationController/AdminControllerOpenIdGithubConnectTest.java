@@ -2,7 +2,7 @@ package com.fitzhi.controller.administrationController;
 
 import static com.fitzhi.Error.CODE_INVALID_OPENID_SERVER;
 import static com.fitzhi.Error.CODE_OPENID_NOT_FOUND;
-import static com.fitzhi.Global.GOOGLE_OPENID_SERVER;
+import static com.fitzhi.Global.GITHUB_OPENID_SERVER;
 import static org.hamcrest.Matchers.is;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
@@ -38,14 +38,14 @@ import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
 
 /**
- * Test the method {@link AdminController#connect(OpenIdCredentials)} for the Google identity server.
- *
+ * Test the method {@link AdminController#connect(OpenIdCredentials)} for the GitHub identity server.
+ * 
  * @author Fr&eacute;d&eacute;ric VIDAL
  */
 @RunWith(SpringRunner.class)
 @SpringBootTest
 @AutoConfigureMockMvc
-public class AdminControllerOpenIdGoogleConnectTest {
+public class AdminControllerOpenIdGithubConnectTest {
 	
 	@Autowired
 	private MockMvc mvc;
@@ -54,7 +54,7 @@ public class AdminControllerOpenIdGoogleConnectTest {
 	private StaffHandler staffHandler;
 
 	@MockBean
-	@Qualifier("GOOGLE")
+	@Qualifier("GITHUB")
 	private TokenHandler tokenHandler;
 
 	/**
@@ -67,14 +67,15 @@ public class AdminControllerOpenIdGoogleConnectTest {
 	public void connectSuccessful() throws Exception {
 
 		Staff staff = new Staff(1789, "Frédéric", "VIDAL", "frvidal", "frvidal", "frvidal@nope.com", "level");
+
 		when(staffHandler.lookup(any(OpenId.class))).thenReturn(staff);
 		
 		OpenIdToken oit = OpenIdToken.of();
-		oit.setServerId(GOOGLE_OPENID_SERVER);
+		oit.setServerId(GITHUB_OPENID_SERVER);
 		oit.setUserId("userId");
 		when(tokenHandler.takeInAccountToken(any(String.class))).thenReturn(oit);
 
-		OpenIdCredentials oic = OpenIdCredentials.of(GOOGLE_OPENID_SERVER, "idToken"); 
+		OpenIdCredentials oic = OpenIdCredentials.of(GITHUB_OPENID_SERVER, "idToken"); 
 
 		this.mvc.perform(post("/api/admin/openId/connect")
 				.header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON)
@@ -95,12 +96,12 @@ public class AdminControllerOpenIdGoogleConnectTest {
 		when(staffHandler.lookup(any(OpenId.class))).thenReturn(null);
 		
 		OpenIdToken oit = OpenIdToken.of();
-		oit.setServerId(GOOGLE_OPENID_SERVER);
+		oit.setServerId(GITHUB_OPENID_SERVER);
 		oit.setUserId("userId");
 		oit.setEmail("userid@nope.com");
 		when(tokenHandler.takeInAccountToken(any(String.class))).thenReturn(oit);
 
-		OpenIdCredentials oic = OpenIdCredentials.of(GOOGLE_OPENID_SERVER, "idToken"); 
+		OpenIdCredentials oic = OpenIdCredentials.of(GITHUB_OPENID_SERVER, "idToken"); 
 
 		this.mvc.perform(post("/api/admin/openId/connect")
 				.header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON)
@@ -128,7 +129,7 @@ public class AdminControllerOpenIdGoogleConnectTest {
 	@Test
 	public void invalidToken() throws Exception {
 
-		OpenIdCredentials oic = OpenIdCredentials.of(GOOGLE_OPENID_SERVER, "idToken"); 
+		OpenIdCredentials oic = OpenIdCredentials.of(GITHUB_OPENID_SERVER, "idToken"); 
 
 		when(tokenHandler.takeInAccountToken(any(String.class))).thenThrow(new ApplicationException(1789, "Error 1789"));
 
