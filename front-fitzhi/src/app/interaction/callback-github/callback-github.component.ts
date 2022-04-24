@@ -77,7 +77,6 @@ export class CallbackGithubComponent implements OnInit, AfterViewInit {
 						console.log (`${staff.idStaff} ${staff.firstName} ${staff.lastName} has been created in Fitzi from its Github token`);
 					}
 					this.staffService.changeCollaborator(staff);
-
 					
 					const token = new Token();
 					// We use the GITHUB token as access token for this authenticated user.
@@ -112,7 +111,13 @@ export class CallbackGithubComponent implements OnInit, AfterViewInit {
 						this.router.navigateByUrl(`/user/${staff.idStaff}`);
 					}
 				},
-				error: error => console.log (error)
+				error: error => {
+					if (traceOn()) {
+						console.log (error.message)
+					}
+					this.installService.uninstall();
+					this.router.navigateByUrl('/');
+				}
 		});
 	}
 

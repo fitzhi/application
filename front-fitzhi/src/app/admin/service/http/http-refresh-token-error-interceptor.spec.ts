@@ -71,7 +71,8 @@ describe(`HttpRefreshTokenErrorInterceptor`, () => {
 				headers: httpHeaders,
 				status: 401,
 				statusText: 'Unauthorized!',
-			});
+			}
+		);
 
 		expect(navigateSpy).toHaveBeenCalledWith(['/login']);
 		expect(authService.isConnected()).toBeFalse();
