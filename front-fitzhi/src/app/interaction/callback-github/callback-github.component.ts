@@ -51,9 +51,23 @@ export class CallbackGithubComponent implements OnInit, AfterViewInit {
 		// either the registration of a new user in the application.
 		if (!this.installService.isComplete()) {
 			this.register(this.code);
+		} {
+			// or the connection of a registered user.
+			this.connect(this.code)
 		}
-		// or the connection of a registered user.
 	}
+
+
+	
+	/**
+	 * Register the Github user associated with the given code
+	 * @param code the returned code
+	 */
+	 connect(code: string) {
+		 if (traceOn()) {
+			 console.log ('Connecting github user with code %s', code);
+		 }
+	 }
 
 	/**
 	 * Register the Github user associated with the given code

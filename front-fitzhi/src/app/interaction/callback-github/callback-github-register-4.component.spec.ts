@@ -3,7 +3,6 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { MatDialogModule } from '@angular/material/dialog';
 import { ActivatedRoute, Router } from '@angular/router';
 import { RouterTestingModule } from '@angular/router/testing';
-import { of } from 'rxjs';
 import { AuthService } from 'src/app/admin/service/auth/auth.service';
 import { InstallService } from 'src/app/admin/service/install/install.service';
 import { TokenService } from 'src/app/admin/service/token/token.service';
@@ -20,7 +19,7 @@ import { MessageService } from '../message/message.service';
 import { CallbackGithubComponent } from './callback-github.component';
 
 
-describe('CallbackGithubComponent (Registering a user)', () => {
+describe('CallbackGithubComponent (when registering user)', () => {
 	let component: CallbackGithubComponent;
 	let fixture: ComponentFixture<CallbackGithubComponent>;
 	let httpTestingController: HttpTestingController;
@@ -78,11 +77,12 @@ describe('CallbackGithubComponent (Registering a user)', () => {
 		messageService = TestBed.inject(MessageService);
 		router = TestBed.inject(Router);
 
+
 		fixture.detectChanges();
 	});
 
-	function mockRestCallRegister() {
-	
+	function mockRestCall() {
+		
 		const req1 = httpTestingController.expectOne('URL_OF_SERVER/api/admin/openId/register');
 		expect(req1.request.method).toBe('POST');
 
@@ -94,71 +94,12 @@ describe('CallbackGithubComponent (Registering a user)', () => {
 		const staff = new Collaborator();
 		staff.idStaff = 1789;
 		req1.flush(new OpenIdTokenStaff(token, staff));
+
 	}
 
-	function mockRestCallRegisterInError() {
-		const req1 = httpTestingController.expectOne('URL_OF_SERVER/api/admin/openId/register');
-		expect(req1.request.method).toBe('POST');
-		req1.error(new ErrorEvent('error'), { status: 500, statusText: 'Error message!' });
-	}
+	it('should NOT have to save the "installation done" status, when this installation has already been processed.', () => {
 
-	it('should call the Fitzhi backend server with the code sent by Github', () => {
-		
-		const spyOnStaffService = spyOn(staffService, 'changeCollaborator').and.returnValue(null);
-		const spyOnTokenService = spyOn(tokenService, 'saveToken').and.returnValue(null);
-		const spyOnAuthService = spyOn(authService, 'setConnect').and.returnValue(null);
-		const spyOnProjectService = spyOn(projectService, 'startLoadingProjects').and.returnValue(null);
-		const spyOnStaffListService = spyOn(staffListService, 'startLoadingStaff').and.returnValue(null);
-		const spyOnMessageService = spyOn(messageService, 'success').and.returnValue(null);
-		const navigateSpy = spyOn(router, 'navigateByUrl');
-		spyOn (backendSetupService, 'saveVeryFirstConnection$').and.returnValue(of(true));
-		// We do not need to load the skills.
-		spyOn (skillService, 'loadSkills').and.returnValue(null);
-
-		mockRestCallRegister();
-
-		expect(spyOnStaffService).toHaveBeenCalled();
-		expect(spyOnTokenService).toHaveBeenCalled();
-		expect(spyOnAuthService).toHaveBeenCalled();
-		expect(spyOnProjectService).toHaveBeenCalled();
-		expect(spyOnStaffListService).toHaveBeenCalled();
-		expect(spyOnMessageService).toHaveBeenCalled();
-		expect(navigateSpy).toHaveBeenCalledWith('/user/1789');
-
-	});
-
-	it('should redirect the application to the starting point, if the backend-server sent back with an error.', () => {
-		
-		const spyOnStaffService = spyOn(staffService, 'changeCollaborator').and.returnValue(null);
-		const spyOnTokenService = spyOn(tokenService, 'saveToken').and.returnValue(null);
-		const spyOnAuthService = spyOn(authService, 'setConnect').and.returnValue(null);
-		const spyOnProjectService = spyOn(projectService, 'startLoadingProjects').and.returnValue(null);
-		const spyOnStaffListService = spyOn(staffListService, 'startLoadingStaff').and.returnValue(null);
-		const spyOnMessageService = spyOn(messageService, 'success').and.returnValue(null);
-		const navigateSpy = spyOn(router, 'navigateByUrl');
-		spyOn (backendSetupService, 'saveVeryFirstConnection$').and.returnValue(of(true));
-		// We do not need to load the skills.
-		spyOn (skillService, 'loadSkills').and.returnValue(null);
-
-		const spyUninstall = spyOn(installService, 'uninstall').and.returnValue(null);
-
-		mockRestCallRegisterInError();
-
-		expect(spyOnStaffService).not.toHaveBeenCalled();
-		expect(spyOnTokenService).not.toHaveBeenCalled();
-		expect(spyOnAuthService).not.toHaveBeenCalled();
-		expect(spyOnProjectService).not.toHaveBeenCalled();
-		expect(spyOnStaffListService).not.toHaveBeenCalled();
-		expect(spyOnMessageService).not.toHaveBeenCalled();
-
-		expect(navigateSpy).toHaveBeenCalledWith('/');
-		expect(spyUninstall).toHaveBeenCalled();
-
-	});
-
-	it('should NOT have to save the "installation done" status if it is not the very first connection.', () => {
-
-		const spy = spyOn(backendSetupService, 'saveVeryFirstConnection$').and.returnValue(of(true));
+		const spy = spyOn(backendSetupService, 'saveVeryFirstConnection$').and.returnValue(null);
 
 		spyOn(staffService, 'changeCollaborator').and.returnValue(null);
 		spyOn(tokenService, 'saveToken').and.returnValue(null);
@@ -168,9 +109,10 @@ describe('CallbackGithubComponent (Registering a user)', () => {
 		spyOn(messageService, 'success').and.returnValue(null);
 		spyOn(router, 'navigateByUrl');
 
-		mockRestCallRegister();
+		mockRestCall();
 
 		expect(spy).not.toHaveBeenCalled();
+
 	});
 
 });

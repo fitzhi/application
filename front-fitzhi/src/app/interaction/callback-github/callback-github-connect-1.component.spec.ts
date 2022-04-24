@@ -9,12 +9,12 @@ import { CinematicService } from 'src/app/service/cinematic.service';
 import { CallbackGithubComponent } from './callback-github.component';
 
 
-describe('CallbackGithubComponent', () => {
+describe('CallbackGithubComponent (when connecting a user)', () => {
 	let component: CallbackGithubComponent;
 	let fixture: ComponentFixture<CallbackGithubComponent>;
 	let httpTestingController: HttpTestingController;
 	let installService: InstallService;
-	let spyPrimeRegister: any;
+	let spyConnect: any;
 
 	beforeEach(async () => {
 		await TestBed.configureTestingModule({
@@ -45,15 +45,15 @@ describe('CallbackGithubComponent', () => {
 		backendSetupService.saveUrl('URL_OF_SERVER');
 
 		installService = TestBed.inject(InstallService);
-		spyOn(installService, 'isComplete').and.returnValue(false);
+		spyOn(installService, 'isComplete').and.returnValue(true);
 
-		spyPrimeRegister = spyOn(component, 'register').and.returnValue(null);
+		spyConnect = spyOn(component, 'connect').and.returnValue(null);
 
 		fixture.detectChanges();
 	});
 
-	it('should register the curent user, if installation on desktop has NOT been completed..', () => {
-		expect(spyPrimeRegister).toHaveBeenCalled();
+	it('should sign into Fitzhi the selected Github user, when installation is complete.', () => {
+		expect(spyConnect).toHaveBeenCalled();
 	});
 
 });

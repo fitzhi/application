@@ -9,7 +9,7 @@ import { CinematicService } from 'src/app/service/cinematic.service';
 import { CallbackGithubComponent } from './callback-github.component';
 
 
-describe('CallbackGithubComponent', () => {
+describe('CallbackGithubComponent (when registering user)', () => {
 	let component: CallbackGithubComponent;
 	let fixture: ComponentFixture<CallbackGithubComponent>;
 	let httpTestingController: HttpTestingController;
