@@ -199,6 +199,20 @@ public class AdminController {
 			return staff;
 		}
 
+		if (GITHUB_OPENID_SERVER.equals(credentials.getOpenIdServer())) {
+			OpenIdToken oit = githubTokenHandler.takeInAccountToken(credentials.getIdToken());
+			Staff staff = staffHandler.lookup(OpenId.of(GITHUB_OPENID_SERVER, oit.getUserId()));
+			if (staff != null) {
+				throw new ApplicationException(
+					CODE_OPENID_ALREADY_REGISTERED, 
+					MessageFormat.format(MESSAGE_OPENID_ALREADY_REGISTERED, 
+						oit.getEmail(), String.valueOf(staff.getIdStaff()), staff.getFirstName(), staff.getLastName()));
+			}
+			staff = staffHandler.createStaffMember(oit);
+			githubTokenHandler.storeStaffToken(staff, oit);
+			return staff;
+		}
+
 		throw new ApplicationException(CODE_INVALID_OPENID_SERVER, MessageFormat.format(MESSAGE_INVALID_OPENID_SERVER, credentials.getOpenIdServer()));
 	}
 

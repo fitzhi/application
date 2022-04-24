@@ -38,14 +38,14 @@ import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
 
 /**
- * Test the method {@link AdminController#openidRegister(OpenIdCredentials)}.
+ * Test the method {@link AdminController#openidRegister(OpenIdCredentials)} with the Google identity server.
  * 
  * @author Fr&eacute;d&eacute;ric VIDAL
  */
 @RunWith(SpringRunner.class)
 @SpringBootTest
 @AutoConfigureMockMvc
-public class AdminControllerOpenIdRegisterTest {
+public class AdminControllerGoogleOpenIdRegisterTest {
 	
 	@Autowired
 	private MockMvc mvc;
