@@ -66,7 +66,6 @@ export class SkillService extends InternalService {
 
 		
 		if (this.backendSetupService.hasSavedAnUrl()) {
-			console.log ('nooooope');
 			this.loadSkills();
 		}
 		

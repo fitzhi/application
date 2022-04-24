@@ -61,11 +61,7 @@ export class CallbackGithubComponent implements OnInit, AfterViewInit {
 	 */
 	register(code: string) {
 
-		console.log ('nope');
-
 		const body = { 'openIdServer': this.githubService.GITHUB_SERVER_ID, 'idToken': code };
-
-		console.log ('noope', this.installService.isVeryFirstInstall());
 
 		const url = this.backendSetupService.url() + '/admin/openId/' +
 			((this.installService.isVeryFirstInstall())  ? 'primeRegister' : 'register');
@@ -103,13 +99,11 @@ export class CallbackGithubComponent implements OnInit, AfterViewInit {
 
 					this.installService.installComplete();
 					if (this.installService.isVeryFirstInstall()) {
-						console.log ('nipe');
 						this.backendSetupService.saveVeryFirstConnection$().subscribe({
 							next: doneAndOk => {
 								if (doneAndOk) {
 									console.log ('Registration done');
 								}
-								console.log ('nupe');
 								this.router.navigateByUrl(`/user/${staff.idStaff}`);
 							},
 							error: error => console.log (error)
