@@ -192,7 +192,8 @@ public class AdminController {
 				throw new ApplicationException(
 					CODE_OPENID_ALREADY_REGISTERED, 
 					MessageFormat.format(MESSAGE_OPENID_ALREADY_REGISTERED, 
-						oit.getEmail(), String.valueOf(staff.getIdStaff()), staff.getFirstName(), staff.getLastName()));
+						((oit.getLogin() == null) ? oit.getEmail() : oit.getLogin()), 
+						String.valueOf(staff.getIdStaff()), staff.getFirstName(), staff.getLastName()));
 			}
 			staff = staffHandler.createStaffMember(oit);
 			googleTokenHandler.storeStaffToken(staff, oit);
@@ -206,7 +207,8 @@ public class AdminController {
 				throw new ApplicationException(
 					CODE_OPENID_ALREADY_REGISTERED, 
 					MessageFormat.format(MESSAGE_OPENID_ALREADY_REGISTERED, 
-						oit.getEmail(), String.valueOf(staff.getIdStaff()), staff.getFirstName(), staff.getLastName()));
+					((oit.getLogin() == null) ? oit.getEmail() : oit.getLogin()), 
+					String.valueOf(staff.getIdStaff()), staff.getFirstName(), staff.getLastName()));
 			}
 			staff = staffHandler.createStaffMember(oit);
 			githubTokenHandler.storeStaffToken(staff, oit);

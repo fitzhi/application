@@ -115,7 +115,7 @@ public class AdminControllerGithubOpenIdRegisterTest {
 	}
 
 	@Test
-	public void tokenAlreadyRegistered() throws Exception {
+	public void tokenAlreadyRegisteredMessageWithEmail() throws Exception {
 
 		Staff staff = new Staff();
 		staff.setIdStaff(1789);
@@ -137,7 +137,35 @@ public class AdminControllerGithubOpenIdRegisterTest {
 				.content(gson.toJson(oic)))
 				.andExpect(status().isInternalServerError())
 				.andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
-				.andExpect(jsonPath("$.message").value("The login openID \"fv@nope.com\" is already registered with Frédéric VIDAL (1789)."))
+				.andExpect(jsonPath("$.message").value("The login/email openID \"fv@nope.com\" is already registered with Frédéric VIDAL (1789)."))
+				.andExpect(jsonPath("$.code", is(CODE_OPENID_ALREADY_REGISTERED)));
+	}
+
+	@Test
+	public void tokenAlreadyRegisteredMessageWithLogin() throws Exception {
+
+		Staff staff = new Staff();
+		staff.setIdStaff(1789);
+		staff.setLastName("VIDAL");
+		staff.setFirstName("Frédéric");
+		staff.setEmail("fv@nope.com");
+		when(staffHandler.lookup(any(OpenId.class))).thenReturn(staff);
+
+		OpenIdCredentials oic = OpenIdCredentials.of(GITHUB_OPENID_SERVER, "idToken"); 
+
+		OpenIdToken oit = OpenIdToken.of();
+		oit.serverId = GITHUB_OPENID_SERVER;
+		oit.setUserId("testUserId");
+		oit.setEmail("fv@nope.com");
+		oit.setLogin("fvLogin");
+		when(tokenHandler.takeInAccountToken(any(String.class))).thenReturn(oit);
+
+		this.mvc.perform(post("/api/admin/openId/register")
+				.header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON)
+				.content(gson.toJson(oic)))
+				.andExpect(status().isInternalServerError())
+				.andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
+				.andExpect(jsonPath("$.message").value("The login/email openID \"fvLogin\" is already registered with Frédéric VIDAL (1789)."))
 				.andExpect(jsonPath("$.code", is(CODE_OPENID_ALREADY_REGISTERED)));
 	}
 }
