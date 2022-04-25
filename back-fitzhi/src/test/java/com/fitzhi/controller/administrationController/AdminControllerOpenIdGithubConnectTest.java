@@ -67,7 +67,6 @@ public class AdminControllerOpenIdGithubConnectTest {
 	public void connectSuccessful() throws Exception {
 
 		Staff staff = new Staff(1789, "Frédéric", "VIDAL", "frvidal", "frvidal", "frvidal@nope.com", "level");
-
 		when(staffHandler.lookup(any(OpenId.class))).thenReturn(staff);
 		
 		OpenIdToken oit = OpenIdToken.of();

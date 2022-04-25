@@ -181,7 +181,7 @@ public class AdminController {
 		value="Create a user in Fitzhi based on an OpenId credential. This creation is processed when installing the Front Client."
 	)
 	@PostMapping("/openId/register")
-	public Staff openIdRegister(@RequestBody OpenIdCredentials credentials) throws ApplicationException {
+	public OpenIdTokenStaff openIdRegister(@RequestBody OpenIdCredentials credentials) throws ApplicationException {
 
 		
 		if (GOOGLE_OPENID_SERVER.equals(credentials.getOpenIdServer())) {
@@ -197,7 +197,7 @@ public class AdminController {
 			}
 			staff = staffHandler.createStaffMember(oit);
 			googleTokenHandler.storeStaffToken(staff, oit);
-			return staff;
+			return OpenIdTokenStaff.of(oit, staff);
 		}
 
 		if (GITHUB_OPENID_SERVER.equals(credentials.getOpenIdServer())) {
@@ -212,7 +212,7 @@ public class AdminController {
 			}
 			staff = staffHandler.createStaffMember(oit);
 			githubTokenHandler.storeStaffToken(staff, oit);
-			return staff;
+			return OpenIdTokenStaff.of(oit, staff);
 		}
 
 		throw new ApplicationException(CODE_INVALID_OPENID_SERVER, MessageFormat.format(MESSAGE_INVALID_OPENID_SERVER, credentials.getOpenIdServer()));

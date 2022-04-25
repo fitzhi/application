@@ -70,7 +70,8 @@ public class AdminControllerOpenIdGithubPrimeRegisterTest {
 	@Test
 	public void nominalPrimeRegister() throws Exception {
 
-		when(staffHandler.createStaffMember(any())).thenReturn(new Staff (1789, "...login", "nope..."));
+		Staff staff = new Staff(1789, "Frédéric", "VIDAL", "frvidal", "frvidal", "frvidal@nope.com", "level");
+		when(staffHandler.createStaffMember(any())).thenReturn(staff);
 
 		OpenIdToken oit = OpenIdToken.of();
 		oit.setServerId(GITHUB_OPENID_SERVER);
@@ -84,8 +85,11 @@ public class AdminControllerOpenIdGithubPrimeRegisterTest {
 				.content(gson.toJson(oic)))
 				.andExpect(status().isOk())
 				.andExpect(jsonPath("$.staff.idStaff", is(1789)))
-				.andExpect(jsonPath("$.staff.login", is("...login")))
-				.andExpect(jsonPath("$.staff.password", is("nope...")))
+				.andExpect(jsonPath("$.staff.firstName", is("Frédéric")))
+				.andExpect(jsonPath("$.staff.lastName", is("VIDAL")))
+				.andExpect(jsonPath("$.staff.nickName", is("frvidal")))
+				.andExpect(jsonPath("$.staff.login", is("frvidal")))
+				.andExpect(jsonPath("$.staff.email", is("frvidal@nope.com")))
 				.andExpect(jsonPath("$.openIdToken.origin.access_token", is("theAccessToken")))
 				.andDo(print())
 				.andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE));
