@@ -51,14 +51,14 @@ describe('Github OpenidConnectionComponent', () => {
 		expect(localOauthOnly).toBeNull();
 	});
 
-	it('should display the Github & the Google buttons, if both servers are declared.', () => {
+	it('should display the Github & the Google buttons, if both servers are declared..', () => {
 
 		const githubService = TestBed.inject(GithubService);
-		githubService.clientId = 'myClientId';
+		githubService.clientId = 'myGithubClientId';
 		githubService.register();
 
 		const googleService = TestBed.inject(GoogleService);
-		googleService.clientId = 'myClientId';
+		googleService.clientId = 'myGoogleClientId';
 		googleService.register();
 
 		fixture.detectChanges();
