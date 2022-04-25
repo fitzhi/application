@@ -5,6 +5,7 @@ import { Token } from '../token/token';
 import { TokenService } from '../token/token.service';
 import { OpenIdCredentials } from 'src/app/data/open-id-credentials';
 import { Collaborator } from 'src/app/data/collaborator';
+import { OpenIdTokenStaff } from 'src/app/data/openidtoken-staff';
 
 describe('AuthService', () => {
 	let httpTestingController: HttpTestingController;
@@ -81,8 +82,8 @@ describe('AuthService', () => {
 
 		service.connectOpenId$(new OpenIdCredentials('GOOGLE', 'google-jwt')).subscribe({
 			next: st => {
-				expect(st.idStaff).toBe(1789);
-				expect(st.lastName).toBe('VIDAL');
+				expect(st.staff.idStaff).toBe(1789);
+				expect(st.staff.lastName).toBe('VIDAL');
 				done();
 			}
 		});
@@ -93,7 +94,7 @@ describe('AuthService', () => {
 		staff.idStaff = 1789;
 		staff.firstName = 'Frédéric';
 		staff.lastName = 'VIDAL';
-		req.flush(staff);
+		req.flush( new OpenIdTokenStaff(null, staff));
 
 		expect(spy).toHaveBeenCalled();
 	});
@@ -121,7 +122,6 @@ describe('AuthService', () => {
 				status: 404,
 				statusText: 'Not found!',
 			});
-
 
 		expect(spy).toHaveBeenCalled();
 	});

@@ -4,6 +4,7 @@ import { BehaviorSubject, EMPTY } from 'rxjs';
 import { switchMap } from 'rxjs/operators';
 import { BaseDirective } from 'src/app/base/base-directive.directive';
 import { OpenIdCredentials } from 'src/app/data/open-id-credentials';
+import { OpenIdTokenStaff } from 'src/app/data/openidtoken-staff';
 import { traceOn } from 'src/app/global';
 import { MessageService } from 'src/app/interaction/message/message.service';
 import { GoogleService } from 'src/app/service/google/google.service';
@@ -77,10 +78,11 @@ export class ConnectUserComponent extends BaseDirective implements OnInit, OnDes
 							if (traceOn()) {
 								console.log ('%s is logged in', this.googleService.googleToken.name);
 							}
-							this.authService.connectOpenId$(new OpenIdCredentials('GOOGLE', this.googleService.jwt))
+							this.authService.connectOpenId$(new OpenIdCredentials(this.googleService.GOOGLE_SERVER_ID, this.googleService.jwt))
 								.subscribe({
-									next: staff => {
-
+									next: (oits: OpenIdTokenStaff) => {
+										const staff = oits.staff;
+										
 										this.messageService.success(`${staff.firstName} ${staff.lastName} is successfully connected`);
 										const token = new Token();
 										// We use the JWT as access token for this authenticated user.

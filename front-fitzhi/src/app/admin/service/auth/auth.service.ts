@@ -4,6 +4,8 @@ import { Observable, of, throwError } from 'rxjs';
 import { catchError, switchMap, take, tap } from 'rxjs/operators';
 import { Collaborator } from 'src/app/data/collaborator';
 import { OpenIdCredentials } from 'src/app/data/open-id-credentials';
+import { OpenIdToken } from 'src/app/data/OpenIdToken';
+import { OpenIdTokenStaff } from 'src/app/data/openidtoken-staff';
 import { traceOn } from 'src/app/global';
 import { InternalService } from 'src/app/internal-service';
 import { BackendSetupService } from 'src/app/service/backend-setup/backend-setup.service';
@@ -83,48 +85,46 @@ export class AuthService extends InternalService {
 	 * @param credentials the openID credentials loaded from the authentication server
 	 * @returns an observable containing the staff linked to the credentials
 	 */
-	public connectOpenId$(credentials: OpenIdCredentials): Observable<Collaborator> {
+	public connectOpenId$(credentials: OpenIdCredentials): Observable<OpenIdTokenStaff> {
 
 		const body = { openIdServer: credentials.serverId, idToken: credentials.jwt};
 
-		return this.httpClient.post<Collaborator>(this.backendSetupService.url() + '/admin/openId/connect', body)
+		return this.httpClient.post<OpenIdTokenStaff>(this.backendSetupService.url() + '/admin/openId/connect', body)
 			.pipe(
 				take(1),
 				tap({
-					next: staff => {
+					next: oits => {
+						const staff = oits.staff;
 						if (traceOn()) {
 							console.log('Identity retrieved : %d %s %s', staff.idStaff, staff.firstName, staff.lastName);
 						}
 						this.setConnect();
-						return of (this.connected);
 					},
 					error: error => {
 						if (traceOn() && (error)) {
 							console.log ('Error', error);
 						}
 						this.setDisconnect();
-						throwError(error.status, error.statusText);
 					}
 				}));
 	}
 
-
 	/**
-	 * **Disable** the connection status stored in the authentication service.
+	 * `Disable` the connection status stored in the authentication service.
 	 */
 	public setDisconnect() {
 		this.connected = false;
 	}
 
 	/**
-	 * **Enable** the connection status stored in the authentication service.
+	 * `Enable` the connection status stored in the authentication service.
 	 */
 	public setConnect() {
 		this.connected = true;
 	}
 
 	/**
-     * @returns TRUE if the user is connected, FALSE otherwise.
+     * @returns `TRUE` if the user is connected, `FALSE` otherwise.
      */
 	public isConnected() {
 

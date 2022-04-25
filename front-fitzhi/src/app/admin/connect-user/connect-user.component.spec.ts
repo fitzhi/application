@@ -8,6 +8,7 @@ import { of } from 'rxjs';
 import { Collaborator } from 'src/app/data/collaborator';
 import { GoogleToken } from 'src/app/data/google-token';
 import { OpenidServer } from 'src/app/data/openid-server';
+import { OpenIdTokenStaff } from 'src/app/data/openidtoken-staff';
 import { AlternativeOpenidConnectionComponent } from 'src/app/interaction/alternative-openid-connection/alternative-openid-connection.component';
 import { MessageBoxService } from 'src/app/interaction/message-box/service/message-box.service';
 import { CinematicService } from 'src/app/service/cinematic.service';
@@ -111,7 +112,7 @@ describe('ConnectUserComponent', () => {
 		referentialService.referentialLoaded$.next(true);
 
 		const staff = new Collaborator();
-		const spy1 = spyOn(authService, 'connectOpenId$').and.returnValue(of(staff));
+		const spy1 = spyOn(authService, 'connectOpenId$').and.returnValue(of(new OpenIdTokenStaff(null, staff)));
 		const spy2 = spyOn(tokenService, 'saveToken').and.returnValue(null);
 		const spy3 = spyOn(authService, 'setConnect').and.returnValue(null);
 		const spy4 = spyOn(projectService, 'startLoadingProjects').and.returnValue(null);

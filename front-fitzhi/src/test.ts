@@ -16,7 +16,7 @@ getTestBed().initTestEnvironment(
 // Then we find all the tests
 
 const context = require.context('./', true, /\.spec\.ts$/);
-// const context = require.context('./', true,  /callback-github-5\.component\.spec\.ts$/);
+// const context = require.context('./', true,  /callback-github-connect-1\.component\.spec\.ts$/);
 
 // const context = require.context('./', true,  /auth\.service\.spec\.ts$/);
 // const context = require.context('./', true,  /register-user\.component\.spec\.ts$/);
