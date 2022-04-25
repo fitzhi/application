@@ -83,7 +83,6 @@ export class BackendSetupComponent extends BaseDirective implements OnInit, OnDe
 							this.messengerVeryFirstConnection.emit(data.first);
 							this.messageService.info('This URL is valid. Let\'s go ahead !');
 						}
-
 					},
 				error: error => {
 					if (traceOn()) {
