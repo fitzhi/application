@@ -64,11 +64,10 @@ export class SkillService extends InternalService {
 			console.log('Skills loading is postponed due to the lack of backend URL.');
 		}
 
-		
 		if (this.backendSetupService.hasSavedAnUrl()) {
 			this.loadSkills();
 		}
-		
+
 	}
 
 	/**

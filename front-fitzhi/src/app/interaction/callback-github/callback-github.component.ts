@@ -55,38 +55,38 @@ export class CallbackGithubComponent implements OnInit, AfterViewInit {
 			this.register(this.code);
 		} else {
 			// or the connection of a registered user.
-			this.connect(this.code)
+			this.connect(this.code);
 		}
 	}
-	
+
 	/**
 	 * Register the Github user associated with the given code
 	 * @param code the returned code
 	 */
-	 connect(code: string) {
-		 if (traceOn()) {
-			 console.log ('Connecting github user with code %s', code);
-		 }
-		 const oic = new OpenIdCredentials(this.githubService.GITHUB_SERVER_ID, code);
-		 this.authService.connectOpenId$(oic).subscribe({
-			next: (oits: OpenIdTokenStaff) => {
-				const staff = oits.staff;
-				if (traceOn()) {
-					console.log ("%s %s %s is connected.", staff.idStaff, staff.firstName, staff.lastName)
-				}
-				this.messageService.success(`${staff.firstName} ${staff.lastName} is successfully connected`);
-
-				const token = new Token();
-				// We use the JWT as access token for this authenticated user.
-				token.access_token = oits.openIdToken.origin.access_token;
-				this.tokenService.saveToken(token);
-
-				this.completeConnection();
-
-				this.router.navigateByUrl('/welcome');
+	connect(code: string) {
+		if (traceOn()) {
+			console.log ('Connecting github user with code %s', code);
+		}
+		const oic = new OpenIdCredentials(this.githubService.GITHUB_SERVER_ID, code);
+		this.authService.connectOpenId$(oic).subscribe({
+		next: (oits: OpenIdTokenStaff) => {
+			const staff = oits.staff;
+			if (traceOn()) {
+				console.log ('%s %s %s is connected.', staff.idStaff, staff.firstName, staff.lastName);
 			}
-		 });
-	 }
+			this.messageService.success(`${staff.firstName} ${staff.lastName} is successfully connected`);
+
+			const token = new Token();
+			// We use the JWT as access token for this authenticated user.
+			token.access_token = oits.openIdToken.origin.access_token;
+			this.tokenService.saveToken(token);
+
+			this.completeConnection();
+
+			this.router.navigateByUrl('/welcome');
+		}
+		});
+	}
 
 	/**
 	 * Register the Github user associated with the given code
@@ -110,7 +110,7 @@ export class CallbackGithubComponent implements OnInit, AfterViewInit {
 						console.log (`${staff.idStaff} ${staff.firstName} ${staff.lastName} has been created in Fitzi from its Github token`);
 					}
 					this.staffService.changeCollaborator(staff);
-					
+
 					const token = new Token();
 					// We use the GITHUB token as access token for this authenticated user.
 					token.access_token = oits.openIdToken.origin.access_token;
@@ -140,7 +140,7 @@ export class CallbackGithubComponent implements OnInit, AfterViewInit {
 				},
 				error: error => {
 					if (traceOn()) {
-						console.log (error.message)
+						console.log (error.message);
 					}
 					this.installService.uninstall();
 					this.router.navigateByUrl('/');

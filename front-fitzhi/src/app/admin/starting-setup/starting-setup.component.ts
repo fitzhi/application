@@ -156,7 +156,7 @@ export class StartingSetupComponent extends BaseDirective implements OnDestroy {
 		} else {
 			this.backendSetupService.saveVeryFirstConnection$().subscribe({
 				next: state => this.nextStepAfterStaffUpdate($event)
-			})
+			});
 		}
 	}
 

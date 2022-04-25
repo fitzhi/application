@@ -64,7 +64,7 @@ describe('CallbackGithubComponent (when registering a user)', () => {
 		spyOn(installService, 'isComplete').and.returnValue(false);
 
 		httpTestingController = TestBed.inject(HttpTestingController);
-		
+
 		backendSetupService = TestBed.inject(BackendSetupService);
 		backendSetupService.saveUrl('URL_OF_SERVER');
 
@@ -82,7 +82,7 @@ describe('CallbackGithubComponent (when registering a user)', () => {
 	});
 
 	function mockRestCallRegister() {
-	
+
 		const req1 = httpTestingController.expectOne('URL_OF_SERVER/api/admin/openId/register');
 		expect(req1.request.method).toBe('POST');
 
@@ -103,7 +103,7 @@ describe('CallbackGithubComponent (when registering a user)', () => {
 	}
 
 	it('should call the Fitzhi backend server with the code sent by Github', () => {
-		
+
 		const spyOnStaffService = spyOn(staffService, 'changeCollaborator').and.returnValue(null);
 		const spyOnTokenService = spyOn(tokenService, 'saveToken').and.returnValue(null);
 		const spyOnAuthService = spyOn(authService, 'setConnect').and.returnValue(null);
@@ -128,7 +128,7 @@ describe('CallbackGithubComponent (when registering a user)', () => {
 	});
 
 	it('should redirect the application to the starting point, if the backend-server sent back with an error.', () => {
-		
+
 		const spyOnStaffService = spyOn(staffService, 'changeCollaborator').and.returnValue(null);
 		const spyOnTokenService = spyOn(tokenService, 'saveToken').and.returnValue(null);
 		const spyOnAuthService = spyOn(authService, 'setConnect').and.returnValue(null);

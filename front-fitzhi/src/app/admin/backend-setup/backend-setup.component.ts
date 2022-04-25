@@ -72,7 +72,7 @@ export class BackendSetupComponent extends BaseDirective implements OnInit, OnDe
 
 						if (!data.connected) {
 							this.currentState = this.BUTTON_INVALID_URL;
-							this.messageService.error('Error ! Either this URL is invalid, or your server is offline');		
+							this.messageService.error('Error ! Either this URL is invalid, or your server is offline');
 						} else {
 							if (traceOn() && data.first) {
 								console.log('This is the very first connection into fitzhì');

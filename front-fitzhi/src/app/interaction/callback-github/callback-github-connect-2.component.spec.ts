@@ -62,9 +62,9 @@ describe('CallbackGithubComponent (when connecting a user)', () => {
 		backendSetupService.saveUrl('URL_OF_SERVER');
 
 		skillService = TestBed.inject(SkillService);
-		
+
 		installService = TestBed.inject(InstallService);
-		installService.setVeryFirstConnection(false); 
+		installService.setVeryFirstConnection(false);
 		installService.installComplete();
 
 		staffService = TestBed.inject(StaffService);
@@ -79,7 +79,7 @@ describe('CallbackGithubComponent (when connecting a user)', () => {
 	});
 
 	function mockRestCall() {
-		
+
 		const req1 = httpTestingController.expectOne('URL_OF_SERVER/api/admin/openId/connect');
 		expect(req1.request.method).toBe('POST');
 

@@ -63,7 +63,7 @@ describe('CallbackGithubComponent (when registering user)', () => {
 		spyOn(installService, 'isComplete').and.returnValue(false);
 
 		httpTestingController = TestBed.inject(HttpTestingController);
-		
+
 		backendSetupService = TestBed.inject(BackendSetupService);
 		backendSetupService.saveUrl('URL_OF_SERVER');
 
@@ -77,12 +77,11 @@ describe('CallbackGithubComponent (when registering user)', () => {
 		messageService = TestBed.inject(MessageService);
 		router = TestBed.inject(Router);
 
-
 		fixture.detectChanges();
 	});
 
 	function mockRestCall() {
-		
+
 		const req1 = httpTestingController.expectOne('URL_OF_SERVER/api/admin/openId/register');
 		expect(req1.request.method).toBe('POST');
 

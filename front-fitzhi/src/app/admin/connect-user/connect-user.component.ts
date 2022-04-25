@@ -82,7 +82,7 @@ export class ConnectUserComponent extends BaseDirective implements OnInit, OnDes
 								.subscribe({
 									next: (oits: OpenIdTokenStaff) => {
 										const staff = oits.staff;
-										
+
 										this.messageService.success(`${staff.firstName} ${staff.lastName} is successfully connected`);
 										const token = new Token();
 										// We use the JWT as access token for this authenticated user.
