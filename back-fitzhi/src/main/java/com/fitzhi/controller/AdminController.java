@@ -253,10 +253,10 @@ public class AdminController {
 	 */
 	@ResponseBody
 	@ApiOperation(
-		value="Connect a user based on his OpenID JWT and return the corresponding staff. Connection is successful"
+		value="Connect a user based on his OpenID JWT and return the corresponding staff and his OpenId object. Connection is successful"
 	)
 	@PostMapping("/openId/connect")
-	public Staff connect(@RequestBody OpenIdCredentials credentials) throws ApplicationException {
+	public OpenIdTokenStaff connect(@RequestBody OpenIdCredentials credentials) throws ApplicationException {
 
 		if (GOOGLE_OPENID_SERVER.equals(credentials.getOpenIdServer())) {
 			OpenIdToken oit = googleTokenHandler.takeInAccountToken(credentials.getIdToken());
@@ -265,7 +265,7 @@ public class AdminController {
 				throw new NotFoundException(CODE_OPENID_NOT_FOUND, MessageFormat.format(MESSAGE_OPENID_NOT_FOUND, oit.getEmail()));
 			}
 			googleTokenHandler.storeStaffToken(staff, oit);
-			return staff;
+			return OpenIdTokenStaff.of(oit, staff);
 		}
 
 		if (GITHUB_OPENID_SERVER.equals(credentials.getOpenIdServer())) {
@@ -275,7 +275,7 @@ public class AdminController {
 				throw new NotFoundException(CODE_OPENID_NOT_FOUND, MessageFormat.format(MESSAGE_OPENID_NOT_FOUND, oit.getEmail()));
 			}
 			githubTokenHandler.storeStaffToken(staff, oit);
-			return staff;
+			return OpenIdTokenStaff.of(oit, staff);
 		}
 
 		throw new ApplicationException(CODE_INVALID_OPENID_SERVER, MessageFormat.format(MESSAGE_INVALID_OPENID_SERVER, credentials.getOpenIdServer()));

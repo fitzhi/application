@@ -80,12 +80,12 @@ public class AdminControllerOpenIdGoogleConnectTest {
 				.header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON)
 				.content(gson.toJson(oic)))
 				.andExpect(status().isOk())
-				.andExpect(jsonPath("$.idStaff", is(1789)))
-				.andExpect(jsonPath("$.firstName", is("Frédéric")))
-				.andExpect(jsonPath("$.lastName", is("VIDAL")))
-				.andExpect(jsonPath("$.nickName", is("frvidal")))
-				.andExpect(jsonPath("$.login", is("frvidal")))
-				.andExpect(jsonPath("$.email", is("frvidal@nope.com")))
+				.andExpect(jsonPath("$.staff.idStaff", is(1789)))
+				.andExpect(jsonPath("$.staff.firstName", is("Frédéric")))
+				.andExpect(jsonPath("$.staff.lastName", is("VIDAL")))
+				.andExpect(jsonPath("$.staff.nickName", is("frvidal")))
+				.andExpect(jsonPath("$.staff.login", is("frvidal")))
+				.andExpect(jsonPath("$.staff.email", is("frvidal@nope.com")))
 				.andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE));
 	}
 
