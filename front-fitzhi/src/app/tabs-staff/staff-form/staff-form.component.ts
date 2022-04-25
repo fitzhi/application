@@ -65,7 +65,7 @@ export class StaffFormComponent extends BaseDirective implements OnInit, OnDestr
 		lastName: new FormControl('', [Validators.required, Validators.maxLength(16), this.noUselessWhitespaceValidator]),
 		nickName: new FormControl('', [Validators.maxLength(16), this.noUselessWhitespaceValidator]),
 		login: new FormControl('', [Validators.required, Validators.maxLength(16), this.noUselessWhitespaceValidator]),
-		email: new FormControl('', [Validators.required, Validators.maxLength(32), Validators.email]),
+		email: new FormControl('', [Validators.required, Validators.maxLength(64), Validators.email]),
 		profile: new FormControl(null, [Validators.required]),
 		forceActiveState: new FormControl(),
 		active: new FormControl({value: 1, disabled: true}),
