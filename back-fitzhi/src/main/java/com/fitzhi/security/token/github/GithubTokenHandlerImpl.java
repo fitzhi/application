@@ -63,7 +63,7 @@ public class GithubTokenHandlerImpl implements TokenHandler {
 	 */
 	private final static String openIdServersFilename = "openid-servers.json";
 
-	private String clientId = null;
+	private OpenIdServer openIdServer = null;
 
 	@PostConstruct
 	private void init() {
@@ -74,7 +74,7 @@ public class GithubTokenHandlerImpl implements TokenHandler {
 				.filter(server -> GITHUB_OPENID_SERVER.equals(server.getServerId()))
 				.findFirst();
 			if (oOpenIdServer.isPresent()) {
-				clientId = oOpenIdServer.get().getClientId();
+				this.openIdServer = oOpenIdServer.get();
 			}
 		} catch (ApplicationException e) {
 			log.error(e.getMessage(), e);
@@ -84,7 +84,7 @@ public class GithubTokenHandlerImpl implements TokenHandler {
 
 	@Override
 	public boolean isDeclared() {
-		return (clientId != null);
+		return (this.openIdServer != null);
 	}
 
 	@Override
@@ -107,8 +107,8 @@ public class GithubTokenHandlerImpl implements TokenHandler {
 		String url = MessageFormat.format(
 			"https://github.com/login/oauth/access_token?code={0}&client_id={1}&client_secret={2}",
 			idTokenString,
-			"37e824ec4f90dcafe68e",
-			"2f7c46c2c9fde5b1c7713f19e787f9b1243c6f6e");
+			this.openIdServer.getClientId(),
+			this.openIdServer.getClientSecret());
 		if (log.isDebugEnabled()) {
 			log.debug("Accessing the url " + url);
 		}
@@ -135,7 +135,7 @@ public class GithubTokenHandlerImpl implements TokenHandler {
 
 	@Override
 	public String getClientId() {
-		return clientId;
+		return this.openIdServer.getClientId();
 	}
 
 	@Override

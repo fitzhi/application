@@ -7,5 +7,6 @@ import lombok.NoArgsConstructor;
 public @Data class OpenIdServer {
     private String serverId;
     private String clientId;
+    private String clientSecret;
 }
 

@@ -2,7 +2,6 @@ package com.fitzhi.security.github;
 
 import com.fitzhi.exception.ApplicationException;
 import com.fitzhi.security.token.TokenHandler;
-import com.fitzhi.security.token.google.GoogleTokenHandlerImpl;
 
 import org.junit.Assert;
 import org.junit.Test;
@@ -21,7 +20,7 @@ import org.springframework.test.context.junit4.SpringRunner;
  */
 @RunWith(SpringRunner.class)
 @SpringBootTest
-@TestPropertySource(properties = { "referential.dir=nonExistingPath" }) 
+@TestPropertySource(properties = { "referential.dir=nonExistingPath" })
 public class GithubTokenHandlerInErrorTest {
 	
 	@Autowired
