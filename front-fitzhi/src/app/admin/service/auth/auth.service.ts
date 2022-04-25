@@ -1,10 +1,8 @@
 import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { Observable, of, throwError } from 'rxjs';
+import { Observable, of } from 'rxjs';
 import { catchError, switchMap, take, tap } from 'rxjs/operators';
-import { Collaborator } from 'src/app/data/collaborator';
 import { OpenIdCredentials } from 'src/app/data/open-id-credentials';
-import { OpenIdToken } from 'src/app/data/OpenIdToken';
 import { OpenIdTokenStaff } from 'src/app/data/openidtoken-staff';
 import { traceOn } from 'src/app/global';
 import { InternalService } from 'src/app/internal-service';

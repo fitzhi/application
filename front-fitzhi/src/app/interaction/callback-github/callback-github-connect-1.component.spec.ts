@@ -8,7 +8,6 @@ import { BackendSetupService } from 'src/app/service/backend-setup/backend-setup
 import { CinematicService } from 'src/app/service/cinematic.service';
 import { CallbackGithubComponent } from './callback-github.component';
 
-
 describe('CallbackGithubComponent (when connecting a user)', () => {
 	let component: CallbackGithubComponent;
 	let fixture: ComponentFixture<CallbackGithubComponent>;

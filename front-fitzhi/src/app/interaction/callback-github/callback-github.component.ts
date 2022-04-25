@@ -75,20 +75,15 @@ export class CallbackGithubComponent implements OnInit, AfterViewInit {
 					console.log ("%s %s %s is connected.", staff.idStaff, staff.firstName, staff.lastName)
 				}
 				this.messageService.success(`${staff.firstName} ${staff.lastName} is successfully connected`);
-				
+
 				const token = new Token();
 				// We use the JWT as access token for this authenticated user.
 				token.access_token = oits.openIdToken.origin.access_token;
 				this.tokenService.saveToken(token);
 
-				this.authService.setConnect();
+				this.completeConnection();
 
-				// We load the projects and start the refresh process.
-				this.projectService.startLoadingProjects();
-				// We load the staff and start the refresh process.
-				this.staffListService.startLoadingStaff();
-
-				this.router.navigate(['/welcome']);
+				this.router.navigateByUrl('/welcome');
 			}
 		 });
 	 }
@@ -124,13 +119,7 @@ export class CallbackGithubComponent implements OnInit, AfterViewInit {
 					}
 					this.tokenService.saveToken(token);
 
-					// This registration through the mechanism of openid tokens, automatically connects the user.
-					this.authService.setConnect();
-
-					// We load the projects and start the refresh process.
-					this.projectService.startLoadingProjects();
-					// We load the staff and start the refresh process.
-					this.staffListService.startLoadingStaff();
+					this.completeConnection();
 
 					this.messageService.success(`${staff.firstName} ${staff.lastName} is successfully created.`);
 
@@ -157,6 +146,20 @@ export class CallbackGithubComponent implements OnInit, AfterViewInit {
 					this.router.navigateByUrl('/');
 				}
 		});
+	}
+
+	/**
+	 * Complete the connection by doing some initialization.
+	 */
+	private completeConnection() {
+		// This registration through the mechanism of openid tokens, automatically connects the user.
+		this.authService.setConnect();
+
+		// We load the projects and start the refresh process.
+		this.projectService.startLoadingProjects();
+		// We load the staff and start the refresh process.
+		this.staffListService.startLoadingStaff();
+
 	}
 
 }
