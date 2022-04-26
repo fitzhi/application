@@ -59,6 +59,7 @@ describe(`TokenService`, () => {
 	});
 
 	afterEach(() => {
+		localStorage.removeItem('backendUrl');
 		httpMock.verify();
 	});
 });

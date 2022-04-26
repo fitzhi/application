@@ -69,22 +69,28 @@ export class CallbackGithubComponent implements OnInit, AfterViewInit {
 		}
 		const oic = new OpenIdCredentials(this.githubService.GITHUB_SERVER_ID, code);
 		this.authService.connectOpenId$(oic).subscribe({
-		next: (oits: OpenIdTokenStaff) => {
-			const staff = oits.staff;
-			if (traceOn()) {
-				console.log ('%s %s %s is connected.', staff.idStaff, staff.firstName, staff.lastName);
+			next: (oits: OpenIdTokenStaff) => {
+				const staff = oits.staff;
+				if (traceOn()) {
+					console.log ('%s %s %s is connected.', staff.idStaff, staff.firstName, staff.lastName);
+				}
+				this.messageService.success(`${staff.firstName} ${staff.lastName} is successfully connected`);
+
+				const token = new Token();
+				// We use the JWT as access token for this authenticated user.
+				token.access_token = oits.openIdToken.origin.access_token;
+				this.tokenService.saveToken(token);
+
+				this.completeConnection();
+
+				this.router.navigateByUrl('/welcome');
+			},
+			error: error => {
+				if (traceOn()) {
+					console.log (error.message);
+				}
+				this.router.navigateByUrl('/');
 			}
-			this.messageService.success(`${staff.firstName} ${staff.lastName} is successfully connected`);
-
-			const token = new Token();
-			// We use the JWT as access token for this authenticated user.
-			token.access_token = oits.openIdToken.origin.access_token;
-			this.tokenService.saveToken(token);
-
-			this.completeConnection();
-
-			this.router.navigateByUrl('/welcome');
-		}
 		});
 	}
 

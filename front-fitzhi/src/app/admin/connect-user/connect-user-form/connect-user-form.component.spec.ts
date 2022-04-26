@@ -62,7 +62,9 @@ describe('ConnectUserFormComponent', () => {
 		await TestBed.configureTestingModule({
 			declarations: [ ConnectUserFormComponent, TestHostComponent ],
 			providers: [AuthService, BackendSetupService, ProjectService, CinematicService, FileService, MessageBoxService, FormBuilder],
-			imports: [HttpClientTestingModule, MatDialogModule, RouterTestingModule, FormsModule, ReactiveFormsModule]
+			imports: [HttpClientTestingModule, MatDialogModule,
+			RouterTestingModule.withRoutes([]),
+			FormsModule, ReactiveFormsModule]
 		})
 		.compileComponents();
 	});

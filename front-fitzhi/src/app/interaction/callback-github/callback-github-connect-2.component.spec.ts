@@ -96,10 +96,6 @@ describe('CallbackGithubComponent (when connecting a user)', () => {
 
 	function mockRestCallRegisterInError() {
 
-		const reqSkill = httpTestingController.expectOne('URL_OF_SERVER/api/skill');
-		expect(reqSkill.request.method).toBe('GET');
-		reqSkill.flush([]);
-
 		const req1 = httpTestingController.expectOne('URL_OF_SERVER/api/admin/openId/connect');
 		expect(req1.request.method).toBe('POST');
 		req1.error(new ErrorEvent('error'), { status: 500, statusText: 'Error message!' });
@@ -115,7 +111,7 @@ describe('CallbackGithubComponent (when connecting a user)', () => {
 		const navigateSpy = spyOn(router, 'navigateByUrl');
 
 		// We do not need to load the skills.
-		// spyOn (skillService, 'loadSkills').and.returnValue(null);
+		spyOn (skillService, 'loadSkills').and.returnValue(null);
 
 		mockRestCall();
 
@@ -138,7 +134,7 @@ describe('CallbackGithubComponent (when connecting a user)', () => {
 		const navigateSpy = spyOn(router, 'navigateByUrl');
 
 		// We do not need to load the skills.
-		// spyOn (skillService, 'loadSkills').and.returnValue(null);
+		spyOn (skillService, 'loadSkills').and.returnValue(null);
 
 		mockRestCallRegisterInError();
 
@@ -149,7 +145,6 @@ describe('CallbackGithubComponent (when connecting a user)', () => {
 		expect(spyOnMessageService).not.toHaveBeenCalled();
 		expect(navigateSpy).not.toHaveBeenCalledWith('/welcome');
 
-		httpTestingController.verify();
 	});
 
 });
