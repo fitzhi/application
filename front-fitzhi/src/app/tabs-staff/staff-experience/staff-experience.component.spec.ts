@@ -10,6 +10,7 @@ import { TabsStaffListService } from 'src/app/tabs-staff-list/service/tabs-staff
 import { InitTest } from 'src/app/test/init-test';
 import { StaffService } from '../service/staff.service';
 import { StaffExperienceComponent } from './staff-experience.component';
+import { TagifyEditableState } from './tagify-stars/tagify-editable-state';
 import { TagifyStarsComponent } from './tagify-stars/tagify-stars.component';
 
 
@@ -220,6 +221,14 @@ describe('StaffExperienceComponent', () => {
 		expect(result[0].idSkill).toBe(1000);
 		expect(result[1].idSkill).toBe(1001);
 	});
+
+	it('should NOT be able to update any experience, if there is no edited collaborator.', () => {
+		expect(field('#image_upLoadCV')).not.toBeNull();
+	});
+
+	function field(id: string): HTMLInputElement {
+		return (fixture.nativeElement.querySelector(id) as HTMLInputElement);
+	}
 
 	function staff(): Collaborator {
 		const st = new Collaborator();

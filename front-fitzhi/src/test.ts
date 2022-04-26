@@ -23,7 +23,7 @@ const context = require.context('./', true, /\.spec\.ts$/);
 // const context = require.context('./', true,  /callback-github-connect-1\.component\.spec\.ts$/);
 // const context = require.context('./', true,  /callback-github-connect-2\.component\.spec\.ts$/);
 // const context = require.context('./', true,  /register-user-single-oauth\.component\.spec\.ts$/);
-// const context = require.context('./', true,  /staff-form.component\.createStaff\.spec\.ts$/);
+// const context = require.context('./', true,  /staff-experience.component\.spec\.ts$/);
 // const context = require.context('./', true,  /alternative-openid-connection-google-github\.component\.spec\.ts$/);
 
 // const context = require.context('./', true,  /github\.service\.spec\.ts$/);
