@@ -80,15 +80,10 @@ public class TokenUtility<T> {
 			CloseableHttpResponse response = client.execute(uriRequest);
 			if (response.getStatusLine().getStatusCode() == 200) {
 
-				BufferedReader br = new BufferedReader(
-					new InputStreamReader( 
-						(response.getEntity().getContent())
-					)
-				);
-				
-				String content = br.lines().collect(Collectors.joining("\n"));
-
-				return gson.fromJson(content, sample);
+				try ( BufferedReader br = new BufferedReader(new InputStreamReader( (response.getEntity().getContent())))) { 
+					String content = br.lines().collect(Collectors.joining("\n"));
+					return gson.fromJson(content, sample);
+				}
 
 			} else {
 				throw new ApplicationException(
