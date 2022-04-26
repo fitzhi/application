@@ -48,7 +48,7 @@ describe('AppComponent', () => {
 	}));
 
 	it('The toolbar should NOT exist until user is connected ' + environment.autoConnect, waitForAsync(() => {
-		const spy = spyOn(authService, 'isConnected').and.returnValue(false);
+		spyOn(authService, 'isConnected').and.returnValue(false);
 		const fixture = TestBed.createComponent(AppComponent);
 		fixture.detectChanges();
 		expect(document.getElementById('toolbar')).toBeNull();
