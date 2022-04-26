@@ -1,10 +1,12 @@
 <div id="connection" class="container">
 
-	<div class="row text-left" [hidden]="!veryFirstConnection">
-		<p class="important">This is the very first connection in fitzhì.</p>
-		<p>You need first to setup the admin user.</p>
-		This user has a complete access to the application features and is allowed to setup user rights.<br/>
-		Other admin users are possible.<br/><br/>
+	<div class="row d-flex flex-column text-left p-0" [hidden]="!veryFirstConnection">
+		<p class="mb-2 important">This is the very first connection in fitzhì.</p>
+		<p class="mb-0">You need first to setup the admin user.</p>
+		<p class="mb-0">
+			This user has a complete access to the application features and is allowed to setup user rights.<br/>
+			Other admin users are possible.<br/>
+		</p>
 	</div>
 
 	<div class="row text-left" style="padding-bottom:0px" [hidden]="veryFirstConnection">
