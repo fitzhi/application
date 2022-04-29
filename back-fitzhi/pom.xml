@@ -45,7 +45,6 @@
 		<google-api-client.version>1.33.4</google-api-client.version>
 		<google-api-client-http.version>1.2.3-alpha</google-api-client-http.version>
 
-
 		<!-- JaCoCo Properties -->
 		<jacoco.version>0.8.8</jacoco.version>
 		<sonar.java.coveragePlugin>jacoco</sonar.java.coveragePlugin>
