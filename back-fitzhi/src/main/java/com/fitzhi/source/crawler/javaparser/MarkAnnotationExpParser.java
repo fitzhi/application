@@ -1,7 +1,9 @@
 package com.fitzhi.source.crawler.javaparser;
 
 import static com.fitzhi.Error.CODE_GIT_ERROR;
+import static com.fitzhi.Error.CODE_INVALID_OPTIONAL_STORAGE;
 import static com.fitzhi.Error.MESSAGE_GIT_ERROR;
+import static com.fitzhi.Error.MESSAGE_INVALID_OPTIONAL_STORAGE;
 
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -15,10 +17,12 @@ import javax.validation.constraints.NotNull;
 import com.fitzhi.data.internal.Author;
 import com.fitzhi.data.internal.DetectedExperience;
 import com.fitzhi.data.internal.ExperienceDetectionTemplate;
-import com.fitzhi.data.internal.ProjectDetectedExperiences;
 import com.fitzhi.data.internal.Project;
+import com.fitzhi.data.internal.ProjectDetectedExperiences;
 import com.fitzhi.exception.ApplicationException;
+import com.github.javaparser.Position;
 import com.github.javaparser.ast.CompilationUnit;
+import com.github.javaparser.ast.CompilationUnit.Storage;
 import com.github.javaparser.ast.ImportDeclaration;
 import com.github.javaparser.ast.NodeList;
 import com.github.javaparser.ast.expr.MarkerAnnotationExpr;
@@ -114,7 +118,14 @@ public class MarkAnnotationExpParser implements ExperienceParser {
 	public void analyze(CompilationUnit compilationUnit, Git git, ProjectDetectedExperiences mapDetectedExperiences) throws ApplicationException {
 
 		if (log.isDebugEnabled()) {
-			log.debug(String.format("Analyzing file %s", compilationUnit.getStorage().get().getFileName()));
+			compilationUnit.getStorage().ifPresentOrElse(
+				storage -> {
+					log.debug(String.format("Analyzing file %s", storage.getFileName()));
+				},
+				() -> {
+					log.error(String.format("WTF : Optional<Storage> is empty"));
+				}
+			);
 		}
 
 		// Recherche des librairies importées
@@ -128,16 +139,22 @@ public class MarkAnnotationExpParser implements ExperienceParser {
 			return;
 		}
 		List<MarkerAnnotationExpr> list = compilationUnit.findAll(MarkerAnnotationExpr.class, this.predicate);
+
 		for (MarkerAnnotationExpr mae : list) {
 			if (mae.getBegin().isPresent()) {
-				Path pathRelative = pathGitDir.relativize(compilationUnit.getStorage().get().getPath());
+				Storage storage = compilationUnit.getStorage().orElseThrow(() -> 
+					new ApplicationException(
+						CODE_INVALID_OPTIONAL_STORAGE, 
+						MessageFormat.format(MESSAGE_INVALID_OPTIONAL_STORAGE, "Optional<Storage>")));
+				Path pathRelative = pathGitDir.relativize(storage.getPath());
 				if (log.isDebugEnabled()) {
-					log.debug (String.format("%s %s %s", 
-						compilationUnit.getStorage().get().getFileName(),
-						mae,
-						getPersonIdent(git, pathRelative.toString(), mae.getBegin().get().line)));
+					log.debug (String.format("%s %s", storage.getFileName(), mae));
 				}
-				PersonIdent pi = getPersonIdent(git, pathRelative.toString(), mae.getBegin().get().line);
+				Position position = mae.getBegin().orElseThrow(() -> 
+					new ApplicationException(
+						CODE_INVALID_OPTIONAL_STORAGE, 
+						MessageFormat.format(MESSAGE_INVALID_OPTIONAL_STORAGE, "Optional<Position>")));
+				PersonIdent pi = getPersonIdent(git, pathRelative.toString(), position.line);
 				Author author = new Author(pi.getName(), pi.getEmailAddress());
 				DetectedExperience de = DetectedExperience.of(detectionTemplate.getIdEDT(), project.getId(), author);
 				mapDetectedExperiences.inc(de);

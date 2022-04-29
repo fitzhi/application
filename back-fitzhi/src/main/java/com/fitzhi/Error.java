@@ -148,6 +148,9 @@ public class Error {
 	public static final int CODE_INVALID_HTTP_VERB = -1044;
 	public static final String MESSAGE_INVALID_HTTP_VERB = "Invalid HTTP verb \"{0}\".";
 
+	public static final int CODE_INVALID_OPTIONAL_STORAGE = -1045;
+	public static final String MESSAGE_INVALID_OPTIONAL_STORAGE = "INTERNAL ERROR {0} is empty.";
+
 	private Error() {
 	}
 	

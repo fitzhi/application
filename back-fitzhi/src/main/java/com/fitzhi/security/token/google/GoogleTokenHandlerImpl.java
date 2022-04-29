@@ -119,7 +119,7 @@ public class GoogleTokenHandlerImpl implements TokenHandler {
 				oit.setInError(false);
 				oit.setUserId(payload.getSubject());
 				oit.setEmail(payload.getEmail());
-				oit.setEmailVerified(Boolean.valueOf(payload.getEmailVerified()));
+				oit.setEmailVerified(payload.getEmailVerified());
 				oit.setName((String) payload.get("name"));
 				oit.setLogin("");
 				oit.setLocale((String) payload.get("locale"));

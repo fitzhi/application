@@ -271,11 +271,13 @@ public class EcosystemAnalyzerImpl implements EcosystemAnalyzer {
 					res = sourceRoot.tryToParse();
 					for (ParseResult<CompilationUnit> pr : res) {
 						if (pr.isSuccessful()) {
-							if (pr.getResult().isPresent()) {
-								CompilationUnit cu =  pr.getResult().get();
-								for (ExperienceParser parser : parsers) {
-									parser.analyze(cu, git, mapDetectedExperiences);
-								}
+							if (pr.getResult().isEmpty()) {
+								log.error("WTF Optional<CompilationUnit> is empty");
+								break;
+							}
+							CompilationUnit cu =  pr.getResult().orElse(new CompilationUnit());
+							for (ExperienceParser parser : parsers) {
+								parser.analyze(cu, git, mapDetectedExperiences);
 							}
 						}
 					}
