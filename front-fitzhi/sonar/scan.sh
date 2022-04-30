@@ -1,7 +1,7 @@
 
 sonar-scanner -X \
   -Dsonar.projectKey="Front_Fitzhi" \
-  -Dsonar.projectName=="Front Fitzhi" \
+  -Dsonar.projectName="Front Fitzhi" \
   -Dsonar.sources=. \
   -Dsonar.host.url=http://localhost:9000/sonar \
   -Dsonar.login=$1 \

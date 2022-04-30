@@ -17,7 +17,6 @@ getTestBed().initTestEnvironment(
 
 const context = require.context('./', true, /\.spec\.ts$/);
 // const context = require.context('./', true,  /alternative-openid-connection-google-github\.component\.spec\.ts$/);
-
 // const context = require.context('./', true,  /auth\.service\.spec\.ts$/);
 // const context = require.context('./', true,  /register-user\.component\.spec\.ts$/);
 // const context = require.context('./', true,  /callback-github-connect-1\.component\.spec\.ts$/);
