@@ -45,7 +45,10 @@ public class SimpleCorsFilter implements Filter {
         HttpServletResponse response = (HttpServletResponse) res;
         HttpServletRequest request = (HttpServletRequest) req;
 
-        response.setHeader("Access-Control-Allow-Origin", allowedOrigins);
+        // In JUnit testing mode, the origin might be null. We use then localhost
+        final String origin = (request.getHeader("Origin") == null) ? "http://localhost" : request.getHeader("Origin");
+
+        response.setHeader("Access-Control-Allow-Origin", origin);
         response.setHeader("Access-Control-Allow-Methods", "POST, PUT, GET, OPTIONS, DELETE");
         response.setHeader("Access-Control-Max-Age", "3600");
         response.setHeader("Access-Control-Allow-Headers",  "*");

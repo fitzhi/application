@@ -20,7 +20,7 @@ import org.junit.runner.RunWith;
 import org.springframework.test.context.junit4.SpringRunner;
 
 /**
- * This class is testing the method {@link GitCrawler#che}
+ * This class is testing the method {@link GitCrawler#checkBranchNameExist(Git, String)}
  * 
  * @author Fr&eacute;d&eacute;ric VIDAL
  */

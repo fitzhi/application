@@ -34,6 +34,9 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.nio.file.attribute.FileAttribute;
+import java.nio.file.attribute.PosixFilePermission;
+import java.nio.file.attribute.PosixFilePermissions;
 import java.text.MessageFormat;
 import java.time.LocalDate;
 import java.time.ZoneId;
@@ -99,6 +102,7 @@ import com.fitzhi.source.crawler.EcosystemAnalyzer;
 import com.fitzhi.source.crawler.impl.AbstractScannerDataGenerator;
 import com.google.gson.Gson;
 
+import org.apache.commons.lang3.SystemUtils;
 import org.eclipse.jgit.api.Git;
 import org.eclipse.jgit.api.errors.GitAPIException;
 import org.eclipse.jgit.api.errors.JGitInternalException;
@@ -568,9 +572,15 @@ public class GitCrawler extends AbstractScannerDataGenerator {
 	 * @param project the current project which local repository has to be created
 	 * @throws ApplicationException throw if any exception occurs.
 	 */
-	private Path mkdirLocalRepo(Project project) throws ApplicationException {
+	static Path mkdirLocalRepo(Project project) throws ApplicationException {
 		try {
-			return Files.createTempDirectory("fitzhi_jgit_" + project.getName().replace(" ","_")  + "_");
+			if(SystemUtils.IS_OS_UNIX) {
+				FileAttribute<Set<PosixFilePermission>> attr = PosixFilePermissions.asFileAttribute(PosixFilePermissions.fromString("rw-------"));			  
+				return Files.createTempDirectory("fitzhi_jgit_" + project.getName().replace(" ","_")  + "_", attr);	
+			} else {
+				// Security on Windows system, WTF...
+				return Files.createTempDirectory("fitzhi_jgit_" + project.getName().replace(" ","_")  + "_"); //NOSONAR
+			}
 		} catch (final IOException ioe) {
 			throw new ApplicationException(CODE_IO_EXCEPTION, ioe.getLocalizedMessage(), ioe);
 		}
