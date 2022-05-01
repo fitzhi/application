@@ -68,6 +68,7 @@ public class Global {
 	 */
 	public static final int UNKNOWN = -1;
 
+	public static final String REFS_HEAD = "refs/heads/";
 	/**
 	 * Deep cloning of an object by serialization.
 	 * @param object the given object to be cloned

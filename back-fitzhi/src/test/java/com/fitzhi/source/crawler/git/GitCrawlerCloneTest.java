@@ -41,7 +41,9 @@ public class GitCrawlerCloneTest {
 	@Before
 	public void before() throws Exception {
 		projectHandler.addNewProject(new Project(1515, "Marignan"));
+		projectHandler.getProject(1515).setBranch("master");
 		projectHandler.addNewProject(new Project(1214, "Bouvines"));	
+		projectHandler.getProject(1214).setBranch("master");
 	}
 
 	/**

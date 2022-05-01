@@ -52,6 +52,7 @@ public class FitzhiWebMvcConfigurer implements WebMvcConfigurer {
 	@Bean
 	public CommonsMultipartResolver multipartResolver() {
 		CommonsMultipartResolver commonsMultipartResolver = new CommonsMultipartResolver();
+		commonsMultipartResolver.setMaxUploadSize(8388608);
 		commonsMultipartResolver.setDefaultEncoding("UTF-8");
 		return commonsMultipartResolver;
 	}

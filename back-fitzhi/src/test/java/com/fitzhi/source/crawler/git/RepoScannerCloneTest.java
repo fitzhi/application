@@ -15,6 +15,8 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
 
+import lombok.extern.slf4j.Slf4j;
+
 /**
  * <p>
  * Test of the method {@link RepoScanner#clone(com.fitzhi.data.internal.Project, com.fitzhi.data.source.ConnectionSettings)}
@@ -24,6 +26,7 @@ import org.springframework.test.context.junit4.SpringRunner;
  */
 @RunWith(SpringRunner.class)
 @SpringBootTest
+@Slf4j
 public class RepoScannerCloneTest {
  
 	@Autowired
@@ -56,12 +59,11 @@ public class RepoScannerCloneTest {
 
 	@Test
 	public void validPassword() throws Exception {
-		Project project = new Project(1790, "One year after the great Revolution");
+		Project project = projectHandler.getProject(1790);
 		ConnectionSettings settings = new ConnectionSettings();
 		settings.setPublicRepository(false);
 		settings.setUrl("https://github.com/frvidal/test.git");
 		settings.setLogin("frvidal");
-		System.out.println("Token " + System.getenv("TOKEN_FRVIDAL"));
 		settings.setPassword(System.getenv("TOKEN_FRVIDAL"));
 
 		scanner.clone(project, settings);

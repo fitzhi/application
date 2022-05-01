@@ -26,6 +26,7 @@ import static com.fitzhi.Global.NO_PROGRESSION;
 import static com.fitzhi.Global.PROJECT;
 import static com.fitzhi.bean.impl.RepositoryState.REPOSITORY_READY;
 import static org.eclipse.jgit.diff.DiffEntry.DEV_NULL;
+import static com.fitzhi.Global.REFS_HEAD;
 
 import java.io.File;
 import java.io.FileReader;
@@ -480,9 +481,14 @@ public class GitCrawler extends AbstractScannerDataGenerator {
 	 * @throws GitAPIException thrown if the GIT operation failed for a bad reason.
 	 * @throws ApplicationException thrown if the application detects a problem
 	 */
-	private void checkBranchNameExist(Git git, String branchName) throws GitAPIException, ApplicationException {
+	static void checkBranchNameExist(Git git, String branchName) throws GitAPIException, ApplicationException {
 		java.util.List<Ref> branches = git.branchList().call();
-		if (branches.size() == 0) {
+		if (branches.isEmpty()) {
+			throw new ApplicationException(
+				CODE_BRANCH_DOES_NOT_EXIST, 
+				MessageFormat.format(MESSAGE_BRANCH_DOES_NOT_EXIST, branchName));
+		}
+		if (!branches.stream().anyMatch(ref -> (REFS_HEAD + branchName).equals(ref.getName()))) {
 			throw new ApplicationException(
 				CODE_BRANCH_DOES_NOT_EXIST, 
 				MessageFormat.format(MESSAGE_BRANCH_DOES_NOT_EXIST, branchName));
