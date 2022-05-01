@@ -5,6 +5,7 @@ import  java.nio.file.Path;
 import com.fitzhi.data.internal.Project;
 import com.fitzhi.exception.ApplicationException;
 
+import org.apache.commons.lang3.SystemUtils;
 import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -27,9 +28,13 @@ public class GitCrawlerMkdirLocalRepoTest {
 	@Test
 	public void userRights() throws ApplicationException {
 		Path path  = GitCrawler.mkdirLocalRepo(new Project(1, "my name of project"));
-		Assert.assertTrue(path.toFile().canRead());
-		Assert.assertTrue(path.toFile().canWrite());
-		Assert.assertFalse(path.toFile().canExecute());
+		if(SystemUtils.IS_OS_UNIX) {
+			Assert.assertTrue(path.toFile().canRead());
+			Assert.assertTrue(path.toFile().canWrite());
+			Assert.assertFalse(path.toFile().canExecute());
+		} else {
+			Assert.assertTrue(SystemUtils.IS_OS_WINDOWS);
+		}
 	}
 
 }
