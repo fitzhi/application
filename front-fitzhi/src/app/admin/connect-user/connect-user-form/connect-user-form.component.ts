@@ -50,7 +50,8 @@ export class ConnectUserFormComponent implements OnInit {
 				if (traceOn()) {
 					console.log ('Auto connnection to Fitzhi.');
 				}
-				this.connectionGroup.setValue({ username: 'guest', password: 'anonymous' });
+				// This is not a security leak. This is just an "anonymous" password
+				this.connectionGroup.setValue({ username: 'guest', password: 'anonymous' }); //NOSONAR
 				this.onSubmit();
 			}, 1000);
 		}
