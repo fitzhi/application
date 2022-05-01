@@ -2,6 +2,7 @@
 
 export VERSION_FITZHI=`cat ../back-fitzhi/VERSION_FITZHI`
 export SONAR_HOST_URL=`cat ./SONAR_HOST_URL`
+export SONAR_TOKEN=`cat ./SONAR_TOKEN`
 
 echo "Build, push and test the Fitzhi container for the release ${VERSION_FITZHI} of Fitzhi."
 echo "Sonar server is located @ ${SONAR_HOST_URL}."
@@ -36,7 +37,7 @@ docker pull fitzhi/application:${VERSION_FITZHI}
 docker volume create fitzhi-data
 docker run --name fitzhi \
 -e "urlSonarServer=http://${SONAR_HOST_URL}:9000" \
--e "login=c1574b8a8ca259d527d7c8d1d630e6322f2b0455" \
+-e "login=${SONAR_TOKEN}" \
 -v fitzhi-data:/fitzhi/deploy/ \
 -p 80:80 -d --rm fitzhi/application:${VERSION_FITZHI}
 
