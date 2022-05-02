@@ -5,7 +5,6 @@ import com.fitzhi.data.internal.Project;
 import com.fitzhi.data.source.ConnectionSettings;
 import com.fitzhi.source.crawler.RepoScanner;
 
-import org.eclipse.jgit.api.errors.GitAPIException;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;

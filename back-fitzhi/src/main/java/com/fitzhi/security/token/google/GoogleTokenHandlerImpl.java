@@ -100,10 +100,10 @@ public class GoogleTokenHandlerImpl implements TokenHandler {
 			throw new ApplicationRuntimeException("SHOULD NOT PASS HERE");
 		}
 
-		HttpTransport HTTP_TRANSPORT = new NetHttpTransport();
+		HttpTransport httpTransport = new NetHttpTransport();
 		final GsonFactory jsonFactory = GsonFactory.getDefaultInstance();
 
-		GoogleIdTokenVerifier verifier = new GoogleIdTokenVerifier.Builder(HTTP_TRANSPORT, jsonFactory)
+		GoogleIdTokenVerifier verifier = new GoogleIdTokenVerifier.Builder(httpTransport, jsonFactory)
 			.setAudience(Arrays.asList(this.clientId)) // Specify the list of CLIENT_IDs that accesses the backend:
 			.build();
 
