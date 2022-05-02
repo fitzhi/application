@@ -6,4 +6,4 @@
 [![CodeFactor](https://www.codefactor.io/repository/github/fitzhi/application/badge/master?style=for-the-badge)](https://www.codefactor.io/repository/github/fitzhi/application/overview/master)
 
 
-## The main documentation of Fitzhi is available on [the main site](http://www.fitzhi.com)
+## The main documentation of Fitzhi is available on [the main site](http://www.fitzhi.com).
