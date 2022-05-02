@@ -49,6 +49,8 @@ public class RepoScannerCloneValidTest {
 		settings.setLogin("frvidal");
 		settings.setPassword(System.getenv("TOKEN_FRVIDAL"));
 
+		Thread.sleep(1000);
+		
 		scanner.clone(project, settings);
 	}
 
