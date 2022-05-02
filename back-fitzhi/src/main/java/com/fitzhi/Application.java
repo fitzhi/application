@@ -89,15 +89,18 @@ public class Application {
 			LoggerFactory.getLogger(Application.class.getCanonicalName()).info("--------------------------------");
 			LoggerFactory.getLogger(Application.class.getCanonicalName()).info("Most of the settings below are configured inside the file 'applications.properties', which is just aside of Fitzhì.jar.");
 			LoggerFactory.getLogger(Application.class.getCanonicalName()).info("\tFiles pattern on-boarded in the evaluation : ");
-			LoggerFactory.getLogger(Application.class.getCanonicalName()).info(String.format("\t %s", patternsInclusion));
-			LoggerFactory.getLogger(Application.class.getCanonicalName()).info(String.format("\t Inactivity delay : %d", this.inactivityDelay));
+			LoggerFactory.getLogger(Application.class.getCanonicalName()).info("\t {}", patternsInclusion);
+			LoggerFactory.getLogger(Application.class.getCanonicalName()).info("\t Inactivity delay : {}", this.inactivityDelay);
 			LoggerFactory.getLogger(Application.class.getCanonicalName()).info("\tExternal directories which are excluded from the evaluation : ");
-			LoggerFactory.getLogger(Application.class.getCanonicalName()).info(String.format("\t %s", dependenciesMarker));
+			LoggerFactory.getLogger(Application.class.getCanonicalName()).info("\t {}", dependenciesMarker);
 			LoggerFactory.getLogger(Application.class.getCanonicalName()).info(((collapseEmptyDirectory) ? "\tDirectories should be collapsed" : "\tDirectories should NOT be collaped"));
 			LoggerFactory.getLogger(Application.class.getCanonicalName()).info(((prefilterEligibility) ? "\tFile eligibility is PREfiltered" : "\tFile eligibility id POSTfiltered"));
-			LoggerFactory.getLogger(Application.class.getCanonicalName()).info(((reposDir == null) ? 
-				"\tLocal repositories are hosted in a temporary destination" : String.format("\tLocal repositories are hosted in %s", reposDir)));
-			LoggerFactory.getLogger(Application.class.getCanonicalName()).info(String.format("\tLocale : %s", Locale.getDefault().toString()));
+			if (reposDir == null) {
+				LoggerFactory.getLogger(Application.class.getCanonicalName()).info("\tLocal repositories are hosted in a temporary destination") ;
+			} else {
+				LoggerFactory.getLogger(Application.class.getCanonicalName()).info("\tLocal repositories are hosted in {}", reposDir);
+			}
+			LoggerFactory.getLogger(Application.class.getCanonicalName()).info("\tLocale : {}", Locale.getDefault().toString());
 			
 		};
 	}
