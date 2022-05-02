@@ -62,13 +62,13 @@ public class Application {
 	@Value("${staffHandler.inactivity.delay}")
 	private int inactivityDelay;	
 	
-    /**
-     * <p>
-     * <i>Optional</i> repositories location.
-     * </p>
-     */
-    @Value("${gitcrawler.repositories.location:#{null}}")
-    private String reposDir;
+	/**
+	 * <p>
+	 * <i>Optional</i> repositories location.
+	 * </p>
+	 */
+	@Value("${gitcrawler.repositories.location:#{null}}")
+	private String reposDir;
 
 	
 	public static void main(String[] args) {
@@ -77,35 +77,35 @@ public class Application {
 	}
 
 	@Bean
-    CommandLineRunner init(
-    		@Qualifier("Application") StorageService storageServiceApplication,
-    		@Qualifier("Attachment") StorageService storageServiceAttachment) {
-        return (args) -> {
-        	LoggerFactory.getLogger(Application.class.getCanonicalName()).info("StorageService initialization");
-        	storageServiceApplication.init();
-        	storageServiceAttachment.init();
-          	
-            LoggerFactory.getLogger(Application.class.getCanonicalName()).info("Source code crawling settings : ");
-            LoggerFactory.getLogger(Application.class.getCanonicalName()).info("--------------------------------");
-            LoggerFactory.getLogger(Application.class.getCanonicalName()).info("Most of the settings below are configured inside the file 'applications.properties', which is just aside of Fitzhì.jar.");
-            LoggerFactory.getLogger(Application.class.getCanonicalName()).info("\tFiles pattern on-boarded in the evaluation : ");
-            LoggerFactory.getLogger(Application.class.getCanonicalName()).info(String.format("\t %s", patternsInclusion));
-            LoggerFactory.getLogger(Application.class.getCanonicalName()).info(String.format("\t Inactivity delay : %d", this.inactivityDelay));
-            LoggerFactory.getLogger(Application.class.getCanonicalName()).info("\tExternal directories which are excluded from the evaluation : ");
-	        LoggerFactory.getLogger(Application.class.getCanonicalName()).info(String.format("\t %s", dependenciesMarker));
-            LoggerFactory.getLogger(Application.class.getCanonicalName()).info(((collapseEmptyDirectory) ? "\tDirectories should be collapsed" : "\tDirectories should NOT be collaped"));
-            LoggerFactory.getLogger(Application.class.getCanonicalName()).info(((prefilterEligibility) ? "\tFile eligibility is PREfiltered" : "\tFile eligibility id POSTfiltered"));
+	CommandLineRunner init(
+			@Qualifier("Application") StorageService storageServiceApplication,
+			@Qualifier("Attachment") StorageService storageServiceAttachment) {
+		return args -> {
+			LoggerFactory.getLogger(Application.class.getCanonicalName()).info("StorageService initialization");
+			storageServiceApplication.init();
+			storageServiceAttachment.init();
+		  	
+			LoggerFactory.getLogger(Application.class.getCanonicalName()).info("Source code crawling settings : ");
+			LoggerFactory.getLogger(Application.class.getCanonicalName()).info("--------------------------------");
+			LoggerFactory.getLogger(Application.class.getCanonicalName()).info("Most of the settings below are configured inside the file 'applications.properties', which is just aside of Fitzhì.jar.");
+			LoggerFactory.getLogger(Application.class.getCanonicalName()).info("\tFiles pattern on-boarded in the evaluation : ");
+			LoggerFactory.getLogger(Application.class.getCanonicalName()).info(String.format("\t %s", patternsInclusion));
+			LoggerFactory.getLogger(Application.class.getCanonicalName()).info(String.format("\t Inactivity delay : %d", this.inactivityDelay));
+			LoggerFactory.getLogger(Application.class.getCanonicalName()).info("\tExternal directories which are excluded from the evaluation : ");
+			LoggerFactory.getLogger(Application.class.getCanonicalName()).info(String.format("\t %s", dependenciesMarker));
+			LoggerFactory.getLogger(Application.class.getCanonicalName()).info(((collapseEmptyDirectory) ? "\tDirectories should be collapsed" : "\tDirectories should NOT be collaped"));
+			LoggerFactory.getLogger(Application.class.getCanonicalName()).info(((prefilterEligibility) ? "\tFile eligibility is PREfiltered" : "\tFile eligibility id POSTfiltered"));
 			LoggerFactory.getLogger(Application.class.getCanonicalName()).info(((reposDir == null) ? 
 				"\tLocal repositories are hosted in a temporary destination" : String.format("\tLocal repositories are hosted in %s", reposDir)));
 			LoggerFactory.getLogger(Application.class.getCanonicalName()).info(String.format("\tLocale : %s", Locale.getDefault().toString()));
 			
 		};
-    }
+	}
 	
-    @Bean
-    public SavingBackendService task() {
-        return new SavingBackendService();
-    }
+	@Bean
+	public SavingBackendService task() {
+		return new SavingBackendService();
+	}
 
 	/**
 	 * Create and return a filter in charge of the generation for etags.
