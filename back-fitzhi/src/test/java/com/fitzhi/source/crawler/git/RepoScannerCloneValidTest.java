@@ -24,7 +24,7 @@ import org.springframework.test.context.junit4.SpringRunner;
  */
 @RunWith(SpringRunner.class)
 @SpringBootTest
-public class RepoScannerCloneTest {
+public class RepoScannerCloneValidTest {
  
 	@Autowired
 	@Qualifier("GIT")
@@ -38,20 +38,6 @@ public class RepoScannerCloneTest {
 		Project project = new Project(1790, "One year after the great Revolution");
 		project.setBranch("main");
 		projectHandler.addNewProject(project);
-	}
-
-	@Test (expected = GitAPIException.class)
-	public void invalidPassword() throws Exception {
-
-		Project project = projectHandler.getProject(1790);
-		
-		ConnectionSettings settings = new ConnectionSettings();
-		settings.setPublicRepository(false);
-		settings.setUrl("https://github.com/frvidal/test.git");
-		settings.setLogin("frvidal");
-		settings.setPassword("invalidPassword");
-
-		scanner.clone(project, settings);
 	}
 
 	@Test
