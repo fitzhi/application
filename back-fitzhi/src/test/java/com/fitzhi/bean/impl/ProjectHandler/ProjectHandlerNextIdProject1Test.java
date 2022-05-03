@@ -1,6 +1,12 @@
 package com.fitzhi.bean.impl.ProjectHandler;
 
+import static org.mockito.Mockito.spy;
+import static org.mockito.Mockito.when;
+
+import java.util.HashMap;
+
 import com.fitzhi.bean.ProjectHandler;
+import com.fitzhi.data.internal.Project;
 import com.fitzhi.exception.ApplicationException;
 
 import org.junit.Assert;
@@ -26,6 +32,8 @@ public class ProjectHandlerNextIdProject1Test {
 	@Test
 	public void empty() throws UnsupportedOperationException, ApplicationException {
 		projectHandler.getProjects().clear();
+		ProjectHandler spy = spy(projectHandler);
+		when(spy.getProjects()).thenReturn(new HashMap<Integer, Project>());
 		Assert.assertEquals(1, projectHandler.nextIdProject());
 	}
 }
