@@ -368,7 +368,7 @@ public class ProjectHandlerImpl extends AbstractDataSaverLifeCycleImpl implement
 	
 	@Override
 	public void initLocationRepository(int idProject) throws ApplicationException {
-		Project project = lookup(idProject);
+		Project project = getProject(idProject);
 		this.initLocationRepository(project);
 	}
 
