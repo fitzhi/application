@@ -172,24 +172,16 @@ public class ProjectHandlerImpl extends AbstractDataSaverLifeCycleImpl implement
 		if (log.isDebugEnabled()) {
 			log.debug (String.format("Retrieve the contributors list for the project id %d", idProject));
 		}
-		List<Contributor> contributors = new ArrayList<>();
-		staffHandler.getStaff().values().forEach(staff -> {
-			Optional<Mission> optMission  = 
-						staff.getMissions().stream()
-						.filter(mission -> mission.getIdProject() == idProject)
-						.findFirst();
-			if (optMission.isPresent()) {
-				Mission mission = optMission.get();
-				contributors.add(
-						new Contributor(
-								staff.getIdStaff(), 
-								mission.getFirstCommit(), 
-								mission.getLastCommit(), 
-								mission.getNumberOfCommits(), 
-								mission.getNumberOfFiles()));
-			}
-		});
-		return contributors;
+		return staffHandler.getStaff().values().stream()
+			.flatMap(st -> st.getMissions().stream())
+			.filter(mission -> mission.getIdProject() == idProject)
+			.map(mission -> new Contributor(
+				mission.getIdStaff(), 
+				mission.getFirstCommit(), 
+				mission.getLastCommit(), 
+				mission.getNumberOfCommits(), 
+				mission.getNumberOfFiles()))
+			.collect(Collectors.toList());
 	}
 
 	@Override
