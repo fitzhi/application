@@ -46,7 +46,7 @@ public class ProjectHandlerContributorsTest {
 	public void before() {
 		Staff st1 = new Staff(1, "firstName", "lastName", "nickName", "login", "email", "level");
 		st1.addMission(new Mission(1, 1, "one"));
-		st1.addMission(new Mission(1, 1789, "one"));
+		st1.addMission(new Mission(1, 1789, "Revolution"));
 		mockStaff.put(1, st1);
 
 		Staff st2 = new Staff(1, "firstName", "lastName", "nickName", "login", "email", "level");
@@ -68,6 +68,20 @@ public class ProjectHandlerContributorsTest {
 		Assert.assertFalse(projectHandler.contributors(1789).isEmpty());
 		Assert.assertEquals(1, projectHandler.contributors(1789).size());
 		Assert.assertEquals(1, projectHandler.contributors(1789).get(0).getIdStaff());
+	}
+
+	@Test
+	public void multiple() throws ApplicationException {
+		Staff st3 = new Staff(3, "firstName", "lastName", "nickName", "login", "email", "level");
+		st3.addMission(new Mission(3, 1, "one"));
+		st3.addMission(new Mission(3, 1789, "Revolution"));
+		mockStaff.put(2, st3);
+
+		when(staffHandler.getStaff()).thenReturn(mockStaff);
+		Assert.assertFalse(projectHandler.contributors(1789).isEmpty());
+		Assert.assertEquals(2, projectHandler.contributors(1789).size());
+		Assert.assertEquals(1, projectHandler.contributors(1789).get(0).getIdStaff());
+		Assert.assertEquals(3, projectHandler.contributors(1789).get(1).getIdStaff());
 	}
 
 	@Test
