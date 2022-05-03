@@ -3,6 +3,7 @@ package com.fitzhi.bean.impl.ProjectHandler;
 import com.fitzhi.bean.ProjectHandler;
 import com.fitzhi.data.internal.Project;
 import com.fitzhi.exception.ApplicationException;
+import com.fitzhi.exception.NotFoundException;
 
 import org.junit.After;
 import org.junit.Assert;
@@ -11,6 +12,8 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.annotation.DirtiesContext;
+import org.springframework.test.annotation.DirtiesContext.ClassMode;
 import org.springframework.test.context.junit4.SpringRunner;
 
 /**
@@ -19,6 +22,7 @@ import org.springframework.test.context.junit4.SpringRunner;
  */
 @RunWith(SpringRunner.class)
 @SpringBootTest
+@DirtiesContext(classMode=ClassMode.AFTER_EACH_TEST_METHOD)
 public class ProjectHandlerInitLocationRepositoryIdStaffTest {
 
 	Project project;
@@ -43,11 +47,13 @@ public class ProjectHandlerInitLocationRepositoryIdStaffTest {
 	}
 	
 
-	@Test (expected = ApplicationException.class)
+	@Test
 	public void notFound() throws ApplicationException {
-		projectHandler.initLocationRepository(1790);
+		
+		Assert.assertThrows(NotFoundException.class, () -> {
+			projectHandler.initLocationRepository(1790);
+		});
 		// initLocationReposioty(Project) has NOT been called
-		Assert.assertFalse(projectHandler.isDataUpdated());
 		Project prj = projectHandler.getProject(1789); 
 		Assert.assertNotNull(prj.getLocationRepository());
 	}
