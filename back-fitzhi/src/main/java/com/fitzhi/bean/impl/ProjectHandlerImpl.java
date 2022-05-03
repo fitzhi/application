@@ -710,7 +710,7 @@ public class ProjectHandlerImpl extends AbstractDataSaverLifeCycleImpl implement
 	public void saveUrlSonarServer(Project project, String newUrlSonarServer)  {
 		synchronized (lockDataUpdated) {
 			if ((newUrlSonarServer == null) || "".equals(newUrlSonarServer) || !newUrlSonarServer.equals(project.getUrlSonarServer())) {
-				project.setSonarProjects(new ArrayList<SonarProject>());
+				project.setSonarProjects(new ArrayList<>());
 			}
 			project.setUrlSonarServer(newUrlSonarServer);
 			this.dataUpdated = true;
