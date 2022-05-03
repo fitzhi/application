@@ -20,6 +20,7 @@ import java.util.Map;
 import java.util.NoSuchElementException;
 import java.util.Objects;
 import java.util.Optional;
+import java.util.Map.Entry;
 import java.util.stream.Collectors;
 
 import javax.validation.constraints.NotNull;
@@ -959,10 +960,10 @@ public class ProjectHandlerImpl extends AbstractDataSaverLifeCycleImpl implement
 		Map<Integer, ExperienceDetectionTemplate> templates = ecosystemAnalyzer.loadExperienceDetectionTemplates();
 
 		List<ExperienceAbacus> abacus = ecosystemAnalyzer.loadExperienceAbacus();
-		for (StaffExperienceTemplate staffExperienceTemplate : experiences.keySet()) {
-			final int idStaff = staffExperienceTemplate.getIdStaff();
-			final int idEDT = staffExperienceTemplate.getIdExperienceDetectionTemplate();
-			final int value = experiences.get(staffExperienceTemplate);
+		for (Entry<StaffExperienceTemplate, Integer> entry : experiences.entrySet()) {
+			final int idStaff = entry.getKey().getIdStaff();
+			final int idEDT = entry.getKey().getIdExperienceDetectionTemplate();
+			final int value = experiences.get(entry.getKey());
 
 			// We do not take in account developers with a negative value
 			if (value < 0) {
