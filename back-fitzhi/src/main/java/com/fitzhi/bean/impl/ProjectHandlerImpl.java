@@ -556,7 +556,7 @@ public class ProjectHandlerImpl extends AbstractDataSaverLifeCycleImpl implement
 			.collect(Collectors.toList());
 		
 		for (Ghost detectedGhost : detectedGhosts) {
-			if (!ghosts.stream().anyMatch(ghost -> detectedGhost.getPseudo().equals(ghost.getPseudo()))) {
+			if (ghosts.stream().noneMatch(ghost -> detectedGhost.getPseudo().equals(ghost.getPseudo()))) {
 				ghosts.add(detectedGhost);
 			}
 		}
