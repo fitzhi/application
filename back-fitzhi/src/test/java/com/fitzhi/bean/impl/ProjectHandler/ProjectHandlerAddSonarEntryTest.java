@@ -52,8 +52,9 @@ public class ProjectHandlerAddSonarEntryTest {
 		SonarProject sp = new SonarProject("key-sonar", "name-sonar");
 		project.getSonarProjects().add(sp);
 
+		// We add a second time
 		projectHandler.addSonarEntry(project, sp);
-		
+
 		Assert.assertFalse(projectHandler.isDataUpdated());
 	}
 
