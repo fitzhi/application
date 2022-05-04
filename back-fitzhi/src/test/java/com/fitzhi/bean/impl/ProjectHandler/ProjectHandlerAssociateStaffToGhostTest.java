@@ -22,7 +22,7 @@ import com.fitzhi.exception.ApplicationException;
 /**
  * <p>
  * Test the method {@link ProjectHandler#setGhostTechnicalStatus(Project, String, boolean) ProjectHandler.setGhostTechnicalStatus}
- * </p>setGhostTechnicalStatus
+ * </p>
  * @author Fr&eacute;d&eacute;ric VIDAL
  */
 @RunWith(SpringRunner.class)
