@@ -952,7 +952,8 @@ public class ProjectHandlerImpl extends AbstractDataSaverLifeCycleImpl implement
 	}
 
 	@Override
-	public void updateStaffSkillLevel(Map<StaffExperienceTemplate, Integer> experiences) throws ApplicationException {
+	public void updateStaffSkillLevel(Map<StaffExperienceTemplate, Integer> experiences) 
+		throws ApplicationException {
 
 		// Nothing to do.
 		if (experiences.isEmpty()) {

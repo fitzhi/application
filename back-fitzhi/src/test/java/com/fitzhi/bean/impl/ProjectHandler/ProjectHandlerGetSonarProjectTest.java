@@ -21,7 +21,7 @@ import org.springframework.test.context.junit4.SpringRunner;
 @RunWith(SpringRunner.class)
 public class ProjectHandlerGetSonarProjectTest {
    
-    private Project project;
+	private Project project;
 
 	@Before
 	public void before() throws ApplicationException {
@@ -29,13 +29,13 @@ public class ProjectHandlerGetSonarProjectTest {
 		project.getSonarProjects().add(new SonarProject("key-sonar", "value-sonar"));
 	}
 
-    @Test
-    public void found() throws ApplicationException { 
-        Assert.assertNotNull(ProjectHandlerImpl.getSonarProject(project, "key-sonar"));
-    }
+	@Test
+	public void found() throws ApplicationException { 
+		Assert.assertNotNull(ProjectHandlerImpl.getSonarProject(project, "key-sonar"));
+	}
 
-    @Test (expected = ApplicationException.class)
-    public void notFound() throws ApplicationException { 
-        ProjectHandlerImpl.getSonarProject(project, "key-unknown");
-    }
+	@Test (expected = ApplicationException.class)
+	public void notFound() throws ApplicationException { 
+		ProjectHandlerImpl.getSonarProject(project, "key-unknown");
+	}
 }
