@@ -788,8 +788,6 @@ public class ProjectHandlerImpl extends AbstractDataSaverLifeCycleImpl implement
 		}
 		
 		Path repo = Paths.get(project.getLocationRepository(), ".git");
-		System.out.println(repo.toFile().getAbsolutePath());
-		System.out.println(repo.toFile().exists());
 		if (log.isDebugEnabled()) {
 			log.debug(String.format("Examining if %s exists", repo.toFile().getAbsolutePath()));
 		}
@@ -934,17 +932,17 @@ public class ProjectHandlerImpl extends AbstractDataSaverLifeCycleImpl implement
 				Collectors.summingInt(DetectedExperience::getCount)));
 		
 		Map<StaffExperienceTemplate, Integer> staffAggregations = new HashMap<>();
-		for (AuthorExperienceTemplate authorExperienceTemplate : authorAggregations.keySet()) {
-			Staff staff = staffHandler.lookup(authorExperienceTemplate.getAuthor());
+		for (Entry<AuthorExperienceTemplate, Integer> entry : authorAggregations.entrySet()) {
+			Staff staff = staffHandler.lookup(entry.getKey().getAuthor());
 			if (staff != null) {
-				StaffExperienceTemplate key = StaffExperienceTemplate.of(authorExperienceTemplate.getIdExperienceDetectionTemplate(), staff.getIdStaff());
+				StaffExperienceTemplate key = StaffExperienceTemplate.of(entry.getKey().getIdExperienceDetectionTemplate(), staff.getIdStaff());
 				Integer count = staffAggregations.get(key);
 				if (count == null) {
 					// We create a new record 
-					staffAggregations.put(key, authorAggregations.get(authorExperienceTemplate));
+					staffAggregations.put(key, entry.getValue());
 				} else { 
 					// We update an existing one
-					staffAggregations.put(key, authorAggregations.get(authorExperienceTemplate) + count);
+					staffAggregations.put(key, entry.getValue() + count);
 				}
 			}
 		}

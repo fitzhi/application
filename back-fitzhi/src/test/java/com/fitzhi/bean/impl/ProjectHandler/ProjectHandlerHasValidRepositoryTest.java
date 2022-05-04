@@ -2,7 +2,6 @@ package com.fitzhi.bean.impl.ProjectHandler;
 
 import com.fitzhi.bean.ProjectHandler;
 import com.fitzhi.data.internal.Project;
-import com.fitzhi.exception.ApplicationException;
 
 import org.junit.Assert;
 import org.junit.Before;
