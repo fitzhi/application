@@ -11,6 +11,7 @@ import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
+import com.fitzhi.ApplicationRuntimeException;
 import com.fitzhi.bean.CacheDataHandler;
 import com.fitzhi.bean.DataHandler;
 import com.fitzhi.bean.ProjectHandler;
@@ -362,6 +363,16 @@ public class ProjectHandlerSaveProjectTest {
 
 		project = projectHandler.lookup(1789);
 		Assert.assertEquals("project.getBranch()", "branch", project.getBranch());
+	}
+
+	@Test(expected = ApplicationRuntimeException.class)
+	public void projectNotFound() throws ApplicationException {
+		projectHandler.saveProject(new Project(17890000, "name"));
+	}
+
+	@Test(expected = ApplicationException.class)
+	public void projectWithId0() throws ApplicationException {
+		projectHandler.saveProject(new Project(0, "zero"));
 	}
 
 	@After

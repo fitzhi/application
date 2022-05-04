@@ -126,6 +126,8 @@ public class ProjectHandlerImpl extends AbstractDataSaverLifeCycleImpl implement
 	@Autowired
 	EcosystemAnalyzer ecosystemAnalyzer;
 
+	private String pseudoNotFound = "%s does not exist anymore in the project %s (id: %d)";
+
 	@Override
 	public Map<Integer, Project> getProjects() throws ApplicationException {
 		if (this.projects != null) {
@@ -253,7 +255,7 @@ public class ProjectHandlerImpl extends AbstractDataSaverLifeCycleImpl implement
 
 			savedProject.setUrlCodeFactorIO((project.getUrlCodeFactorIO()));
 			if ((project.getUrlSonarServer() == null) || ("".equals(project.getUrlSonarServer()))) {
-				savedProject.setSonarProjects(new ArrayList<SonarProject>());
+				savedProject.setSonarProjects(new ArrayList<>());
 			}			
 			
 			// If we change the URL repository, we have to reset the previous clone (if any). 
@@ -447,8 +449,7 @@ public class ProjectHandlerImpl extends AbstractDataSaverLifeCycleImpl implement
 			}
 		}
 		throw new ApplicationRuntimeException(
-				String.format("%s does not exist anymore in the project %s (id: %d)",
-						pseudo, project.getName(), project.getId()));
+				String.format(pseudoNotFound, pseudo, project.getName(), project.getId()));
 	}
 
 	@Override
@@ -494,8 +495,7 @@ public class ProjectHandlerImpl extends AbstractDataSaverLifeCycleImpl implement
 			}		
 		}
 		throw new ApplicationRuntimeException(
-				String.format("%s does not exist anymore in the project %s (id: %d)",
-						pseudo, project.getName(), project.getId()));
+				String.format(pseudoNotFound, pseudo, project.getName(), project.getId()));
 		
 	}
 
@@ -522,8 +522,7 @@ public class ProjectHandlerImpl extends AbstractDataSaverLifeCycleImpl implement
 			}	
 		}
 		throw new ApplicationRuntimeException(
-				String.format("%s does not exist anymore in the project %s (id: %d)",
-						pseudo, project.getName(), project.getId()));
+				String.format(pseudoNotFound, pseudo, project.getName(), project.getId()));
 	}
 
 	
@@ -582,9 +581,9 @@ public class ProjectHandlerImpl extends AbstractDataSaverLifeCycleImpl implement
 			    Ghost ghost = iter.next();
 			    if (pseudo.equals(ghost.getPseudo())) {
 			        iter.remove();
+					this.dataUpdated = true;
 			    }
 			}			
-			this.dataUpdated = true;
 		}
 	}
 
