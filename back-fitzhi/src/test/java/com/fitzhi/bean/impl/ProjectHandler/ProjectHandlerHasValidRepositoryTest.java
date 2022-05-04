@@ -10,32 +10,43 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.test.annotation.DirtiesContext;
-import org.springframework.test.annotation.DirtiesContext.ClassMode;
 import org.springframework.test.context.junit4.SpringRunner;
 
 /**
- * This class tests the method {@link ProjectHandler#contributors(int)}
+ * This class tests the method {@link ProjectHandler#hasValidRepository(com.fitzhi.data.internal.Project)}
+ * 
  * @author Frederic VIDAL
  */
 @RunWith(SpringRunner.class)
 @SpringBootTest
-@DirtiesContext(classMode=ClassMode.AFTER_EACH_TEST_METHOD)
-public class ProjectHandlerContributorsHasValidRepositoryTest {
+public class ProjectHandlerHasValidRepositoryTest {
 
-	Project project;
-	
+	private Project project;
+
 	@Autowired
 	ProjectHandler projectHandler;
-	
+		
 	@Before
-	public void before() {
+	public void before() throws Exception {
 		project = new Project(1789, "The French revolution");
 	}
 
 	@Test
-	public void noRepository() throws ApplicationException {
+	public void noRepository() {
 		Assert.assertFalse(projectHandler.hasValidRepository(project));
 	}
-	
+
+	@Test
+	public void notFound()  {
+		project.setLocationRepository(".");
+		Assert.assertFalse(projectHandler.hasValidRepository(project));
+	}
+
+	@Test
+	public void found() {
+		// We use the Project .git located in the application folder, which is a parent of back-fitzhi
+		project.setLocationRepository("..");
+		Assert.assertTrue(projectHandler.hasValidRepository(project));
+	}
+
 }

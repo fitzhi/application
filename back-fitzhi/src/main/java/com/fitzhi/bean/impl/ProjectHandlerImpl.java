@@ -788,6 +788,8 @@ public class ProjectHandlerImpl extends AbstractDataSaverLifeCycleImpl implement
 		}
 		
 		Path repo = Paths.get(project.getLocationRepository(), ".git");
+		System.out.println(repo.toFile().getAbsolutePath());
+		System.out.println(repo.toFile().exists());
 		if (log.isDebugEnabled()) {
 			log.debug(String.format("Examining if %s exists", repo.toFile().getAbsolutePath()));
 		}
