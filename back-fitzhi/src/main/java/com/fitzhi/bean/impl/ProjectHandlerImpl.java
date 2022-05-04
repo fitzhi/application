@@ -130,6 +130,7 @@ public class ProjectHandlerImpl extends AbstractDataSaverLifeCycleImpl implement
 
 	@Override
 	public Map<Integer, Project> getProjects() throws ApplicationException {
+
 		if (this.projects != null) {
 			return this.projects;
 		}
@@ -605,7 +606,7 @@ public class ProjectHandlerImpl extends AbstractDataSaverLifeCycleImpl implement
 		}
 
 		System.out.println("----------------------------------------");
-		
+
 		/**
 		 * We update the name if necessary.
 		 */
