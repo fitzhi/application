@@ -605,8 +605,6 @@ public class ProjectHandlerImpl extends AbstractDataSaverLifeCycleImpl implement
 			return;
 		}
 
-		System.out.println("----------------------------------------");
-
 		/**
 		 * We update the name if necessary.
 		 */
