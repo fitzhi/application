@@ -643,7 +643,7 @@ public class ProjectHandlerImpl extends AbstractDataSaverLifeCycleImpl implement
 	}
 
 	@Override
-	public boolean containsSonarEntry(Project project, String key) {
+	public boolean containsSonarProject(Project project, String key) {
 		return project.getSonarProjects()
 				.stream()
 				.anyMatch(entry -> key.equals(entry.getKey()));
@@ -652,11 +652,11 @@ public class ProjectHandlerImpl extends AbstractDataSaverLifeCycleImpl implement
 	/**
 	 * Select the Sonar project corresponding to the couple (project, sonarKey)
 	 * @param project the given project
-	 * @param sonarKey the given 
-	 * @return
-	 * @throws ApplicationException
+	 * @param sonarKey the given Sonar key
+	 * @return the Sonar project found
+	 * @throws ApplicationException thrown most probably of the key has not been found
 	 */
-	private SonarProject getSonarProject(Project project, String sonarKey) throws ApplicationException {
+	public static SonarProject getSonarProject(Project project, String sonarKey) throws ApplicationException {
 		Optional<SonarProject> oSonarProject = project.getSonarProjects()
 				.stream()
 				.filter(sp -> sonarKey.equals(sp.getKey()))

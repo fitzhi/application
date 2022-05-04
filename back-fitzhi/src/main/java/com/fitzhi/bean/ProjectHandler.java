@@ -300,7 +300,7 @@ public interface ProjectHandler extends DataSaverLifeCycle {
 	 * @param key the key of a project declared in Sonar.
 	 * @return {@code true} if the key exists in the collection
 	 */
-	boolean containsSonarEntry(Project project, String key);
+	boolean containsSonarProject(Project project, String key);
 	
 	/**
 	 * Save the files statistics retrieved from the Sonar project.
