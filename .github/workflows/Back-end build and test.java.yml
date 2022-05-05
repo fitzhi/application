@@ -88,7 +88,9 @@ jobs:
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}  # Needed to get PR information, if any
         SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
-      run: mvn sonar:sonar -Dmaven.test.skip=true -Dsonar.host.url=https://sonarcloud.io/ -Dsonar.organization=fitzhi
+      run: |
+        export VERSION_FITZHI=`cat ./VERSION_FITZHI`
+        mvn sonar:sonar -Dmaven.test.skip=true -Dsonar.host.url=https://sonarcloud.io/ -Dsonar.organization=fitzhi
       if: (matrix.os == 'ubuntu-latest')
     - name: Extract branch name
       shell: bash
