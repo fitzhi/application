@@ -69,8 +69,8 @@ public class ProjectHandlerResetGhostTest {
 		ghosts.add(new Ghost("tech", -1, true));
 		project.setGhosts(ghosts);
 		projectHandler.resetGhost(project, "pseudo");
-		Assert.assertEquals(project.getGhosts().get(0).getPseudo(), "pseudo");
-		Assert.assertEquals(project.getGhosts().get(0).getIdStaff(), Ghost.NULL);
+		Assert.assertEquals("pseudo", project.getGhosts().get(0).getPseudo());
+		Assert.assertEquals(Ghost.NULL, project.getGhosts().get(0).getIdStaff());
 		Assert.assertTrue(projectHandler.isDataUpdated());
 	}
 }
