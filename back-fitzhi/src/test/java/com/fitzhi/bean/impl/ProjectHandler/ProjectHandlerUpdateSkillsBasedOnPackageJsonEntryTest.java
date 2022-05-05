@@ -63,7 +63,7 @@ public class ProjectHandlerUpdateSkillsBasedOnPackageJsonEntryTest {
 		project.setLocationRepository(".");
 
 		projectHandler.addNewProject(project);
-		
+		projectHandler.dataAreSaved();
 	}
 	
 	@Test

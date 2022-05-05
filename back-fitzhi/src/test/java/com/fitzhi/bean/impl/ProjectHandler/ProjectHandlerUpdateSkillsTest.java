@@ -69,6 +69,7 @@ public class ProjectHandlerUpdateSkillsTest {
 		project = new Project(1789, "my testing project 11");
 		project.setLocationRepository(".");
 		projectHandler.addNewProject(project);
+		projectHandler.dataAreSaved();
 		
 	}
 	

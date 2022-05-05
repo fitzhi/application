@@ -35,6 +35,7 @@ public class ProjectHandlerInitLocationRepositoryIdStaffTest {
 		project = new Project(1789, "my testing project 5");
 		projectHandler.addNewProject(project);
 		project.setLocationRepository("theLocationRepository");
+		projectHandler.dataAreSaved();
 	}
 	
 	@Test

@@ -58,6 +58,7 @@ public class ProjectHandlerUpdateSkillsBasedOnFilenameDetectionTest {
 		project = new Project(1789, "my testing project 8");
 		project.setLocationRepository(".");
 		projectHandler.addNewProject(project);
+		projectHandler.dataAreSaved();
 	}
 	
 	@Test
