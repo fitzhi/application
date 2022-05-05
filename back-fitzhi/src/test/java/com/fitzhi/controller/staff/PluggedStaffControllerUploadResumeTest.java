@@ -1,6 +1,3 @@
-/**
- * 
- */
 package com.fitzhi.controller.staff;
 
 import static org.assertj.core.api.Assertions.assertThat;
