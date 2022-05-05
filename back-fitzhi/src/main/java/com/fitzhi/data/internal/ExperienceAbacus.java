@@ -11,6 +11,12 @@ import lombok.Data;
  */
 public @Data class ExperienceAbacus {
 
+
+	public ExperienceAbacus(final int idAbacus, final int idExperienceDetectionTemplate) {
+		this.idAbacus = idAbacus;
+		this.idExperienceDetectionTemplate = idExperienceDetectionTemplate;
+	}
+
 	/**
 	 * This object identifier.
 	 */

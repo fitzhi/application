@@ -79,7 +79,7 @@ public class ScheduledTasks {
 				log.info("Starting the experiences detection.");
 			}
 			projectHandler.processProjectsExperiences();
-			projectHandler.updateStaffSkillLevel(projectHandler.processGlobalExperiences());
+			projectHandler.updateProjectStaffSkillLevel(projectHandler.processGlobalExperiences());
 			if (log.isInfoEnabled()) {
 				log.info("Peacefully terminate the experiences detection.");
 			}

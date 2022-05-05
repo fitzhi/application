@@ -950,7 +950,7 @@ public class ProjectHandlerImpl extends AbstractDataSaverLifeCycleImpl implement
 	}
 
 	@Override
-	public void updateStaffSkillLevel(Map<StaffExperienceTemplate, Integer> experiences) 
+	public void updateProjectStaffSkillLevel(Map<StaffExperienceTemplate, Integer> experiences) 
 		throws ApplicationException {
 
 		// Nothing to do.
@@ -966,46 +966,54 @@ public class ProjectHandlerImpl extends AbstractDataSaverLifeCycleImpl implement
 			final int idEDT = entry.getKey().getIdExperienceDetectionTemplate();
 			final int value = experiences.get(entry.getKey());
 
-			// We do not take in account developers with a negative value
-			if (value >= 0) {
+			updateStaffSkillSystemLevel(idStaff, idEDT, value, templates, abacus);
 
-				// If the staff member does not exist anymore, we skip him
-				Staff staff = staffHandler.lookup(idStaff);
-				if (staff == null) {
-					if (log.isWarnEnabled()) {
-						log.warn(String.format("Staff id %d does not exist anymore", idStaff));
-					}
-				} else {
-					
-					ExperienceDetectionTemplate edt = templates.get(idEDT);
-					if (edt == null) {
-						throw new ApplicationRuntimeException("WTF : edt should not be null at this stage!");
-					}
-		
-					final int idSkill = edt.getIdSkill();
-					if (log.isDebugEnabled()) {
-						log.debug(String.format("Setting the level of skill/id %d for staff/id %d", idSkill, idStaff));
-					}
-		
-					Optional<ExperienceAbacus> oExperienceAbacus = abacus.stream()
-						.filter (ea -> (ea.getIdExperienceDetectionTemplate() == idEDT))
-						.filter (ea -> (ea.getValue() <= value))
-						.sorted((ea1, ea2) -> (ea2.getValue() - ea1.getValue()))
-						.findFirst();
-					if (!oExperienceAbacus.isPresent()) {
-						if (log.isWarnEnabled()) {
-							log.warn(String.format(
-								"Cannot retrieve an entry in the abacus for the value %d of %d", value, idEDT));
-						}
-					} else {
-						ExperienceAbacus ea = oExperienceAbacus.get();
-						staffHandler.updateSkillSystemLevel(idStaff, idSkill, ea.getLevel());
-						if (log.isDebugEnabled()) {
-							log.debug(String.format("updateSkillSystemLevel(%d, %d, %d)", idStaff, idSkill, ea.getLevel()));
-						}
-					}
-		
-				}
+		}
+	}
+
+	@Override
+	public void updateStaffSkillSystemLevel(final int idStaff, final int idEDT, final int value, Map<Integer, ExperienceDetectionTemplate> templates, List<ExperienceAbacus> abacus) 
+		throws ApplicationException {
+
+		// We do not take in account developers with a negative value
+		if (value < 0) {
+			return;
+		}
+
+		// If the staff member does not exist anymore, we skip him
+		Staff staff = staffHandler.lookup(idStaff);
+		if (staff == null) {
+			if (log.isWarnEnabled()) {
+				log.warn(String.format("Staff id %d does not exist anymore", idStaff));
+			}
+			return;
+		}
+			
+		ExperienceDetectionTemplate edt = templates.get(idEDT);
+		if (edt == null) {
+			throw new ApplicationRuntimeException("WTF : edt should not be null at this stage!");
+		}
+
+		final int idSkill = edt.getIdSkill();
+		if (log.isDebugEnabled()) {
+			log.debug(String.format("Setting the level of skill/id %d for staff/id %d", idSkill, idStaff));
+		}
+
+		Optional<ExperienceAbacus> oExperienceAbacus = abacus.stream()
+			.filter (ea -> (ea.getIdExperienceDetectionTemplate() == idEDT))
+			.filter (ea -> (ea.getValue() <= value))
+			.sorted((ea1, ea2) -> (ea2.getValue() - ea1.getValue()))
+			.findFirst();
+		if (!oExperienceAbacus.isPresent()) {
+			if (log.isWarnEnabled()) {
+				log.warn(String.format(
+					"Cannot retrieve an entry in the abacus for the value %d of %d", value, idEDT));
+			}
+		} else {
+			ExperienceAbacus ea = oExperienceAbacus.get();
+			staffHandler.updateSkillSystemLevel(idStaff, idSkill, ea.getLevel());
+			if (log.isDebugEnabled()) {
+				log.debug(String.format("updateSkillSystemLevel(%d, %d, %d)", idStaff, idSkill, ea.getLevel()));
 			}
 		}
 	}

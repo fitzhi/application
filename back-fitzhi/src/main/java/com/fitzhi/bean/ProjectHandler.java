@@ -9,6 +9,8 @@ import javax.validation.constraints.NotNull;
 
 import com.fitzhi.bean.impl.ProjectHandlerImpl;
 import com.fitzhi.data.internal.Experience;
+import com.fitzhi.data.internal.ExperienceAbacus;
+import com.fitzhi.data.internal.ExperienceDetectionTemplate;
 import com.fitzhi.data.internal.FilesStats;
 import com.fitzhi.data.internal.Ghost;
 import com.fitzhi.data.internal.Library;
@@ -395,13 +397,33 @@ public interface ProjectHandler extends DataSaverLifeCycle {
 
 	/**
 	 * <p>
-	 * Update for all staff members declared in the application, 
+	 * Update for <b>ALL</b> staff members declared in the application, 
 	 * the <b>"system"</b> {@link Experience level for all skills} detected in the projects.
 	 * </p>
+	 * <p>
+	 * The level on experiences can be set by the end user in the staff form, or automatically assessed by Fitzhi
+	 * </p>
 	 * 
-	 * @param experiences the map containing the experiences retrieved from the activities 
+	 * @param experiences the map containing the experiences involved by the activities 
 	 * @throws ApplicationException thrown if any problem occurs.
 	 */
-	void updateStaffSkillLevel(Map<StaffExperienceTemplate, Integer> experiences) throws ApplicationException;
+	void updateProjectStaffSkillLevel(Map<StaffExperienceTemplate, Integer> experiences) throws ApplicationException;
+
+	/**
+	 * <p>
+	 * Update one experience for a given staff member.
+	 * The level on experiences can be set by the end user in the staff form, or automatically assessed by Fitzhi
+	 * </p>
+	 * 
+	 * @param idStaff the Staff identifier
+	 * @param idEDT the experience of detection template
+	 * @param value the computed value by the system
+	 * @param templates the experience (skill/level) detection templates declared in the application.
+	 * @param abacus the abacus
+	 *
+	 * @throws ApplicationException thrown if any problem occurs.
+	 */
+	void updateStaffSkillSystemLevel (final int idStaff, final int idEDT, final int value, Map<Integer, ExperienceDetectionTemplate> templates, List<ExperienceAbacus> abacus)
+		throws ApplicationException;
 
 }
