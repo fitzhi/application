@@ -45,7 +45,7 @@ public class ProjectAuditHandlerAddUpdateAttachmentFileTest {
 	private int ID_PROJECT = 314116;
 	@Before
 	public void before() throws ApplicationException {
-		project = projectHandler.addNewProject(new Project(ID_PROJECT, "PI"));
+		project = projectHandler.addNewProject(new Project(ID_PROJECT, "PI 2"));
 		project.setAudit(new HashMap<Integer, AuditTopic>());
 		AuditTopic auditTopic = new AuditTopic();
 		auditTopic.setEvaluation(40);
