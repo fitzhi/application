@@ -28,7 +28,7 @@ import org.springframework.test.annotation.DirtiesContext.ClassMode;
 import org.springframework.test.context.junit4.SpringRunner;
 
 /**
- * Test of method {@link ProjectHandler#updateProjectStaffSkillLevel(java.util.Map)}.
+ * Test of method {@link ProjectHandler#updateProjectStaffSkillLevel(java.util.Map)}
  * 
  * @author Frederic VIDAL
  */
