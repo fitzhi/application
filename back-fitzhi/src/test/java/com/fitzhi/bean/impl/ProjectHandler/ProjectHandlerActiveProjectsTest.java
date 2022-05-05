@@ -37,8 +37,12 @@ public class ProjectHandlerActiveProjectsTest {
 			}
 		}
 
+		String message = projectHandler.activeProjects().stream()
+			.map(p -> p.getId() + " " + p.getName() + ", ")
+			.collect(StringBuilder::new, StringBuilder::append, StringBuilder::append)
+			.toString();
 		// There are 3 active projects declared in the file Projects.json.
-		Assert.assertEquals(3, projectHandler.activeProjects().size());
+		Assert.assertEquals("Invalid number of active projects / Projects (" +message+")", 3, projectHandler.activeProjects().size());
 
 		// We inactivate the project 2.
 		projectHandler.inactivateProject(projectHandler.getProject(2));
