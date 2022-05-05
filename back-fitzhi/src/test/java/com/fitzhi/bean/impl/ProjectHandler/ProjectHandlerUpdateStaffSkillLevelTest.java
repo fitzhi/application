@@ -23,15 +23,18 @@ import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.test.annotation.DirtiesContext;
+import org.springframework.test.annotation.DirtiesContext.ClassMode;
 import org.springframework.test.context.junit4.SpringRunner;
 
 /**
- * Test of method {@link ProjectHandler#updateStaffSkillLevel(java.util.Map)}.
+ * Test of method {@link ProjectHandler#updateProjectStaffSkillLevel(java.util.Map)}.
  * 
  * @author Frederic VIDAL
  */
 @RunWith(SpringRunner.class)
 @SpringBootTest
+@DirtiesContext(classMode=ClassMode.BEFORE_CLASS)
 public class ProjectHandlerUpdateStaffSkillLevelTest {
 
 	@Autowired
@@ -47,7 +50,7 @@ public class ProjectHandlerUpdateStaffSkillLevelTest {
 	public void valueTooSmall() throws ApplicationException {
 		Map<StaffExperienceTemplate, Integer> staffExpData = new HashMap<>();
 		staffExpData.put(StaffExperienceTemplate.of(2, 1), 30);
-		projectHandler.updateStaffSkillLevel(staffExpData);
+		projectHandler.updateProjectStaffSkillLevel(staffExpData);
 		verify(staffHandler, never()).updateSkillSystemLevel(1, 1, 1);
 	}
 
@@ -57,7 +60,7 @@ public class ProjectHandlerUpdateStaffSkillLevelTest {
 		doNothing().when(staffHandler).updateSkillSystemLevel(1, 1, 1);
 		Map<StaffExperienceTemplate, Integer> staffExpData = new HashMap<>();
 		staffExpData.put(StaffExperienceTemplate.of(2, 1), 3000);
-		projectHandler.updateStaffSkillLevel(staffExpData);
+		projectHandler.updateProjectStaffSkillLevel(staffExpData);
 		verify(staffHandler, times(1)).updateSkillSystemLevel(1, 1, 1);
 		verify(staffHandler, times(1)).lookup(1);
 	}
@@ -68,7 +71,7 @@ public class ProjectHandlerUpdateStaffSkillLevelTest {
 		doNothing().when(staffHandler).updateSkillSystemLevel(1, 1, 3);
 		Map<StaffExperienceTemplate, Integer> staffExpData = new HashMap<>();
 		staffExpData.put(StaffExperienceTemplate.of(2, 1), 13000);
-		projectHandler.updateStaffSkillLevel(staffExpData);
+		projectHandler.updateProjectStaffSkillLevel(staffExpData);
 		verify(staffHandler, times(1)).updateSkillSystemLevel(1, 1, 3);
 		verify(staffHandler, times(1)).lookup(1);
 	}
@@ -79,7 +82,7 @@ public class ProjectHandlerUpdateStaffSkillLevelTest {
 		doThrow(new ApplicationException()).when(staffHandler).updateSkillSystemLevel(1, 1, 3);
 		Map<StaffExperienceTemplate, Integer> staffExpData = new HashMap<>();
 		staffExpData.put(StaffExperienceTemplate.of(2, 1), 13000);
-		projectHandler.updateStaffSkillLevel(staffExpData);
+		projectHandler.updateProjectStaffSkillLevel(staffExpData);
 		verify(staffHandler, times(1)).lookup(1);
 		verify(staffHandler, times(1)).updateSkillSystemLevel(1, 1, 3);
 	}
@@ -89,7 +92,7 @@ public class ProjectHandlerUpdateStaffSkillLevelTest {
 		when(staffHandler.lookup(1)).thenReturn(null);
 		Map<StaffExperienceTemplate, Integer> staffExpData = new HashMap<>();
 		staffExpData.put(StaffExperienceTemplate.of(2, 1789), 7000);
-		projectHandler.updateStaffSkillLevel(staffExpData);
+		projectHandler.updateProjectStaffSkillLevel(staffExpData);
 		verify(staffHandler, never()).updateSkillSystemLevel(anyInt(), anyInt(), anyInt());
 		verify(staffHandler, times(1)).lookup(1789);
 	}
