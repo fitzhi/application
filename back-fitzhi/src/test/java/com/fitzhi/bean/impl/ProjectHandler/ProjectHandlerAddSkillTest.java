@@ -28,7 +28,7 @@ public class ProjectHandlerAddSkillTest {
 	
 	@Before
 	public void before() throws ApplicationException {
-		project = new Project(1789, "my testing project");
+		project = new Project(1789, "my testing project 1");
 		projectHandler.addSkill(project, new ProjectSkill(1, 10, 0));
 	}
 	

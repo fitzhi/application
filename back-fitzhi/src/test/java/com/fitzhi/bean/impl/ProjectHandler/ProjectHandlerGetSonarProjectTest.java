@@ -25,7 +25,7 @@ public class ProjectHandlerGetSonarProjectTest {
 
 	@Before
 	public void before() throws ApplicationException {
-		project = new Project(1789, "my testing project");
+		project = new Project(1789, "my testing project 4");
 		project.getSonarProjects().add(new SonarProject("key-sonar", "value-sonar"));
 	}
 

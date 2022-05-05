@@ -59,7 +59,7 @@ public class ProjectHandlerUpdateSkillsBasedOnPomXmlEntryTest {
 		repo.add(php);
 		repo.add(pomXml);
 		
-		project = new Project(1789, "my testing project");
+		project = new Project(1789, "my testing project 10");
 		project.setLocationRepository(".");
 
 		projectHandler.addNewProject(project);

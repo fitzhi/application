@@ -66,7 +66,7 @@ public class ProjectHandlerUpdateSkillsTest {
 		repo.add(php);
 		repo.add(ts);
 		
-		project = new Project(1789, "my testing project");
+		project = new Project(1789, "my testing project 11");
 		project.setLocationRepository(".");
 		projectHandler.addNewProject(project);
 		

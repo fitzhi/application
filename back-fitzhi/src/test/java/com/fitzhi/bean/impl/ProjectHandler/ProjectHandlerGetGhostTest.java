@@ -31,7 +31,7 @@ public class ProjectHandlerGetGhostTest {
 	
 	@Before
 	public void before() throws ApplicationException {
-		project = new Project(1789, "my testing project");
+		project = new Project(1789, "my testing project 3");
 		List<Ghost> ghosts = new ArrayList<Ghost>();
 		ghosts.add(new Ghost("myPseudo", 122, false));
 		project.setGhosts(ghosts);

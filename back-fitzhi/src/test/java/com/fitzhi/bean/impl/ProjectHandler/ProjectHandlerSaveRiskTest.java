@@ -24,7 +24,7 @@ public class ProjectHandlerSaveRiskTest {
 	
 	@Test
 	public void save() throws ApplicationException {
-		Project project = new Project(1789, "my testing project");
+		Project project = new Project(1789, "my testing project 7");
 		projectHandler.saveRisk(project, 123);
 		Assert.assertEquals(123, project.getStaffEvaluation());
 		Assert.assertTrue(projectHandler.isDataUpdated());

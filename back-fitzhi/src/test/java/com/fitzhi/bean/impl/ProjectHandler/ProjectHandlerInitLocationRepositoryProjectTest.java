@@ -28,7 +28,7 @@ public class ProjectHandlerInitLocationRepositoryProjectTest {
 	
 	@Before
 	public void before() throws ApplicationException {
-		project = new Project(1789, "my testing project");
+		project = new Project(1789, "my testing project 6");
 		project.setLocationRepository("theLocationRepository");
 		projectHandler.addNewProject(project);
 	}
