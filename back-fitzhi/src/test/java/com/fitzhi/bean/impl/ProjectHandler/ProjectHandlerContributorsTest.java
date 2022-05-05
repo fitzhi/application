@@ -29,7 +29,7 @@ import org.springframework.test.context.junit4.SpringRunner;
  */
 @RunWith(SpringRunner.class)
 @SpringBootTest
-@DirtiesContext(classMode=ClassMode.AFTER_EACH_TEST_METHOD)
+@DirtiesContext(classMode=ClassMode.BEFORE_EACH_TEST_METHOD)
 public class ProjectHandlerContributorsTest {
 
 	Project project;
