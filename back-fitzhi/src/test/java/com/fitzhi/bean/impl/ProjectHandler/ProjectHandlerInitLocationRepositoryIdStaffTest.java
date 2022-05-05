@@ -33,8 +33,8 @@ public class ProjectHandlerInitLocationRepositoryIdStaffTest {
 	@Before
 	public void before() throws ApplicationException {
 		project = new Project(1789, "my testing project");
-		project.setLocationRepository("theLocationRepository");
 		projectHandler.addNewProject(project);
+		project.setLocationRepository("theLocationRepository");
 	}
 	
 	@Test

@@ -80,6 +80,6 @@ public class ProjectHandlerUpdateSkillsBasedOnPackageJsonEntryTest {
 	
 	@After
 	public void after() throws ApplicationException {
-		projectHandler.getProjects().remove(1789);
+		projectHandler.removeProject(1789);
 	}
 }
