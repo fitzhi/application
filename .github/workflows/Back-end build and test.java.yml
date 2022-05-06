@@ -90,6 +90,7 @@ jobs:
         SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
       run: |
         export VERSION_FITZHI=`cat ./VERSION_FITZHI`
+        mvn jacoco:report
         mvn -B sonar:sonar -Dsonar.host.url=https://sonarcloud.io/ -Dsonar.organization=fitzhi
       if: (matrix.os == 'ubuntu-latest')
     - name: Extract branch name
