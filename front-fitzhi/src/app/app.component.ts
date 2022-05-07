@@ -12,7 +12,7 @@ import { traceOn } from './global';
 import { BackendSetupService } from './service/backend-setup/backend-setup.service';
 import { CinematicService } from './service/cinematic.service';
 import { ReferentialService } from './service/referential/referential.service';
-import { SonarService } from './service/sonar.service';
+import { SonarService } from './service/sonar/sonar.service';
 import { SkillService } from './skill/service/skill.service';
 import { ListProjectsService } from './tabs-project/list-project/list-projects-service/list-projects.service';
 import { TabsStaffListService } from './tabs-staff-list/service/tabs-staff-list.service';

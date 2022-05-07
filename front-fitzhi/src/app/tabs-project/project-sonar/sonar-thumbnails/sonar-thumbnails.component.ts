@@ -9,7 +9,7 @@ import { traceOn } from 'src/app/global';
 import { MessageService } from 'src/app/interaction/message/message.service';
 import { ILanguageCount } from 'src/app/service/ILanguageCount';
 import { ProjectService } from 'src/app/service/project/project.service';
-import { SonarService } from 'src/app/service/sonar.service';
+import { SonarService } from 'src/app/service/sonar/sonar.service';
 import { PanelSwitchEvent } from './panel-switch-event';
 import { ThumbnailQuotationBadge } from './thumbnail-quotation-badge';
 

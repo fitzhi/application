@@ -1,8 +1,8 @@
 import { HttpClientModule, HttpHeaders } from '@angular/common/http';
 import { HttpClientTestingModule, HttpTestingController } from '@angular/common/http/testing';
 import { TestBed, TestModuleMetadata } from '@angular/core/testing';
-import { DeclaredSonarServer } from '../data/declared-sonar-server';
-import { InitTest } from '../test/init-test';
+import { DeclaredSonarServer } from '../../data/declared-sonar-server';
+import { InitTest } from '../../test/init-test';
 import { SonarService } from './sonar.service';
 
 
@@ -12,8 +12,6 @@ describe('SonarService', () => {
 	let sonarService: SonarService;
 
 	const URL_SONAR = 'https://sonar.server:9000';
-
-
 
 	beforeEach(async() => {
 

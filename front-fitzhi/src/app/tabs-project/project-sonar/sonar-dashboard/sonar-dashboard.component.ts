@@ -5,7 +5,7 @@ import { BaseDirective } from 'src/app/base/base-directive.directive';
 import { ProjectSonarMetricValue } from 'src/app/data/project-sonar-metric-value';
 import { traceOn } from 'src/app/global';
 import { ProjectService } from 'src/app/service/project/project.service';
-import { SonarService } from 'src/app/service/sonar.service';
+import { SonarService } from 'src/app/service/sonar/sonar.service';
 import { PanelSwitchEvent } from '../sonar-thumbnails/panel-switch-event';
 
 @Component({

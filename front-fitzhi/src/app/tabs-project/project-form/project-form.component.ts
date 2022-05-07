@@ -11,7 +11,7 @@ import { traceOn } from 'src/app/global';
 import { MessageGravity } from 'src/app/interaction/message/message-gravity';
 import { GitService } from 'src/app/service/git/git.service';
 import { ReferentialService } from 'src/app/service/referential/referential.service';
-import { SonarService } from 'src/app/service/sonar.service';
+import { SonarService } from 'src/app/service/sonar/sonar.service';
 import { BaseDirective } from '../../base/base-directive.directive';
 import { Constants } from '../../constants';
 import { Project } from '../../data/project';

@@ -12,7 +12,7 @@ import { traceOn } from 'src/app/global';
 import { MessageGravity } from 'src/app/interaction/message/message-gravity';
 import { MessageService } from 'src/app/interaction/message/message.service';
 import { ProjectService } from 'src/app/service/project/project.service';
-import { SonarService } from 'src/app/service/sonar.service';
+import { SonarService } from 'src/app/service/sonar/sonar.service';
 import { PanelSwitchEvent } from '../sonar-thumbnails/panel-switch-event';
 
 @Component({

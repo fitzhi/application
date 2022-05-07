@@ -2,20 +2,20 @@ import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { BehaviorSubject, EMPTY, forkJoin, Observable, of } from 'rxjs';
 import { catchError, switchMap, take, tap } from 'rxjs/operators';
-import { DeclaredSonarServer } from '../data/declared-sonar-server';
-import { Project } from '../data/project';
-import { SonarServer } from '../data/sonar-server';
-import { Component } from '../data/sonar/component';
-import { ComponentTree } from '../data/sonar/component-tree';
-import { Components } from '../data/sonar/components';
-import { Metric } from '../data/sonar/metric';
-import { Metrics } from '../data/sonar/metrics';
-import { ResponseComponentMeasures } from '../data/sonar/reponse-component-measures';
-import { traceOn } from '../global';
-import { InternalService } from '../internal-service';
-import { ILanguageCount } from './ILanguageCount';
-import { ProjectService } from './project/project.service';
-import { ReferentialService } from './referential/referential.service';
+import { DeclaredSonarServer } from '../../data/declared-sonar-server';
+import { Project } from '../../data/project';
+import { SonarServer } from '../../data/sonar-server';
+import { Component } from '../../data/sonar/component';
+import { ComponentTree } from '../../data/sonar/component-tree';
+import { Components } from '../../data/sonar/components';
+import { Metric } from '../../data/sonar/metric';
+import { Metrics } from '../../data/sonar/metrics';
+import { ResponseComponentMeasures } from '../../data/sonar/reponse-component-measures';
+import { traceOn } from '../../global';
+import { InternalService } from '../../internal-service';
+import { ILanguageCount } from '../ILanguageCount';
+import { ProjectService } from '../project/project.service';
+import { ReferentialService } from '../referential/referential.service';
 
 @Injectable({
 	providedIn: 'root'
@@ -448,7 +448,7 @@ export class SonarService extends InternalService {
 	 * @param type the given type.
 	 */
 	loadComponents$(sonarServer: SonarServer, type: string): Observable<Components> {
-		const params = new HttpParams().set('qualifiers', type).set('ps', '500');
+		const params = new HttpParams().set('qualifiers', type).set('ps', '500').set('organization', 'fitzhi');
 		return this.httpClient
 			.get<Components>(sonarServer.urlSonar + '/api/components/search',
 				{ params, headers: this.sonarHeaders(sonarServer) })
