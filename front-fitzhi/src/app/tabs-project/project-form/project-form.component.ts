@@ -15,7 +15,7 @@ import { SonarService } from 'src/app/service/sonar/sonar.service';
 import { BaseDirective } from '../../base/base-directive.directive';
 import { Constants } from '../../constants';
 import { Project } from '../../data/project';
-import { SonarProject } from '../../data/SonarProject';
+import { SonarProject } from '../../data/sonar-project';
 import { MessageService } from '../../interaction/message/message.service';
 import { CinematicService } from '../../service/cinematic.service';
 import { ProjectService } from '../../service/project/project.service';

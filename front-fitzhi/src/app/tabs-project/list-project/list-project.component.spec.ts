@@ -12,7 +12,7 @@ import { BehaviorSubject } from 'rxjs';
 import { Project } from 'src/app/data/project';
 import { RiskLegend } from 'src/app/data/riskLegend';
 import { SonarEvaluation } from 'src/app/data/sonar-evaluation';
-import { SonarProject } from 'src/app/data/SonarProject';
+import { SonarProject } from 'src/app/data/sonar-project';
 import { CinematicService } from 'src/app/service/cinematic.service';
 import { ProjectService } from 'src/app/service/project/project.service';
 import { ReferentialService } from 'src/app/service/referential/referential.service';

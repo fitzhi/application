@@ -3,7 +3,7 @@ import { traceOn } from '../global';
 import { Component } from './sonar/component';
 import { Metric } from './sonar/metric';
 import { ProjectSonarMetric } from './sonar/project-sonar-metric';
-import { SonarProject } from './SonarProject';
+import { SonarProject } from './sonar-project';
 
 /**
  * This class represents a Sonar server available in the infrastructure.

@@ -18,7 +18,7 @@ import { SettingsGeneration } from '../../data/settingsGeneration';
 import { Skill } from '../../data/skill';
 import { FilesStats } from '../../data/sonar/FilesStats';
 import { ResponseComponentMeasures } from '../../data/sonar/reponse-component-measures';
-import { SonarProject } from '../../data/SonarProject';
+import { SonarProject } from '../../data/sonar-project';
 import { Task } from '../../data/task';
 import { traceOn } from '../../global';
 import { MessageGravity } from '../../interaction/message/message-gravity';

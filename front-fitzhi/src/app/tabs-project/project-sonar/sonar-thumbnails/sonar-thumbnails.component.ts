@@ -4,7 +4,7 @@ import { BaseDirective } from 'src/app/base/base-directive.directive';
 import { Constants } from 'src/app/constants';
 import { SonarEvaluation } from 'src/app/data/sonar-evaluation';
 import { FilesStats } from 'src/app/data/sonar/FilesStats';
-import { SonarProject } from 'src/app/data/SonarProject';
+import { SonarProject } from 'src/app/data/sonar-project';
 import { traceOn } from 'src/app/global';
 import { MessageService } from 'src/app/interaction/message/message.service';
 import { ILanguageCount } from 'src/app/service/ILanguageCount';

@@ -2,7 +2,7 @@ import { TestBed, TestModuleMetadata } from '@angular/core/testing';
 import { Project } from '../../data/project';
 import { ProjectSonarMetricValue } from '../../data/project-sonar-metric-value';
 import { SonarServer } from '../../data/sonar-server';
-import { SonarProject } from '../../data/SonarProject';
+import { SonarProject } from '../../data/sonar-project';
 import { InitTest } from '../../test/init-test';
 import { SonarService } from './sonar.service';
 

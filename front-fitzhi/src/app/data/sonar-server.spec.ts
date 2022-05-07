@@ -1,5 +1,5 @@
 import { SonarServer } from './sonar-server';
-import { SonarProject } from './SonarProject';
+import { SonarProject } from './sonar-project';
 
 
 describe('Testing the SonarServer object', () => {

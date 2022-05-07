@@ -1,5 +1,5 @@
 import { Library } from './library';
-import { SonarProject } from './SonarProject';
+import { SonarProject } from './sonar-project';
 import { AuditTopic } from './AuditTopic';
 import { ProjectSkill } from './project-skill';
 import { Constants } from '../constants';
