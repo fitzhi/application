@@ -155,7 +155,8 @@ export class SonarService extends InternalService {
 				.pipe(
 					take(1),
 					switchMap((version: string) => {
-						const sonarServer = new SonarServer(version, sonar.urlSonarServer, true, sonar.user, sonar.password, sonar.login);
+						const sonarServer = new SonarServer(version, sonar.urlSonarServer, true, sonar.organization, 
+							sonar.user, sonar.password, sonar.login);
 						if (traceOn()) {
 							console.log('Sonar version ' + sonarServer.sonarVersion + ' installed at the URL ' + sonarServer.urlSonar);
 						}

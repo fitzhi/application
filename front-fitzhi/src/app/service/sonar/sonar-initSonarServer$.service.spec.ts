@@ -34,7 +34,7 @@ describe('SonarService', () => {
 
 	it('should load correctly the Sonar version, and create a "SonarServer" object with a USER/PASS inside the application.', done => {
 
-		const dss = new DeclaredSonarServer(URL_SONAR, 'admin', 'password');
+		const dss = new DeclaredSonarServer(URL_SONAR, undefined, 'admin', 'password');
 		sonarService.initSonarServer$(dss).subscribe({
 			next: sonarServer => {
 				expect(sonarServer.sonarVersion).toBe('3.14116');
@@ -54,7 +54,7 @@ describe('SonarService', () => {
 
 	it('should load correctly the Sonar version, and create a "SonarServer" object with a valid LOGIN inside the application.', done => {
 
-		const dss = new DeclaredSonarServer(URL_SONAR, undefined , undefined, 'my-token');
+		const dss = new DeclaredSonarServer(URL_SONAR, undefined, undefined , undefined, 'my-token');
 		sonarService.initSonarServer$(dss).subscribe({
 			next: sonarServer => {
 				expect(sonarServer.sonarVersion).toBe('3.14116');
@@ -74,7 +74,7 @@ describe('SonarService', () => {
 
 	it('should consider the server offline if the Sonar does not return its version.', done => {
 
-		const dss = new DeclaredSonarServer(URL_SONAR, undefined , undefined, 'my-token');
+		const dss = new DeclaredSonarServer(URL_SONAR, undefined, undefined, undefined, 'my-token');
 		sonarService.initSonarServer$(dss).subscribe({
 			next: sonarServer => {
 				expect(sonarServer.sonarOn).toBeFalse();
