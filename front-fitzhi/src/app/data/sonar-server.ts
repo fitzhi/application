@@ -23,6 +23,7 @@ export class SonarServer {
 		public sonarVersion: string,
 		public urlSonar: string,
 		public sonarOn = false,
+		public organization?: string,
 		public user?: string,
 		public password?: string,
 		public login?: string) {}
