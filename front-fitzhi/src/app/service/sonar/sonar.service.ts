@@ -186,8 +186,8 @@ export class SonarService extends InternalService {
 			return false;
 		}
 		const servers = this.sonarServers.filter(sonarServer => sonarServer.urlSonar === url);
-		if (servers && (servers.length !== 1)) {
-			if (traceOn()) {
+		if (servers && (servers.length != 1)) {
+			if (traceOn() && (servers.length > 1)) {
 				console.log ('WTF !!!', servers);
 			}
 			return false;

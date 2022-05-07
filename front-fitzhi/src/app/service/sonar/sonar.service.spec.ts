@@ -241,4 +241,31 @@ describe('SonarService', () => {
 		expect(headers.get('Authorization')).toBe('Basic ' + btoa('my-token:'));
 	});
 
+	it('isActive() should always return FALSE if the given URL is null.', () => {
+		expect(sonarService.isActive(null)).toBe(false);
+	});
+
+	it('isActive() should return the status of the Sonar server if the given URL is found.', () => {
+		const sonarServer1 = new SonarServer('1.0', 'urlSonar1', true);
+		const sonarServer2 = new SonarServer('1.0', 'urlSonar2', false);
+		sonarService.sonarServers.push(sonarServer1);
+		sonarService.sonarServers.push(sonarServer2);
+		expect(sonarService.isActive('urlSonar1')).toBe(true);
+		expect(sonarService.isActive('urlSonar2')).toBe(false);
+	});
+
+	it('isActive() should ALWAYS return FALSE if the given URL is an unregistered url.', () => {
+		const sonarServer = new SonarServer('1.0', 'urlSonar', true);
+		sonarService.sonarServers.push(sonarServer)
+		expect(sonarService.isActive('unregistered')).toBe(false);
+	});
+
+	it('isActive() should ALWAYS return FALSE if 2 (WTF) servers correspond to the given URL.', () => {
+		const sonarServer1 = new SonarServer('1.0', 'urlSonar', true);
+		const sonarServer2 = new SonarServer('1.0', 'urlSonar', true);
+		sonarService.sonarServers.push(sonarServer1)
+		sonarService.sonarServers.push(sonarServer2)
+		expect(sonarService.isActive('urlSonar')).toBe(false);
+	});
+
 });
