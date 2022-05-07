@@ -448,7 +448,7 @@ export class SonarService extends InternalService {
 	 * @param type the given type.
 	 */
 	loadComponents$(sonarServer: SonarServer, type: string): Observable<Components> {
-		const params = new HttpParams().set('qualifiers', type).set('ps', '500').set('organization', 'fitzhi');
+		const params = new HttpParams().set('qualifiers', type).set('ps', '500');
 		return this.httpClient
 			.get<Components>(sonarServer.urlSonar + '/api/components/search',
 				{ params, headers: this.sonarHeaders(sonarServer) })
