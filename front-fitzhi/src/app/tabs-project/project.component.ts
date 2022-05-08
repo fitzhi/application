@@ -10,7 +10,7 @@ import { MessageService } from '../interaction/message/message.service';
 import { CinematicService } from '../service/cinematic.service';
 import { ProjectService } from '../service/project/project.service';
 import { ReferentialService } from '../service/referential/referential.service';
-import { SonarService } from '../service/sonar.service';
+import { SonarService } from '../service/sonar/sonar.service';
 import { ListProjectsService } from './list-project/list-projects-service/list-projects.service';
 
 @Component({
