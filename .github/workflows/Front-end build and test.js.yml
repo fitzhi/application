@@ -24,10 +24,15 @@ jobs:
       uses: actions/setup-node@v1
       with:
         node-version: ${{matrix.node-version}}
-    - run: npm --version
-    - run: npm ci
-    - run: npm run build
-    - run: npm run test
+    - name: Build and test
+      run: |
+        npm --version
+        npm ci
+        npm run build
+    - name: Building Sonar evaluation
+      run: npm run sonar
+      env:
+        SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
     #
     # These lines are commented because I (Frederic VIDAL) could not find a way to commit changes to another repository from this repository
     #
