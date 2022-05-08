@@ -24,11 +24,12 @@ jobs:
       uses: actions/setup-node@v1
       with:
         node-version: ${{matrix.node-version}}
-    - name: Build and test
+    - name: Building and testing
       run: |
         npm --version
         npm ci
         npm run build
+        npm run test
     - name: Building Sonar evaluation
       run: npm run sonar
       env:
