@@ -33,6 +33,7 @@ jobs:
       run: npm run sonar
       env:
         SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+      if: (matrix.node-version == '16.x')
     #
     # These lines are commented because I (Frederic VIDAL) could not find a way to commit changes to another repository from this repository
     #
