@@ -1,8 +1,13 @@
+import { HttpClient, HttpClientModule } from '@angular/common/http';
+import { HttpClientTestingModule, HttpTestingController } from '@angular/common/http/testing';
 import { TestBed, TestModuleMetadata } from '@angular/core/testing';
+import { isEmpty } from 'rxjs/operators';
+import { Component } from 'src/app/data/sonar/component';
+import { ComponentMeasures } from 'src/app/data/sonar/component-measures';
 import { Project } from '../../data/project';
 import { ProjectSonarMetricValue } from '../../data/project-sonar-metric-value';
-import { SonarServer } from '../../data/sonar-server';
 import { SonarProject } from '../../data/sonar-project';
+import { SonarServer } from '../../data/sonar-server';
 import { InitTest } from '../../test/init-test';
 import { SonarService } from './sonar.service';
 
@@ -11,6 +16,8 @@ describe('SonarService', () => {
 
 	let sonarService: SonarService;
 	const URL_SONAR = 'https://sonar.server:9000';
+	let httpClient: HttpClient;
+	let httpTestingController: HttpTestingController;
 
 	function createProjectWithMetric(metric: string, weight: number, value: number): Project {
 		const project = new Project();
@@ -35,7 +42,7 @@ describe('SonarService', () => {
 		const testConf: TestModuleMetadata =  {
 			declarations: [],
 			providers: [],
-			imports: []
+			imports: [HttpClientTestingModule, HttpClientModule]
 		};
 		InitTest.addImports(testConf.imports);
 		InitTest.addProviders(testConf.providers);
@@ -47,6 +54,10 @@ describe('SonarService', () => {
 		sonarService = TestBed.inject(SonarService);
 		expect(sonarService).toBeTruthy();
 		sonarService.sonarServers.push(new SonarServer('1.0.TEST', URL_SONAR));
+
+		httpClient = TestBed.inject(HttpClient);
+		httpTestingController = TestBed.inject(HttpTestingController);
+
 	});
 
 	it('tests the method evaluateSonarProject with Bugs', () => {
@@ -267,5 +278,44 @@ describe('SonarService', () => {
 		sonarService.sonarServers.push(sonarServer2)
 		expect(sonarService.isActive('urlSonar')).toBe(false);
 	});
+
+	it('should return an empty list if the Sonar server is not identified alive.', done => {
+		const sonarServer = new SonarServer('1.0', 'urlSonar', false);
+		sonarService.loadComponents$(sonarServer, 'TRK').pipe(isEmpty()).subscribe({
+			next: (res) => {
+				expect(res).toBe(true);
+				done();
+			} 
+		});
+	});
+	
+	it('should NOT include the organization to the query params, if the Sonar server is not declared in it.', done => {
+		const sonarServer = new SonarServer('1.0', 'urlSonar', true);
+		sonarService.loadComponents$(sonarServer, 'TRK').subscribe({
+			next: (component) => {
+				expect(component).toBeDefined();
+				done();
+			} 
+		});
+
+		const req = httpTestingController.expectOne('urlSonar/api/components/search?qualifiers=TRK&ps=500');
+		expect(req.request.method).toEqual('GET');
+		req.flush(new Component());
+	});
+
+	it('should include the organization to the query params, if the Sonar server is declared in it (this is most likely the sonarcloud.io use case).', done => {
+		const sonarServer = new SonarServer('1.0', 'urlSonar', true, "fitzhi");
+		sonarService.loadComponents$(sonarServer, 'TRK').subscribe({
+			next: (component) => {
+				expect(component).toBeDefined();
+				done();
+			} 
+		});
+
+		const req = httpTestingController.expectOne('urlSonar/api/components/search?qualifiers=TRK&ps=500&organization=fitzhi');
+		expect(req.request.method).toEqual('GET');
+		req.flush(new Component());
+	});
+
 
 });

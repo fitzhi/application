@@ -446,10 +446,18 @@ export class SonarService extends InternalService {
 	/**
 	 * Load the components filtered on a passed type.
 	 * @param sonarServer The Sonar server to access
-	 * @param type the given type.
+	 * @param type the given type or component.
 	 */
 	loadComponents$(sonarServer: SonarServer, type: string): Observable<Components> {
-		const params = new HttpParams().set('qualifiers', type).set('ps', '500');
+		if (!sonarServer.sonarOn) {
+			return EMPTY;
+		}
+
+		let params = new HttpParams().set('qualifiers', type).set('ps', '500');
+		if (sonarServer.organization) {
+			params = params.set('organization', sonarServer.organization);
+		}
+
 		return this.httpClient
 			.get<Components>(sonarServer.urlSonar + '/api/components/search',
 				{ params, headers: this.sonarHeaders(sonarServer) })
@@ -531,7 +539,5 @@ export class SonarService extends InternalService {
 				})
 			);
 	}
-
-
 
 }
