@@ -11,14 +11,13 @@ import lombok.EqualsAndHashCode;
  * @author Fr&eacute;d&eacute;ric VIDAL
  *
  */
-abstract class ApiSubError {
-
+interface ApiSubError {
 }
 
 @Data
 @EqualsAndHashCode(callSuper = false)
 @AllArgsConstructor
-class ApiValidationError extends ApiSubError {
+class ApiValidationError implements ApiSubError {
    private String object;
    private String field;
    private Object rejectedValue;
