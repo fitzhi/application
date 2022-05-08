@@ -100,7 +100,7 @@ public class Application {
 			} else {
 				LoggerFactory.getLogger(Application.class.getCanonicalName()).info("\tLocal repositories are hosted in {}", reposDir);
 			}
-			LoggerFactory.getLogger(Application.class.getCanonicalName()).info("\tLocale : {}", Locale.getDefault().toString());
+			LoggerFactory.getLogger(Application.class.getCanonicalName()).info("\tLocale : {}", Locale.getDefault());
 			
 		};
 	}
