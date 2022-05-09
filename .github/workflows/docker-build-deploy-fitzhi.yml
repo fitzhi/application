@@ -21,13 +21,12 @@ jobs:
         username: ${{ secrets.DOCKER_HUB_USERNAME }}
         password: ${{ secrets.DOCKER_HUB_PASSWORD }}
 
-    - name: Building the Angular Frontend
+    - name: Build the Angular Frontend
       run: |
         npm ci
         sh ./gen-build-ts.sh
         npm run test
         npm run build-prod-docker
-        ls ./dist-docker
       working-directory: ./front-fitzhi
 
     - name: Build the image of Fitzhi
@@ -36,5 +35,7 @@ jobs:
         docker build . --file docker/Dockerfile --tag fitzhi/application:${VERSION_FITZHI}
   
     - name: Deploy the image
-      run: docker push fitzhi/application:${VERSION_FITZHI}
+      run: |
+        export VERSION_FITZHI=`cat ./back-fitzhi/VERSION_FITZHI`
+        docker push fitzhi/application:${VERSION_FITZHI}
 
