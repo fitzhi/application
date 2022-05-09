@@ -27,12 +27,13 @@ jobs:
         sh ./gen-build-ts.sh
         npm run test
         npm run build-prod-docker
+        mv dist-docker ../spoq
       working-directory: ./front-fitzhi
 
     - name: Build the image of Fitzhi
       run: |
         export VERSION_FITZHI=`cat ./back-fitzhi/VERSION_FITZHI`
-        docker build . --file docker/Dockerfile --tag fitzhi/application:${VERSION_FITZHI}
+        docker build . --file ./docker/Dockerfile --tag fitzhi/application:${VERSION_FITZHI}
   
     - name: Deploy the image
       run: |
