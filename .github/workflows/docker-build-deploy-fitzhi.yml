@@ -36,5 +36,5 @@ jobs:
         docker build . --file docker/Dockerfile --tag fitzhi/application:${VERSION_FITZHI}
   
     - name: Deploy the image
-        docker push fitzhi/application:${VERSION_FITZHI}
+      run: docker push fitzhi/application:${VERSION_FITZHI}
 
