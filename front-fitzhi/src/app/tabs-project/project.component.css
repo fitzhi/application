@@ -1,16 +1,16 @@
-:host >>> .component-container {
+:host ::ng-deep .component-container {
 	height: inherit;
 }
 
-:host >>> .mat-tab-body-wrapper {
+:host ::ng-deep .mat-tab-body-wrapper {
 	height: inherit;
 }
 
-:host >>> .mat-tab-group {
+:host ::ng-deep .mat-tab-group {
 	height: inherit;
 }
 
-:host >>> .mat-header-cell {
+:host ::ng-deep .mat-header-cell {
 	height: 3em;
 }
 

@@ -153,7 +153,7 @@ rect.rectTreeMap {
 	height: 15px;
 }
 
-:host >>> div.angular-popper {
+:host ::ng-deep div.angular-popper {
 	background: lightyellow;
 	width: 520px;
 	left: 5px !important;
@@ -161,7 +161,7 @@ rect.rectTreeMap {
 	font-size: smaller;
 }
 
-:host >>> div.angular-popper__arrow {
+:host ::ng-deep div.angular-popper__arrow {
 	background: lightyellow;
 	border-color: lightgrey;
 }

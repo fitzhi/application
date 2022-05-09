@@ -18,30 +18,30 @@ div.staff-projects-container div.tableMissions {
     margin: 10px auto;
 }
 
-:host >>> th#name > .mat-sort-header-container  {
+:host ::ng-deep th#name > .mat-sort-header-container  {
     display: flex;
     color: darkblue
 }
 
-:host >>> th#numberOfCommits > .mat-sort-header-container  {
-    display: flex;
-    justify-content: flex-end;
-    color: darkblue
-}
-
-:host >>> th#numberOfFiles > .mat-sort-header-container  {
+:host ::ng-deep th#numberOfCommits > .mat-sort-header-container  {
     display: flex;
     justify-content: flex-end;
     color: darkblue
 }
 
-:host >>> th#firstCommit > .mat-sort-header-container  {
+:host ::ng-deep th#numberOfFiles > .mat-sort-header-container  {
+    display: flex;
+    justify-content: flex-end;
+    color: darkblue
+}
+
+:host ::ng-deep th#firstCommit > .mat-sort-header-container  {
     display: flex;
     justify-content: center;
     color: darkblue
 }
 
-:host >>> th#lastCommit > .mat-sort-header-container  {
+:host ::ng-deep th#lastCommit > .mat-sort-header-container  {
     display: flex;
     justify-content: center;
     color: darkblue;

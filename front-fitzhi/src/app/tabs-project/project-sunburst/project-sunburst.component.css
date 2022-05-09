@@ -122,7 +122,7 @@ div.taskReportError {
   color: var(--color-error);
 }
 
-:host >>> div.angular-popper {
+:host ::ng-deep div.angular-popper {
   background: lightyellow;
   width: 520px;
   left: -35px !important;
@@ -131,7 +131,7 @@ div.taskReportError {
 }
 
 
-:host >>> div.angular-popper__arrow {
+:host ::ng-deep div.angular-popper__arrow {
   background: lightyellow;
   border-color: lightgrey;
 }

@@ -1,8 +1,8 @@
-:host >>> th#selected  {
+:host ::ng-deep th#selected  {
     width: 30px;
 }
 
-:host >>> th#name {
+:host ::ng-deep th#name {
     font-weight: 700;
     font-size: 15px;
 }

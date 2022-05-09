@@ -1,71 +1,71 @@
-:host >>> th#pseudo > .mat-sort-header-container {
+:host ::ng-deep th#pseudo > .mat-sort-header-container {
 	display: flex;
 	color: darkblue;
 	height: 2em;
 }
 
-:host >>> th#lastCommit > .mat-sort-header-container {
+:host ::ng-deep th#lastCommit > .mat-sort-header-container {
 	display: flex;
 	color: darkblue;
 	height: 2em;
 }
-:host >>> th#numberOfCommits > .mat-sort-header-container {
-	display: flex;
-	color: darkblue;
-	height: 2em;
-}
-
-:host >>> th#numberOfFiles > .mat-sort-header-container {
+:host ::ng-deep th#numberOfCommits > .mat-sort-header-container {
 	display: flex;
 	color: darkblue;
 	height: 2em;
 }
 
-:host >>> th#login > .mat-sort-header-container {
+:host ::ng-deep th#numberOfFiles > .mat-sort-header-container {
 	display: flex;
 	color: darkblue;
 	height: 2em;
-	margin-left: 1em;
 }
 
-:host >>> th#fullName > .mat-sort-header-container {
+:host ::ng-deep th#login > .mat-sort-header-container {
 	display: flex;
 	color: darkblue;
 	height: 2em;
 	margin-left: 1em;
 }
 
-:host >>> th#technical > .mat-sort-header-container {
+:host ::ng-deep th#fullName > .mat-sort-header-container {
+	display: flex;
+	color: darkblue;
+	height: 2em;
+	margin-left: 1em;
+}
+
+:host ::ng-deep th#technical > .mat-sort-header-container {
 	display: flex;
 	color: darkblue;
 	height: 2em;
 }
 
-:host >>> th#firstname  > .mat-sort-header-container {
+:host ::ng-deep th#firstname  > .mat-sort-header-container {
 	display: flex;
 	color: darkblue;
 	height: 2em;
 }
 
-:host >>> th#lastname > .mat-sort-header-container {
+:host ::ng-deep th#lastname > .mat-sort-header-container {
 	display: inline-flex;
 	color: darkblue;
 	height: 2em;
 }
 
-:host >>> th#active > .mat-sort-header-container {
+:host ::ng-deep th#active > .mat-sort-header-container {
 	display: inline-flex;
 	color: darkblue;
 	height: 2em;
 }
 
-:host >>> th#external > .mat-sort-header-container {
+:host ::ng-deep th#external > .mat-sort-header-container {
 	display: inline-flex;
 	color: darkblue;
 	height: 2em;
 }
 
-:host >>> th#creation > .mat-sort-header-container {
+:host ::ng-deep th#creation > .mat-sort-header-container {
 	display: flex;
 	color: darkblue;
 	height: 2em;
