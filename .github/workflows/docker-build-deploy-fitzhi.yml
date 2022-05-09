@@ -18,3 +18,4 @@ jobs:
       run: |
         export VERSION_FITZHI=`cat ./back-fitzhi/VERSION_FITZHI`
         docker build . --file docker/Dockerfile --tag fitzhi/application:${VERSION_FITZHI}
+        docker push fitzhi/application:${VERSION_FITZHI}
