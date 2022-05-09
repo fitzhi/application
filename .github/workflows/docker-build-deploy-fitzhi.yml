@@ -17,4 +17,4 @@ jobs:
     - name: Build the Docker image
       run: |
         export VERSION_FITZHI=`cat ./back-fitzhi/VERSION_FITZHI`
-        docker build ./docker --file Dockerfile --tag fitzhi/application:${VERSION_FITZHI}
+        docker build . --file docker/Dockerfile --tag fitzhi/application:${VERSION_FITZHI}
