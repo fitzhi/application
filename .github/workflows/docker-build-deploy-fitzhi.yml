@@ -25,8 +25,10 @@ jobs:
         password: ${{ secrets.DOCKER_HUB_PASSWORD }}
 
     - name: Set up Docker Buildx
-      id: buildx
       uses: docker/setup-buildx-action@v2
+      id: buildx
+      with:
+        install: true
     
     - name: Inspect builder
       run: |
