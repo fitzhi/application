@@ -84,7 +84,7 @@ public class ReactiveLogReportSunburstGenerationLogNextTest {
 				asyncTask.logMessage("nopeOperation", PROJECT, ID_PROJECT, "my second message", 0);
 				ReactiveLogReportSunburstGenerationLogNextTest.this.eraseTime();				
 			}
-		}, 2, TimeUnit.SECONDS);
+		}, 3, TimeUnit.SECONDS);
 
 		
 		executorService.schedule(new Runnable() {
