@@ -65,9 +65,9 @@ jobs:
         mv ./back-fitzhi/target/fitzhi-1.8-SNAPSHOT.jar	deploy/back-fitzhi/fitzhi-1.8-SNAPSHOT.jar
         mv ./back-fitzhi/target/application.properties	deploy/back-fitzhi/application.properties
         mv ./back-fitzhi/target/logback-spring.xml	deploy/back-fitzhi/logback-spring.xml
-    	  cp ./docker/docker/default /etc/nginx/sites-enabled/default
-  	    cp ./docker/docker/start-fitzhi.sh ./deploy/back-fitzhi/start-fitzhi.sh
-	      cp ./docker/docker/sonar-servers.json ./deploy/data/referential/sonar-servers.json
+        cp ./docker/docker/default /etc/nginx/sites-enabled/default
+        cp ./docker/docker/start-fitzhi.sh ./deploy/back-fitzhi/start-fitzhi.sh
+        cp ./docker/docker/sonar-servers.json ./deploy/data/referential/sonar-servers.json
 
     - name: Build the image of Fitzhi
       run: |
