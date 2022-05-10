@@ -1,5 +1,5 @@
 # Ubuntu Fitzhi container
-FROM adoptopenjdk/openjdk11:jre-11.0.11_9
+FROM adoptopenjdk/openjdk11:jre-11.0.9.1_1-alpine
 LABEL Frederic VIDAL (frederic.vidal@fitzhi.com)
 
 RUN apt update; \
