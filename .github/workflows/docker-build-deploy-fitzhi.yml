@@ -48,10 +48,10 @@ jobs:
       run: |
         export VERSION_FITZHI=`cat ./back-fitzhi/VERSION_FITZHI`
         # docker build . --file ./docker/Dockerfile-linux-arm64 --tag fitzhi/application:${VERSION_FITZHI}-arm64
-        docker build . --file ./docker/Dockerfile-linux-amd64 --tag fitzhi/application:${VERSION_FITZHI}-amd64
+        docker build . --file ./docker/Dockerfile --platform=linux/amd64,linux/arm64 --tag fitzhi/application:${VERSION_FITZHI}
   
     - name: Deploy the image
       run: |
         export VERSION_FITZHI=`cat ./back-fitzhi/VERSION_FITZHI`
         # docker push fitzhi/application:${VERSION_FITZHI}-arm64
-        docker push fitzhi/application:${VERSION_FITZHI}-amd64
+        docker push fitzhi/application:${VERSION_FITZHI}
