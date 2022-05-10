@@ -6,7 +6,8 @@ LABEL Frederic VIDAL (frederic.vidal@fitzhi.com)
 RUN apt update; \
 	apt-get -y install git; \
 	apt-get -y install nginx; \
-	mkdir -p spoq
+	mkdir spoq; \
+	mkdir deploy
 
 # URL where the Sonar server is installed
 ARG urlSonarServer
@@ -24,13 +25,9 @@ ARG login
 
 COPY spoq spoq
 
-RUN	cd fitzhi; \
-	curl --insecure https://spoq.fitzhi.com/release/back-fitzhi.zip --output deploy.zip; \
-	tar xvf deploy.zip; \
-	cp ./deploy/docker/default /etc/nginx/sites-enabled/default; \
-	cp ./deploy/docker/start-fitzhi.sh ./deploy/backend-fitzhi/start-fitzhi.sh; \
-	cp ./deploy/docker/sonar-servers.json ./deploy/data/referential/sonar-servers.json; \
-	cd /; \
+COPY deploy deploy
+
+RUN	cd /; \
 	echo "export DOCKER_FITZHI_BUILDTIME=#buildingTime" >> ~/.bashrc
 
 WORKDIR /fitzhi/deploy/backend-fitzhi
