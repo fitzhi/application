@@ -53,5 +53,5 @@ jobs:
     - name: Deploy the image
       run: |
         export VERSION_FITZHI=`cat ./back-fitzhi/VERSION_FITZHI`
-        docker push fitzhi/application:${VERSION_FITZHI}-arm64
+        # docker push fitzhi/application:${VERSION_FITZHI}-arm64
         docker push fitzhi/application:${VERSION_FITZHI}-amd64
