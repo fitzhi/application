@@ -1,5 +1,6 @@
 # Ubuntu Fitzhi container
-FROM adoptopenjdk/openjdk11:jre-11.0.9.1_1-alpine
+# docker pull adoptopenjdk/openjdk11:x86_64-ubuntu-jre-11.0.15_10
+FROM adoptopenjdk/openjdk11:aarch64-ubuntu-jdk-11.0.15_10-slim
 LABEL Frederic VIDAL (frederic.vidal@fitzhi.com)
 
 RUN apt update; \
