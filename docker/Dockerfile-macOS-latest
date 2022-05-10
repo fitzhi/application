@@ -1,5 +1,4 @@
 # Ubuntu Fitzhi container
-#FROM adoptopenjdk/openjdk11:jre-11.0.9.1_1-alpine
 FROM adoptopenjdk/openjdk11:aarch64-ubuntu-jre-11.0.15_10
 LABEL Frederic VIDAL (frederic.vidal@fitzhi.com)
 
