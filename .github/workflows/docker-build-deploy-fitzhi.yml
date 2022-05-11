@@ -70,7 +70,7 @@ jobs:
     - name: Build the image of Fitzhi
       run: |
         export VERSION_FITZHI=`cat ./back-fitzhi/VERSION_FITZHI`
-        docker build . --file ./docker/Dockerfile --platform=linux/amd64,linux/arm64 --tag fitzhi/application:${VERSION_FITZHI}
+        docker build -o . . --file ./docker/Dockerfile --platform=linux/amd64,linux/arm64 --tag fitzhi/application:${VERSION_FITZHI}
         docker images
   
     - name: Deploy the image
