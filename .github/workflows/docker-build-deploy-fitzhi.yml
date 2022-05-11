@@ -61,7 +61,7 @@ jobs:
     - name: Package the Server runtime
       run: |
         mkdir -p fitzhi/deploy/back-fitzhi
-        mv ./back-fitzhi/data ./deploy/data
+        mv ./back-fitzhi/data fitzhi/deploy/data
         mv ./back-fitzhi/target/fitzhi-1.8-SNAPSHOT.jar	fitzhi/deploy/back-fitzhi/fitzhi-1.8-SNAPSHOT.jar
         mv ./back-fitzhi/target/application.properties	fitzhi/deploy/back-fitzhi/application.properties
         mv ./back-fitzhi/target/logback-spring.xml	fitzhi/deploy/back-fitzhi/logback-spring.xml
