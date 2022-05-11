@@ -4,7 +4,8 @@ FROM eclipse-temurin:11.0.15_10-jre
 LABEL Frederic VIDAL (frederic.vidal@fitzhi.com)
 
 ENV DEBIAN_FRONTEND noninteractive
-RUN apt-get update && apt-get install -y git nginx
+
+RUN apt-get update && apt-get install -yes git nginx && echo "install";
 
 # RUN mkdir spoq
 
