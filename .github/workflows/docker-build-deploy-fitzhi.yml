@@ -60,12 +60,12 @@ jobs:
 
     - name: Package the Server runtime
       run: |
-        mkdir -p deploy/back-fitzhi
+        mkdir -p fitzhi/deploy/back-fitzhi
         mv ./back-fitzhi/data ./deploy/data
-        mv ./back-fitzhi/target/fitzhi-1.8-SNAPSHOT.jar	deploy/back-fitzhi/fitzhi-1.8-SNAPSHOT.jar
-        mv ./back-fitzhi/target/application.properties	deploy/back-fitzhi/application.properties
-        mv ./back-fitzhi/target/logback-spring.xml	deploy/back-fitzhi/logback-spring.xml
-        mv ./docker/docker ./deploy/
+        mv ./back-fitzhi/target/fitzhi-1.8-SNAPSHOT.jar	fitzhi/deploy/back-fitzhi/fitzhi-1.8-SNAPSHOT.jar
+        mv ./back-fitzhi/target/application.properties	fitzhi/deploy/back-fitzhi/application.properties
+        mv ./back-fitzhi/target/logback-spring.xml	fitzhi/deploy/back-fitzhi/logback-spring.xml
+        mv ./docker/docker fitzhi/deploy/
 
     - name: Build the image of Fitzhi
       run: |
