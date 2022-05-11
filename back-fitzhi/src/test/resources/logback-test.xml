@@ -11,7 +11,7 @@
 	<appender name="theVoid" class="ch.qos.logback.core.helpers.NOPAppender" />
 
 	<root level="DEBUG">
-		<appender-ref ref="STDOUT" />
+		<appender-ref ref="theVoid" />
 	</root>
 
 <!-- Parking for my logging. 
