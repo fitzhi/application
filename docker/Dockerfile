@@ -29,7 +29,7 @@ COPY fitzhi fitzhi
 
 RUN ls -lR fitzhi
 
-RUN ls -lR /etc/nginx
+# RUN ls -lR /etc/nginx
 
 RUN	cd /; \
 #	cp ./deploy/docker/default /etc/nginx/sites-enabled/default; \
