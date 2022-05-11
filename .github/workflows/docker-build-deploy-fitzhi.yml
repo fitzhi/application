@@ -42,7 +42,7 @@ jobs:
       run: |
         npm ci
         sh ./gen-build-ts.sh
-        npm run test
+#        npm run test
         npm run build-prod-docker
         mv dist-docker ../spoq
       working-directory: ./front-fitzhi
