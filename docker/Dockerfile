@@ -5,7 +5,7 @@ LABEL Frederic VIDAL (frederic.vidal@fitzhi.com)
 
 ENV DEBIAN_FRONTEND noninteractive
 
-RUN apt-get update && apt-get install -yes git nginx && echo "install";
+RUN apt-get update && apt-get install -y git nginx && echo "install";
 
 # RUN mkdir spoq
 
