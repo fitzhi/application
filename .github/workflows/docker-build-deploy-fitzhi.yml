@@ -42,6 +42,7 @@ jobs:
       run: |
         npm ci
         sh ./gen-build-ts.sh
+        npm run test
         npm run build-prod-docker
         mv dist-docker ../spoq
       working-directory: ./front-fitzhi
@@ -69,10 +70,10 @@ jobs:
     - name: Build the image of Fitzhi
       run: |
         export VERSION_FITZHI=`cat ./back-fitzhi/VERSION_FITZHI`
-        docker build --output type=docker . --file ./docker/Dockerfile --platform=linux/amd64,linux/arm64 --tag fitzhi/application:${VERSION_FITZHI}
+        docker build --push --file ./docker/Dockerfile --platform=linux/amd64,linux/arm64 --tag fitzhi/application:${VERSION_FITZHI}
         docker images
   
     - name: Deploy the image
       run: |
         export VERSION_FITZHI=`cat ./back-fitzhi/VERSION_FITZHI`
-        docker push fitzhi/application:${VERSION_FITZHI}
+        # docker push fitzhi/application:${VERSION_FITZHI}
