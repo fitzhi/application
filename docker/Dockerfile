@@ -4,8 +4,7 @@ FROM eclipse-temurin:11.0.15_10-jre
 LABEL Frederic VIDAL (frederic.vidal@fitzhi.com)
 
 RUN apt update; \
-	apt-get -y install git; \
-	apt-get -y install nginx; \
+	apt-get -y install git nginx; \
 	mkdir spoq; \
 	mkdir deploy
 
@@ -26,10 +25,6 @@ ARG login
 COPY spoq spoq
 
 COPY fitzhi fitzhi
-
-RUN ls -lR fitzhi
-
-# RUN ls -lR /etc/nginx
 
 RUN	cd /; \
 #	cp ./deploy/docker/default /etc/nginx/sites-enabled/default; \
