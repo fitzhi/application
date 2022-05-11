@@ -3,10 +3,9 @@
 FROM eclipse-temurin:11.0.15_10-jre
 LABEL Frederic VIDAL (frederic.vidal@fitzhi.com)
 
-RUN apt update; \
-	apt-get -y install git nginx; \
-	mkdir spoq; \
-	mkdir deploy
+RUN apt update
+RUN	apt install -y git nginx
+RUN mkdir spoq
 
 # URL where the Sonar server is installed
 ARG urlSonarServer
