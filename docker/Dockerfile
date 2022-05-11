@@ -5,7 +5,7 @@ LABEL Frederic VIDAL (frederic.vidal@fitzhi.com)
 
 ENV DEBIAN_FRONTEND noninteractive
 RUN apt-get update; \
-    apt-get install -y git nginx
+    apt-get -y install git nginx
 
 # URL where the Sonar server is installed
 ARG urlSonarServer
