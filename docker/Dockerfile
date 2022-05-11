@@ -26,7 +26,7 @@ COPY spoq spoq
 COPY fitzhi fitzhi
 
 RUN	cd /; \
-#	cp ./deploy/docker/default /etc/nginx/sites-enabled/default; \
+	cp fitzhi/deploy/docker/default /etc/nginx/sites-enabled/default; \
 	cp fitzhi/deploy/docker/start-fitzhi.sh fitzhi/deploy/back-fitzhi/start-fitzhi.sh; \
 	cp fitzhi/deploy/docker/sonar-servers.json fitzhi/deploy/data/referential/sonar-servers.json; \
 	echo "export DOCKER_FITZHI_BUILDTIME=#buildingTime" >> ~/.bashrc
