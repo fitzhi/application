@@ -25,9 +25,9 @@ ARG login
 
 COPY spoq spoq
 
-COPY deploy deploy
+COPY fitzhi fitzhi
 
-RUN ls -lR deploy
+RUN ls -lR fitzhi
 
 RUN ls -lR /etc/nginx
 
