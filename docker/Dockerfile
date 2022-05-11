@@ -3,8 +3,7 @@
 FROM eclipse-temurin:11.0.15_10-jre
 LABEL Frederic VIDAL (frederic.vidal@fitzhi.com)
 
-RUN apt-get update
-RUN	apt-get install -y git nginx
+RUN apt-get update && apt-get install -y git nginx
 # RUN mkdir spoq
 
 # URL where the Sonar server is installed
