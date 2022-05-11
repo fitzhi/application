@@ -29,10 +29,12 @@ COPY deploy deploy
 
 RUN ls -lR deploy
 
+RUN ls -lR /etc/nginx
+
 RUN	cd /; \
 #	cp ./deploy/docker/default /etc/nginx/sites-enabled/default; \
-	cp ./deploy/docker/start-fitzhi.sh ./deploy/back-fitzhi/start-fitzhi.sh; \
-	cp ./deploy/docker/sonar-servers.json ./deploy/data/referential/sonar-servers.json; \
+	cp fitzhi/deploy/docker/start-fitzhi.sh fitzhi/deploy/back-fitzhi/start-fitzhi.sh; \
+	cp fitzhi/deploy/docker/sonar-servers.json fitzhi/deploy/data/referential/sonar-servers.json; \
 	echo "export DOCKER_FITZHI_BUILDTIME=#buildingTime" >> ~/.bashrc
 
 WORKDIR /fitzhi/deploy/back-fitzhi
