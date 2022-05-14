@@ -84,7 +84,7 @@ public class ReactiveLogReportSunburstGenerationLogNextTest {
 				asyncTask.logMessage("nopeOperation", PROJECT, ID_PROJECT, "my second message", 0);
 				ReactiveLogReportSunburstGenerationLogNextTest.this.eraseTime();				
 			}
-		}, 3, TimeUnit.SECONDS);
+		}, 2, TimeUnit.SECONDS);
 
 		
 		executorService.schedule(new Runnable() {
@@ -97,7 +97,7 @@ public class ReactiveLogReportSunburstGenerationLogNextTest {
 					log.error("Internal error", e);
 				}
 			}
-		}, 4, TimeUnit.SECONDS);
+		}, 5, TimeUnit.SECONDS);
 	}
 
 	@Test
