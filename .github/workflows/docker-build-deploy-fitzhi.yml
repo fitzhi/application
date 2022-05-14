@@ -43,6 +43,10 @@ jobs:
         echo "Flags:     ${{ steps.buildx.outputs.flags }}"
         echo "Platforms: ${{ steps.buildx.outputs.platforms }}"
 
+    - name: Set up QEMU
+      uses: docker/setup-qemu-action@v1
+      id: qemu
+
     - name: Build the Angular Frontend
       run: |
         npm ci
@@ -75,7 +79,7 @@ jobs:
     - name: Build the image of Fitzhi
       run: |
         export VERSION_FITZHI=`cat ./back-fitzhi/VERSION_FITZHI`
-        docker build . --push --file ./docker/Dockerfile --platform=linux/amd64,linux/arm/v8 --tag fitzhi/application:${VERSION_FITZHI} --no-cache
+        docker build . --push --file ./docker/Dockerfile --platform=linux/amd64,linux/arm64 --tag fitzhi/application:${VERSION_FITZHI} --no-cache
         # docker build . --push --file ./docker/Dockerfile --platform=linux/amd64,linux/arm64 --tag fitzhi/application:${VERSION_FITZHI} --no-cache
         docker images
   
