@@ -27,6 +27,8 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.security.test.context.support.WithMockUser;
+import org.springframework.test.annotation.DirtiesContext;
+import org.springframework.test.annotation.DirtiesContext.ClassMode;
 import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
@@ -43,7 +45,7 @@ import lombok.extern.slf4j.Slf4j;
 @AutoConfigureMockMvc
 @TestPropertySource(properties = { "shuffleData=1" }) 
 @Slf4j
-
+@DirtiesContext(classMode = ClassMode.BEFORE_CLASS)
 public class ProjectControllerContributorsInShuffleModeTest {
 
 	/**
