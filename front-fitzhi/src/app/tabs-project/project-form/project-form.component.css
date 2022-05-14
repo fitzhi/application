@@ -9,6 +9,7 @@ div.container {
 
 div.projectForm {
 	min-width: 800px;
+	margin-left: 10px;
 }
 
 .required {
