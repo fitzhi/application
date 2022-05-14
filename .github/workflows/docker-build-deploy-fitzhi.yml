@@ -1,15 +1,14 @@
 # 
 # Building & deploying the Fitzhi docker image into dockerhub.
+# This is a nightly build.
 # 
 # Author : Frederic VIDAL (May 2022)
 #
 name: Docker Fitzhi Image CI
 
 on:
-  push:
-    branches: [ release-1.8 ]
-  pull_request:
-    branches: [ master ]
+  schedule:
+    - cron: '0 1 * * *'
 
 jobs:
 
