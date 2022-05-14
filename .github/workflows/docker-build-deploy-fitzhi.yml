@@ -75,7 +75,7 @@ jobs:
     - name: Build the image of Fitzhi
       run: |
         export VERSION_FITZHI=`cat ./back-fitzhi/VERSION_FITZHI`
-        docker build . --push --file ./docker/Dockerfile --platform=linux/amd64,linux/arm64 --tag fitzhi/application:${VERSION_FITZHI} --no-cache
+        docker build . --push --file ./docker/Dockerfile --platform=linux/amd64,linux/arm/v7,linux/arm/v8 --tag fitzhi/application:${VERSION_FITZHI} --no-cache
         # docker build . --push --file ./docker/Dockerfile --platform=linux/amd64,linux/arm64 --tag fitzhi/application:${VERSION_FITZHI} --no-cache
         docker images
   
