@@ -1,6 +1,5 @@
 package com.fitzhi.bean.impl.RiskProcessor;
 
-import com.fitzhi.bean.RiskProcessor;
 import com.fitzhi.bean.impl.RiskCommitAndDevActiveProcessorImpl;
 
 import org.junit.Assert;
