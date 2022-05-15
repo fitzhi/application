@@ -5,9 +5,10 @@
 # Author : Frederic VIDAL (May 2022)
 #
 name: Docker Fitzhi Image CI
+
 on:
   schedule:
-    - cron: "0 1 * * *"
+    - cron: '0 17 * * *'
 
 jobs:
   build:
@@ -18,7 +19,9 @@ jobs:
 
     steps:
     - uses: actions/checkout@v3
-
+      with:
+        ref: release-1.8
+  
     - name: Log in to Docker Hub
       uses: docker/login-action@f054a8b539a109f9f41c372932f1ae047eff08c9
       with:
