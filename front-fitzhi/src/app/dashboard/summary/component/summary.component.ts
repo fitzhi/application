@@ -8,6 +8,7 @@ import { selection } from '../../selection';
 import { SummaryService } from '../service/summary.service';
 import { environment } from '../../../../environments/environment';
 import { TurnoverService } from 'src/app/service/turnover/turnover.service';
+import { traceOn } from 'src/app/global';
 
 
 @Component({
@@ -98,6 +99,14 @@ export class SummaryComponent extends BaseDirective implements OnInit, OnDestroy
 	 * @param selectionId the identifier of the panel dashboard to display
 	 */
 	switchTo(selectionId: number) {
+		if (traceOn()) {
+			console.log (`switch to ${selectionId}`);
+		}
+		// No click action  for the turnover summary.
+		if ((selectionId === selection.turnoverPenultimateYear) || (selectionId === selection.turnoverLastYear)
+			|| (selectionId === selection.currentSummary)) {
+			return;
+		}
 		this.messengerSelectedSummary.emit(selectionId);
 	}
 

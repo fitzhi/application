@@ -33,6 +33,11 @@ public @Data class Operation {
 	private String authorName;
 
 	/**
+	 * Author email
+	 */
+	private String authorEmail;
+
+	/**
 	 * last of date for this commit. 
 	 */
 	private LocalDate dateCommit;
@@ -50,10 +55,11 @@ public @Data class Operation {
 	 * @param authorName the author's name
 	 * @param dateCommit the date of commit
 	 */
-	public Operation(int idStaff, String authorName, LocalDate dateCommit) {
+	public Operation(int idStaff, String authorName, String authorEmail, LocalDate dateCommit) {
 		super();
 		this.idStaff = idStaff;
 		this.authorName = authorName;
+		this.authorEmail = authorEmail;
 		this.dateCommit = dateCommit;
 	}
 	

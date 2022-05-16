@@ -1,3 +1,4 @@
+import { CssSelector } from '@angular/compiler';
 import { AfterViewInit, Component, EventEmitter, OnDestroy, OnInit, Output } from '@angular/core';
 import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
 import { MatTableDataSource } from '@angular/material/table';
@@ -9,6 +10,7 @@ import { ProjectContributors } from 'src/app/data/external/ProjectContributors';
 import { traceOn } from 'src/app/global';
 import { StaffListService } from 'src/app/service/staff-list-service/staff-list.service';
 import { StaffService } from 'src/app/tabs-staff/service/staff.service';
+import { environment } from 'src/environments/environment';
 import Sunburst from 'sunburst-chart';
 import { BaseDirective } from '../../base/base-directive.directive';
 import { Constants } from '../../constants';
@@ -277,7 +279,7 @@ export class ProjectSunburstComponent extends BaseDirective implements OnInit, A
 		//
 		if (this.cacheService.hasResponse()) {
 			this.setActiveContext (PreviewContext.SUNBURST_READY);
-			setTimeout(() => this.generateChart(this.cacheService.getReponse()), 0);
+			setTimeout(() => this.generateChart(this.cacheService.getResponse()), 0);
 			return;
 		}
 
@@ -502,6 +504,12 @@ export class ProjectSunburstComponent extends BaseDirective implements OnInit, A
     *   2) We put the tooltip on top of the components stack (z-index:'500')
     */
 	hackSunburstStyle() {
+
+		// We do not hack the CSS in Test mode.
+		if (environment.hasOwnProperty('doNotHackCss')) {
+			return;
+		}
+
 		const sheets = document.styleSheets;
 		let sheet, rules, rule;
 		let i, j, k, iLen, jLen, kLen;
@@ -525,7 +533,7 @@ export class ProjectSunburstComponent extends BaseDirective implements OnInit, A
 					}
 				}
 
-				// IE model
+			// IE model
 			} else if (sheet.rules) {
 				rules = sheet.rules;
 				for (k = 0, kLen = rules.length; k < kLen; k++) {
@@ -633,7 +641,7 @@ export class ProjectSunburstComponent extends BaseDirective implements OnInit, A
 			.pipe(take(1))
 			.subscribe(answer => {
 				if (answer) {
-					this.cacheService.clearReponse();
+					this.cacheService.clearResponse();
 					this.projectService
 						.resetDashboard(this.settings.idProject)
 						.pipe(take(1))
@@ -662,7 +670,7 @@ export class ProjectSunburstComponent extends BaseDirective implements OnInit, A
 			.pipe(take(1))
 			.subscribe(answer => {
 				if (answer) {
-					this.cacheService.clearReponse();
+					this.cacheService.clearResponse();
 					this.projectService
 						.reloadSunburst$(this.settings.idProject)
 						.pipe(take(1))

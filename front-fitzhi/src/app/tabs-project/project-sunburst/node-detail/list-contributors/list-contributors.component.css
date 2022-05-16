@@ -4,7 +4,7 @@
 	padding-left: 0;
 }
 
-:host >>> th#fullname  > .mat-header-cell  {
+:host ::ng-deep th#fullname  > .mat-header-cell  {
 	display: flex;
 	padding-left: 0;
 

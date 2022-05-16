@@ -1,40 +1,40 @@
-:host >>> th#numberOfCommits > .mat-sort-header-container  {
+:host ::ng-deep th#numberOfCommits > .mat-sort-header-container  {
     display: flex;
     justify-content: flex-end;
     color: darkblue
 }
 
-:host >>> th#active > .mat-sort-header-container  {
+:host ::ng-deep th#active > .mat-sort-header-container  {
     display: flex;
     justify-content: center;
     color: darkblue;
 }
 
-:host >>> th#external > .mat-sort-header-container  {
+:host ::ng-deep th#external > .mat-sort-header-container  {
     display: flex;
     justify-content: center;
     color: darkblue;
 }
 
-:host >>> th#numberOfFiles > .mat-sort-header-container  {
+:host ::ng-deep th#numberOfFiles > .mat-sort-header-container  {
     display: flex;
     justify-content: flex-end;
     color: darkblue
 }
 
-:host >>> th#firstCommit > .mat-sort-header-container  {
+:host ::ng-deep th#firstCommit > .mat-sort-header-container  {
     display: flex;
     justify-content: center;
     color: darkblue
 }
 
-:host >>> th#lastCommit > .mat-sort-header-container  {
+:host ::ng-deep th#lastCommit > .mat-sort-header-container  {
     display: flex;
     justify-content: center;
     color: darkblue;
 }
 
-:host >>> th#fullname > .mat-sort-header-container  {
+:host ::ng-deep th#fullname > .mat-sort-header-container  {
     color: darkblue;
 }
 
@@ -84,4 +84,17 @@
 
 .col_fullname {
     padding-left: 10px;
+}
+
+:host ::ng-deep div.angular-popper {
+	background: lightyellow;
+	width: 520px;
+	left: 5px !important;
+	z-index: 100;
+	font-size: smaller;
+}
+
+:host ::ng-deep div.angular-popper__arrow {
+	background: lightyellow;
+	border-color: lightgrey;
 }

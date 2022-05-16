@@ -9,5 +9,6 @@ import { RunTimeFile } from "./runtime-file";
 	version: require('../../package.json').version,
 	apiUrl: 'https://spoq.fitzhi.com',
 	buildTime: RunTimeFile.buildtime,
-	autoConnect: true
+	autoConnect: true,
+	test: false,
 };

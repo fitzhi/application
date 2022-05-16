@@ -20,7 +20,7 @@ public class Error {
 	public static final int UNKNOWN_PROJECT = -1;
 			
 	public static final int CODE_IO_ERROR = -1003;
-	public static final String MESSAGE_IO_ERROR = "IO Error with file or dir {0}";
+	public static final String MESSAGE_IO_ERROR = "IO Error with file, url or dir {0}";
 
 	public static final int CODE_SKILL_NOFOUND = -1004;
 	public static final String MESSAGE_SKILL_NOFOUND = "There is no skill for the identifier {0}";
@@ -123,6 +123,33 @@ public class Error {
 
 	public static final int CODE_YEAR_MONTH_INVALID = -1036;
 	public static final String MESSAGE_YEAR_MONTH_INVALID = "The given month {0}/{1} is invalid.";
+
+	public static final int CODE_GOOGLE_TOKEN_ERROR = -1037;
+	public static final String MESSAGE_GOOGLE_TOKEN_ERROR = "Google token verification error.";
+
+	public static final int CODE_INVALID_OPENID_SERVER = -1038;
+	public static final String MESSAGE_INVALID_OPENID_SERVER = "Invalid OpenId server {0}.";
+
+	public static final int CODE_INCONSISTENCY_ERROR_OPENID_SERVER = -1039;
+	public static final String MESSAGE_INCONSISTENCY_ERROR_OPENID_SERVER = "Data inconsistency error with the OpenId server {0} for staff memver {1} {2} {3}.";
+
+	public static final int CODE_INCONSISTENCY_ERROR_MULTI_OPENIDS = -1040;
+	public static final String MESSAGE_INCONSISTENCY_ERROR_MULTI_OPENIDS = "Data inconsistency error with the OpenId server {0} and ID {1}.";
+
+	public static final int CODE_OPENID_NOT_FOUND = -1041;
+	public static final String MESSAGE_OPENID_NOT_FOUND = "The email {0} is not linked with any staff member.";
+
+	public static final int CODE_OPENID_ALREADY_REGISTERED = -1042;
+	public static final String MESSAGE_OPENID_ALREADY_REGISTERED = "The login/email openID \"{0}\" is already registered with {2} {3} ({1}).";
+
+	public static final int CODE_OPENID_HTTP_ERROR = -1043;
+	public static final String MESSAGE_OPENID_HTTP_ERROR = "The HTTP error \"{0}\" {1} occurs when accessing the url \"{2}\".";
+
+	public static final int CODE_INVALID_HTTP_VERB = -1044;
+	public static final String MESSAGE_INVALID_HTTP_VERB = "Invalid HTTP verb \"{0}\".";
+
+	public static final int CODE_INVALID_OPTIONAL_STORAGE = -1045;
+	public static final String MESSAGE_INVALID_OPTIONAL_STORAGE = "INTERNAL ERROR {0} is empty.";
 
 	private Error() {
 	}

@@ -1,10 +1,10 @@
-import { ComponentFixture, TestBed, tick, TestModuleMetadata, waitForAsync } from '@angular/core/testing';
-
-import { StaffFormComponent } from './staff-form.component';
-import { ReferentialService } from 'src/app/service/referential/referential.service';
-import { Profile } from '../../data/profile';
-import { InitTest } from 'src/app/test/init-test';
+import { ComponentFixture, TestBed, TestModuleMetadata, waitForAsync } from '@angular/core/testing';
 import { RouterTestingModule } from '@angular/router/testing';
+import { ReferentialService } from 'src/app/service/referential/referential.service';
+import { InitTest } from 'src/app/test/init-test';
+import { Profile } from '../../data/profile';
+import { StaffFormComponent } from './staff-form.component';
+
 
 describe('StaffFormComponent', () => {
 	let component: StaffFormComponent;
@@ -32,12 +32,10 @@ describe('StaffFormComponent', () => {
 		referentialService.profiles.push (new Profile('one Code', 'labelOfCode for One'));
 		referentialService.profiles.push (new Profile('code nope', 'another labelOfCode'));
 
-
 		fixture.detectChanges();
-
 	});
 
-	it('should create', () => {
+	it('should be successfully created.', () => {
 		expect(component).toBeTruthy();
 	});
 
@@ -53,7 +51,7 @@ describe('StaffFormComponent', () => {
 		return component.profileStaff.controls[id];
 	}
 
-	it('create a new staff member', () => {
+	it('should implement the tests of surface.', () => {
 		expect(component).toBeTruthy();
 
 		expect(component.classOkButton()).toEqual('okButton okButtonInvalid');
@@ -74,8 +72,10 @@ describe('StaffFormComponent', () => {
 		expect(component.profileStaff.valid).toBeFalsy();
 
 		expect(field('email').valid).toBeFalsy();
-		setField('email', 'frvlaid');
+		// Email cannot exceed 64 caracters.
+		setField('email', 'X'.repeat(62) + '@gmail.com');
 		expect(field('email').valid).toBeFalsy();
+
 		setField('email', 'frvlaid@gmail.com');
 		expect(field('email').valid).toBeTruthy();
 		expect(component.profileStaff.valid).toBeFalsy();
@@ -92,7 +92,6 @@ describe('StaffFormComponent', () => {
 		fixture.detectChanges();
 
 		expect(ok.getAttribute('disabled')).toBeNull();
-
 	});
 
 });

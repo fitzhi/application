@@ -1,0 +1,30 @@
+.google-like {
+    background-color: white;
+    border: 1px solid lightgray;
+    border-radius: 4px;
+    font-size: smaller;
+    justify-content: center;
+    width: fit-content;
+    height: 40px;
+}
+
+.google-like a {
+    color: black;
+}    
+
+.google-like:hover {
+    background-color: whitesmoke;
+    border-color: lightblue;
+}
+
+.google-like:hover a {
+    color: black;
+    text-decoration: none;
+}
+
+.google-like div {
+    padding-right: 5px;
+    padding-left: 5px;
+    padding-top: 1px;
+}
+

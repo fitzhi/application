@@ -95,6 +95,7 @@ describe('ProjectSunburstComponent filled with data', () => {
 			setTimeout(() => {
 				sunburstCinematicService.refreshChart$.subscribe({
 					next: doneAndOk => {
+						fixture.detectChanges();
 						expect(component).toBeTruthy();
 						component.hidePreviousSunburstChartDetector();
 						const sunburstViz = fixture.debugElement.nativeElement.querySelector('.sunburst-viz');
@@ -103,7 +104,7 @@ describe('ProjectSunburstComponent filled with data', () => {
 						done();
 					}
 				});
-			}, 100);
+			}, 200);
 		}, 0);
 	});
 

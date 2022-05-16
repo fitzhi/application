@@ -224,6 +224,65 @@ describe('SummaryComponent', () => {
 		});
 	});
 
+	it('should NOT switch to an alternative chart if the user clicks on the PENULTIMATE year GitHub turnover summary.', done => {
+
+		loadTheCharts(8);
+
+		const spy = spyOn(component.summary, 'switchTo').and.callThrough();
+		const spyComponentParent = spyOn(component, 'switchTo').withArgs(selection.treeMapProjects).and.callThrough();
+
+		service.summary$.subscribe({
+			next: sum => {
+				const thumbnail = fixture.debugElement.query(By.css('#thumbnail-turnover-2020'));
+				console.log ('tumbnail', thumbnail );
+				thumbnail.triggerEventHandler('click', null);
+				fixture.detectChanges();
+				expect(spy).toHaveBeenCalled();
+				expect(spyComponentParent).not.toHaveBeenCalled();
+				done();
+			}
+		});
+	});
+
+	it('should NOT switch to an alternative chart if the user clicks on the PREVIOUS year GitHub turnover summary.', done => {
+
+		loadTheCharts(8);
+
+		const spy = spyOn(component.summary, 'switchTo').and.callThrough();
+		const spyComponentParent = spyOn(component, 'switchTo').withArgs(selection.treeMapProjects).and.callThrough();
+
+		service.summary$.subscribe({
+			next: sum => {
+				const thumbnail = fixture.debugElement.query(By.css('#thumbnail-turnover-2021'));
+				console.log ('tumbnail', thumbnail );
+				thumbnail.triggerEventHandler('click', null);
+				fixture.detectChanges();
+				expect(spy).toHaveBeenCalled();
+				expect(spyComponentParent).not.toHaveBeenCalled();
+				done();
+			}
+		});
+	});
+
+	it('should NOT switch to an alternative chart if the user clicks on the CURRENT year GitHub turnover summary.', done => {
+
+		loadTheCharts(8);
+
+		const spy = spyOn(component.summary, 'switchTo').and.callThrough();
+		const spyComponentParent = spyOn(component, 'switchTo').withArgs(selection.treeMapProjects).and.callThrough();
+
+		service.summary$.subscribe({
+			next: sum => {
+				const thumbnail = fixture.debugElement.query(By.css('#thumbnail-turnover-2022'));
+				console.log ('tumbnail', thumbnail );
+				thumbnail.triggerEventHandler('click', null);
+				fixture.detectChanges();
+				expect(spy).toHaveBeenCalled();
+				expect(spyComponentParent).not.toHaveBeenCalled();
+				done();
+			}
+		});
+	});
 
 	it('should display the 3 turnover panels.', done => {
 

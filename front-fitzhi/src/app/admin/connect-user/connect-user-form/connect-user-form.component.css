@@ -1,0 +1,12 @@
+.container * {
+	padding: 2px;
+}
+
+button.connection-ok, button.connection-cancel {
+	width: 100%;
+}
+
+label.labelConnection {
+	margin-top: 5px;
+	margin-bottom: 0;
+}

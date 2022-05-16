@@ -59,8 +59,10 @@ export class HttpTokenInterceptor implements HttpInterceptor {
 
 			|| (req.url.substring(req.url.length - '/api/skill'.length) === '/api/skill')
 			|| req.url.includes('/api/admin/isVeryFirstConnection')
-			|| req.url.includes('/api/admin/veryFirstUser')
-			|| req.url.includes('/api/admin/register')
+			|| req.url.includes('/api/admin/classic/primeRegister')
+			|| req.url.includes('/api/admin/classic/register')
+			|| req.url.includes('/api/admin/openId/primeRegister')
+			|| req.url.includes('/api/admin/openId/register')
 
 			// Sonar URL
 			|| req.url.includes('/api/components/search')

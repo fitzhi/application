@@ -10,6 +10,7 @@ import com.fitzhi.bean.StaffHandler;
 import com.fitzhi.data.internal.Staff;
 import com.fitzhi.exception.ApplicationException;
 
+import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -92,7 +93,7 @@ public class PluggedStaffControllerSwitchActivationTest {
 				
 	}	
 	
-	@Before 
+	@After
 	public void after() {
 		staffHandler.removeStaff(1789);
 	}

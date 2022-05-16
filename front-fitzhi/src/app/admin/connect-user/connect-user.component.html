@@ -1,51 +1,44 @@
-<div class="container">
-	<div class="col-md-12">
-		<form class="needs-validation" [formGroup]="connectionGroup">
-			<div id="logo" class="text-center">
-				质
-			</div>
-			<div class="text-center" style="margin-bottom: 20px;">
-				<span class="welcome">Welcome to Fitzhì !</span>
-			</div>
-			<div class="row connection">
-				<div class="col-md-5 labelConnection">
-					<label for="username" class="required float-right labelConnection">Username :</label>
-				</div>
-				<div class="col-md-7">
-					<input type="text" class="form-control required" id="username" name="username"
-						placeholder="Username (Required)" formControlName="username" />
-					<label *ngIf="username.touched && username.invalid" class="alert alert-warning warning-text">
-						Username is required and cannot exceed 16 chars max.
-					</label>
-				</div>
-			</div>
-
-			<div class="row connection">
-				<div class="col-md-5 labelConnection">
-					<label for="password" class="required float-right labelConnection">Password :</label>
-				</div>
-				<div class="col-md-7">
-					<input type="password" class="form-control required" id="connect-password" name="password"
-						placeholder="Password (Required)" formControlName="password" />
-					<label *ngIf="password.touched && password.invalid" ngClass="alert alert-warning warning-text">
-						Password is required<br/>
-						and is between 8 and 16 chars max
-					</label>
-				</div>
-			</div>
-
-			<div class="row">
-				<div class="col-md-6"></div>
-				<div class="col-md-3">
-					<button class="btn btn-outline-secondary rounded connection-cancel" type="reset" alt="cancel this operation"
-						(click)="onCancel()">Cancel</button>
-				</div>
-				<div class="col-md-3">
-					<button class="btn btn-outline-secondary rounded connection-ok" 
-						(click)="onSubmit()" 
-						[disabled]="connectionGroup.invalid">Sign in</button>
-				</div>
-			</div>
-		</form>
+<div id="connectContainer" class="container">
+	<div class="row">
+		<div class="col-12 logo text-center">
+			质
+		</div>
 	</div>
+	<div class="row mb-4">
+		<div class="col-12 text-center">
+			<span class="welcome">Welcome to Fitzhì !</span>
+		</div>
+	</div>
+
+	<div *ngIf="localOnlyOauth$|async;then localOauthOnly else openIdOauth"></div>
+
+	<ng-template #localOauthOnly>
+		<div id="localOnly" class="row text-center">
+			<div class="col-3"></div>
+			<div class="col-6 text-center">
+				<app-connect-user-form 
+					[directLogin]="directLogin"
+					(messengerUserConnected$)="onUserConnected($event)" >
+				</app-connect-user-form>
+			</div>
+			<div class="col-3"></div>
+		</div>
+	</ng-template>
+
+	<ng-template #openIdOauth>
+		<div id="openidOauth" class="row">
+			<div class="col-4 text-center">
+				<app-alternative-openid-connection></app-alternative-openid-connection>
+			</div>
+			<div class="col-1"></div>
+			<div class="col-6 text-center">
+				<app-connect-user-form 
+					[directLogin]="directLogin"
+					(messengerUserConnected$)="onUserConnected($event)" >
+				</app-connect-user-form>
+			</div>
+			<div class="col-1"></div>
+		</div>
+	</ng-template>
+
 </div>

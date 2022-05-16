@@ -1,4 +1,5 @@
 [
 	{ "urlSonarServer": "http://host-connection-with-token-login:9000", "login": "#login" },
-	{ "urlSonarServer": "http://host-connection-with-user-pass:9000", "user": "#user", "password": "#password" }
+	{ "urlSonarServer": "http://host-connection-with-user-pass:9000", "user": "#user", "password": "#password" },
+	{ "urlSonarServer": "https:/sonarcloud.io", "organization": "#organization", "login": "#login" }
 ]

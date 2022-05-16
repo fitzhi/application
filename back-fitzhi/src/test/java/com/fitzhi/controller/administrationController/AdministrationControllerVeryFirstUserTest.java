@@ -10,12 +10,18 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
+import java.time.LocalDate;
 import java.util.HashMap;
 import java.util.Map;
 
 import com.fitzhi.bean.Administration;
 import com.fitzhi.bean.StaffHandler;
+import com.fitzhi.controller.util.LocalDateAdapter;
+import com.fitzhi.data.internal.ClassicCredentials;
 import com.fitzhi.data.internal.Staff;
+import com.google.common.net.HttpHeaders;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -42,11 +48,13 @@ import org.springframework.test.web.servlet.MockMvc;
 @TestPropertySource(properties = { "allowSelfRegistration=false" }) 
 public class AdministrationControllerVeryFirstUserTest {
 
-	private static final String LOGIN = "login";
+	/**
+	 * Initialization of the Google JSON parser.
+	 */
+	Gson gson = new GsonBuilder().
+		registerTypeAdapter(LocalDate.class, new LocalDateAdapter().nullSafe()).create();
 
 	private static final String CST_STAFF_ID_STAFF = "$.idStaff";
-
-	private static final String PASS_WORD = "password"; //NOSONAR
 
 	@Autowired
 	private MockMvc mvc;
@@ -68,16 +76,18 @@ public class AdministrationControllerVeryFirstUserTest {
 		when(staffHandler.getStaff()).thenReturn(new HashMap<Integer, Staff>());
 		when(staffHandler.createWorkforceMember(any(Staff.class))).thenReturn(new Staff(1, "adminForTest", "passForTest"));
 
+		ClassicCredentials cc = ClassicCredentials.of("adminForTest", "passForTest");
+
 		//
 		// We disable this line for the Sonar analysis to avoid a useless password security check. 
 		// This fake password is useless for any hacker
 		//
-		this.mvc.perform(post("/api/admin/veryFirstUser") //NOSONAR
-					.param(LOGIN, "adminForTest") 
-					.param(PASS_WORD, "passForTest"))  
-				.andExpect(status().isOk())
-				.andExpect(jsonPath(CST_STAFF_ID_STAFF, is(1)))
-				.andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE));
+		this.mvc.perform(post("/api/admin/classic/primeRegister")
+			.header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON)
+			.content(gson.toJson(cc)))
+			.andExpect(status().isOk())
+			.andExpect(jsonPath(CST_STAFF_ID_STAFF, is(1)))
+			.andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE));
 	}
 
 	@Test
@@ -88,13 +98,15 @@ public class AdministrationControllerVeryFirstUserTest {
 		when(staffHandler.getStaff()).thenReturn(map);
 		when(staffHandler.createWorkforceMember(any(Staff.class))).thenReturn(new Staff(1, "adminForTest", "passForTest"));
 
+		ClassicCredentials cc = ClassicCredentials.of("adminForTest", "passForTest");
+
 		//
 		// We disable this line for the Sonar analysis to avoid a useless password security check. 
 		// This fake password is useless for any hacker
 		//
-		this.mvc.perform(post("/api/admin/veryFirstUser") //NOSONAR
-				.param(LOGIN, "adminForTest") 
-				.param(PASS_WORD, "passForTest"))  
+		this.mvc.perform(post("/api/admin/classic/primeRegister")
+			.header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON)
+			.content(gson.toJson(cc)))
 			.andExpect(status().isInternalServerError())
 			.andExpect(jsonPath("$.code", is(CODE_INVALID_FIRST_USER_ADMIN_ALREADY_CREATED)))
 			.andExpect(jsonPath("$.message", is(MESSAGE_INVALID_FIRST_USER_ADMIN_ALREADY_CREATED)))

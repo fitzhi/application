@@ -17,4 +17,4 @@ else
 	exit 1
 fi
 
-./deploy/backend-fitzhi/fitzhi-1.7-SNAPSHOT.jar --spring.profiles.active=$1
+./deploy/backend-fitzhi/fitzhi-1.8-SNAPSHOT.jar --spring.profiles.active=$1

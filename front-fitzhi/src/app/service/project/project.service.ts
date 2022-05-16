@@ -18,7 +18,7 @@ import { SettingsGeneration } from '../../data/settingsGeneration';
 import { Skill } from '../../data/skill';
 import { FilesStats } from '../../data/sonar/FilesStats';
 import { ResponseComponentMeasures } from '../../data/sonar/reponse-component-measures';
-import { SonarProject } from '../../data/SonarProject';
+import { SonarProject } from '../../data/sonar-project';
 import { Task } from '../../data/task';
 import { traceOn } from '../../global';
 import { MessageGravity } from '../../interaction/message/message-gravity';
@@ -31,7 +31,7 @@ import { CinematicService } from '../cinematic.service';
 import { FileService } from '../file.service';
 import { GitService } from '../git/git.service';
 import { ReferentialService } from '../referential/referential.service';
-import { SonarService } from '../sonar.service';
+import { SonarService } from '../sonar/sonar.service';
 import { ProjectsListenerService } from './projects-listener.service';
 
 const httpOptions = {

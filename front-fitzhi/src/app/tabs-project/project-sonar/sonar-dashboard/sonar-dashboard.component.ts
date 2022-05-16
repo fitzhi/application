@@ -5,7 +5,7 @@ import { BaseDirective } from 'src/app/base/base-directive.directive';
 import { ProjectSonarMetricValue } from 'src/app/data/project-sonar-metric-value';
 import { traceOn } from 'src/app/global';
 import { ProjectService } from 'src/app/service/project/project.service';
-import { SonarService } from 'src/app/service/sonar.service';
+import { SonarService } from 'src/app/service/sonar/sonar.service';
 import { PanelSwitchEvent } from '../sonar-thumbnails/panel-switch-event';
 
 @Component({
@@ -23,7 +23,7 @@ export class SonarDashboardComponent extends BaseDirective implements OnInit, On
 	@Input() panelSwitchTransmitter$: Subject<PanelSwitchEvent>;
 
 	constructor(
-		private sanitize: DomSanitizer,
+		private sanitizer: DomSanitizer,
 		private projectService: ProjectService,
 		private sonarService: SonarService) { super(); }
 
@@ -115,7 +115,8 @@ export class SonarDashboardComponent extends BaseDirective implements OnInit, On
 				.loadProjectBadge$(this.projectService.project, this.sonarKey, sonarServer.projectSonarMetrics[badgeNumero].key)
 				.subscribe(svg => {
 					if (svg) {
-						this.safeBadge.push(this.sanitize.bypassSecurityTrustHtml(svg));
+						// The SVG has been sanitized.
+						this.safeBadge.push(this.sanitizer.bypassSecurityTrustHtml(svg)); //NOSONAR
 						this.safeBadgeLength = this.safeBadge.length;
 						this.loadBadge(badgeNumero + 1);
 					} else {

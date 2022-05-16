@@ -1,6 +1,3 @@
-/**
- * 
- */
 package com.fitzhi.bean.impl.ProjectHandler;
 
 import java.util.Optional;
@@ -15,6 +12,7 @@ import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMock
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
 
+import com.fitzhi.ApplicationRuntimeException;
 import com.fitzhi.bean.ProjectHandler;
 import com.fitzhi.bean.StaffHandler;
 import com.fitzhi.data.internal.Ghost;
@@ -24,7 +22,7 @@ import com.fitzhi.exception.ApplicationException;
 /**
  * <p>
  * Test the method {@link ProjectHandler#setGhostTechnicalStatus(Project, String, boolean) ProjectHandler.setGhostTechnicalStatus}
- * </p>setGhostTechnicalStatus
+ * </p>
  * @author Fr&eacute;d&eacute;ric VIDAL
  */
 @RunWith(SpringRunner.class)
@@ -78,6 +76,16 @@ public class ProjectHandlerAssociateStaffToGhostTest {
 		Assert.assertEquals(oGhost.get().getIdStaff(), 1);
 	}
 	
+	@Test (expected = ApplicationRuntimeException.class)
+	public void staffNotFound() throws ApplicationException {
+		projectHandler.associateStaffToGhost(project, "pseudoLinked", 666);	
+	}
+
+	@Test (expected = ApplicationRuntimeException.class)
+	public void ghostNotFound() throws ApplicationException {
+		projectHandler.associateStaffToGhost(project, "unknown", 1);	
+	}
+
 	@After
 	public void after() throws ApplicationException {
 		project = projectHandler.lookup(1);

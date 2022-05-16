@@ -204,6 +204,7 @@ public class PocConnectionTestByPassable {
 								str, 
 								UNKNOWN,
 								"unknown",
+								"email@nope.com", 
 								commit.getAuthorIdent().getWhen(), 1);
 					}
 	        	}

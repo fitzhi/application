@@ -20,11 +20,13 @@ import java.util.Map;
 import java.util.NoSuchElementException;
 import java.util.Objects;
 import java.util.Optional;
+import java.util.Map.Entry;
 import java.util.stream.Collectors;
 
 import javax.validation.constraints.NotNull;
 
 import com.fitzhi.ApplicationRuntimeException;
+import com.fitzhi.bean.CacheDataHandler;
 import com.fitzhi.bean.DataHandler;
 import com.fitzhi.bean.ProjectHandler;
 import com.fitzhi.bean.SkillHandler;
@@ -38,7 +40,6 @@ import com.fitzhi.data.internal.ExperienceDetectionTemplate;
 import com.fitzhi.data.internal.FilesStats;
 import com.fitzhi.data.internal.Ghost;
 import com.fitzhi.data.internal.Library;
-import com.fitzhi.data.internal.Mission;
 import com.fitzhi.data.internal.Project;
 import com.fitzhi.data.internal.ProjectDetectedExperiences;
 import com.fitzhi.data.internal.ProjectSkill;
@@ -102,6 +103,12 @@ public class ProjectHandlerImpl extends AbstractDataSaverLifeCycleImpl implement
 	public DataHandler dataHandler;
 			
 	/**
+	 * Cache service regarding the sunburst data.
+	 */
+	@Autowired
+	public CacheDataHandler cacheDataHandler;
+
+	/**
 	 * Component in charge of handling connected Sonar server.
 	 */
 	@Autowired
@@ -119,8 +126,11 @@ public class ProjectHandlerImpl extends AbstractDataSaverLifeCycleImpl implement
 	@Autowired
 	EcosystemAnalyzer ecosystemAnalyzer;
 
+	private String pseudoNotFound = "%s does not exist anymore in the project %s (id: %d)";
+
 	@Override
 	public Map<Integer, Project> getProjects() throws ApplicationException {
+
 		if (this.projects != null) {
 			return this.projects;
 		}
@@ -165,31 +175,23 @@ public class ProjectHandlerImpl extends AbstractDataSaverLifeCycleImpl implement
 		if (log.isDebugEnabled()) {
 			log.debug (String.format("Retrieve the contributors list for the project id %d", idProject));
 		}
-		List<Contributor> contributors = new ArrayList<>();
-		staffHandler.getStaff().values().forEach(staff -> {
-			Optional<Mission> optMission  = 
-						staff.getMissions().stream()
-						.filter(mission -> mission.getIdProject() == idProject)
-						.findFirst();
-			if (optMission.isPresent()) {
-				Mission mission = optMission.get();
-				contributors.add(
-						new Contributor(
-								staff.getIdStaff(), 
-								mission.getFirstCommit(), 
-								mission.getLastCommit(), 
-								mission.getNumberOfCommits(), 
-								mission.getNumberOfFiles()));
-			}
-		});
-		return contributors;
+		return staffHandler.getStaff().values().stream()
+			.flatMap(st -> st.getMissions().stream())
+			.filter(mission -> mission.getIdProject() == idProject)
+			.map(mission -> new Contributor(
+				mission.getIdStaff(), 
+				mission.getFirstCommit(), 
+				mission.getLastCommit(), 
+				mission.getNumberOfCommits(), 
+				mission.getNumberOfFiles()))
+			.collect(Collectors.toList());
 	}
 
 	@Override
 	public Project addNewProject(Project project) throws ApplicationException {
 		
 		// 
-		// We encrypt the password 
+		// We encrypt the GIT credential password if necessary.
 		//
 		encryptPasswordIfNecessary(project);
 		
@@ -254,7 +256,7 @@ public class ProjectHandlerImpl extends AbstractDataSaverLifeCycleImpl implement
 
 			savedProject.setUrlCodeFactorIO((project.getUrlCodeFactorIO()));
 			if ((project.getUrlSonarServer() == null) || ("".equals(project.getUrlSonarServer()))) {
-				savedProject.setSonarProjects(new ArrayList<SonarProject>());
+				savedProject.setSonarProjects(new ArrayList<>());
 			}			
 			
 			// If we change the URL repository, we have to reset the previous clone (if any). 
@@ -262,6 +264,9 @@ public class ProjectHandlerImpl extends AbstractDataSaverLifeCycleImpl implement
 			if ( 	(savedProject.getUrlRepository() != null) && 
 					(!savedProject.getUrlRepository().equals(project.getUrlRepository()))) {
 				savedProject.setLocationRepository(null);
+				dataHandler.removeCrawlerFiles(savedProject);
+				cacheDataHandler.removeRepository(savedProject);
+				staffHandler.removeProject(savedProject.getId());
 			}
 			
 			// If we change the active branch, we have to reset the previous clone (if any). 
@@ -269,7 +274,11 @@ public class ProjectHandlerImpl extends AbstractDataSaverLifeCycleImpl implement
 			if ( 	(savedProject.getBranch() != null) && 
 					(!savedProject.getBranch().equals(project.getBranch()))) {
 				savedProject.setLocationRepository(null);
+				dataHandler.removeCrawlerFiles(savedProject);
+				cacheDataHandler.removeRepository(savedProject);
+				staffHandler.removeProject(savedProject.getId());
 			}
+
 			// Default branch name is "master" if none is given
 			if ((project.getUrlRepository() != null) && (project.getBranch() == null)) {
 				savedProject.setBranch("master");
@@ -354,7 +363,7 @@ public class ProjectHandlerImpl extends AbstractDataSaverLifeCycleImpl implement
 	
 	@Override
 	public void initLocationRepository(int idProject) throws ApplicationException {
-		Project project = lookup(idProject);
+		Project project = getProject(idProject);
 		this.initLocationRepository(project);
 	}
 
@@ -441,8 +450,7 @@ public class ProjectHandlerImpl extends AbstractDataSaverLifeCycleImpl implement
 			}
 		}
 		throw new ApplicationRuntimeException(
-				String.format("%s does not exist anymore in the project %s (id: %d)",
-						pseudo, project.getName(), project.getId()));
+				String.format(pseudoNotFound, pseudo, project.getName(), project.getId()));
 	}
 
 	@Override
@@ -488,8 +496,7 @@ public class ProjectHandlerImpl extends AbstractDataSaverLifeCycleImpl implement
 			}		
 		}
 		throw new ApplicationRuntimeException(
-				String.format("%s does not exist anymore in the project %s (id: %d)",
-						pseudo, project.getName(), project.getId()));
+				String.format(pseudoNotFound, pseudo, project.getName(), project.getId()));
 		
 	}
 
@@ -516,8 +523,7 @@ public class ProjectHandlerImpl extends AbstractDataSaverLifeCycleImpl implement
 			}	
 		}
 		throw new ApplicationRuntimeException(
-				String.format("%s does not exist anymore in the project %s (id: %d)",
-						pseudo, project.getName(), project.getId()));
+				String.format(pseudoNotFound, pseudo, project.getName(), project.getId()));
 	}
 
 	
@@ -550,7 +556,7 @@ public class ProjectHandlerImpl extends AbstractDataSaverLifeCycleImpl implement
 			.collect(Collectors.toList());
 		
 		for (Ghost detectedGhost : detectedGhosts) {
-			if (!ghosts.stream().anyMatch(ghost -> detectedGhost.getPseudo().equals(ghost.getPseudo()))) {
+			if (ghosts.stream().noneMatch(ghost -> detectedGhost.getPseudo().equals(ghost.getPseudo()))) {
 				ghosts.add(detectedGhost);
 			}
 		}
@@ -576,9 +582,9 @@ public class ProjectHandlerImpl extends AbstractDataSaverLifeCycleImpl implement
 			    Ghost ghost = iter.next();
 			    if (pseudo.equals(ghost.getPseudo())) {
 			        iter.remove();
+					this.dataUpdated = true;
 			    }
 			}			
-			this.dataUpdated = true;
 		}
 	}
 
@@ -635,7 +641,7 @@ public class ProjectHandlerImpl extends AbstractDataSaverLifeCycleImpl implement
 	}
 
 	@Override
-	public boolean containsSonarEntry(Project project, String key) {
+	public boolean containsSonarProject(Project project, String key) {
 		return project.getSonarProjects()
 				.stream()
 				.anyMatch(entry -> key.equals(entry.getKey()));
@@ -644,11 +650,11 @@ public class ProjectHandlerImpl extends AbstractDataSaverLifeCycleImpl implement
 	/**
 	 * Select the Sonar project corresponding to the couple (project, sonarKey)
 	 * @param project the given project
-	 * @param sonarKey the given 
-	 * @return
-	 * @throws ApplicationException
+	 * @param sonarKey the given Sonar key
+	 * @return the Sonar project found
+	 * @throws ApplicationException thrown most probably of the key has not been found
 	 */
-	private SonarProject getSonarProject(Project project, String sonarKey) throws ApplicationException {
+	public static SonarProject getSonarProject(Project project, String sonarKey) throws ApplicationException {
 		Optional<SonarProject> oSonarProject = project.getSonarProjects()
 				.stream()
 				.filter(sp -> sonarKey.equals(sp.getKey()))
@@ -705,7 +711,7 @@ public class ProjectHandlerImpl extends AbstractDataSaverLifeCycleImpl implement
 	public void saveUrlSonarServer(Project project, String newUrlSonarServer)  {
 		synchronized (lockDataUpdated) {
 			if ((newUrlSonarServer == null) || "".equals(newUrlSonarServer) || !newUrlSonarServer.equals(project.getUrlSonarServer())) {
-				project.setSonarProjects(new ArrayList<SonarProject>());
+				project.setSonarProjects(new ArrayList<>());
 			}
 			project.setUrlSonarServer(newUrlSonarServer);
 			this.dataUpdated = true;
@@ -926,17 +932,17 @@ public class ProjectHandlerImpl extends AbstractDataSaverLifeCycleImpl implement
 				Collectors.summingInt(DetectedExperience::getCount)));
 		
 		Map<StaffExperienceTemplate, Integer> staffAggregations = new HashMap<>();
-		for (AuthorExperienceTemplate authorExperienceTemplate : authorAggregations.keySet()) {
-			Staff staff = staffHandler.lookup(authorExperienceTemplate.getAuthor());
+		for (Entry<AuthorExperienceTemplate, Integer> entry : authorAggregations.entrySet()) {
+			Staff staff = staffHandler.lookup(entry.getKey().getAuthor());
 			if (staff != null) {
-				StaffExperienceTemplate key = StaffExperienceTemplate.of(authorExperienceTemplate.getIdExperienceDetectionTemplate(), staff.getIdStaff());
+				StaffExperienceTemplate key = StaffExperienceTemplate.of(entry.getKey().getIdExperienceDetectionTemplate(), staff.getIdStaff());
 				Integer count = staffAggregations.get(key);
 				if (count == null) {
 					// We create a new record 
-					staffAggregations.put(key, authorAggregations.get(authorExperienceTemplate));
+					staffAggregations.put(key, entry.getValue());
 				} else { 
 					// We update an existing one
-					staffAggregations.put(key, authorAggregations.get(authorExperienceTemplate) + count);
+					staffAggregations.put(key, entry.getValue() + count);
 				}
 			}
 		}
@@ -944,7 +950,8 @@ public class ProjectHandlerImpl extends AbstractDataSaverLifeCycleImpl implement
 	}
 
 	@Override
-	public void updateStaffSkillLevel(Map<StaffExperienceTemplate, Integer> experiences) throws ApplicationException {
+	public void updateProjectStaffSkillLevel(Map<StaffExperienceTemplate, Integer> experiences) 
+		throws ApplicationException {
 
 		// Nothing to do.
 		if (experiences.isEmpty()) {
@@ -954,48 +961,55 @@ public class ProjectHandlerImpl extends AbstractDataSaverLifeCycleImpl implement
 		Map<Integer, ExperienceDetectionTemplate> templates = ecosystemAnalyzer.loadExperienceDetectionTemplates();
 
 		List<ExperienceAbacus> abacus = ecosystemAnalyzer.loadExperienceAbacus();
-		for (StaffExperienceTemplate staffExperienceTemplate : experiences.keySet()) {
-			final int idStaff = staffExperienceTemplate.getIdStaff();
-			final int idEDT = staffExperienceTemplate.getIdExperienceDetectionTemplate();
-			final int value = experiences.get(staffExperienceTemplate);
+		for (Entry<StaffExperienceTemplate, Integer> entry : experiences.entrySet()) {
+			final int idStaff = entry.getKey().getIdStaff();
+			final int idEDT = entry.getKey().getIdExperienceDetectionTemplate();
+			final int value = experiences.get(entry.getKey());
 
-			// We do not take in account developers with a negative value
-			if (value < 0) {
-				continue;
+			updateStaffSkillSystemLevel(idStaff, idEDT, value, templates, abacus);
+
+		}
+	}
+
+	@Override
+	public void updateStaffSkillSystemLevel(final int idStaff, final int idEDT, final int value, Map<Integer, ExperienceDetectionTemplate> templates, List<ExperienceAbacus> abacus) 
+		throws ApplicationException {
+
+		// We do not take in account developers with a negative value
+		if (value < 0) {
+			return;
+		}
+
+		// If the staff member does not exist anymore, we skip him
+		Staff staff = staffHandler.lookup(idStaff);
+		if (staff == null) {
+			if (log.isWarnEnabled()) {
+				log.warn(String.format("Staff id %d does not exist anymore", idStaff));
 			}
+			return;
+		}
+			
+		ExperienceDetectionTemplate edt = templates.get(idEDT);
+		if (edt == null) {
+			throw new ApplicationRuntimeException("WTF : edt should not be null at this stage!");
+		}
 
-			// If the staff member does not exist anymore, we skip him
-			Staff staff = staffHandler.lookup(idStaff);
-			if (staff == null) {
-				if (log.isWarnEnabled()) {
-					log.warn(String.format("Staff id %d does not exist anymore", idStaff));
-				}
-				continue;
+		final int idSkill = edt.getIdSkill();
+		if (log.isDebugEnabled()) {
+			log.debug(String.format("Setting the level of skill/id %d for staff/id %d", idSkill, idStaff));
+		}
+
+		Optional<ExperienceAbacus> oExperienceAbacus = abacus.stream()
+			.filter (ea -> (ea.getIdExperienceDetectionTemplate() == idEDT))
+			.filter (ea -> (ea.getValue() <= value))
+			.sorted((ea1, ea2) -> (ea2.getValue() - ea1.getValue()))
+			.findFirst();
+		if (!oExperienceAbacus.isPresent()) {
+			if (log.isWarnEnabled()) {
+				log.warn(String.format(
+					"Cannot retrieve an entry in the abacus for the value %d of %d", value, idEDT));
 			}
-
-			ExperienceDetectionTemplate edt = templates.get(idEDT);
-			if (edt == null) {
-				throw new ApplicationRuntimeException("WTF : edt should not be null at this stage!");
-			}
-
-			final int idSkill = edt.getIdSkill();
-			if (log.isDebugEnabled()) {
-				log.debug(String.format("Setting the level of skill/id %d for staff/id %d", idSkill, idStaff));
-			}
-
-			Optional<ExperienceAbacus> oExperienceAbacus = abacus.stream()
-				.filter (ea -> (ea.getIdExperienceDetectionTemplate() == idEDT))
-				.filter (ea -> (ea.getValue() <= value))
-				.sorted((ea1, ea2) -> (ea2.getValue() - ea1.getValue()))
-				.findFirst();
-			if (!oExperienceAbacus.isPresent()) {
-				if (log.isWarnEnabled()) {
-					log.warn(String.format(
-						"Cannot retrieve an entry in the abacus for the value %d of %d", value, idEDT));
-				}
-				continue;
-			}
-
+		} else {
 			ExperienceAbacus ea = oExperienceAbacus.get();
 			staffHandler.updateSkillSystemLevel(idStaff, idSkill, ea.getLevel());
 			if (log.isDebugEnabled()) {

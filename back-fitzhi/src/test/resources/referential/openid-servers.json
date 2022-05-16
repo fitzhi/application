@@ -1,0 +1,10 @@
+[
+	{ 
+		"serverId": "GOOGLE", 
+		"clientId": "690807651852-sqjienqot7ui0pufj4ie4n320pss5ipc.apps.googleusercontent.com"
+	},
+	{ 
+		"serverId": "GITHUB", 
+		"clientId": "the Github client identifier"
+	}
+]

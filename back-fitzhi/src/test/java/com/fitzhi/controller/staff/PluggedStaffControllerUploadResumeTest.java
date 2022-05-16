@@ -1,6 +1,3 @@
-/**
- * 
- */
 package com.fitzhi.controller.staff;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -36,6 +33,8 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.test.context.support.WithMockUser;
+import org.springframework.test.annotation.DirtiesContext;
+import org.springframework.test.annotation.DirtiesContext.ClassMode;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.util.LinkedMultiValueMap;
@@ -51,6 +50,7 @@ import lombok.extern.slf4j.Slf4j;
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @AutoConfigureMockMvc
 @Slf4j
+@DirtiesContext(classMode = ClassMode.BEFORE_CLASS)
 public class PluggedStaffControllerUploadResumeTest {
 
 	/**

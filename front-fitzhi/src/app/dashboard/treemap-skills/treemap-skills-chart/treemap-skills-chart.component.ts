@@ -67,7 +67,7 @@ export class TreemapSkillsChartComponent extends TreemapChartDirective implement
 		this.colorScheme.domain = [];
 		this.distribution.forEach(data => this.colorScheme.domain.push(data.color));
 		if (traceOn()) {
-			console.groupCollapsed('Skills distribution');
+			console.groupCollapsed('Skills distribution ' + this.distribution.length);
 			this.distribution.forEach(skillData =>
 				console.log (skillData.name, skillData.value)
 			);

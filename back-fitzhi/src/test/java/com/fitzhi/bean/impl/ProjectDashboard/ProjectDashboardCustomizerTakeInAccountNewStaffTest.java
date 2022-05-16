@@ -70,6 +70,10 @@ public class ProjectDashboardCustomizerTakeInAccountNewStaffTest {
 	@Autowired
 	CacheDataHandler cacheDataHandler;
 	
+	/**
+	 * The Commit repository is SAVED when starting the test for a backup pupose.
+	 * It will be RESTORED after the test in order to reset the system in the original state.
+	 */
 	CommitRepository savedRepository;
 	
 	@Before
@@ -78,12 +82,33 @@ public class ProjectDashboardCustomizerTakeInAccountNewStaffTest {
 		savedRepository = cacheDataHandler.getRepository(project);
 	}
 	
+
+	/**
+	 * This TEST verifies 2 specific cases
+	 * The file has 4 commits detected.
+	 * 2 commits on the 6/12/2019
+	 * 2 commits on the 7/12/2019
+	 * 
+	 * On the 6/12, one commit is already registered with an identified staff 1 and the "authorName": "theAuthorOfOne"
+	 * We will onboard the Staff fvidal with the identifier 1. So the 2 records has to be merged in to a single one.
+	 * 
+	 * On the 7/12, the 2 commits have been made by 2 ghosts which correspond to the same staff member with id 1.
+	 * Therefore these 2 commits have to be merged.
+	 * 
+	 * @throws ApplicationException
+	 * @throws IOException
+	 * @throws Exception
+	 */
 	@Test
-	public void testOnBoardingNominal() throws ApplicationException, IOException, Exception {
-		Project project = new Project(1917, "The Red Rev project");
+	public void onBoardingNominal() throws ApplicationException, IOException, Exception {
+		Project project = new Project(1917, "The Red Revolutionary project");
 		
 		Staff staff = new Staff(1, "Frédéric", "VIDAL", "altF4", "fvidal", "frvidal@void.com", "OIM");
 		staffHandler.getStaff().put(1, staff);
+		Mission m1 = new Mission(1, 1919, "N/A");
+		m1.setNumberOfCommits(2);
+		m1.setNumberOfFiles(2);
+		staff.addMission(m1);
 		
 		
 		CommitRepository repository = cacheDataHandler.getRepository(project);
@@ -126,7 +151,7 @@ public class ProjectDashboardCustomizerTakeInAccountNewStaffTest {
 		Assert.assertEquals(LocalDate.of(2019, 12, 6), mission.getFirstCommit());
 		Assert.assertEquals(LocalDate.of(2019, 12, 7), mission.getLastCommit());
 		Assert.assertEquals(1917, mission.getIdProject());
-		Assert.assertEquals("The Red Rev project", mission.getName());
+		Assert.assertEquals("The Red Revolutionary project", mission.getName());
 		Assert.assertEquals(1, mission.getIdStaff());
 		
 	}

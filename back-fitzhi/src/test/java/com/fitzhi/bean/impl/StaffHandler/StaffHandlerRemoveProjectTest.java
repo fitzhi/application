@@ -40,20 +40,20 @@ public class StaffHandlerRemoveProjectTest {
 	}
 
 	@Test
-	public void remove() throws ApplicationException {
+	public void removeTheMissionOfAGivenProject() throws ApplicationException {
 
-		Staff staff = staffHandler.getStaff().get(1789);
+		Staff staff = staffHandler.getStaff(1789);
 		Assert.assertTrue (staff.getMissions().stream().anyMatch(mission -> (mission.getIdProject() == 1)));
 		
-		staff = staffHandler.getStaff().get(1964);
+		staff = staffHandler.getStaff(1964);
 		Assert.assertTrue (staff.getMissions().stream().anyMatch(mission -> (mission.getIdProject() == 1)));
 
 		staffHandler.removeProject(1);
 
-		staff = staffHandler.getStaff().get(1789);
+		staff = staffHandler.getStaff(1789);
 		Assert.assertFalse (staff.getMissions().stream().anyMatch(mission -> (mission.getIdProject() == 1)));
 		
-		staff = staffHandler.getStaff().get(1964);
+		staff = staffHandler.getStaff(1964);
 		Assert.assertFalse (staff.getMissions().stream().anyMatch(mission -> (mission.getIdProject() == 1)));
 
 	}

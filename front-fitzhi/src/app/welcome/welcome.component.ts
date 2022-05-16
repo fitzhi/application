@@ -11,7 +11,7 @@ export class WelcomeComponent implements OnInit {
 
 	/**
      * Is this the VERY fist launch into fitzhì ?
-     * We speak about the FIRST user connecting for the FIRST time into fitzhì ?
+     * We mention here the VERY FIRST user, who is connecting into Fitzhì.
      */
 	veryFirstLaunch = false;
 

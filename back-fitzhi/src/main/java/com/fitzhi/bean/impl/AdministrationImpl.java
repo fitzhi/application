@@ -1,11 +1,9 @@
 package com.fitzhi.bean.impl;
 
 import static com.fitzhi.Error.CODE_CANNOT_SELF_CREATE_USER;
-import static com.fitzhi.Error.CODE_INVALID_LOGIN_PASSWORD;
 import static com.fitzhi.Error.CODE_IO_ERROR;
 import static com.fitzhi.Error.CODE_LOGIN_ALREADY_EXIST;
 import static com.fitzhi.Error.MESSAGE_CANNOT_SELF_CREATE_USER;
-import static com.fitzhi.Error.MESSAGE_INVALID_LOGIN_PASSWORD;
 import static com.fitzhi.Error.MESSAGE_IO_ERROR;
 import static com.fitzhi.Error.MESSAGE_LOGIN_ALREADY_EXIST;
 
@@ -15,16 +13,16 @@ import java.nio.file.Paths;
 import java.text.MessageFormat;
 import java.util.Optional;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.stereotype.Service;
-
 import com.fitzhi.bean.Administration;
 import com.fitzhi.bean.StaffHandler;
 import com.fitzhi.data.encryption.DataEncryption;
 import com.fitzhi.data.internal.Staff;
 import com.fitzhi.exception.ApplicationException;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.stereotype.Service;
 
 import lombok.extern.slf4j.Slf4j;
 
@@ -168,23 +166,5 @@ public class AdministrationImpl implements Administration {
 			return staff;
 		}		
 	}
-	
-	@Override
-	public Staff connect(String login, String password) throws ApplicationException {
-		
-		Staff staff = staffHandler.findStaffOnLogin(login)
-				.orElseThrow(() -> new ApplicationException(CODE_INVALID_LOGIN_PASSWORD, MESSAGE_INVALID_LOGIN_PASSWORD));
-		
-		if (log.isDebugEnabled()) {
-			log.debug(String.format("login found %s", staff.fullName()));
-		}
-		
-		if (!passwordEncoder.matches(password, staff.getPassword())) {
-			throw new ApplicationException(CODE_INVALID_LOGIN_PASSWORD, MESSAGE_INVALID_LOGIN_PASSWORD);
-		}
-		
-		return staff;
-	}
 
-	
 }

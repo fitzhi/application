@@ -1,0 +1,11 @@
+[
+	{ 
+		"serverId": "GOOGLE", 
+		"clientId": "690807651852-r4ahq03fuj1klqlq3igclo16d00cfak0.apps.googleusercontent.com"
+	},
+	{ 
+		"serverId": "GITHUB", 
+		"clientId": "719664e4cffb62bf29e2",
+		"clientSecret": "9760a85fc5564dc3b808cdb8d4bfabf436d5f1f0"
+	}
+]

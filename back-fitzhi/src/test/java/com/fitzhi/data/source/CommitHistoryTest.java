@@ -35,10 +35,10 @@ public class CommitHistoryTest {
     @Before
     public void before() {
 		ch = new CommitHistory("test", 1);
-		ch.addOperation(new Operation(1, "one", LocalDate.of(2018, 11, 1)));
-		ch.addOperation(new Operation(1, "one", LocalDate.of(2018, 10, 17)));
-		ch.addOperation(new Operation(2, "two", LocalDate.of(2018, 11, 25)));
-		ch.addOperation(new Operation(3, "three", LocalDate.of(2017, 11, 1)));
+		ch.addOperation(new Operation(1, "one", "email@nope.com", LocalDate.of(2018, 11, 1)));
+		ch.addOperation(new Operation(1, "one", "email@nope.com", LocalDate.of(2018, 10, 17)));
+		ch.addOperation(new Operation(2, "two", "email@nope.com", LocalDate.of(2018, 11, 25)));
+		ch.addOperation(new Operation(3, "three", "email@nope.com", LocalDate.of(2017, 11, 1)));
 
 		staffHandler.getStaff().values().stream().map(Staff::fullName).forEach(log::debug);
 

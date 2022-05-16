@@ -1,6 +1,3 @@
-/**
- * 
- */
 package com.fitzhi.bean.impl;
 
 import static com.fitzhi.Global.INTERNAL_FILE_SEPARATOR;
@@ -14,11 +11,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-
 import com.fitzhi.ApplicationRuntimeException;
 import com.fitzhi.bean.ProjectHandler;
 import com.fitzhi.bean.RiskProcessor;
@@ -30,13 +22,18 @@ import com.fitzhi.data.internal.SourceFile;
 import com.fitzhi.data.source.CommitHistory;
 import com.fitzhi.data.source.CommitRepository;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
 import lombok.Data;
+import lombok.extern.slf4j.Slf4j;
 
 /**
  * @author Fr&eacute;d&eacute;ric VIDAL
  *
  */
 @Service("commitAndDevActive")
+@Slf4j
 public class RiskCommitAndDevActiveProcessorImpl implements RiskProcessor {
 
 	
@@ -81,11 +78,6 @@ public class RiskCommitAndDevActiveProcessorImpl implements RiskProcessor {
 	@Autowired
 	ProjectHandler projectHandler;
 	
-	/**
-	 * The logger for the Risk Surveyor.
-	 */
-	Logger logger = LoggerFactory.getLogger(RiskCommitAndDevActiveProcessorImpl.class.getCanonicalName());
-
 	@Override
 	public Map<Integer, RiskLegend> riskLegends() {
 
@@ -100,18 +92,17 @@ public class RiskCommitAndDevActiveProcessorImpl implements RiskProcessor {
 		// 69 -> 0
 		for (int i=0; i<=10; i++) {
 			
-			String red = String.format("%X", (int) (28 + (139-28)*i/10));
+			String red = String.format("%X", (28 + (139-28)*i/10));
 			red = (red.length() == 1) ? ("0" + red) : red;
 			
-			String green = String.format("%X", (int) (183 - 183*i/10));
+			String green = String.format("%X", (183 - 183*i/10));
 			green = (green.length() == 1) ? ("0" + green) : green;
 			
-			String blue = String.format("%X", (int) (69 - 69*i/10));
+			String blue = String.format("%X", (69 - 69*i/10));
 			blue = (blue.length() == 1) ? ("0" + blue) : blue;
 			
 			colors[i] = "#" + red + green + blue;
 		}
-		
 		
 		explanations.put(0, new RiskLegend(0, colors[0],
 				"commits have been submitted by active developers. Perfect level of proficiency on this project"));
@@ -221,13 +212,13 @@ public class RiskCommitAndDevActiveProcessorImpl implements RiskProcessor {
 			riskLevel = (int) Math.ceil(((1 - ((double) countCommitsByActiveDevelopers / (double) countCommits)) * 10));
 		}
 
-		if (logger.isDebugEnabled()) {
+		if (log.isDebugEnabled()) {
 			StringBuilder sb = new StringBuilder(LN);
 			sb.append("Evaluating the risk for " + dir + data.getLocation()).append(LN);
 			sb.append("countCommits : " + countCommits).append(LN);
 			sb.append("countCommitsByActiveDevelopers : " + countCommitsByActiveDevelopers).append(LN);
 			sb.append("riskLevel evaluated : " + riskLevel).append(LN);
-			logger.debug(sb.toString());
+			log.debug(sb.toString());
 		}
 		data.setRiskLevel(riskLevel);
 
@@ -276,9 +267,9 @@ public class RiskCommitAndDevActiveProcessorImpl implements RiskProcessor {
 				Optional<String> optKey;
 				optKey = repository.getRepository().keySet().stream().filter(k -> k.equals(searchedFile)).findFirst();
 				if (!optKey.isPresent()) {
-					if (logger.isErrorEnabled()) {
-						logger.error(String.format("Searching %s in", searchedFile));
-						repository.getRepository().keySet().stream().forEach(f -> logger.error(f));
+					if (log.isErrorEnabled()) {
+						log.error(String.format("Searching %s in", searchedFile));
+						repository.getRepository().keySet().stream().forEach(f -> log.error(f));
 					}
 					throw new ApplicationRuntimeException( String.format("%s not found! (base dir %s, sunB location %s, source filename %s)", searchedFile, baseDir, sunburstData.getLocation(), source.getFilename()));
 				}
@@ -289,8 +280,8 @@ public class RiskCommitAndDevActiveProcessorImpl implements RiskProcessor {
 				long countCommitsByActiveDevelopers = activity.countCommitsByActiveDevelopers(staffHandler);
 
 				String fullClass = baseDir + sunburstData.getLocation() + "/" + source.getFilename();
-				if (logger.isDebugEnabled()) {
-					logger.debug(String.format("Adding stat entry for %s : %d / %d", fullClass,
+				if (log.isDebugEnabled()) {
+					log.debug(String.format("Adding stat entry for %s : %d / %d", fullClass,
 							countCommitsByActiveDevelopers, countCommits));
 
 				}
@@ -357,8 +348,8 @@ public class RiskCommitAndDevActiveProcessorImpl implements RiskProcessor {
 		double sumImportance = dataTree.sum(IMPORTANCE);
 		double sumRiskLevelTimesImportance = dataTree.sum(RISKLEVEL_TIMES_IMPORTANCE);
 		int projectRisk = (int) (sumRiskLevelTimesImportance / sumImportance);
-		if (logger.isDebugEnabled()) {
-			logger.debug(String.format("Project %s has risk %d ", project.getName(), projectRisk));
+		if (log.isDebugEnabled()) {
+			log.debug(String.format("Project %s has risk %d ", project.getName(), projectRisk));
 		}
 		this.projectHandler.saveRisk(project, projectRisk);
 	}

@@ -36,9 +36,11 @@ public class ProjectHandlerIntegrateGhostsTest {
 	
 	Project project;
 
+	private int ID_PROJECT = 314116;
+
 	@Before
 	public void before() throws ApplicationException {
-		project = projectHandler.addNewProject(new Project(314116, "PI"));
+		project = projectHandler.addNewProject(new Project(ID_PROJECT, "PI 4"));
 		project.getGhosts().add(new Ghost("pseudoUnlinked", false));
 		project.getGhosts().add(new Ghost("pseudoLinked", 2, false));
 	}
@@ -48,7 +50,7 @@ public class ProjectHandlerIntegrateGhostsTest {
 	public void test() throws ApplicationException {
 		Set<String> pseudos = new HashSet<String>();
 		pseudos.add("newpseudo");
-		projectHandler.integrateGhosts(314116, GhostsListFactory.getInstance(pseudos));
+		projectHandler.integrateGhosts(ID_PROJECT, GhostsListFactory.getInstance(pseudos));
 		
 		Assert.assertTrue("Ghosts list contains 2 entries", project.getGhosts().size()== 2);
 		
@@ -71,6 +73,6 @@ public class ProjectHandlerIntegrateGhostsTest {
 
 	@After
 	public void after() throws ApplicationException {
-		projectHandler.removeProject(314116);
+		projectHandler.removeProject(ID_PROJECT);
 	}
 }

@@ -55,9 +55,10 @@ public class ProjectHandlerUpdateSkillsBasedOnFilenameDetectionTest {
 		repo.add(php);
 		repo.add(ts);
 		
-		project = new Project(1789, "my testing project");
+		project = new Project(1789, "my testing project 8");
 		project.setLocationRepository(".");
 		projectHandler.addNewProject(project);
+		projectHandler.dataAreSaved();
 	}
 	
 	@Test

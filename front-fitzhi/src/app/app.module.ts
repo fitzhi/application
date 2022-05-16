@@ -41,6 +41,7 @@ import { BackendSetupComponent } from './admin/backend-setup/backend-setup.compo
 import { CiaoComponent } from './admin/ciao/ciao.component';
 import { ConnectUserComponent } from './admin/connect-user/connect-user.component';
 import { DevOnOffComponent } from './admin/dev-on-off/dev-on-off.component';
+import { RegisterUserFormComponent } from './admin/register-user/register-user-form/register-user-form.component';
 import { RegisterUserComponent } from './admin/register-user/register-user.component';
 import { AuthGuardService } from './admin/security/auth-guard.service';
 import { HttpErrorInterceptorService } from './admin/service/http/http-error-interceptor-service';
@@ -66,6 +67,7 @@ import { TreemapProjectsContainerComponent } from './dashboard/treemap-projects/
 import { TreemapSkillsChartComponent } from './dashboard/treemap-skills/treemap-skills-chart/treemap-skills-chart.component';
 import { TreemapSkillsComponent } from './dashboard/treemap-skills/treemap-skills-container/treemap-skills.component';
 import { TreemapHeaderComponent } from './dashboard/treemap-skills/treemap-skills-header/treemap-skills-header.component';
+import { AlternativeOpenidConnectionComponent } from './interaction/alternative-openid-connection/alternative-openid-connection.component';
 import { ErrorComponent } from './interaction/error/error.component';
 import { MessageBoxComponent } from './interaction/message-box/dialog/message-box.component';
 import { MessageComponent } from './interaction/message/message.component';
@@ -126,6 +128,9 @@ import { StaffProjectsComponent } from './tabs-staff/staff-projects/staff-projec
 import { StaffRemoveComponent } from './tabs-staff/staff-remove/staff-remove.component';
 import { StaffComponent } from './tabs-staff/staff.component';
 import { WelcomeComponent } from './welcome/welcome.component';
+import { ConnectUserFormComponent } from './admin/connect-user/connect-user-form/connect-user-form.component';
+import { CallbackGithubComponent } from './interaction/callback-github/callback-github.component';
+
 
 @NgModule({
 	declarations: [
@@ -204,7 +209,11 @@ import { WelcomeComponent } from './welcome/welcome.component';
 		StarfieldComponent,
 		StarfieldHeaderComponent,
 		StarfieldContentComponent,
-		SummaryComponent
+		SummaryComponent,
+		RegisterUserFormComponent,
+		AlternativeOpenidConnectionComponent,
+		ConnectUserFormComponent,
+		CallbackGithubComponent
 	],
 	imports: [
 		BsDropdownModule.forRoot(),
@@ -243,12 +252,12 @@ import { WelcomeComponent } from './welcome/welcome.component';
 		NgxPopper,
 		DynamicPieChartModule,
 		ControlledRisingSkylineModule,
-		RisingSkylineModule
+		RisingSkylineModule,
 	],
 	providers: [
+		ReferentialService,
 		CinematicService,
 		StaffService,
-		ReferentialService,
 		PieDashboardService,
 		AuthGuardService,
 		TokenService,
@@ -268,8 +277,15 @@ import { WelcomeComponent } from './welcome/welcome.component';
 			multi: true
 		},
 		DatePipe,
+		{
+			provide: LOCALE_ID,
+			useValue: 'fr'
+		},
+
 		// Remove this line or change the useValue property to your regional settings
-		{ provide: LOCALE_ID, useValue: 'fr' }
+		// provider: new GoogleLoginProvider('690807651852-sqjienqot7ui0pufj4ie4n320pss5ipc.apps.googleusercontent.com')
+
+
 	],
 	bootstrap: [AppComponent]
 })

@@ -8,7 +8,7 @@ import java.time.LocalDate;
 public interface GitMetrics {
 
 	/**
-	 * @return the number of metrics submited.
+	 * @return the number of commits submited.
 	 */
 	int getNumberOfCommits();
 

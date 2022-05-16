@@ -120,7 +120,7 @@ export class StaffExperienceComponent extends BaseDirective implements OnInit, O
 				this.values$.next(values);
 			}
 
-			if (!this.staff.idStaff || !this.staff.active) {
+			if (!this.staff.idStaff || !this.staff.active || (this.staff.idStaff === -1)) {
 				this.editableState$.next(TagifyEditableState.READ_ONLY);
 			} else {
 				this.editableState$.next(TagifyEditableState.ALL_ALLOWED);

@@ -6,6 +6,7 @@ import static com.fitzhi.Global.LN;
 import static com.fitzhi.Global.NO_PROGRESSION;
 import static com.fitzhi.Global.PROJECT;
 
+import java.security.SecureRandom;
 import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.List;
@@ -44,7 +45,7 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public abstract class AbstractScannerDataGenerator implements RepoScanner {
 	
-	private Random r = new Random();
+	private Random r = new SecureRandom();
 	
 	/**
 	 * <p>

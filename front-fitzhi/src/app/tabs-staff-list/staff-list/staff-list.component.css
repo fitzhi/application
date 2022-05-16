@@ -1,18 +1,18 @@
-:host >>> th#fullname > .mat-sort-header-container  {
+:host ::ng-deep th#fullname > .mat-sort-header-container  {
 	color: darkblue;
 }
 
-:host >>> th#level > .mat-sort-header-container  {
+:host ::ng-deep th#level > .mat-sort-header-container  {
 	color: darkblue;
 }
 
-:host >>> th#isActive > .mat-sort-header-container  {
+:host ::ng-deep th#isActive > .mat-sort-header-container  {
 	display: flex;
 	justify-content: center;
 	color: darkblue;
 }
 
-:host >>> th#external > .mat-sort-header-container  {
+:host ::ng-deep th#external > .mat-sort-header-container  {
 	display: flex;
 	justify-content: center;
 	color: darkblue;

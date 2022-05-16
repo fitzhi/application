@@ -12,6 +12,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.junit4.SpringRunner;
 
 /**
@@ -22,6 +23,7 @@ import org.springframework.test.context.junit4.SpringRunner;
  */
 @RunWith(SpringRunner.class)
 @SpringBootTest
+@DirtiesContext()
 public class StaffHandlerUpdateExperienceTest {
 
 	@Autowired
@@ -31,7 +33,7 @@ public class StaffHandlerUpdateExperienceTest {
 	public void before() {
 		Staff st =  new Staff(1000,"Christian Aligato", "Chavez Tugo", "cact" , "cact", "cact@void.com", "");
 		st.getExperiences().add(new Experience(1, 0));
-		staffHandler.getStaff().put(1000, st);
+		staffHandler.put(1000, st);
 	}
 
 	@Test

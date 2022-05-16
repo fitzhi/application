@@ -25,6 +25,12 @@ then
 	sed -i 's/"login": "#login"/"login": "'${login}'"/g' ../data/referential/sonar-servers.json
 fi
 
+if [ ${organization} ] && [ ${organization} != "" ]
+then
+	echo Given organization ${organization}
+	sed -i 's/"organization": "#organization"/"organization": "'${organization}'"/g' ../data/referential/sonar-servers.json
+fi
+
 service nginx start 
 
-java -Xmx1g -jar fitzhi-1.7.jar --spring.profiles.active=HTTP > out.txt
+java -Xmx1g -jar fitzhi-1.8.jar --spring.profiles.active=HTTP > out.txt

@@ -1,9 +1,9 @@
-:host >>> th#skill > .mat-sort-header-container  {
+:host ::ng-deep th#skill > .mat-sort-header-container  {
 	color: darkblue;
 	font-size: 22px;
 }
 
-:host >>> th.level > .mat-sort-header-container  {
+:host ::ng-deep th.level > .mat-sort-header-container  {
 	justify-content: flex-end;
 }
 

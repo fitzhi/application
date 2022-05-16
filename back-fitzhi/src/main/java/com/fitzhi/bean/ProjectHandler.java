@@ -7,10 +7,14 @@ import java.util.Optional;
 
 import javax.validation.constraints.NotNull;
 
+import com.fitzhi.bean.impl.ProjectHandlerImpl;
 import com.fitzhi.data.internal.Experience;
+import com.fitzhi.data.internal.ExperienceAbacus;
+import com.fitzhi.data.internal.ExperienceDetectionTemplate;
 import com.fitzhi.data.internal.FilesStats;
 import com.fitzhi.data.internal.Ghost;
 import com.fitzhi.data.internal.Library;
+import com.fitzhi.data.internal.Mission;
 import com.fitzhi.data.internal.Project;
 import com.fitzhi.data.internal.ProjectSkill;
 import com.fitzhi.data.internal.ProjectSonarMetricValue;
@@ -24,7 +28,7 @@ import com.fitzhi.exception.NotFoundException;
 
 /**
  * This interface is in charge of the Projects management.
- * Its main implementation is ProjectHandlerImpl
+ * Its main implementation is {@link ProjectHandlerImpl}
  * 
  * @author Fr&eacute;d&eacute;ric VIDAL
  */
@@ -87,16 +91,17 @@ public interface ProjectHandler extends DataSaverLifeCycle {
 	void init();
 
 	/**
-	 * @param idProject
-	 *            the project identifier.
-	 * @return the list of contributor for the given project.
+	 * Retrieve the list of submitters (and their metrics) for this project based on the {@link Mission missions} declared in the Staff collection. 
+	 * 
+	 * @param idProject the project identifier.
+	 * @return the list of contributors for the given project.
 	 */
 	List<Contributor> contributors(int idProject);
 
 	/**
 	 * Add a new project inside the projects referential.<br/>
-	 * If project is not identified (e.g. the {@code Project#getId()} is less than 1), we will generate an ID.
-	 * @param project the passed project
+	 * If project is not identified (e.g. the {@code Project#getId()} is less than 1), application will generate an ID.
+	 * @param project the given project
 	 * @return the newly created project
 	 * 
 	 */
@@ -297,7 +302,7 @@ public interface ProjectHandler extends DataSaverLifeCycle {
 	 * @param key the key of a project declared in Sonar.
 	 * @return {@code true} if the key exists in the collection
 	 */
-	boolean containsSonarEntry(Project project, String key);
+	boolean containsSonarProject(Project project, String key);
 	
 	/**
 	 * Save the files statistics retrieved from the Sonar project.
@@ -392,13 +397,33 @@ public interface ProjectHandler extends DataSaverLifeCycle {
 
 	/**
 	 * <p>
-	 * Update for all staff members declared in the application, 
+	 * Update for <b>ALL</b> staff members declared in the application, 
 	 * the <b>"system"</b> {@link Experience level for all skills} detected in the projects.
 	 * </p>
+	 * <p>
+	 * The level on experiences can be set by the end user in the staff form, or automatically assessed by Fitzhi
+	 * </p>
 	 * 
-	 * @param experiences the map containing the experiences retrieved from the activities 
+	 * @param experiences the map containing the experiences involved by the activities 
 	 * @throws ApplicationException thrown if any problem occurs.
 	 */
-	void updateStaffSkillLevel(Map<StaffExperienceTemplate, Integer> experiences) throws ApplicationException;
+	void updateProjectStaffSkillLevel(Map<StaffExperienceTemplate, Integer> experiences) throws ApplicationException;
+
+	/**
+	 * <p>
+	 * Update one experience for a given staff member.
+	 * The level on experiences can be set by the end user in the staff form, or automatically assessed by Fitzhi
+	 * </p>
+	 * 
+	 * @param idStaff the Staff identifier
+	 * @param idEDT the experience of detection template
+	 * @param value the computed value by the system
+	 * @param templates the experience (skill/level) detection templates declared in the application.
+	 * @param abacus the abacus
+	 *
+	 * @throws ApplicationException thrown if any problem occurs.
+	 */
+	void updateStaffSkillSystemLevel (final int idStaff, final int idEDT, final int value, Map<Integer, ExperienceDetectionTemplate> templates, List<ExperienceAbacus> abacus)
+		throws ApplicationException;
 
 }

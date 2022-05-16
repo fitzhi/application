@@ -1,17 +1,15 @@
 package com.fitzhi.data.internal;
 
+import static com.fitzhi.Global.ROLE_TRUSTED_USER;
+
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.userdetails.UserDetails;
-
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fitzhi.Global;
 import com.fitzhi.bean.impl.StaffHandlerImpl;
 import com.fitzhi.data.encryption.DataEncryption;
 import com.fitzhi.data.source.Contributor;
@@ -19,7 +17,10 @@ import com.fitzhi.exception.ApplicationException;
 import com.fitzhi.security.CustomGrantedAuthority;
 import com.fitzhi.service.FileType;
 
-import static com.fitzhi.Global.ROLE_TRUSTED_USER;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
 
 import lombok.Data;
 
@@ -95,14 +96,19 @@ public @Data class Staff implements UserDetails {
 	private List<CustomGrantedAuthority> authorities = new ArrayList<>();
 	
 	/**
+	* List of openIds associated with this staff member.
+	*/
+	private List<OpenId> openIds = new ArrayList<>();
+
+	/**
 	 * Empty construction.
 	 */
 	public Staff() {
 		authorities.add(new CustomGrantedAuthority(ROLE_TRUSTED_USER));
 		missions = new ArrayList<>();
 		experiences = new ArrayList<>();
+		openIds = new ArrayList<>();
 	}
-
 
 	/**
 	 * Creation of a empty staff member just on a his login/password
@@ -118,6 +124,7 @@ public @Data class Staff implements UserDetails {
 		missions = new ArrayList<>();
 		experiences = new ArrayList<>();
 		authorities.add(new CustomGrantedAuthority(ROLE_TRUSTED_USER));
+		openIds = new ArrayList<>();
 	}
 
 	/**
@@ -143,6 +150,7 @@ public @Data class Staff implements UserDetails {
 		missions = new ArrayList<>();
 		experiences = new ArrayList<>();
 		authorities.add(new CustomGrantedAuthority(ROLE_TRUSTED_USER));
+		openIds = new ArrayList<>();
 	}
 
 	/**
@@ -175,6 +183,7 @@ public @Data class Staff implements UserDetails {
 		missions = new ArrayList<>();
 		experiences = new ArrayList<>();
 		authorities.add(new CustomGrantedAuthority(ROLE_TRUSTED_USER));
+		openIds = new ArrayList<>();
 	}
 
 	/**
@@ -268,6 +277,33 @@ public @Data class Staff implements UserDetails {
 		return passwordEncrypted.equals(this.password);
 	}
 
+	/**
+	 * Retrieve the principal associated to this staff member.
+	 * 
+	 * @param serverId the Open server identifier. {@link Global#GOOGLE_OPENID_SERVER} might be the value.
+	 * @return the principal associated with this staff for the given server, or {@code null} if none exists.
+	 */
+	public String getPrincipal(String serverId) {
+		Optional<String> oServerId = this.getOpenIds()
+			.stream()
+			.filter(openId -> serverId.equals(openId.getServerId()))
+			.map(OpenId::getUserId)
+			.findFirst();
+		return oServerId.orElse(null);
+	}
+
+	/**
+	 * Test if the given openID authenticates this staff member.
+	 * 
+	 * @param serverId the given authentication server
+	 * @param userId the given Open Identifier
+	 * @return {@code true} if this staff member is linked with this open identifier, {@code false} otherwise
+	 */
+	public boolean isAuthByOpenId(String serverId, String userId) {
+		return this.getOpenIds()
+			.stream()
+			.anyMatch(openId -> (serverId.equals(openId.getServerId()) && userId.equals(openId.getUserId())) );
+	}
 
 	@Override
 	public Collection<? extends GrantedAuthority> getAuthorities() {

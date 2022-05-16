@@ -11,6 +11,7 @@ import { catchError } from 'rxjs/operators';
 import { traceOn } from 'src/app/global';
 import { MessageService } from 'src/app/interaction/message/message.service';
 import { ProjectsListenerService } from 'src/app/service/project/projects-listener.service';
+import { AuthService } from '../auth/auth.service';
 
 @Injectable()
 export class HttpRefreshTokenErrorInterceptor implements HttpInterceptor {
@@ -42,6 +43,7 @@ export class HttpRefreshTokenErrorInterceptor implements HttpInterceptor {
 	constructor(
 		private router: Router,
 		private projectsListenerService: ProjectsListenerService,
+		private authService: AuthService,
 		private messageService: MessageService) { }
 
 	/**
@@ -79,7 +81,7 @@ export class HttpRefreshTokenErrorInterceptor implements HttpInterceptor {
 
 									// We interrupt the projects listener until connection has succeed.
 									this.projectsListenerService.interruptProjectsListener();
-
+									this.authService.setDisconnect();
 									this.router.navigate(['/login']);
 									return throwError(response);
 								}

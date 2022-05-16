@@ -1,11 +1,14 @@
 package com.fitzhi.bean.impl;
 
+import static com.fitzhi.Error.CODE_INCONSISTENCY_ERROR_MULTI_OPENIDS;
 import static com.fitzhi.Error.CODE_LOGIN_ALREADY_EXIST;
-import static com.fitzhi.Error.CODE_STAFF_NOFOUND;
-import static com.fitzhi.Error.MESSAGE_LOGIN_ALREADY_EXIST;
-import static com.fitzhi.Error.MESSAGE_STAFF_NOFOUND;
 import static com.fitzhi.Error.CODE_MONTH_SKILLS_CONSTELLATION_NOFOUND;
+import static com.fitzhi.Error.CODE_STAFF_NOFOUND;
+import static com.fitzhi.Error.MESSAGE_INCONSISTENCY_ERROR_MULTI_OPENIDS;
+import static com.fitzhi.Error.MESSAGE_LOGIN_ALREADY_EXIST;
 import static com.fitzhi.Error.MESSAGE_MONTH_SKILLS_CONSTELLATION_NOFOUND;
+import static com.fitzhi.Error.MESSAGE_STAFF_NOFOUND;
+
 import static com.fitzhi.Global.UNKNOWN;
 
 import java.text.MessageFormat;
@@ -35,6 +38,8 @@ import com.fitzhi.data.internal.Author;
 import com.fitzhi.data.internal.Constellation;
 import com.fitzhi.data.internal.Experience;
 import com.fitzhi.data.internal.Mission;
+import com.fitzhi.data.internal.OpenId;
+import com.fitzhi.data.internal.OpenIdToken;
 import com.fitzhi.data.internal.PeopleCountExperienceMap;
 import com.fitzhi.data.internal.Project;
 import com.fitzhi.data.internal.ResumeSkill;
@@ -494,26 +499,37 @@ public class StaffHandlerImpl extends AbstractDataSaverLifeCycleImpl implements 
 	}
 
 	@Override
-	public void involve(Project project, Contributor contributor) throws ApplicationException {
+	public void involve(Project project, Contributor contributor)  {
 
-		Staff staff = getStaff().get(contributor.getIdStaff());
-		if (staff == null) {
+		try {
+			Staff staff = getStaff(contributor.getIdStaff());
+
+			Optional<Mission> oMission = staff.getMissions()
+				.stream()
+				.filter(mission -> mission.getIdProject() == project.getId())
+				.findFirst();
+			
+			// We create a new Mission record if necessary.
+			Mission mission = (oMission.isPresent()) ? oMission.get() : new Mission();
+
+			mission.setIdProject(project.getId());
+			mission.setName(project.getName());
+			mission.setIdStaff(staff.getIdStaff());
+			mission.setFirstCommit(contributor.getFirstCommit());
+			mission.setLastCommit(contributor.getLastCommit());
+			mission.setNumberOfCommits(contributor.getNumberOfCommits());
+			mission.setNumberOfFiles(contributor.getNumberOfFiles());
+
+			// We add this new mission if necessary.
+			if (!oMission.isPresent()) {
+				staff.addMission(mission);
+			}
+
+		} catch (final NotFoundException nfe) {
+			throw new ApplicationRuntimeException(
+				String.format("EVERE ERROR : the Staff identifier %d should already exist.", contributor.getIdStaff()));
 		}
 		
-		Optional<Mission> oMission = staff.getMissions()
-			.stream()
-			.filter(mission -> mission.getIdProject() == project.getId())
-			.findFirst();
-		
-		Mission mission = (oMission.isPresent()) ? oMission.get() : new Mission();
-		mission.setIdProject(project.getId());
-		mission.setName(project.getName());
-		mission.setIdStaff(staff.getIdStaff());
-		mission.setFirstCommit(contributor.getFirstCommit());
-		mission.setLastCommit(contributor.getLastCommit());
-		mission.setNumberOfCommits(contributor.getNumberOfCommits());
-		mission.setNumberOfFiles(contributor.getNumberOfFiles());
-		staff.addMission(mission);
 	}
 
 	@Override
@@ -593,7 +609,7 @@ public class StaffHandlerImpl extends AbstractDataSaverLifeCycleImpl implements 
 	}
 
 	@Override
-	public Staff createWorkforceMember(final Staff staff) throws ApplicationException {
+	public Staff createWorkforceMember(Staff staff) throws ApplicationException {
 		controlWorkforceMember(staff);
 		addNewStaff(staff);
 		return staff;
@@ -621,6 +637,22 @@ public class StaffHandlerImpl extends AbstractDataSaverLifeCycleImpl implements 
 		return staff;
 	}
 
+	@Override
+	public Staff createStaffMember(OpenIdToken openIdToken) throws ApplicationException {
+
+		Staff staff = new Staff();
+		staff.setFirstName(openIdToken.getGivenName());
+		staff.setLastName(openIdToken.getFamilyName());
+		staff.setEmail(openIdToken.getEmail());
+		staff.setLogin(openIdToken.getLogin());
+		List<OpenId> list = new ArrayList<>();
+		list.add(OpenId.of(openIdToken.getServerId(), openIdToken.getUserId()));
+		staff.setOpenIds(list);
+		
+		addNewStaff(staff);
+		return staff;
+	}
+	
 	/**
 	 * Add a new staff in the staff collection
 	 * @param staff the new Staff member
@@ -995,6 +1027,23 @@ public class StaffHandlerImpl extends AbstractDataSaverLifeCycleImpl implements 
 			}
 			dataSaver.saveSkillsConstellations(currentMonth, List.copyOf(constellations.values()));
 		}
+	}
+
+	@Override
+	public Staff lookup(OpenId openId) throws ApplicationException {
+		final List<Staff> selected = getStaff().values()
+			.stream()
+			.filter(staff -> staff.isAuthByOpenId(openId.getServerId(), openId.getUserId()))
+			.collect(Collectors.toList());
+		if (selected.isEmpty()) {
+			return null;
+		}
+		if (selected.size() >= 2) {
+			throw new ApplicationException(
+				CODE_INCONSISTENCY_ERROR_MULTI_OPENIDS, 
+				MessageFormat.format(MESSAGE_INCONSISTENCY_ERROR_MULTI_OPENIDS, openId.getServerId(), openId.getUserId()));
+		}
+		return selected.get(0);
 	}
 
 }

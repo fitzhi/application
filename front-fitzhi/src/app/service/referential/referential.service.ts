@@ -1,7 +1,8 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { BehaviorSubject } from 'rxjs';
-import { switchMap, take } from 'rxjs/operators';
+import { catchError, switchMap, take } from 'rxjs/operators';
+import { OpenidServer } from 'src/app/data/openid-server';
 import { DeclaredSonarServer } from '../../data/declared-sonar-server';
 import { Ecosystem } from '../../data/ecosystem';
 import { OptimalSkillCoverage } from '../../data/optimal-skill-coverage';
@@ -12,8 +13,10 @@ import { SupportedMetric } from '../../data/supported-metric';
 import { TopicLegend } from '../../data/topic-legend';
 import { traceOn } from '../../global';
 import { BackendSetupService } from '../backend-setup/backend-setup.service';
+import { GithubService } from '../github/github.service';
+import { GoogleService } from '../google/google.service';
 
-@Injectable()
+@Injectable({providedIn: 'root'})
 export class ReferentialService {
 
 	/*
@@ -69,12 +72,21 @@ export class ReferentialService {
 	 */
 	public referentialLoaded$ = new BehaviorSubject<boolean>(false);
 
-	/*
-	 * Skills.
+	/**
+	 * the Skills loaded.
 	 */
 	public skills: Skill[] = [];
 
-	constructor(private httpClient: HttpClient, private backendSetupService: BackendSetupService) {}
+	/**
+	 * Array of Open ID servers. This array of settings is loaded from the backend server.
+	 */
+	public openidServers: OpenidServer[] = [];
+
+	constructor (
+		private httpClient: HttpClient,
+		private googleService: GoogleService,
+		private githubService: GithubService,
+		private backendSetupService: BackendSetupService) {}
 
 	/**
 	 * Loading all referential.
@@ -87,16 +99,36 @@ export class ReferentialService {
 				console.log('First start of application. Referentials loading is postponed.');
 				return;
 			} else {
-				console.log('Fetching the profiles on URL ' + this.backendSetupService.url() + '/referential/profiles');
+				console.log('Fetching the profiles on URL ' + this.backendSetupService.url() + '/referential/openid-servers');
 			}
 		}
-		console.log(this.backendSetupService.url() + '/referential/profiles');
 
 		if (!this.backendSetupService.hasSavedAnUrl()) {
 			return;
 		}
 
-		this.httpClient.get<Profile[]>(this.backendSetupService.url() + '/referential/profiles')
+		this.httpClient.get<OpenidServer[]>(this.backendSetupService.url() + '/referential/openid-servers')
+			.pipe(
+				take(1),
+				switchMap(
+					(servers: OpenidServer[]) => {
+						if (traceOn()) {
+							console.groupCollapsed('OpenId servers : ');
+							servers.forEach(function (server) {
+								console.log(server.serverId + ' ' + server.clientId);
+							});
+							console.groupEnd();
+						}
+						this.openidServers.push(...servers);
+						this.googleService.takeInAccountDeclaredServers(servers);
+						this.githubService.takeInAccountDeclaredServers(servers);
+						return this.httpClient.get<Profile[]> 	(this.backendSetupService.url() + '/referential/profiles');
+					}),
+				catchError((e) => {
+					// The OpenId servers array is not mandatory.
+					console.log ('Just a warning : ' + e.error.message);
+					return this.httpClient.get<Profile[]> 	(this.backendSetupService.url() + '/referential/profiles');
+				}))
 			.pipe(
 				take(1),
 				switchMap(
@@ -216,5 +248,4 @@ export class ReferentialService {
 					}
 				);
 	}
-
 }

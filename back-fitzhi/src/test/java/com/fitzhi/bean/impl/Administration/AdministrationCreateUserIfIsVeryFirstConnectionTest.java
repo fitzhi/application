@@ -1,6 +1,3 @@
-/**
- * 
- */
 package com.fitzhi.bean.impl.Administration;
 
 

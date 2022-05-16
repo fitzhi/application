@@ -59,11 +59,11 @@ public class ProjectHandlerUpdateSkillsBasedOnPackageJsonEntryTest {
 		repo.add(php);
 		repo.add(packageJson);
 		
-		project = new Project(1789, "my testing project");
+		project = new Project(1789, "my testing project 9");
 		project.setLocationRepository(".");
 
 		projectHandler.addNewProject(project);
-		
+		projectHandler.dataAreSaved();
 	}
 	
 	@Test
@@ -80,6 +80,6 @@ public class ProjectHandlerUpdateSkillsBasedOnPackageJsonEntryTest {
 	
 	@After
 	public void after() throws ApplicationException {
-		projectHandler.getProjects().remove(1789);
+		projectHandler.removeProject(1789);
 	}
 }

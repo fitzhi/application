@@ -16,6 +16,8 @@ import { MessageService } from '../../interaction/message/message.service';
 import { CinematicService } from '../../service/cinematic.service';
 import { ProjectService } from '../../service/project/project.service';
 import { ProjectStaffService } from '../project-staff-service/project-staff.service';
+import { selection } from '../../dashboard/selection';
+import { FitzhiDashboardPopupHelper } from 'src/app/dashboard/fitzhi-dashboard-popup-helper';
 
 @Component({
 	selector: 'app-project-staff',
@@ -23,6 +25,13 @@ import { ProjectStaffService } from '../project-staff-service/project-staff.serv
 	styleUrls: ['./project-staff.component.css']
 })
 export class ProjectStaffComponent extends BaseDirective implements OnInit, OnDestroy, AfterContentInit {
+
+	/**
+	 * Helper handler the display or not of the poppup.
+	 */
+	public popupHelper = new FitzhiDashboardPopupHelper();
+
+	public selection = selection;
 
 	public dataSource: MatTableDataSource<Contributor>;
 
@@ -92,7 +101,7 @@ export class ProjectStaffComponent extends BaseDirective implements OnInit, OnDe
 				.subscribe({
 					next: doneAndOk => {
 						if (traceOn()) {
-							this.projectService.dump(this.projectService.project, 'projectStaffComponent.ngOnInit()');
+							this.projectService.dump(this.projectService.project, 'projectStaffComponent.ngAfterContentInit()');
 						}
 						if (doneAndOk) {
 							this.loadContributors();
@@ -116,7 +125,7 @@ export class ProjectStaffComponent extends BaseDirective implements OnInit, OnDe
 						if (traceOn()) {
 							console.log('404 : cannot find contributors for the id ' + this.projectService.project.id);
 						}
-						this.messageService.error('Cannot retrieve the contributors for the project identifier ' + this.projectService.project.id);
+						this.messageService.error('Cannot retrieve the contributors for project ' + this.projectService.project.name);
 					} else {
 						console.error(error);
 					}

@@ -6,7 +6,7 @@ import { Project } from 'src/app/data/project';
 import { BehaviorSubject } from 'rxjs';
 import { ReferentialService } from 'src/app/service/referential/referential.service';
 import { PortalHostDirective } from '@angular/cdk/portal';
-import { SonarProject } from 'src/app/data/SonarProject';
+import { SonarProject } from 'src/app/data/sonar-project';
 import { SonarEvaluation } from 'src/app/data/sonar-evaluation';
 import { RiskLegend } from 'src/app/data/riskLegend';
 import { MatGridList, MatGridListModule } from '@angular/material/grid-list';

@@ -1,11 +1,13 @@
+import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
+import { Observable, of } from 'rxjs';
+import { catchError, switchMap, take, tap } from 'rxjs/operators';
+import { OpenIdCredentials } from 'src/app/data/open-id-credentials';
+import { OpenIdTokenStaff } from 'src/app/data/openidtoken-staff';
+import { traceOn } from 'src/app/global';
 import { InternalService } from 'src/app/internal-service';
 import { BackendSetupService } from 'src/app/service/backend-setup/backend-setup.service';
-import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
-import { take, switchMap, catchError } from 'rxjs/operators';
 import { Token } from '../token/token';
-import { Observable, of } from 'rxjs';
-import { traceOn } from 'src/app/global';
 import { TokenService } from '../token/token.service';
 
 @Injectable({
@@ -23,7 +25,13 @@ export class AuthService extends InternalService {
 		private tokenService: TokenService,
 		private httpClient: HttpClient) { super(); }
 
-	public connect$(username: string, password: string): Observable<boolean> {
+	/**
+	 * Authentification request in a classic approach (user/password).
+	 * @param username the given username
+	 * @param password the given password
+	 * @returns an observable containing a boolean equal to **true** if the connection succeeds, **false** otherwise.
+	 */
+	public connectClassic$(username: string, password: string): Observable<boolean> {
 
 		if (traceOn()) {
 			console.log('Trying a connection with user/pass ' + username + ':' + password
@@ -31,7 +39,7 @@ export class AuthService extends InternalService {
 		}
 
 		let headers: HttpHeaders = new HttpHeaders();
-		headers = headers.append('Content-Type', 'application/x-www-urlencoded');
+		headers = headers.append('Content-Type', 'application/x-www-form-urlencoded');
 		headers = headers.append('Authorization', 'Basic ' + btoa('fitzhi-trusted-client' + ':secret'));
 
 		const params = new HttpParams()
@@ -40,8 +48,9 @@ export class AuthService extends InternalService {
 			.set('grant_type', 'password');
 
 		return this.httpClient.post<Token>(
-			localStorage.getItem('backendUrl') + '/oauth/token', '',
-				{ headers: headers, params: params })
+			localStorage.getItem('backendUrl') + '/oauth/token',
+				params.toString(),
+				{ headers: headers })
 			.pipe(
 				take(1),
 				switchMap(
@@ -70,7 +79,50 @@ export class AuthService extends InternalService {
 	}
 
 	/**
-     * @returns TRUE if the user is connected, FALSE otherwise.
+	 * Authentification request in the OpenId approach
+	 * @param credentials the openID credentials loaded from the authentication server
+	 * @returns an observable containing the staff linked to the credentials
+	 */
+	public connectOpenId$(credentials: OpenIdCredentials): Observable<OpenIdTokenStaff> {
+
+		const body = { openIdServer: credentials.serverId, idToken: credentials.jwt};
+
+		return this.httpClient.post<OpenIdTokenStaff>(this.backendSetupService.url() + '/admin/openId/connect', body)
+			.pipe(
+				take(1),
+				tap({
+					next: oits => {
+						const staff = oits.staff;
+						if (traceOn()) {
+							console.log('Identity retrieved : %d %s %s', staff.idStaff, staff.firstName, staff.lastName);
+						}
+						this.setConnect();
+					},
+					error: error => {
+						if (traceOn() && (error)) {
+							console.log ('Error', error);
+						}
+						this.setDisconnect();
+					}
+				}));
+	}
+
+	/**
+	 * `Disable` the connection status stored in the authentication service.
+	 */
+	public setDisconnect() {
+		this.connected = false;
+	}
+
+	/**
+	 * `Enable` the connection status stored in the authentication service.
+	 */
+	public setConnect() {
+		this.connected = true;
+	}
+
+	/**
+     * @returns `TRUE` if the user is connected, `FALSE` otherwise.
      */
 	public isConnected() {
 

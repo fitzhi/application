@@ -24,10 +24,11 @@ public interface CommitRepository {
 	 * @param sourceCodePath the complete source code path 
 	 * @param idStaff staff member's identifier
 	 * @param authorName the author's name
+	 * @param authorEmail the author's email
 	 * @param timestamp date of the operation
 	 * @param importance the importance of this source file in the project in a numeric value format
 	 */
-	void addCommit(String sourceCodePath, int idStaff, String authorName, LocalDate timestamp, long importance);
+	void addCommit(String sourceCodePath, int idStaff, String authorName, String authorEmail, LocalDate timestamp, long importance);
 	
 	/**
 	 * <p>
@@ -37,10 +38,11 @@ public interface CommitRepository {
 	 * @param sourceCodePath the complete source code path 
 	 * @param idStaff staff member's identifier
 	 * @param authorName the author's name
+	 * @param authorEmail the author's email
 	 * @param timestamp date of the operation (without time offset)
 	 * @param importance the importance of this source file in the project in a numeric value format
 	 */
-	void addCommit(String sourceCodePath, int idStaff, String authorName, Date timestamp, long importance);
+	void addCommit(String sourceCodePath, int idStaff, String authorName, String authorEmail, Date timestamp, long importance);
 	
 	/**
 	 * On-board a staff member into the repository to replace unknown contributors.
@@ -101,7 +103,7 @@ public interface CommitRepository {
 	 * @param idStaff developer's identifier
 	 * @return the number of unit of commits submitted by the passed developer for each file.
 	 */
-	int numberOfFileCommits(int idStaff);
+	int numberOfFileCommit(int idStaff);
 	
 	/**
 	 * @param idStaff developer identifier

@@ -42,8 +42,22 @@ public class Global {
 	/**
 	 * Role given to all user who are allowed to connect to Fitzhi.
 	 */
+	public static final String TRUSTED_USER = "TRUSTED_USER";
+
+	/**
+	 * Role given to all user who are allowed to connect to Fitzhi.
+	 */
 	public static final String ROLE_TRUSTED_USER = "ROLE_TRUSTED_USER";
 
+	/**
+	 * Identifiant for the Google authentication server.
+	 */
+	public final static String GOOGLE_OPENID_SERVER = "GOOGLE";
+
+	/**
+	 * Identifiant for the Github authentication server.
+	 */
+	public final static String GITHUB_OPENID_SERVER = "GITHUB";
 
 	private Global() {
 	}
@@ -54,6 +68,7 @@ public class Global {
 	 */
 	public static final int UNKNOWN = -1;
 
+	public static final String REFS_HEAD = "refs/heads/";
 	/**
 	 * Deep cloning of an object by serialization.
 	 * @param object the given object to be cloned

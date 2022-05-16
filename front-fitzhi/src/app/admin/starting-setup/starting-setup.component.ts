@@ -1,14 +1,16 @@
 import { HttpClient } from '@angular/common/http';
-import { Component, OnDestroy, ViewChild } from '@angular/core';
+import { Component, NgZone, OnDestroy, ViewChild } from '@angular/core';
 import { MatStepper } from '@angular/material/stepper';
 import { Router } from '@angular/router';
-import { Subject } from 'rxjs';
 import { BaseDirective } from 'src/app/base/base-directive.directive';
 import { Collaborator } from 'src/app/data/collaborator';
+import { LoginEvent } from 'src/app/data/login-event';
+import { LoginMode } from 'src/app/data/login-mode';
 import { traceOn } from 'src/app/global';
 import { BackendSetupService } from 'src/app/service/backend-setup/backend-setup.service';
 import { ReferentialService } from 'src/app/service/referential/referential.service';
 import { SkillService } from 'src/app/skill/service/skill.service';
+import { RegisterUserComponent } from '../register-user/register-user.component';
 import { InstallService } from '../service/install/install.service';
 
 @Component({
@@ -24,19 +26,9 @@ export class StartingSetupComponent extends BaseDirective implements OnDestroy {
 	@ViewChild('stepper', { static: true }) stepper: MatStepper;
 
 	/**
-	 * This status will be setup to TRUE, FALSE otherwise.
+	 * The register form.
 	 */
-	public veryFirstConnection = true;
-
-	/**
-	 * Are we in the very first connection ?
-	 */
-	private _veryFirstConnection$ = new Subject<boolean>();
-
-	/**
-	 * Are we in the very first connection ?
-	 */
-	public veryFirstConnection$ = this._veryFirstConnection$.asObservable();
+	@ViewChild(RegisterUserComponent) register;
 
 	/**
 	 * Array representing the fact that each step has been completed.
@@ -58,25 +50,25 @@ export class StartingSetupComponent extends BaseDirective implements OnDestroy {
 	 */
 	labelUser = 'User';
 
-
 	constructor(
 		private backendSetupService: BackendSetupService,
 		private referentialService: ReferentialService,
 		private skillService: SkillService,
-		private installService: InstallService,
+		public installService: InstallService,
 		private router: Router,
-		private httpClient: HttpClient) { super(); }
+		private httpClient: HttpClient,
+		private ngZone: NgZone) { super(); }
 
 	/**
 	 * Setup the fact that this is the very first connection.
 	 */
 	onChangeVeryFirstConnection($event: boolean) {
+
 		if (traceOn()) {
 			console.log('veryFirstConnection :', $event);
 		}
 
-		this.veryFirstConnection = $event;
-		this._veryFirstConnection$.next(this.veryFirstConnection);
+		this.installService.setVeryFirstConnection($event);
 
 		this.labelUser = ($event) ? 'First admin user' : 'First registration';
 
@@ -85,27 +77,38 @@ export class StartingSetupComponent extends BaseDirective implements OnDestroy {
 		this.skillService.loadSkills();
 
 		setTimeout(() => this.stepper.next(), 0);
+
 	}
 
 	/**
 	 * Catch the staff identifier created the registerUserComponent.
 	 */
-	setRegisteredUser($event: number) {
+	setRegisteredUser($event: LoginEvent) {
 
 		if (traceOn()) {
-			console.log('idStaff created :', $event);
+			console.log(`idStaff created : ${$event.idStaff}`);
 		}
-		// Operation has been cancelled.
-		if ($event === -1) {
+
+		// Operation has been cancelled. We skip backward.
+		if ($event.idStaff === -1) {
 			this.completed[1] = false;
-			setTimeout(() => {
-				this.stepper.previous();
-			}, 0);
+			setTimeout(() => { this.stepper.previous(); }, 0);
 			return;
 		}
-		this.completed[1] = true;
-		this.idStaff = $event;
-		setTimeout(() => this.stepper.next(), 0);
+
+		this.idStaff = $event.idStaff;
+		this.ngZone.run(() => {
+			this.completed[1] = true;
+			// If we are in openID mode we can skip the connection tab. We are already connected after the registration.
+			if ($event.loginMode === LoginMode.OPENID) {
+				this.completed[2] = true;
+			}
+			setTimeout(() => {
+				this.stepper.next();
+				// Same reason as before.
+				if ($event.loginMode === LoginMode.OPENID) { this.stepper.next(); }
+			}, 0);
+		});
 	}
 
 	/**
@@ -126,9 +129,7 @@ export class StartingSetupComponent extends BaseDirective implements OnDestroy {
 	setConnection($event: boolean) {
 		if ($event) {
 			this.completed[2] = true;
-			setTimeout(() => {
-				this.stepper.next();
-			}, 0);
+			setTimeout(() => this.stepper.next(), 0);
 		} else {
 			this.completed[2] = false;
 			this.completed[3] = false;
@@ -147,27 +148,21 @@ export class StartingSetupComponent extends BaseDirective implements OnDestroy {
 			console.log('staff updated for :', $event.lastName);
 		}
 
-		if (!this.veryFirstConnection) {
+		if (!this.installService.isComplete()) {
 			if (traceOn()) {
-				console.log('We are not in mode "very first connection".');
+				console.log('We have already installed Fitzhi. This is not the mode "very first connection".');
 			}
 			this.nextStepAfterStaffUpdate($event);
 		} else {
-			this.subscriptions.add(
-				this.httpClient.post<Boolean>(this.backendSetupService.url() + '/admin/saveVeryFirstConnection', '')
-					.subscribe({
-						next:  veryFirstConnectionIsRegistered => {
-							if (traceOn() && veryFirstConnectionIsRegistered) {
-								console.log('The very first connection is registered into Fitzhi.');
-							}
-							this.nextStepAfterStaffUpdate($event);
-						}
-					}
-				)
-			);
+			this.backendSetupService.saveVeryFirstConnection$().subscribe({
+				next: state => this.nextStepAfterStaffUpdate($event)
+			});
 		}
 	}
 
+	/**
+	 * @param staff the staff saved
+	 */
 	private nextStepAfterStaffUpdate(staff: Collaborator): void {
 		this.completed[3] = true;
 		this.installService.installComplete();

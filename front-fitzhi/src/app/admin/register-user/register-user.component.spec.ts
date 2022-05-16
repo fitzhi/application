@@ -1,61 +1,44 @@
-import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
-import { RegisterUserComponent } from './register-user.component';
-import { HttpClientTestingModule, HttpTestingController } from '@angular/common/http/testing';
 import { HttpClient, HttpClientModule } from '@angular/common/http';
-import { ReferentialService } from 'src/app/service/referential/referential.service';
-import { CinematicService } from 'src/app/service/cinematic.service';
-import { MatCheckboxModule } from '@angular/material/checkbox';
-import { MatTableModule } from '@angular/material/table';
+import { HttpClientTestingModule, HttpTestingController } from '@angular/common/http/testing';
+import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { MatPaginatorModule } from '@angular/material/paginator';
-import { MatGridListModule } from '@angular/material/grid-list';
-import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { MatFormFieldModule } from '@angular/material/form-field';
-import { MatSliderModule } from '@angular/material/slider';
-import { MatInputModule } from '@angular/material/input';
+import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatDialogModule } from '@angular/material/dialog';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatGridListModule } from '@angular/material/grid-list';
+import { MatInputModule } from '@angular/material/input';
+import { MatPaginatorModule } from '@angular/material/paginator';
+import { MatSliderModule } from '@angular/material/slider';
+import { MatTableModule } from '@angular/material/table';
 import { By } from '@angular/platform-browser';
-import { InstallService } from '../service/install/install.service';
-import { StaffService } from 'src/app/tabs-staff/service/staff.service';
-import { Collaborator } from 'src/app/data/collaborator';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { of } from 'rxjs';
+import { Collaborator } from 'src/app/data/collaborator';
+import { AlternativeOpenidConnectionComponent } from 'src/app/interaction/alternative-openid-connection/alternative-openid-connection.component';
+import { CinematicService } from 'src/app/service/cinematic.service';
+import { GoogleService } from 'src/app/service/google/google.service';
+import { ReferentialService } from 'src/app/service/referential/referential.service';
+import { StaffService } from 'src/app/tabs-staff/service/staff.service';
+import { InstallService } from '../service/install/install.service';
+import { RegisterUserFormComponent } from './register-user-form/register-user-form.component';
+import { RegisterUserComponent } from './register-user.component';
 
 
 describe('RegisterUserComponent', () => {
 	let component: RegisterUserComponent;
 	let fixture: ComponentFixture<RegisterUserComponent>;
+	let googleService: GoogleService;
 
 	let httpClient: HttpClient;
 	let httpTestingController: HttpTestingController;
 
 	let installService: InstallService;
-
-	function setUser(value: string) {
-		const user = fixture.debugElement.query(By.css('#user'));
-		user.nativeElement.value = value;
-		user.nativeElement.dispatchEvent(new Event('input'));
-		fixture.detectChanges();
-	}
-
-	function setPassword(value: string) {
-		const password = fixture.debugElement.query(By.css('#password'));
-		password.nativeElement.value = value; // This is not a credential. //NOSONAR
-		password.nativeElement.dispatchEvent(new Event('input'));
-		fixture.detectChanges();
-	}
-
-	function setConfirmedPassword(value: string) {
-		const passwordConfirmation = fixture.debugElement.query(By.css('#passwordConfirmation'));
-		passwordConfirmation.nativeElement.value = value; // This is not a credential. //NOSONAR
-		passwordConfirmation.nativeElement.dispatchEvent(new Event('input'));
-		fixture.detectChanges();
-	}
-
+	let spyGoogleInit: any;
 
 	beforeEach(waitForAsync(() => {
 		TestBed.configureTestingModule({
-			declarations: [RegisterUserComponent],
-			providers: [ReferentialService, CinematicService, InstallService],
+			declarations: [RegisterUserComponent, RegisterUserFormComponent, AlternativeOpenidConnectionComponent],
+			providers: [ReferentialService, CinematicService, InstallService, GoogleService],
 			imports: [MatCheckboxModule, MatTableModule, FormsModule, MatPaginatorModule, MatGridListModule,
 				HttpClientTestingModule, HttpClientModule, BrowserAnimationsModule, MatFormFieldModule,
 				ReactiveFormsModule, MatSliderModule, MatInputModule, MatDialogModule]
@@ -72,6 +55,9 @@ describe('RegisterUserComponent', () => {
 		component = fixture.componentInstance;
 
 		installService = TestBed.inject(InstallService);
+
+		googleService = TestBed.inject(GoogleService);
+		spyGoogleInit = spyOn(googleService, 'initialize').and.returnValue();
 
 		fixture.detectChanges();
 	});
@@ -106,49 +92,15 @@ describe('RegisterUserComponent', () => {
 		expect(localStorage.getItem('installation')).toBe('1');
 	});
 
-	it('should NOT activate the button Ok if the password length is lower than 8 characters.', () => {
-
-		setUser('frvidal');
-		setPassword('pass123');
-		setConfirmedPassword('pass123');
-
-		const btnOk = fixture.debugElement.query(By.css('#okButton'));
-		expect(btnOk).toBeDefined();
-		expect(btnOk.nativeElement.disabled).toBeTruthy();
-	});
-
-	it('should NOT activate the button Ok if the password is not correctly confirmed.', () => {
-
-		setUser('frvidal');
-		setPassword('pass123word');
-		setConfirmedPassword('pass123weird');
-
-		const btnOk = fixture.debugElement.query(By.css('#okButton'));
-		expect(btnOk).toBeDefined();
-		expect(btnOk.nativeElement.disabled).toBeTruthy();
-	});
-
-	it('should activate the button Ok, if the user & password fields are correctly entered.', () => {
-
-		setUser('frvidal');
-		setPassword('pass123word');
-		setConfirmedPassword('pass123word');
-
-		const btnOk = fixture.debugElement.query(By.css('#okButton'));
-		expect(btnOk).toBeDefined();
-		expect(btnOk.nativeElement.disabled).toBeFalsy();
-
-	});
-
 	it('Should handle correctly the registration of a new user.', () => {
 
 		const staffService = TestBed.inject(StaffService);
 		const spyChangeCollaborator = spyOn(staffService, 'changeCollaborator').and.returnValue();
-		const spyRegisterUsers = spyOn(staffService, 'registerUser$').and.returnValue(of(new Collaborator()));
+		const spyRegisterUsers = spyOn(staffService, 'classicRegisterUser$').and.returnValue(of(new Collaborator()));
 
-		component.connectionGroup.get('username').setValue('myPersonalUser');
-		component.connectionGroup.get('password').setValue('myPersonalPass');
-		component.connectionGroup.get('passwordConfirmation').setValue('myPersonalPass');
+		component.registerUserFormComponent.connectionGroup.get('username').setValue('myPersonalUser');
+		component.registerUserFormComponent.connectionGroup.get('password').setValue('myPersonalPass');
+		component.registerUserFormComponent.connectionGroup.get('passwordConfirmation').setValue('myPersonalPass');
 		fixture.detectChanges();
 
 		const btnOk = fixture.debugElement.nativeElement.querySelector('#okButton');
@@ -158,5 +110,8 @@ describe('RegisterUserComponent', () => {
 
 		expect(spyRegisterUsers).toHaveBeenCalled();
 		expect(spyChangeCollaborator).toHaveBeenCalled();
+
 	});
+
+
 });

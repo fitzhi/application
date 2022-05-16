@@ -88,33 +88,33 @@ describe('staffService', () => {
 		});
 	});
 
-	it('registerUser$() for the first connection', done => {
-		service.registerUser$(true, 'myUser', 'myPass').subscribe({
+	it('registerUser$() for the first connection.', done => {
+		service.classicRegisterUser$(true, 'myUser', 'myPass').subscribe({
 			next: createdStaff => {
 				expect(createdStaff.idStaff).toBe(1789);
 				done();
 			}
 		});
-		const req = httpMock.expectOne('http://myServerUrl:8080/api/admin/veryFirstUser?login=myUser&password=myPass');
+		const req = httpMock.expectOne('http://myServerUrl:8080/api/admin/classic/primeRegister');
 		expect(req.request.method).toBe('POST');
-		expect(req.request.params.get('login')).toBe('myUser');
-		expect(req.request.params.get('password')).toBe('myPass');
+		expect(req.request.body.login).toBe('myUser');
+		expect(req.request.body.password).toBe('myPass');
 		const staff = new Collaborator();
 		staff.idStaff = 1789;
 		req.flush(staff);
 	});
 
-	it('registerUser$() during lifetime of the application', done => {
-		service.registerUser$(false, 'myUser', 'myPass').subscribe({
+	it('registerUser$() during lifetime of the application.', done => {
+		service.classicRegisterUser$(false, 'myUser', 'myPass').subscribe({
 			next: createdStaff => {
 				expect(createdStaff.idStaff).toBe(1789);
 				done();
 			}
 		});
-		const req = httpMock.expectOne('http://myServerUrl:8080/api/admin/register?login=myUser&password=myPass');
+		const req = httpMock.expectOne('http://myServerUrl:8080/api/admin/classic/register');
 		expect(req.request.method).toBe('POST');
-		expect(req.request.params.get('login')).toBe('myUser');
-		expect(req.request.params.get('password')).toBe('myPass');
+		expect(req.request.body.login).toBe('myUser');
+		expect(req.request.body.password).toBe('myPass');
 		const staff = new Collaborator();
 		staff.idStaff = 1789;
 		req.flush(staff);

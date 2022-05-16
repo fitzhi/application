@@ -1,4 +1,4 @@
-:host >>> th#staffEvaluation > .mat-sort-header-container  {
+:host ::ng-deep th#staffEvaluation > .mat-sort-header-container  {
 	color: darkblue;
 	min-width: 50px;
 	margin-top: 20px;
@@ -6,7 +6,7 @@
 	font-size: larger;
 }
 
-:host >>> th#sonarEvaluation > .mat-sort-header-container  {
+:host ::ng-deep th#sonarEvaluation > .mat-sort-header-container  {
 	color: darkblue;
 	min-width: 50px;
 	margin-top: 20px;
@@ -14,7 +14,7 @@
 	font-size: larger;
 }
 
-:host >>> th#auditEvaluation > .mat-sort-header-container  {
+:host ::ng-deep th#auditEvaluation > .mat-sort-header-container  {
 	color: darkblue;
 	min-width: 50px;
 	margin-top: 20px;
@@ -22,7 +22,7 @@
 	font-size: larger;
 }
 
-:host >>> th#name > .mat-sort-header-container  {
+:host ::ng-deep th#name > .mat-sort-header-container  {
 	color: darkblue;
 	min-width: 300px;
 	padding-left: 10px;
@@ -31,7 +31,7 @@
 	font-size: larger;
 }
 
-:host >>> th#techno > .mat-sort-header-container  {
+:host ::ng-deep th#techno > .mat-sort-header-container  {
 	color: darkblue;
 	min-width: 300px;
 	padding-left: 10px;
@@ -40,7 +40,7 @@
 	font-size: larger;
 }
 
-:host >>> th#lastCommit > .mat-sort-header-container  {
+:host ::ng-deep th#lastCommit > .mat-sort-header-container  {
 	color: darkblue;
 	min-width: 100px;
 	margin-top: 20px;
@@ -48,7 +48,7 @@
 	font-size: larger;
 }
 
-:host >>> th#lastCommitter > .mat-sort-header-container  {
+:host ::ng-deep th#lastCommitter > .mat-sort-header-container  {
 	color: darkblue;
 	margin-top: 20px;
 	min-width: 200px;

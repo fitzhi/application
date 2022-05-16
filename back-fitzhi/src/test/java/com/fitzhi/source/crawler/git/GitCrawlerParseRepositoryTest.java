@@ -18,6 +18,7 @@ import com.fitzhi.bean.StaffHandler;
 import com.fitzhi.data.internal.Project;
 import com.fitzhi.data.internal.RepositoryAnalysis;
 import com.fitzhi.data.source.BasicCommitRepository;
+import com.fitzhi.data.source.CommitRepository;
 import com.fitzhi.exception.ApplicationException;
 import com.fitzhi.source.crawler.RepoScanner;
 
@@ -65,11 +66,37 @@ public class GitCrawlerParseRepositoryTest {
 	@Test 
 	public void repositoryAlreadyAvailable() throws ApplicationException, IOException {
 		Project project = new Project(1933, "Bad year");
+		
 		when(scanner.parseRepository(any(Project.class))).thenCallRealMethod();
 		when(scanner.loadRepositoryFromCacheIfAny(any(Project.class))).thenReturn(new BasicCommitRepository());
+		// The upgradeRepository method returns FALSE
+		when(scanner.upgradeRepository(any(Project.class), any(CommitRepository.class))).thenReturn(false);
+		
 		Assert.assertNotNull(scanner.parseRepository(project));
+
 		verify(scanner, never()).retrieveRepositoryAnalysis( any(Project.class), any(Repository.class) );
+		verify(scanner, times(1)).upgradeRepository( any(Project.class), any(CommitRepository.class) );
+		verify(cacheDataHandler, never()).saveRepository( any(Project.class), any(CommitRepository.class) );
 	}
+
+	@Test 
+	public void repositoryAlreadyAvailableAndSavedAfterUpgrade() throws ApplicationException, IOException {
+		
+		Project project = new Project(1933, "Bad year");
+		
+		when(scanner.parseRepository(any(Project.class))).thenCallRealMethod();
+		when(scanner.loadRepositoryFromCacheIfAny(any(Project.class))).thenReturn(new BasicCommitRepository());
+		// The upgradeRepository method returns TRUE
+		when(scanner.upgradeRepository(any(Project.class), any(CommitRepository.class))).thenReturn(true);
+		doNothing().when(scanner).saveRepository(any(Project.class), any(CommitRepository.class)  );
+
+		Assert.assertNotNull(scanner.parseRepository(project));
+
+		verify(scanner, never()).retrieveRepositoryAnalysis( any(Project.class), any(Repository.class) );
+		verify(scanner, times(1)).upgradeRepository( any(Project.class), any(CommitRepository.class) );
+		verify(scanner, times(1)).saveRepository( any(Project.class), any(CommitRepository.class) );
+	}
+
 
 	@Test 
 	public void repositoryCreation() throws ApplicationException, IOException {

@@ -26,6 +26,7 @@ import static com.fitzhi.Global.NO_PROGRESSION;
 import static com.fitzhi.Global.PROJECT;
 import static com.fitzhi.bean.impl.RepositoryState.REPOSITORY_READY;
 import static org.eclipse.jgit.diff.DiffEntry.DEV_NULL;
+import static com.fitzhi.Global.REFS_HEAD;
 
 import java.io.File;
 import java.io.FileReader;
@@ -33,6 +34,9 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.nio.file.attribute.FileAttribute;
+import java.nio.file.attribute.PosixFilePermission;
+import java.nio.file.attribute.PosixFilePermissions;
 import java.text.MessageFormat;
 import java.time.LocalDate;
 import java.time.ZoneId;
@@ -47,6 +51,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
+import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
@@ -88,6 +93,7 @@ import com.fitzhi.data.source.CommitHistory;
 import com.fitzhi.data.source.CommitRepository;
 import com.fitzhi.data.source.ConnectionSettings;
 import com.fitzhi.data.source.Contributor;
+import com.fitzhi.data.source.Operation;
 import com.fitzhi.data.source.importance.AssessorImportance;
 import com.fitzhi.data.source.importance.FileSizeImportance;
 import com.fitzhi.data.source.importance.ImportanceCriteria;
@@ -96,6 +102,7 @@ import com.fitzhi.source.crawler.EcosystemAnalyzer;
 import com.fitzhi.source.crawler.impl.AbstractScannerDataGenerator;
 import com.google.gson.Gson;
 
+import org.apache.commons.lang3.SystemUtils;
 import org.eclipse.jgit.api.Git;
 import org.eclipse.jgit.api.errors.GitAPIException;
 import org.eclipse.jgit.api.errors.JGitInternalException;
@@ -478,9 +485,14 @@ public class GitCrawler extends AbstractScannerDataGenerator {
 	 * @throws GitAPIException thrown if the GIT operation failed for a bad reason.
 	 * @throws ApplicationException thrown if the application detects a problem
 	 */
-	private void checkBranchNameExist(Git git, String branchName) throws GitAPIException, ApplicationException {
+	static void checkBranchNameExist(Git git, String branchName) throws GitAPIException, ApplicationException {
 		java.util.List<Ref> branches = git.branchList().call();
-		if (branches.size() == 0) {
+		if (branches.isEmpty()) {
+			throw new ApplicationException(
+				CODE_BRANCH_DOES_NOT_EXIST, 
+				MessageFormat.format(MESSAGE_BRANCH_DOES_NOT_EXIST, branchName));
+		}
+		if (!branches.stream().anyMatch(ref -> (REFS_HEAD + branchName).equals(ref.getName()))) {
 			throw new ApplicationException(
 				CODE_BRANCH_DOES_NOT_EXIST, 
 				MessageFormat.format(MESSAGE_BRANCH_DOES_NOT_EXIST, branchName));
@@ -560,9 +572,15 @@ public class GitCrawler extends AbstractScannerDataGenerator {
 	 * @param project the current project which local repository has to be created
 	 * @throws ApplicationException throw if any exception occurs.
 	 */
-	private Path mkdirLocalRepo(Project project) throws ApplicationException {
+	static Path mkdirLocalRepo(Project project) throws ApplicationException {
 		try {
-			return Files.createTempDirectory("fitzhi_jgit_" + project.getName().replace(" ","_")  + "_");
+			if(SystemUtils.IS_OS_UNIX) {
+				FileAttribute<Set<PosixFilePermission>> attr = PosixFilePermissions.asFileAttribute(PosixFilePermissions.fromString("rw-------"));			  
+				return Files.createTempDirectory("fitzhi_jgit_" + project.getName().replace(" ","_")  + "_", attr);	
+			} else {
+				// Security on Windows system, WTF...
+				return Files.createTempDirectory("fitzhi_jgit_" + project.getName().replace(" ","_")  + "_"); //NOSONAR
+			}
 		} catch (final IOException ioe) {
 			throw new ApplicationException(CODE_IO_EXCEPTION, ioe.getLocalizedMessage(), ioe);
 		}
@@ -1180,29 +1198,67 @@ public class GitCrawler extends AbstractScannerDataGenerator {
 
 			CommitRepository repository = cacheDataHandler.getRepository(project);
 
-			//
-			// Since the last parsing of the repository, some developers might have been
-			// declared (or updated), and are matching (or not) to unknown pseudos.
-			// We test each ghost and re-initialize the set.
-			//
-			repository.setUnknownContributors(
-				// Pseudo does not match any staff member
-				repository.unknownContributors().stream()
-					.filter(pseudo -> (staffHandler.lookup(new Author(pseudo)) == null)) 
-					.collect(Collectors.toSet()));
-
-
-			//
-			// We update the ghosts list, in the project with the up-to-date ghosts list.
-			//
-			projectHandler.integrateGhosts(
-				project.getId(), 
-				GhostsListFactory.getInstance(repository));
-
 			return repository;
 		} else {
 			return null;
 		}
+	}
+
+
+	private Staff retrieveStaff(Operation operation) {
+		final Author author = new Author(operation.getAuthorName(), operation.getAuthorEmail());
+		return staffHandler.lookup(author);
+	}
+
+	@Override
+	public boolean upgradeRepository(Project project, CommitRepository repository) throws ApplicationException {
+
+		final AtomicBoolean updated = new AtomicBoolean();
+
+		repository.getRepository().values().stream()
+			.flatMap(history -> history.getOperations().stream())
+			.filter(operation -> operation.getIdStaff() == -1)
+			.forEach(operation -> {
+				Staff staff = retrieveStaff(operation);
+				if (staff != null) {
+					updated.compareAndSet(false, true);
+					operation.setIdStaff(staff.getIdStaff());
+
+					// We update the mission for the newly updated Staff member.
+					Contributor contributor = repository.extractStaffMetrics(staff);
+					if (contributor != null) {
+						staffHandler.involve(project, contributor);
+					}
+				}
+			});
+
+		//
+		// Since the last parsing of the repository, some developers might have been
+		// declared (or updated), and are matching (or not) to unknown pseudos.
+		// We test each ghost and re-initialize the set.
+		//
+		repository.setUnknownContributors(
+			// Pseudo does not match any staff member
+			repository.unknownContributors().stream()
+				.filter(pseudo -> (staffHandler.lookup(new Author(pseudo)) == null)) 
+				.collect(Collectors.toSet()));
+
+		//
+		// We update the ghosts list, in the project with the up-to-date ghosts list.
+		//
+		projectHandler.integrateGhosts(
+			project.getId(), 
+			GhostsListFactory.getInstance(repository));
+
+		return updated.get();
+	}
+
+	@Override
+	public void saveRepository(Project project, CommitRepository repository) throws IOException {
+		if (log.isDebugEnabled()) {
+			log.debug(String.format("Saving the repository for the project %s", project.getName()));
+		}
+		cacheDataHandler.saveRepository(project, repository);
 	}
 
 	@Override
@@ -1214,6 +1270,10 @@ public class GitCrawler extends AbstractScannerDataGenerator {
 		//
 		CommitRepository repository = loadRepositoryFromCacheIfAny(project);
 		if (repository != null) {
+			// If the repository has been updated during the repository, we save the more complete repository.
+			if (upgradeRepository(project, repository)) {
+				saveRepository(project, repository);
+			}
 			return repository;
 		}
 
@@ -1355,9 +1415,9 @@ public class GitCrawler extends AbstractScannerDataGenerator {
 	 * to the project.
 	 * </p>
 	 * 
-	 * @param project             the given project
-	 * @param analysis            the analysis processed on this project
-	 * @param unknownContributors set of unknown contributors
+	 * @param project the given project
+	 * @param analysis the analysis processed on this project
+	 * @param unknownContributors set of unknown contributors, this set will be filled with the method.
 	 * @throws ApplicationException thrown if any exception occurs
 	 */
 	private void handlingProjectStaffAndGhost(Project project, RepositoryAnalysis analysis,
@@ -1623,7 +1683,7 @@ public class GitCrawler extends AbstractScannerDataGenerator {
 				it -> ((it.getIdStaff() == settings.getIdStaffSelected()) || (settings.getIdStaffSelected() == 0)))
 				.filter(it -> (it.getDateCommit()).isAfter(startingDate))
 				.forEach(item -> personalizedRepo.addCommit(commits.getSourcePath(), item.getIdStaff(),
-						item.getAuthorName(), item.getDateCommit(), commits.getImportance()));
+						item.getAuthorName(), item.getAuthorEmail(), item.getDateCommit(), commits.getImportance()));
 		}
 		return personalizedRepo;
 	}

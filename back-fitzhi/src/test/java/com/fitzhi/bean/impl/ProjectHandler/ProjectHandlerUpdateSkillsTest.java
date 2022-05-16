@@ -66,9 +66,10 @@ public class ProjectHandlerUpdateSkillsTest {
 		repo.add(php);
 		repo.add(ts);
 		
-		project = new Project(1789, "my testing project");
+		project = new Project(1789, "my testing project 11");
 		project.setLocationRepository(".");
 		projectHandler.addNewProject(project);
+		projectHandler.dataAreSaved();
 		
 	}
 	
@@ -87,6 +88,6 @@ public class ProjectHandlerUpdateSkillsTest {
 	
 	@After
 	public void after() throws ApplicationException {
-		projectHandler.getProjects().remove(1789);
+		projectHandler.removeProject(1789);
 	}
 }

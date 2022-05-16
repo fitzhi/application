@@ -3,6 +3,7 @@
 "urlSonarServer": "http://localhost:80/sonar", 
 "user": "admin",
 "password": "#password",
-"login": "#login"
+"login": "#login",
+"organization": "#organization"
 }
 ]

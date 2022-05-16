@@ -108,15 +108,15 @@ describe(`HttpTokenInterceptor`, () => {
 
 	it('should correctly extract the domain name from the url https://api.github.com/test/fred.', () => {
 		expect(HttpTokenInterceptor.extractHost('https://api.github.com/test/fred')).toBe('api.github.com');
-	}),
+	});
 
 	it('should correctly extract the domain name from the url http://api.github.com/test/fred.', () => {
 		expect(HttpTokenInterceptor.extractHost('http://api.github.com/test/fred')).toBe('api.github.com');
-	}),
+	});
 
 	it('should return null if no scheme is given to the URL.', () => {
 		expect(HttpTokenInterceptor.extractHost('api.github.com/test/fred')).toBeNull();
-	}),
+	});
 
 	afterEach(() => {
 		httpMock.verify();

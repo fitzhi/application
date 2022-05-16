@@ -15,6 +15,8 @@ import com.fitzhi.data.internal.Author;
 import com.fitzhi.data.internal.Constellation;
 import com.fitzhi.data.internal.Experience;
 import com.fitzhi.data.internal.Mission;
+import com.fitzhi.data.internal.OpenId;
+import com.fitzhi.data.internal.OpenIdToken;
 import com.fitzhi.data.internal.PeopleCountExperienceMap;
 import com.fitzhi.data.internal.Project;
 import com.fitzhi.data.internal.ResumeSkill;
@@ -122,6 +124,17 @@ public interface StaffHandler extends DataSaverLifeCycle {
 
  	/**
 	 * <p>
+	 * Retrieve ths staff member, if any, linked with the given credentials.
+	 * </p>
+	 * 
+	 * @param openId the given openId
+	 * @return the selected staff or {@code null} if none exists.
+	 * @throws ApplicationException thrown if any problem occurs
+	 */
+	Staff lookup(OpenId openId) throws ApplicationException;
+
+ 	/**
+	 * <p>
 	 * Retrieve the staff member corresponding to the given identifier, if any.
 	 * </p>
 	 * <p>
@@ -164,17 +177,15 @@ public interface StaffHandler extends DataSaverLifeCycle {
 
 	/**
 	 * <p>
-	 * Involve a single contributors into the project.<br/>
+	 * Involve a single contributor into the project.<br/>
 	 * The method add, or update, the missions for the staff associated with the
 	 * contributor.
 	 * </p>
 	 * 
-	 * @param project     the current project
-	 * @param contributor the contributor data representing the contribution of a
-	 *                    staff member in a project.
-	 * @throws ApplicationException thrown if any problem occurs
+	 * @param project the given project
+	 * @param contributor the contributor data representing the contribution of a staff member in a project.
 	 */
-	void involve(Project project, Contributor contributor) throws ApplicationException;
+	void involve(Project project, Contributor contributor);
 
 	/**
 	 * <p>
@@ -243,6 +254,14 @@ public interface StaffHandler extends DataSaverLifeCycle {
 	 * @see #controlWorkforceMember(Staff)
 	 */
 	Staff createEmptyStaff(Author author) throws ApplicationException;
+
+	/**
+	 * Create a staff member based an OpenIdToken.
+	 * @param openIdToken the given openIdToken loaded from the authentication server
+	 * @return the newly created staff member
+	 * @throws ApplicationException thrown if any problem occurs during the validation of this staff member
+	 */
+	Staff createStaffMember(OpenIdToken openIdToken) throws ApplicationException;
 
 	/**
 	 * <p>

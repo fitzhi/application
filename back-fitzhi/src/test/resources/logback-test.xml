@@ -8,7 +8,9 @@
 		</layout>
 	</appender>
 
-	<root level="ERROR">
+	<appender name="theVoid" class="ch.qos.logback.core.helpers.NOPAppender" />
+
+	<root level="DEBUG">
 		<appender-ref ref="STDOUT" />
 	</root>
 

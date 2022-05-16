@@ -59,7 +59,7 @@ public class ProjectHandlerProcessProjectsExperiencesContentParserTest {
 			Map<StaffExperienceTemplate, Integer> experiences = projectHandler.processGlobalExperiences();
 			Assert.assertTrue(experiences.containsKey(StaffExperienceTemplate.of(0, 1789)));
 			
-			projectHandler.updateStaffSkillLevel(experiences);
+			projectHandler.updateProjectStaffSkillLevel(experiences);
 			Assert.assertNotNull(staffHandler.lookup(1789));
 
 			final Staff staff = staffHandler.lookup(1789);

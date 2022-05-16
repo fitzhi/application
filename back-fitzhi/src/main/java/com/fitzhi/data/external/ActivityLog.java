@@ -93,6 +93,7 @@ public @Data class ActivityLog  {
 		this.code = taskLog.getCode();
 		this.message = taskLog.getMessage();
 		this.logTime = taskLog.getLogTime();
+		this.progressionPercentage = taskLog.getProgressionPercentage();
 		this.complete = complete;
 		if (this.complete) {
 			this.progressionPercentage = 100;

@@ -3,7 +3,7 @@ import { traceOn } from '../global';
 import { Component } from './sonar/component';
 import { Metric } from './sonar/metric';
 import { ProjectSonarMetric } from './sonar/project-sonar-metric';
-import { SonarProject } from './SonarProject';
+import { SonarProject } from './sonar-project';
 
 /**
  * This class represents a Sonar server available in the infrastructure.
@@ -15,6 +15,7 @@ export class SonarServer {
 	 * @param sonarVersion the version of the Sonar
 	 * @param urlSonar the Sonar URL
 	 * @param sonarOn `TRUE` if we cannot access the SONAR
+	 * @param organization: organization (if any) declared on sonarcloud.io
 	 * @param user the user to be used for connection
 	 * @param password the password associated to this user
 	 * @param login the login token as a replacement of the login user/password.
@@ -23,6 +24,7 @@ export class SonarServer {
 		public sonarVersion: string,
 		public urlSonar: string,
 		public sonarOn = false,
+		public organization?: string,
 		public user?: string,
 		public password?: string,
 		public login?: string) {}

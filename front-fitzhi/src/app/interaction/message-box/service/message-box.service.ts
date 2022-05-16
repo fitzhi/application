@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
-import { MessageBoxComponent } from '../dialog/message-box.component';
 import { Observable, Subject } from 'rxjs';
+import { MessageBoxComponent } from '../dialog/message-box.component';
 
 @Injectable({
 	providedIn: 'root'

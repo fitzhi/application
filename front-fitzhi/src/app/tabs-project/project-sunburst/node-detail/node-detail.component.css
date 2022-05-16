@@ -5,6 +5,6 @@
     width: fit-content;
 }
 
-:host >>> div.mat-expansion-panel-body  {
+:host ::ng-deep div.mat-expansion-panel-body  {
     padding: 0;
 }

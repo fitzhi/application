@@ -45,7 +45,7 @@
 
 			<div *ngIf="(referentialService.referentialLoaded$|async)" class="w-100 d-flex justify-content-center">
 				<table  id="table-settings" class="table table-bordered" style="width: 300px;">
-
+					<caption>Technical metrics settings</caption>
 					<thead class="thead-light">
 					  <tr>
 						<th scope="col" class="p-1 text-right">Optimal developers count<br/>per MO of code</th>
@@ -91,10 +91,11 @@
 				The geometric mean of these 3 scores is calculated with the parameters listed below :
 			</p>
 			<table class="evaluationDistributions">
+				<caption>Distribution of the evaluations</caption>
 				<tr class="evaluationDistributions">
-					<td><em class="fas glyphicon fa-user-graduate"></em></td>
-					<td><img src="./assets/img/sonar-selected.png" alt="Sonar" class="logoSonar"/></td>
-					<td><em class="fas fa-brain logoTabLabel"></em></td>
+					<th><em class="fas glyphicon fa-user-graduate"></em></th>
+					<th><img src="./assets/img/sonar-selected.png" alt="Sonar" class="logoSonar"/></th>
+					<th><em class="fas fa-brain logoTabLabel"></em></th>
 				</tr>
 				<tr *ngFor="let element of settings.evaluationDistributions; let index = index" class="evaluationDistributions">
 					<td>
@@ -142,7 +143,7 @@
 			</p>
 		</div>
 	</div>
-</angular-popper>        
+</angular-popper>
 
 <angular-popper placement="left" target="#starfield" *ngIf="popupHelper.isButtonActivated(selection.starfield) && !hasSelectedADashboard()">
 	<div content class="help">

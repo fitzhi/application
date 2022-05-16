@@ -72,6 +72,34 @@ describe('ListStaffService', () => {
 
 	});
 
+	it('should clean the staff list when loading the list from the backend.', done => {
+
+		const spyTakeInAccountStaff = spyOn(service, 'takeInAccountStaff').and.callThrough();
+
+		const staff = createStaff();
+
+		expect(service).toBeTruthy();
+		service.allStaff = [staff];
+		expect(service.allStaff.length).toBe(1);
+
+		service.reloadStaff();
+
+		const reqApi1 = httpTestingController.expectOne('URL_OF_SERVER/api/staff');
+		expect(reqApi1.request.method).toEqual('GET');
+		reqApi1.flush( [ staff ] );
+
+		service.allStaff$.pipe(take(1)).subscribe({
+			next: () => {
+				expect(service.allStaff.length).toBe(1);
+				expect(service.allStaff[0].idStaff).toBe(1789);
+				done();
+			}
+		});
+
+		expect(spyTakeInAccountStaff).toHaveBeenCalled();
+
+	});
+
 	it('should handle an error when loading the staff list from the backend.', done => {
 
 		const spyTakeInAccountStaff = spyOn(service, 'takeInAccountStaff').and.callThrough();

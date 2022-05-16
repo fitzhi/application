@@ -58,6 +58,8 @@ public class ScheduledTasks {
 	 */
 	int minute = -1;
 
+	private final Object lockObj = new Object();
+
 	@Scheduled(cron = "${cron.code.analysis}")
 	public void codeAnalysis() {
 		try {
@@ -77,7 +79,7 @@ public class ScheduledTasks {
 				log.info("Starting the experiences detection.");
 			}
 			projectHandler.processProjectsExperiences();
-			projectHandler.updateStaffSkillLevel(projectHandler.processGlobalExperiences());
+			projectHandler.updateProjectStaffSkillLevel(projectHandler.processGlobalExperiences());
 			if (log.isInfoEnabled()) {
 				log.info("Peacefully terminate the experiences detection.");
 			}
@@ -117,7 +119,7 @@ public class ScheduledTasks {
 		try {
 			// For an unknown reason, this method is executed multiple times when the cron is equal to '* 0/5 * * * ?'.
 			// We use a minute based singleton.
-			synchronized(new Object()) {
+			synchronized(lockObj) {
 				if ((minute != Calendar.getInstance().get(Calendar.MINUTE)) && (minute != Calendar.getInstance().get(Calendar.MINUTE) - 1)) {
 					minute = Calendar.getInstance().get(Calendar.MINUTE);
 					if (log.isInfoEnabled()) {

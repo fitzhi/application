@@ -153,17 +153,17 @@ rect.rectTreeMap {
 	height: 15px;
 }
 
-:host >>> div.angular-popper {
-  background: lightyellow;
-  width: 520px;
-  left: 5px !important;
-  z-index: 100;
-  font-size: smaller;
+:host ::ng-deep div.angular-popper {
+	background: lightyellow;
+	width: 520px;
+	left: 5px !important;
+	z-index: 100;
+	font-size: smaller;
 }
 
-:host >>> div.angular-popper__arrow {
-  background: lightyellow;
-  border-color: lightgrey;
+:host ::ng-deep div.angular-popper__arrow {
+	background: lightyellow;
+	border-color: lightgrey;
 }
 
 em.fas {
@@ -213,23 +213,22 @@ tr.evaluationDistributions td em {
 }
 
 div.panelDeveloperBase {
-	border: 1px;
 	width: 5px;
 	height: 25px;
 	border: 1px solid black;
 }
 
 div.panelDeveloperArrowRight {
-    width: 15px;
-    height: 25px;
+	width: 15px;
+	height: 25px;
 	border-top: 1px solid black;
 	border-bottom: 1px solid black;
 	border-right: 1px solid black;
 }
 
 div.panelDeveloperArrowLeft {
-    width: 15px;
-    height: 25px;
+	width: 15px;
+	height: 25px;
 	border-top: 1px solid black;
 	border-bottom: 1px solid black;
 	border-left: 1px solid black;

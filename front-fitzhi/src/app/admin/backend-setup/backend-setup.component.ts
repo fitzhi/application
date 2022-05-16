@@ -1,11 +1,13 @@
 import { Component, EventEmitter, OnDestroy, OnInit, Output } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { take } from 'rxjs/operators';
+import { FirstConnection } from 'src/app/data/first-connection';
 import { traceOn } from 'src/app/global';
 import { MessageService } from 'src/app/interaction/message/message.service';
 import { environment } from '../../../environments/environment';
 import { BaseDirective } from '../../base/base-directive.directive';
 import { BackendSetupService } from '../../service/backend-setup/backend-setup.service';
+import { InstallService } from '../service/install/install.service';
 
 @Component({
 	selector: 'app-backend-setup',
@@ -31,12 +33,6 @@ export class BackendSetupComponent extends BaseDirective implements OnInit, OnDe
 	BUTTON_VALID_URL = 2;
 	BUTTON_INVALID_URL = 3;
 
-	/**
-	 * This boolean is equal to <code>true</code> if we are in the very fist call to fitzhì.
-	 * Specific setup forms should be filled to complete this startup procedure.
-	 */
-	veryFirstConnection = false;
-
 	public environment = environment;
 
 	public backendSetupForm = new FormGroup({
@@ -46,6 +42,7 @@ export class BackendSetupComponent extends BaseDirective implements OnInit, OnDe
 
 	constructor(
 		private messageService: MessageService,
+		private installService: InstallService,
 		private backendSetupService: BackendSetupService) { super(); }
 
 	ngOnInit() {
@@ -71,17 +68,21 @@ export class BackendSetupComponent extends BaseDirective implements OnInit, OnDe
 			.pipe(take(1))
 			.subscribe({
 				next:
-					data => {
-						if (traceOn() && this.veryFirstConnection) {
-							console.log('This is the very first connection into fitzhì');
+					(data: FirstConnection) => {
+
+						if (!data.connected) {
+							this.currentState = this.BUTTON_INVALID_URL;
+							this.messageService.error('Error ! Either this URL is invalid, or your server is offline');
+						} else {
+							if (traceOn() && data.first) {
+								console.log('This is the very first connection into fitzhì');
+							}
+							this.installService.setVeryFirstConnection(data.first);
+							this.backendSetupService.saveUrl(urlCandidate);
+							this.currentState = this.BUTTON_VALID_URL;
+							this.messengerVeryFirstConnection.emit(data.first);
+							this.messageService.info('This URL is valid. Let\'s go ahead !');
 						}
-
-						this.veryFirstConnection = data.connected;
-						this.backendSetupService.saveUrl(urlCandidate);
-						this.currentState = this.BUTTON_VALID_URL;
-						this.messengerVeryFirstConnection.emit(this.veryFirstConnection);
-
-						this.messageService.info('This URL is valid. Let\'s go ahead !');
 					},
 				error: error => {
 					if (traceOn()) {

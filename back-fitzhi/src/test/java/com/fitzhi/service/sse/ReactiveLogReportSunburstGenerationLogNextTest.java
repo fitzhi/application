@@ -14,6 +14,8 @@ import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.annotation.DirtiesContext;
+import org.springframework.test.annotation.DirtiesContext.ClassMode;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import lombok.extern.slf4j.Slf4j;
@@ -36,6 +38,7 @@ import reactor.test.StepVerifier;
 @RunWith(SpringRunner.class)
 @SpringBootTest
 @Slf4j
+@DirtiesContext(classMode=ClassMode.BEFORE_CLASS)
 public class ReactiveLogReportSunburstGenerationLogNextTest {
 
 	/**
@@ -66,50 +69,56 @@ public class ReactiveLogReportSunburstGenerationLogNextTest {
 	
 	@Before
 	public void before() throws ApplicationException {
-		Project p = new Project (ID_PROJECT, "Revolutionnary project");
+		Project p = new Project (ID_PROJECT, "Revolutionary project");
 		projectHandler.addNewProject(p);
 		asyncTask.addTask("nopeOperation", PROJECT, ID_PROJECT);
 		asyncTask.logMessage("nopeOperation", PROJECT, ID_PROJECT, "my first message", 0);
 		this.eraseTime();
 		this.activityLog1 = new ActivityLog(ID_PROJECT, new TaskLog( 0, "my first message", 0, 0), false);
-		this.activityLog2 = new ActivityLog(ID_PROJECT, new TaskLog(0, "my second message", 0, 0), false);
-		this.activityLogEnd = new ActivityLog(ID_PROJECT, new TaskLog(0, "my second message", 0, 0), true);
+		this.activityLog2 = new ActivityLog(ID_PROJECT, new TaskLog(0, "my second message", 50, 0), false);
+		this.activityLogEnd = new ActivityLog(ID_PROJECT, new TaskLog(0, "my second message", 100, 0), true);
 		
-	    executorService.schedule(new Runnable() {
-	        @Override
-	        public void run() {
-				asyncTask.logMessage("nopeOperation", PROJECT, ID_PROJECT, "my second message", 0);
+		executorService.schedule(new Runnable() {
+			@Override
+			public void run() {
+				if (log.isDebugEnabled()) {
+					log.debug("schedule \"my second message\"");
+				}
+				asyncTask.logMessage("nopeOperation", PROJECT, ID_PROJECT, "my second message", 50);
 				ReactiveLogReportSunburstGenerationLogNextTest.this.eraseTime();				
-	        }
-	    }, 2, TimeUnit.SECONDS);
+			}
+		}, 2, TimeUnit.SECONDS);
 
-	    
-	    executorService.schedule(new Runnable() {
-	        @Override
-	        public void run() {
-	        	try {
+		
+		executorService.schedule(new Runnable() {
+			@Override
+			public void run() {
+				try {
+					if (log.isDebugEnabled()) {
+						log.debug("schedule " + MARK_END_OF_OPERATION);
+					}
 					asyncTask.completeTask("nopeOperation", MARK_END_OF_OPERATION, ID_PROJECT);
 					ReactiveLogReportSunburstGenerationLogNextTest.this.eraseTime();				
 				} catch (ApplicationException e) {
 					log.error("Internal error", e);
 				}
-	        }
-	    }, 4, TimeUnit.SECONDS);
+			}
+		}, 5, TimeUnit.SECONDS);
 	}
 
 	@Test
 	public void test() {
 		StepVerifier.create(logReport.sunburstGenerationLogNext("nopeOperation", ID_PROJECT)) 
-			    .expectNext(this.activityLog1) 
-			    .expectNext(this.activityLog2)
-			    .expectNext(this.activityLogEnd)
-			    .expectComplete()
-			    .verify(Duration.ofSeconds(10));
+				.expectNext(this.activityLog1) 
+				.expectNext(this.activityLog2)
+				.expectNext(this.activityLogEnd)
+				.expectComplete()
+				.verify(Duration.ofSeconds(10));
 	}
 	
 	@After
 	public void after() throws ApplicationException {
-		projectHandler.getProjects().remove(ID_PROJECT);
+		projectHandler.removeProject(ID_PROJECT);
 		asyncTask.removeTask("nopeOperation", "mockProject", 1789);		
 	}
 	

@@ -51,15 +51,35 @@ public interface RepoScanner {
 	 * <p>
 	 * Load the repository from the internal cache.
 	 * </p>
-	 * <p>
-	 * This method load the repository from cache <b>AND</b> update the ghosts list as well if any new staff member has been created. 
-	 * </p>
 	 * @param project the current active project.
 	 * @return the repository commit entries if a previous parsing has been saved, or {@code null} if none exists.
 	 * @throws IOException thrown if an IO exception occurs when reading the cache file.
 	 * @throws ApplicationException thrown most probably, if the project ghosts list update failed.
 	 */
 	CommitRepository loadRepositoryFromCacheIfAny(Project project) throws IOException, ApplicationException;
+
+	/**
+	 * <p>
+	 * Upgrade the repository with actual staff collection.
+	 * </p>
+	 * <p>
+	 * This method update the {@code idStaff} if a corresponding staff member is detected <b>AND</b> update the ghosts list as well if any new staff member has been created. 
+	 * </p>
+	 * @return {@code TRUE} if the repository has been updated somewhere, {@code FALSE} otherwise
+	 * @param project the current active project.
+	 * @throws ApplicationException if an exception occurs during the treatment.
+	 */
+	boolean upgradeRepository(Project project, CommitRepository repository) throws ApplicationException;
+
+	/**
+	 * <p>
+	 * Save the repository for the given project.
+	 * </p>
+	 * @return {@code TRUE} if the repository has been updated somewhere, {@code FALSE} otherwise
+	 * @param project the current active project.
+	 * @throws IOException thrown if an IO exception occurs when writing the cache file.
+	 */
+	void saveRepository(Project project, CommitRepository repository) throws IOException;
 
 	/**
 	 * <p>

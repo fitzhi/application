@@ -59,7 +59,8 @@ public class GitCrawlerCloneTest {
 	public void testClone() throws GitAPIException, ApplicationException, IOException {
 		
 		Project project = projectHandler.lookup(ID_PROJECT);
-		
+		project.setBranch("master");
+
 		ConnectionSettings settings = new ConnectionSettings();
 		settings.setPublicRepository(true);
 		

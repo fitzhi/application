@@ -4,6 +4,7 @@ import { take } from 'rxjs/operators';
 import { environment } from '../environments/environment';
 import { AuthService } from './admin/service/auth/auth.service';
 import { InstallService } from './admin/service/install/install.service';
+import { TokenService } from './admin/service/token/token.service';
 import { BaseDirective } from './base/base-directive.directive';
 import { Constants } from './constants';
 import { ListCriteria } from './data/listCriteria';
@@ -11,7 +12,7 @@ import { traceOn } from './global';
 import { BackendSetupService } from './service/backend-setup/backend-setup.service';
 import { CinematicService } from './service/cinematic.service';
 import { ReferentialService } from './service/referential/referential.service';
-import { SonarService } from './service/sonar.service';
+import { SonarService } from './service/sonar/sonar.service';
 import { SkillService } from './skill/service/skill.service';
 import { ListProjectsService } from './tabs-project/list-project/list-projects-service/list-projects.service';
 import { TabsStaffListService } from './tabs-staff-list/service/tabs-staff-list.service';
@@ -63,6 +64,7 @@ export class AppComponent extends BaseDirective implements OnInit, AfterViewInit
 		private cinematicService: CinematicService,
 		private sonarService: SonarService,
 		private authService: AuthService,
+		private tokenService: TokenService,
 		private tabsStaffListService: TabsStaffListService,
 		private skillService: SkillService,
 		private listProjectsService: ListProjectsService,

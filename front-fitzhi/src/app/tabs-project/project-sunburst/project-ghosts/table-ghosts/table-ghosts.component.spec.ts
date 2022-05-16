@@ -153,7 +153,7 @@ describe('TableGhostsComponent', () => {
 	it('Create a simple collaborator', () => {
 		expect(component).toBeTruthy();
 
-		const spyClearCache = spyOn(sunburstCacheService, 'clearReponse');
+		const spyClearCache = spyOn(sunburstCacheService, 'clearResponse');
 
 		const staffService = TestBed.inject(StaffService);
 		const spy = spyOn(staffService, 'save$')
@@ -189,7 +189,7 @@ describe('TableGhostsComponent', () => {
 
 	it('Connect a ghost to ...in fact... nobody, because there is no existing developer for the given pseudo', () => {
 
-		const spyClearCache = spyOn(sunburstCacheService, 'clearReponse');
+		const spyClearCache = spyOn(sunburstCacheService, 'clearResponse');
 		const spyUpdateGhost$ = spyOn(projectService, 'updateGhost$');
 
 		const login: HTMLInputElement = fixture.debugElement.query(By.css('#login-1')).nativeElement;
@@ -220,7 +220,7 @@ describe('TableGhostsComponent', () => {
 		const lastName = fixture.debugElement.query(By.css('#lastname-1')).nativeElement;
 		expect(lastName.value).toBe('');
 
-		const spyClearCache = spyOn(sunburstCacheService, 'clearReponse');
+		const spyClearCache = spyOn(sunburstCacheService, 'clearResponse');
 		const spyUpdateGhost$ = spyOn(projectService, 'updateGhost$').and.returnValue(of(true));
 
 		staffListService.allStaff$.next(allStaff);

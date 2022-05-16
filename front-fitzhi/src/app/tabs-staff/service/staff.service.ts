@@ -3,6 +3,7 @@ import { Injectable } from '@angular/core';
 import { NO_CONTENT } from 'http-status-codes';
 import { BehaviorSubject, EMPTY, Observable, of, Subject } from 'rxjs';
 import { switchMap, take } from 'rxjs/operators';
+import { OpenIdTokenStaff } from 'src/app/data/openidtoken-staff';
 import { Collaborator } from '../../data/collaborator';
 import { DeclaredExperience } from '../../data/declared-experience';
 import { Experience } from '../../data/experience';
@@ -450,16 +451,30 @@ export class StaffService {
 	 * @param username the given username
 	 * @param password  the given password
 	 */
-	registerUser$(veryFirstConnection: boolean, username: string, password: string): Observable<Collaborator> {
-		let params: HttpParams = new HttpParams();
-		params = params.set('login', username);
-		params = params.set('password', password);
+	classicRegisterUser$(veryFirstConnection: boolean, username: string, password: string): Observable<Collaborator> {
+
+		const body = { login: username, password: password};
 
 		return this.httpClient.post<Collaborator>(
-			this.backendSetupService.url() + '/admin/' +
-			(veryFirstConnection ? 'veryFirstUser' : 'register'),
-			null,
-			{params});
+			this.backendSetupService.url() + '/admin/classic/' +
+			(veryFirstConnection ? 'primeRegister' : 'register'),
+			body);
+	}
+
+	/**
+	 * Register a new user inside the application
+	 * @param veryFirstConnection TRUE if the is the VERY FIRST USER to be created, and subsequently the FIRST ADMIN USER.
+	 * @param openIdServer the openId server identifier _(like "GOOGLE" for instance)_
+	 * @param jwt the JWT token
+	 * @returns an observable emitting the pair of objects (OpenIdToken, Staff)
+	 */
+	openIdRegisterUser$(veryFirstConnection: boolean, openIdServer: string, jwt: string): Observable<OpenIdTokenStaff> {
+
+		const body = { openIdServer: openIdServer, idToken: jwt};
+
+		return this.httpClient.post<OpenIdTokenStaff>(
+			this.backendSetupService.url() + '/admin/openId/' + (veryFirstConnection ? 'primeRegister' : 'register'),
+			body);
 	}
 
 	/**

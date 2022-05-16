@@ -21,17 +21,15 @@
 
 	<properties>
 		<jdk.version>11</jdk.version>
-		<spring.version>5.1.14.RELEASE</spring.version>
+		<spring.version>5.3.17</spring.version>
 		<spring-security.version>5.1.8.RELEASE</spring-security.version>
-		<spring-boot.version>2.1.13.RELEASE</spring-boot.version>
-		<spring-oauth.version>2.3.6.RELEASE</spring-oauth.version>
-		<springsecurityoauth2.version>2.3.6.RELEASE</springsecurityoauth2.version>
+		<spring-boot.version>2.1.18.RELEASE</spring-boot.version>
 		<spring-reactor-test.version>3.3.4.RELEASE</spring-reactor-test.version>
 		<jstl.version>1.2</jstl.version>
 		<junit.version>4.13.1</junit.version>
 		<jcl-over-slf4j.version>1.7.25</jcl-over-slf4j.version>
 		<opennlp.version>1.9.0</opennlp.version>
-		<poi.version>5.0.0</poi.version>
+		<poi.version>5.2.2</poi.version>
 		<itextpdf.version>5.5.13</itextpdf.version>
 		<commons-validator.version>1.7</commons-validator.version>
 		<gson.version>2.8.9</gson.version>
@@ -44,6 +42,19 @@
 		<file.encoding>UTF-8</file.encoding>
 		<sonar-plugin.version>3.7.0.1746</sonar-plugin.version>
 		<javaparser.version>3.22.1</javaparser.version>
+		<google-api-client.version>1.33.4</google-api-client.version>
+		<google-api-client-http.version>1.2.3-alpha</google-api-client-http.version>
+
+		<!-- JaCoCo Properties -->
+		<jacoco.version>0.8.8</jacoco.version>
+		<sonar.java.coveragePlugin>jacoco</sonar.java.coveragePlugin>
+		<sonar.dynamicAnalysis>reuseReports</sonar.dynamicAnalysis>
+		<sonar.coverage.jacoco.xmlReportPaths>${project.basedir}/../target/site/jacoco/jacoco.xml</sonar.coverage.jacoco.xmlReportPaths>
+		<sonar.language>java</sonar.language>
+
+		<!-- SonarCloud properties -->
+		<sonar.organization>fitzhi</sonar.organization>
+  		<sonar.host.url>https://sonarcloud.io</sonar.host.url>
 	</properties>
 
 	<licenses>
@@ -80,6 +91,33 @@
 		<profile>
 			<id>profileWithGPGSigning</id>
 		</profile>
+		<!-- https://mvnrepository.com/artifact/org.jacoco/jacoco-maven-plugin -->
+		<profile>
+			<id>coverage</id>
+			<build>
+				<plugins>
+					<plugin>
+						<groupId>org.jacoco</groupId>
+						<artifactId>jacoco-maven-plugin</artifactId>
+						<version>${jacoco.version}</version>
+						<executions>
+							<execution>
+								<id>prepare-agent</id>
+								<goals>
+									<goal>prepare-agent</goal>
+								</goals>
+							</execution>
+							<execution>
+								<id>report</id>
+								<goals>
+									<goal>report</goal>
+								</goals>
+							</execution>
+						</executions>
+					</plugin>
+				</plugins>
+			</build>
+		</profile>		
 	</profiles>
 
 	<dependencies>
@@ -180,6 +218,20 @@
 			<groupId>com.google.code.gson</groupId>
 			<artifactId>gson</artifactId>
 			<version>${gson.version}</version>
+		</dependency>
+
+		<!-- https://mvnrepository.com/artifact/com.google.api-client/google-api-client -->
+		<dependency>
+			<groupId>com.google.api-client</groupId>
+			<artifactId>google-api-client</artifactId>
+			<version>${google-api-client.version}</version>
+		</dependency>
+
+		<!-- https://mvnrepository.com/artifact/com.google.api.client/google-api-client-http -->
+		<dependency>
+			<groupId>com.google.api.client</groupId>
+			<artifactId>google-api-client-http</artifactId>
+			<version>${google-api-client-http.version}</version>
 		</dependency>
 
 		<!-- https://mvnrepository.com/artifact/com.opencsv/opencsv -->
@@ -416,7 +468,7 @@
 				<artifactId>maven-surefire-plugin</artifactId>
 				<version>2.22.2</version>
 				<configuration>
-					<argLine>-Dfile.encoding=UTF-8</argLine>
+					<argLine>${argLine} -Dfile.encoding=UTF-8</argLine>
 				</configuration>
 			</plugin>
 
@@ -441,7 +493,6 @@
 						<goals>
 							<goal>copy-resources</goal>
 						</goals>
-
 						<configuration>
 							<outputDirectory>${basedir}/target</outputDirectory>
 							<resources>
@@ -500,6 +551,32 @@
 				</configuration>
 			</plugin>
 
+			<!-- https://mvnrepository.com/artifact/org.sonarsource.scanner.maven/sonar-maven-plugin -->
+			<plugin>
+				<groupId>org.sonarsource.scanner.maven</groupId>
+				<artifactId>sonar-maven-plugin</artifactId>
+				<version>3.9.1.2184</version>
+			</plugin>
+
+			<plugin>
+				<groupId>org.jacoco</groupId>
+				<artifactId>jacoco-maven-plugin</artifactId>
+				<version>${jacoco.version}</version>
+				<executions>
+					<execution>
+						<goals>
+							<goal>prepare-agent</goal>
+						</goals>
+					</execution>
+					<execution>
+						<id>report</id>
+						<phase>prepare-package</phase>
+						<goals>
+							<goal>report</goal>
+						</goals>
+					</execution>
+				</executions>
+			</plugin>
 		</plugins>
 
 	</build>

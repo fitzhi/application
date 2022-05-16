@@ -44,7 +44,7 @@ public class ProjectAuditHandlerAddRemoveTopicTest {
 
 	@Before
 	public void before() throws ApplicationException {
-		project = projectHandler.addNewProject(new Project(ID_PROJECT, "PI"));
+		project = projectHandler.addNewProject(new Project(ID_PROJECT, "PI 1"));
 		project.setAudit(new HashMap<Integer, AuditTopic>());
 		AuditTopic auditTopic = new AuditTopic();
 		auditTopic.setEvaluation(40);
@@ -98,7 +98,7 @@ public class ProjectAuditHandlerAddRemoveTopicTest {
 	@Test
 	public void loadAnExistingTopic() throws ApplicationException {
 		projectAuditHandler.addTopic(ID_PROJECT, 2);
-		AuditTopic auditTopic = projectAuditHandler.getTopic(314116, 2);
+		AuditTopic auditTopic = projectAuditHandler.getTopic(ID_PROJECT, 2);
 		Assert.assertNotNull(auditTopic);
 		Assert.assertTrue("addNewTopic did not succeed", auditTopic.getIdTopic() == 2);
 		
