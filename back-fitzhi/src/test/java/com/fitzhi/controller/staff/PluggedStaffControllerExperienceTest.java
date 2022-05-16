@@ -27,6 +27,7 @@ import com.fitzhi.bean.StaffHandler;
 import com.fitzhi.controller.StaffController;
 import com.fitzhi.data.internal.Experience;
 import com.fitzhi.data.internal.Skill;
+import com.fitzhi.exception.NotFoundException;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
@@ -68,7 +69,10 @@ public class PluggedStaffControllerExperienceTest {
 	private SkillHandler skillHandler;
 	
 	@Before
-	public void before() {
+	public void before() throws NotFoundException {
+		// We clear the experiences of the staff
+		staffHandler.getStaff(1).setExperiences(new ArrayList<Experience>());
+
 		if (!skillHandler.containsSkill(1)) {
 			skillHandler.addNewSkill(new Skill(1, "JAVA"));
 		}
@@ -111,7 +115,7 @@ public class PluggedStaffControllerExperienceTest {
 	@Test
 	@WithMockUser
 	public void addAndRemoveASkillForAStaffMember() throws Exception {
-		
+
 		this.mvc.perform(get(STAFF_EXPERIENCES_1)).andExpect(status().isOk()).andExpect(content().string("[]"));	
 		String body = "{ \"id\": 2, \"level\": 2}";
 		this.mvc.perform(post(String.format(STAFF_EXPERIENCE, 1))
