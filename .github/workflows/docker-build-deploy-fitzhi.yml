@@ -7,6 +7,8 @@
 name: Docker Fitzhi Image CI
 
 on:
+  push:
+    branches: [ master ]
   schedule:
     - cron: '15 1 * * *'
 
