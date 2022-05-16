@@ -68,7 +68,7 @@ jobs:
 
     - name: Package the Server runtime
       run: |
-        export VERSION_FITZHI=`cat ./VERSION_FITZHI`
+        export VERSION_FITZHI=`cat ./back-fitzhi/VERSION_FITZHI`
         mkdir -p fitzhi/deploy/back-fitzhi
         mv ./back-fitzhi/data fitzhi/deploy/data
         mv ./back-fitzhi/target/fitzhi-${VERSION_FITZHI}.jar	fitzhi/deploy/back-fitzhi/fitzhi-${VERSION_FITZHI}.jar
