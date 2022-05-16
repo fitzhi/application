@@ -5,6 +5,7 @@ import javax.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
+import lombok.ToString;
 
 /**
  * Exemplary experience detected in the repository.
@@ -13,6 +14,7 @@ import lombok.RequiredArgsConstructor;
  */
 @RequiredArgsConstructor(staticName = "of")
 @AllArgsConstructor(staticName = "of")
+@ToString
 public @Data class DetectedExperience {
 
 	/**

@@ -24,6 +24,8 @@ import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.annotation.DirtiesContext.ClassMode;
 import org.springframework.test.context.junit4.SpringRunner;
 
+import lombok.extern.slf4j.Slf4j;
+
 /**
  * <p>
  * Test of the method {@link EcosystemAnalyzer#loadExperienceParsers(String)}
@@ -34,6 +36,7 @@ import org.springframework.test.context.junit4.SpringRunner;
 @RunWith(SpringRunner.class)
 @SpringBootTest
 @DirtiesContext(classMode = ClassMode.BEFORE_CLASS)
+@Slf4j
 public class EcosystemAnalyzerLoadDetectedExperiencesTest {
 
 	@Autowired
@@ -61,7 +64,10 @@ public class EcosystemAnalyzerLoadDetectedExperiencesTest {
 			Assert.assertEquals(10, de.getCount());
 	
 			de = map.get(DetectedExperience.of(1, 0, new Author("frvidal", "frederic.vidal.perso@gmail.com")));
-			Assert.assertEquals(7, de.getCount());
+			if (log.isDebugEnabled()) {
+				map.content().forEach(item -> log.debug(item.toString()));
+			}
+			Assert.assertEquals(6, de.getCount());
 	
 			de = map.get(DetectedExperience.of(0, 0, new Author("fitzhi", "frederic.vidal@fitzhi.com")));
 			Assert.assertEquals(3, de.getCount());
