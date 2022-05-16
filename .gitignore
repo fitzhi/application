@@ -123,3 +123,5 @@ r.sh
 docker/SONAR_HOST_URL
 
 docker/SONAR_TOKEN_LOGIN
+
+back-fitzhi/data/referential/openid-servers-github-google-localhost-80.json
