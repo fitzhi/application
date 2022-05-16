@@ -8,7 +8,7 @@ name: Docker Fitzhi Image CI
 
 on:
   schedule:
-    - cron: '0 17 * * *'
+    - cron: '15 1 * * *'
 
 jobs:
   build:
@@ -19,8 +19,6 @@ jobs:
 
     steps:
     - uses: actions/checkout@v3
-      with:
-        ref: release-1.8
   
     - name: Log in to Docker Hub
       uses: docker/login-action@f054a8b539a109f9f41c372932f1ae047eff08c9
@@ -70,7 +68,7 @@ jobs:
       run: |
         mkdir -p fitzhi/deploy/back-fitzhi
         mv ./back-fitzhi/data fitzhi/deploy/data
-        mv ./back-fitzhi/target/fitzhi-1.8-SNAPSHOT.jar	fitzhi/deploy/back-fitzhi/fitzhi-1.8-SNAPSHOT.jar
+        mv ./back-fitzhi/target/fitzhi-${VERSION_FITZHI}.jar	fitzhi/deploy/back-fitzhi/fitzhi-${VERSION_FITZHI}.jar
         mv ./back-fitzhi/target/application.properties	fitzhi/deploy/back-fitzhi/application.properties
         mv ./back-fitzhi/target/logback-spring.xml	fitzhi/deploy/back-fitzhi/logback-spring.xml
         mv ./docker/docker fitzhi/deploy/
