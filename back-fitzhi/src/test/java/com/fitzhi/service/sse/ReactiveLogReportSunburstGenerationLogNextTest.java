@@ -69,19 +69,22 @@ public class ReactiveLogReportSunburstGenerationLogNextTest {
 	
 	@Before
 	public void before() throws ApplicationException {
-		Project p = new Project (ID_PROJECT, "Revolutionnary project");
+		Project p = new Project (ID_PROJECT, "Revolutionary project");
 		projectHandler.addNewProject(p);
 		asyncTask.addTask("nopeOperation", PROJECT, ID_PROJECT);
 		asyncTask.logMessage("nopeOperation", PROJECT, ID_PROJECT, "my first message", 0);
 		this.eraseTime();
 		this.activityLog1 = new ActivityLog(ID_PROJECT, new TaskLog( 0, "my first message", 0, 0), false);
-		this.activityLog2 = new ActivityLog(ID_PROJECT, new TaskLog(0, "my second message", 0, 0), false);
+		this.activityLog2 = new ActivityLog(ID_PROJECT, new TaskLog(0, "my second message", 50, 0), false);
 		this.activityLogEnd = new ActivityLog(ID_PROJECT, new TaskLog(0, "my second message", 100, 0), true);
 		
 		executorService.schedule(new Runnable() {
 			@Override
 			public void run() {
-				asyncTask.logMessage("nopeOperation", PROJECT, ID_PROJECT, "my second message", 0);
+				if (log.isDebugEnabled()) {
+					log.debug("schedule \"my second message\"");
+				}
+				asyncTask.logMessage("nopeOperation", PROJECT, ID_PROJECT, "my second message", 50);
 				ReactiveLogReportSunburstGenerationLogNextTest.this.eraseTime();				
 			}
 		}, 2, TimeUnit.SECONDS);
@@ -91,6 +94,9 @@ public class ReactiveLogReportSunburstGenerationLogNextTest {
 			@Override
 			public void run() {
 				try {
+					if (log.isDebugEnabled()) {
+						log.debug("schedule " + MARK_END_OF_OPERATION);
+					}
 					asyncTask.completeTask("nopeOperation", MARK_END_OF_OPERATION, ID_PROJECT);
 					ReactiveLogReportSunburstGenerationLogNextTest.this.eraseTime();				
 				} catch (ApplicationException e) {
