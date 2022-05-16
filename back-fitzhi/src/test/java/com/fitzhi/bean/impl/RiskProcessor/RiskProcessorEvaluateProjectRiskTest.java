@@ -11,7 +11,6 @@ import com.fitzhi.data.internal.DataChart;
 import com.fitzhi.data.internal.DataChartTypeData;
 import com.fitzhi.data.internal.Project;
 
-import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;

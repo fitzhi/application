@@ -120,3 +120,6 @@ back-fitzhi/src/test/resources/out_dir/constellations-data/constellations-2000-1
 
 r.sh
 
+docker/SONAR_HOST_URL
+
+docker/SONAR_TOKEN_LOGIN
