@@ -30,7 +30,6 @@ docker/docker/start-fitzhi.sh +
 back-fitzhi/run.sh +
 projects.json
 
-
 === Merging Master into the branch release-1.n
 
 [source, shell]
@@ -46,7 +45,6 @@ git merge master
 **Files concerned** +
 back-fitzhi/VERSION_FITZHI +
 front-fitzhi/package.json +
-
 
 == Taking in account the new SSL certificat
 

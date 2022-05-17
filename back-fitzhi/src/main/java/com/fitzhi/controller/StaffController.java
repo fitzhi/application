@@ -439,6 +439,9 @@ public class StaffController {
 		
 		String filename = StringUtils.cleanPath(file.getOriginalFilename());
 
+		// Replace pattern-breaking characters (security issue)
+		filename = filename.replaceAll("[\n\r\t]", "_");
+
 		if (log.isDebugEnabled()) {
 			log.debug(String.format("Uploading %s for staff identifer %d of type %s", 
 				filename, idStaff, type));
