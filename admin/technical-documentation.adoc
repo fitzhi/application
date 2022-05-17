@@ -44,8 +44,8 @@ git merge master
 - Update the branch to the new SNAPSHOT release 1.m-SNAPSHOT
 
 **Files concerned** +
+back-fitzhi/VERSION_FITZHI +
 front-fitzhi/package.json +
-Update the version of the release in the POM.xml to 1.n-SNAPSHOT
 
 
 == Taking in account the new SSL certificat
