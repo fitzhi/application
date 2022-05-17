@@ -36,6 +36,7 @@ projects.json
 [source, shell]
 ----
 git clone https://github.com/fitzhi/application.git
+cd application
 git checkout release-1.n
 git merge master
 ----
