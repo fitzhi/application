@@ -28,8 +28,7 @@ Front-end build and test.js.yml +
 codeQL-analysis-typescript.yml +
 docker/docker/start-fitzhi.sh +
 back-fitzhi/run.sh +
-projects.json +
-front-fitzhi/package.json
+projects.json
 
 
 === Merging Master into the branch release-1.n
@@ -41,7 +40,12 @@ git checkout release-1.n
 git merge master
 ----
 
-- Update the version of the release in the POM.xml to 1.n-SNAPSHOT
+- Update the branch to the new SNAPSHOT release 1.m-SNAPSHOT
+
+**Files concerned** +
+front-fitzhi/package.json +
+Update the version of the release in the POM.xml to 1.n-SNAPSHOT
+
 
 == Taking in account the new SSL certificat
 

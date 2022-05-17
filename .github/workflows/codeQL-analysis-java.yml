@@ -13,7 +13,7 @@ name: "CodeQL Security analysis for Java"
 
 on:
   push:
-    branches: [ master, release-1.8 ]
+    branches: [ master, release-1.9 ]
   pull_request:
     # The branches below must be a subset of the branches above
     branches: [ master ]
