@@ -147,7 +147,9 @@ public class FileDataHandlerImpl implements DataHandler {
 	 */
 	private static Gson gson = new GsonBuilder().create();
 
-	private final static String skillsFilename = "skills.json";
+	private final static String SKILLS_FILENAME = "skills.json";
+	private final static String PROJECTS_FILENAME = "projects.json";
+	private final static String STAFF_FILENAME = "staff.json";
 
 	/**
 	 * This internal class is used to deserialize the class {@link ProjectDetectedExperiences
@@ -183,24 +185,22 @@ public class FileDataHandlerImpl implements DataHandler {
 			return;
 		}
 
-		final String filename = "projects.json";
-
 		if (log.isDebugEnabled()) {
-			log.debug(String.format("Saving %d projects into file %s.", projects.size(), filename));
+			log.debug(String.format("Saving %d projects into file %s.", projects.size(), PROJECTS_FILENAME));
 			final StringBuilder sb = new StringBuilder();
 			projects.values().stream()
 					.forEach(project -> sb.append(project.getId()).append(" ").append(project.getName()).append(", "));
 			log.debug(sb.toString());
 		}
 
-		Path path = rootLocation.resolve(filename);
+		Path path = rootLocation.resolve(PROJECTS_FILENAME);
 
 		try {
 			try (BufferedWriter writer = Files.newBufferedWriter(path)) {
 				writer.write(gson.toJson(projects));
 			}
 		} catch (final Exception e) {
-			throw new ApplicationException(CODE_IO_ERROR, MessageFormat.format(MESSAGE_IO_ERROR, filename), e);
+			throw new ApplicationException(CODE_IO_ERROR, MessageFormat.format(MESSAGE_IO_ERROR, PROJECTS_FILENAME), e);
 		}
 
 	}
@@ -208,20 +208,18 @@ public class FileDataHandlerImpl implements DataHandler {
 	@Override
 	public Map<Integer, Project> loadProjects() throws ApplicationException {
 
-		final String filename = "projects.json";
-
 		Map<Integer, Project> projects = new HashMap<>();
 
-		try (FileReader fr = new FileReader(rootLocation.resolve(filename).toFile())) {
+		try (FileReader fr = new FileReader(rootLocation.resolve(PROJECTS_FILENAME).toFile())) {
 			Type listProjectsType = new TypeToken<HashMap<Integer, Project>>() {
 			}.getType();
 			projects = gson.fromJson(fr, listProjectsType);
 		} catch (final Exception e) {
-			throw new ApplicationException(CODE_IO_ERROR, MessageFormat.format(MESSAGE_IO_ERROR, filename), e);
+			throw new ApplicationException(CODE_IO_ERROR, MessageFormat.format(MESSAGE_IO_ERROR, PROJECTS_FILENAME), e);
 		}
 
 		if (log.isDebugEnabled()) {
-			log.debug(String.format("Loading %d projects into file %s.", projects.size(), filename));
+			log.debug(String.format("Loading %d projects into file %s.", projects.size(), PROJECTS_FILENAME));
 			final StringBuilder sb = new StringBuilder();
 			projects.values().stream()
 					.forEach(project -> sb.append(project.getId()).append(" ").append(project.getName()).append(", "));
@@ -241,43 +239,39 @@ public class FileDataHandlerImpl implements DataHandler {
 			return;
 		}
 
-		final String filename = "staff.json";
-
 		if (log.isDebugEnabled()) {
-			log.debug(String.format("Saving %d staff members into file %s.", company.size(), filename));
+			log.debug(String.format("Saving %d staff members into file %s.", company.size(), STAFF_FILENAME));
 			final StringBuilder sb = new StringBuilder();
 			company.values().stream().forEach(
 					staff -> sb.append(staff.getIdStaff()).append(" ").append(staff.getLastName()).append(", "));
 			log.debug(sb.toString());
 		}
 
-		try (FileWriter fw = new FileWriter(rootLocation.resolve(filename).toFile())) {
+		try (FileWriter fw = new FileWriter(rootLocation.resolve(STAFF_FILENAME).toFile())) {
 			fw.write(gson.toJson(company));
 		} catch (final Exception e) {
-			throw new ApplicationException(CODE_IO_ERROR, MessageFormat.format(MESSAGE_IO_ERROR, filename), e);
+			throw new ApplicationException(CODE_IO_ERROR, MessageFormat.format(MESSAGE_IO_ERROR, STAFF_FILENAME), e);
 		}
 	}
 
 	@Override
 	public Map<Integer, Staff> loadStaff() throws ApplicationException {
 
-		final String filename = "staff.json";
-
 		Map<Integer, Staff> theStaff = new HashMap<>();
 
-		try (InputStreamReader isr = new InputStreamReader(new FileInputStream(rootLocation.resolve(filename).toFile()),
+		try (InputStreamReader isr = new InputStreamReader(new FileInputStream(rootLocation.resolve(STAFF_FILENAME).toFile()),
 				"UTF-8")) {
 			Type listStaffType = new TypeToken<HashMap<Integer, Staff>>() {
 			}.getType();
 			theStaff = gson.fromJson(isr, listStaffType);
 		} catch (final Exception e) {
 			throw new ApplicationException(CODE_IO_ERROR,
-					MessageFormat.format(MESSAGE_IO_ERROR, rootLocation.resolve(filename).toFile().getAbsoluteFile()),
+					MessageFormat.format(MESSAGE_IO_ERROR, rootLocation.resolve(STAFF_FILENAME).toFile().getAbsoluteFile()),
 					e);
 		}
 
 		if (log.isDebugEnabled()) {
-			log.debug(String.format("Loading %d staff members from file %s.", theStaff.size(), filename));
+			log.debug(String.format("Loading %d staff members from file %s.", theStaff.size(), STAFF_FILENAME));
 			final StringBuilder sb = new StringBuilder();
 			theStaff.values().stream().forEach(
 					staff -> sb.append(staff.getIdStaff()).append(" ").append(staff.getLastName()).append(", "));
@@ -296,20 +290,18 @@ public class FileDataHandlerImpl implements DataHandler {
 			return;
 		}
 
-		final String filename = skillsFilename; 
-
 		if (log.isDebugEnabled()) {
-			log.debug(String.format("Saving %d skills into file %s.", skills.size(), filename));
+			log.debug(String.format("Saving %d skills into file %s.", skills.size(), SKILLS_FILENAME));
 			final StringBuilder sb = new StringBuilder();
 			skills.values().stream()
 					.forEach(skill -> sb.append(skill.getId()).append(" ").append(skill.getTitle()).append(", "));
 			log.debug(sb.toString());
 		}
 
-		try (FileWriter fw = new FileWriter(rootLocation.resolve(filename).toFile())) {
+		try (FileWriter fw = new FileWriter(rootLocation.resolve(SKILLS_FILENAME).toFile())) {
 			fw.write(gson.toJson(skills));
 		} catch (final Exception e) {
-			throw new ApplicationException(CODE_IO_ERROR, MessageFormat.format(MESSAGE_IO_ERROR, filename), e);
+			throw new ApplicationException(CODE_IO_ERROR, MessageFormat.format(MESSAGE_IO_ERROR, SKILLS_FILENAME), e);
 		}
 	}
 
