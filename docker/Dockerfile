@@ -1,5 +1,6 @@
+# 
 # Ubuntu Fitzhi container
-# docker pull adoptopenjdk/openjdk11:x86_64-ubuntu-jre-11.0.15_10
+# 
 FROM eclipse-temurin:11.0.15_10-jre
 LABEL Frederic VIDAL (frederic.vidal@fitzhi.com)
 
