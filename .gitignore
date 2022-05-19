@@ -125,3 +125,7 @@ back-fitzhi/data/referential/openid-servers-github-google-localhost-80.json
 .gitsecret/keys/random_seed
 
 !*.secret
+
+back-fitzhi/data/referential/openid-servers-github-google-localhost-4200.json
+
+back-fitzhi/data/referential/openid-servers-github-google-spoq-io.json
