@@ -112,18 +112,16 @@ back-fitzhi/doc/*.png
 
 back-fitzhi/doc/.asciidoctor
 
-back-fitzhi/src/test/resources/file-content-parser/application/changes-data/1789-project-detected-experiences.json
+back-fitzhi/src/test/resources/file-content-parser/application/changes-data/
 
 back-fitzhi/src/test/resources/out_dir/staff.json
 
-back-fitzhi/src/test/resources/out_dir/constellations-data/constellations-2000-1.json
-
-r.sh
-
-docker/SONAR_HOST_URL
+back-fitzhi/src/test/resources/out_dir/constellations-data/
 
 docker/SONAR_TOKEN_LOGIN
 
 back-fitzhi/data/referential/openid-servers-github-google-localhost-80.json
+
 .gitsecret/keys/random_seed
+
 !*.secret
