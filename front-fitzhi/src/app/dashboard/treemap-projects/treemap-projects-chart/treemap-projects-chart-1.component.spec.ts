@@ -5,6 +5,7 @@ import { By } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { RouterTestingModule } from '@angular/router/testing';
 import { NgxChartsModule } from '@swimlane/ngx-charts';
+import { ReplaySubject } from 'rxjs';
 import { CinematicService } from 'src/app/service/cinematic.service';
 import { DashboardService } from 'src/app/service/dashboard/dashboard.service';
 import { ProjectService } from 'src/app/service/project/project.service';
@@ -92,7 +93,7 @@ describe('TeamProjectsChartComponent', () => {
 			fixture.detectChanges();
 			const labels = loadLabels();
 			expect(labels.length).toBe(1);
-			expect(labels[0].replace(/\s+/g, ' ')).toEqual(`Spring 76,000 lines`);
+			expect(labels[0].replace(/\s/g, ' ').replace(',', ' ')).toEqual(`Spring 76 000 lines`);
 			done();
 		}, 0);
 	});
