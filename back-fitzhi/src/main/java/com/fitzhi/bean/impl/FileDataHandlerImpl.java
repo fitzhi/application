@@ -22,6 +22,7 @@ import java.io.InputStreamReader;
 import java.io.Reader;
 import java.io.Writer;
 import java.lang.reflect.Type;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -71,6 +72,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Service;
 
+import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
 
 
@@ -132,36 +134,37 @@ public class FileDataHandlerImpl implements DataHandler {
 	/**
 	 * Directory where the GIT change records are saved.
 	 */
-	private final String savedChanges = "changes-data";
+	private static final String savedChanges = "changes-data";
 
 	/**
 	 * Directory where the constellations files are saved.
 	 */
-	private final String constellationsLocation = "constellations-data";
+	private static final String constellationsLocation = "constellations-data";
 
 	/**
 	 * Directory where the different pathnames file are stored. 
 	 */
-	private final String pathNames = "pathnames-data";
+	private static final String pathNames = "pathnames-data";
 
 	/**
 	 * Initialization of the Google JSON parser.
 	 */
 	private static Gson gson = new GsonBuilder().create();
 
-	private final static String SKILLS_FILENAME = "skills.json";
-	private final static String PROJECTS_FILENAME = "projects.json";
-	private final static String STAFF_FILENAME = "staff.json";
+	private static final String SKILLS_FILENAME = "skills.json";
+	private static final String PROJECTS_FILENAME = "projects.json";
+	private static final String STAFF_FILENAME = "staff.json";
 
 	/**
 	 * This internal class is used to deserialize the class {@link ProjectDetectedExperiences
 	 */
+	@Data
 	class ClazzDetectedExperiences {
-		public int idExperienceDetectionTemplate;
-		public int idProject;
-		public Author author;
-		public int count;
-		public int idStaff;
+		private int idExperienceDetectionTemplate;
+		private int idProject;
+		private Author author;
+		private int count;
+		private int idStaff;
 	}
 
 	@Autowired
@@ -261,8 +264,7 @@ public class FileDataHandlerImpl implements DataHandler {
 
 		Map<Integer, Staff> theStaff = new HashMap<>();
 
-		try (InputStreamReader isr = new InputStreamReader(new FileInputStream(rootLocation.resolve(STAFF_FILENAME).toFile()),
-				"UTF-8")) {
+		try (InputStreamReader isr = new InputStreamReader(new FileInputStream(rootLocation.resolve(STAFF_FILENAME).toFile()), StandardCharsets.UTF_8)) {
 			Type listStaffType = new TypeToken<HashMap<Integer, Staff>>() {
 			}.getType();
 			theStaff = gson.fromJson(isr, listStaffType);
@@ -584,7 +586,7 @@ public class FileDataHandlerImpl implements DataHandler {
 	@Override
 	public Map<Integer, Skill> loadSkills() throws ApplicationException {
 
-		final String filename = "skills.json";
+		final String filename = SKILLS_FILENAME;
 
 		Map<Integer, Skill> skills = new HashMap<>();
 
@@ -782,8 +784,7 @@ public class FileDataHandlerImpl implements DataHandler {
 
 		try (FileReader fr = new FileReader(rootLocation.resolve(filename).toFile())) {
 			Type typeListConstellations = new TypeToken<List<Constellation>>() {}.getType();
-			List <Constellation> constellations = gson.fromJson(fr, typeListConstellations);
-			return constellations;
+			return gson.fromJson(fr, typeListConstellations);
 		} catch (final Exception e) {
 			throw new ApplicationException(CODE_IO_ERROR, MessageFormat.format(MESSAGE_IO_ERROR, filename), e);
 		}
@@ -916,17 +917,17 @@ public class FileDataHandlerImpl implements DataHandler {
 		//
 		// Saving the set attached to the ADDED paths in the analysis
 		//
-		this.savePaths(project, new ArrayList<String>(analysis.getPathsAdded()), PathsType.PATHS_ADDED);
+		this.savePaths(project, new ArrayList<>(analysis.getPathsAdded()), PathsType.PATHS_ADDED);
 
 		//
 		// Saving the set attached to the MODIFIED paths in the analysis
 		//
-		this.savePaths(project, new ArrayList<String>(analysis.getPathsModified()), PathsType.PATHS_MODIFIED);
+		this.savePaths(project, new ArrayList<>(analysis.getPathsModified()), PathsType.PATHS_MODIFIED);
 
 		//
 		// Saving the set attached to the MODIFIED CANDIDATE in the analysis
 		//
-		this.savePaths(project, new ArrayList<String>(analysis.getPathsCandidate()), PathsType.PATHS_CANDIDATE);
+		this.savePaths(project, new ArrayList<>(analysis.getPathsCandidate()), PathsType.PATHS_CANDIDATE);
 	}
 
 	@Override
@@ -954,9 +955,9 @@ public class FileDataHandlerImpl implements DataHandler {
 
 		RepositoryAnalysis analysis = new RepositoryAnalysis(project);
 		analysis.setChanges(changes);
-		analysis.setPathsAdded(new HashSet<String>(pathsAdded));
-		analysis.setPathsModified(new HashSet<String>(pathsModified));
-		analysis.setPathsCandidate(new HashSet<String>(pathsCandidate));
+		analysis.setPathsAdded(new HashSet<>(pathsAdded));
+		analysis.setPathsModified(new HashSet<>(pathsModified));
+		analysis.setPathsCandidate(new HashSet<>(pathsCandidate));
 		return analysis;
 	}
 
@@ -989,8 +990,10 @@ public class FileDataHandlerImpl implements DataHandler {
 			if (log.isDebugEnabled()) {
 				log.debug (String.format("Removing file %s", f.getAbsolutePath()));
 			}
-			if (!f.delete()) {
-				throw new ApplicationException(CODE_CANNOT_DELETE_FILE, MessageFormat.format(MESSAGE_CANNOT_DELETE_FILE, f.getAbsolutePath()));
+			try {
+				Files.delete(f.toPath());
+			} catch (IOException ioe) {
+				throw new ApplicationException(CODE_CANNOT_DELETE_FILE, MessageFormat.format(MESSAGE_CANNOT_DELETE_FILE, f.getAbsolutePath()), ioe);
 			}
 		} else {
 			if (log.isDebugEnabled()) {
