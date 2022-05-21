@@ -1582,7 +1582,6 @@ public class GitCrawler extends AbstractScannerDataGenerator {
 				String.format("Re-using the local repository of %s !", project.getName()), 10);
 		}
 
-
 		//
 		// If a cache is detected and available for this project, it will be returned by this method.
 		// This variable is not final. It might be overridden by the filtering operation
