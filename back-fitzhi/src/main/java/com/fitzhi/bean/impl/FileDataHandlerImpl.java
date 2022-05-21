@@ -244,6 +244,11 @@ public class FileDataHandlerImpl implements DataHandler {
 			return;
 		}
 
+		//
+		// As the method-name explains, we create the directory.
+		//
+		createIfNeededDirectory(saveDir);
+
 		if (log.isDebugEnabled()) {
 			log.debug(String.format("Saving %d staff members into file %s.", company.size(), STAFF_FILENAME));
 			final StringBuilder sb = new StringBuilder();
@@ -252,9 +257,11 @@ public class FileDataHandlerImpl implements DataHandler {
 			log.debug(sb.toString());
 		}
 
+		System.out.println(rootLocation.resolve(STAFF_FILENAME).toFile().getAbsolutePath());
 		try (FileWriter fw = new FileWriter(rootLocation.resolve(STAFF_FILENAME).toFile())) {
 			fw.write(gson.toJson(company));
 		} catch (final Exception e) {
+			e.printStackTrace();
 			throw new ApplicationException(CODE_IO_ERROR, MessageFormat.format(MESSAGE_IO_ERROR, STAFF_FILENAME), e);
 		}
 	}
