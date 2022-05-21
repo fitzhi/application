@@ -40,9 +40,13 @@ public class GitCrawlerCloneTest {
 
 	@Before
 	public void before() throws Exception {
+		
 		projectHandler.addNewProject(new Project(1515, "Marignan"));
+		projectHandler.dataAreSaved();
 		projectHandler.getProject(1515).setBranch("master");
+
 		projectHandler.addNewProject(new Project(1214, "Bouvines"));	
+		projectHandler.dataAreSaved();
 		projectHandler.getProject(1214).setBranch("master");
 	}
 
@@ -59,6 +63,7 @@ public class GitCrawlerCloneTest {
 		settings.setUrl("https://github.com/frvidal/first-test.git");
 		repoScanner.clone(project, settings);
 		log.debug(project.getLocationRepository());
+
 		// // The removal of the directory has to be successful, because the clone operation succeeds
 		GitCrawler.removeCloneDir(Paths.get("../repos_test/1515"));
 	}

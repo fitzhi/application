@@ -98,5 +98,5 @@ public class SkylineControllerSkylineTest {
 		projectHandler.removeProject(1214);
 		projectHandler.removeProject(1515);
 	}
-	
+
 }
