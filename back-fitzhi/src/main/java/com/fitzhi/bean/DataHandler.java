@@ -145,12 +145,11 @@ public interface DataHandler {
 	 * @param project the current projet for which these paths should be saved. 
 	 * @param pathsType the {@link com.fitzhi.bean.impl.FileDataHandlerImpl.PathsType kind of path} .
 	 * @return the loaded paths retrieved on file system
-	 * @throws ApplicationException thrown if any problem occurs, most probably an {@link IOException}.
-	 * @throws NotFoundException thrown if there is no corresponding file.
+	 * @throws ApplicationException thrown if any problem occurs (most probably an {@link IOException}) or a {@link NotFoundException} if there is no corresponding file.
 	 * @see PathsType
 	 * @see #savePaths(Project, List, PathsType)
 	 */
-	List<String> loadPaths(Project project, PathsType pathsType) throws ApplicationException, NotFoundException;
+	List<String> loadPaths(Project project, PathsType pathsType) throws ApplicationException;
 
 	/**
 	 * <p>

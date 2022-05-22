@@ -760,7 +760,7 @@ public class FileDataHandlerImpl implements DataHandler {
 			if (containerLayers.getLayers() == null) {
 				// If this layers list is still null, without IOException, it means that the
 				// file empty
-				containerLayers.setLayers(new ArrayList<ProjectLayer>());
+				containerLayers.setLayers(new ArrayList<>());
 			}
 			return containerLayers;
 		} catch (final Exception e) {
@@ -866,7 +866,7 @@ public class FileDataHandlerImpl implements DataHandler {
 			if (floors == null) {
 				// If this building list is still null, without IOException, it means that the
 				// file is empty.
-				building.setBuilding(new HashMap<YearWeek, ProjectFloor>());
+				building.setBuilding(new HashMap<>());
 			} else {
 				floors.stream().forEach(floor -> building.initWeek(floor.getIdProject(), floor.getYear(),
 						floor.getWeek(), floor.getLinesActiveDevelopers(), floor.getLinesInactiveDevelopers()));
