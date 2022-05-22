@@ -2,9 +2,6 @@ package com.fitzhi.bean.impl.DataHandler;
 
 import static org.mockito.Mockito.when;
 
-import org.junit.After;
-import org.junit.Assert;
-
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -13,8 +10,10 @@ import java.util.Map;
 
 import com.fitzhi.bean.DataHandler;
 import com.fitzhi.bean.ShuffleService;
-import com.fitzhi.data.internal.Staff;
+import com.fitzhi.data.internal.Skill;
 
+import org.junit.After;
+import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -28,7 +27,7 @@ import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.context.junit4.SpringRunner;
 
 /**
- * Test of the method {@link DataHandler#saveStaff(java.util.Map)}
+ * Test of the method {@link DataHandler#saveSkills(Map))}
  * 
  * @author Fr&eacute;d&eacute;ric VIDAL
  */
@@ -36,7 +35,7 @@ import org.springframework.test.context.junit4.SpringRunner;
 @TestPropertySource(properties = { "applicationOutDirectory=./target/test-classes/out_dir_datahandler" })
 @SpringBootTest
 @DirtiesContext(classMode=ClassMode.BEFORE_CLASS)
-public class DataHandlerSaveStaffTest {
+public class DataHandlerSaveSkillTest {
  
 	@Autowired
 	DataHandler dataHandler;
@@ -49,7 +48,8 @@ public class DataHandlerSaveStaffTest {
 
 	@Before
 	public void before() throws Exception {
-		Path path = Paths.get(saveDir).resolve("staff.json");
+		
+		Path path = Paths.get(saveDir).resolve("skill.json");
 		if (Files.exists(path)) {
 			System.out.println(path.toString());
 			Files.delete(path);
@@ -59,16 +59,16 @@ public class DataHandlerSaveStaffTest {
 	@Test
 	public void save() throws Exception {
 
-		createIfNeededDirectory(saveDir);
-
 		when(shuffleService.isShuffleMode()).thenReturn(false);
 		
-		Map<Integer, Staff> company = new HashMap<>();
-		company.put(1111, new Staff(1111, "firstName", "lastName", "nickName", "login", "email", "level"));
+		createIfNeededDirectory(saveDir);
 
-		dataHandler.saveStaff(company);
+		Map<Integer, Skill> skills = new HashMap<>();
+		skills.put(1111, new Skill(1111, "one one one one"));
 
-		Path path = Paths.get(saveDir).resolve("staff.json");
+		dataHandler.saveSkills(skills);
+
+		Path path = Paths.get(saveDir).resolve("skills.json");
 		Assert.assertTrue(Files.exists(path));
 	}
 
@@ -77,18 +77,18 @@ public class DataHandlerSaveStaffTest {
 
 		when(shuffleService.isShuffleMode()).thenReturn(true);
 		
-		Map<Integer, Staff> company = new HashMap<>();
-		company.put(1111, new Staff(1111, "firstName", "lastName", "nickName", "login", "email", "level"));
+		Map<Integer, Skill> skills = new HashMap<>();
+		skills.put(1111, new Skill(1111, "one one one one"));
 
-		dataHandler.saveStaff(company);
+		dataHandler.saveSkills(skills);
 
-		Path path = Paths.get(saveDir).resolve("staff.json");
+		Path path = Paths.get(saveDir).resolve("skills.json");
 		Assert.assertFalse(Files.exists(path));
 	}
 
 	@After
 	public void after() throws Exception {
-		Path path = Paths.get(saveDir).resolve("staff.json");
+		Path path = Paths.get(saveDir).resolve("skills.json");
 		if (Files.exists(path)) {
 			System.out.println(path.toString());
 			Files.delete(path);

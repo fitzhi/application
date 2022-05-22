@@ -98,25 +98,15 @@ public class FileDataHandlerImpl implements DataHandler {
 		PATHS_ALL("pathsAll"), PATHS_MODIFIED("pathsModified"), PATHS_CANDIDATE("pathsCandidate"), PATHS_ADDED("pathsAdded");
 
 		String typeOfPath;
-
+		
 		private PathsType(String typeOfPath) {  
 			this.typeOfPath = typeOfPath ;  
 		}
-
+		
 		public String getTypeOfPath() {
 			return this.typeOfPath;
 		}		
 	}
-	
-	/**
-	 * Logging constant
-	 */
-	private static final String SAVING_FILE_S = "Saving file %s";
-
-	/**
-	 * Logging constant
-	 */
-	private static final String LOADING_FILE_S = "Loading file %s";
 
 	/**
 	 * Are we in shuffle-mode? In that scenario, the saving process will be
@@ -130,21 +120,32 @@ public class FileDataHandlerImpl implements DataHandler {
 	 */
 	@Value("${applicationOutDirectory}")
 	private String saveDir;
+	
+	/**
+	 * Logging constant
+	 */
+	private static final String SAVING_FILE_S = "Saving file %s";
+
+	/**
+	 * Logging constant
+	 */
+	private static final String LOADING_FILE_S = "Loading file %s";
+
 
 	/**
 	 * Directory where the GIT change records are saved.
 	 */
-	private static final String savedChanges = "changes-data";
+	private static final String SAVED_CHANGES = "changes-data";
 
 	/**
 	 * Directory where the constellations files are saved.
 	 */
-	private static final String constellationsLocation = "constellations-data";
+	private static final String CONSTELLATIONS_LOCATION = "constellations-data";
 
 	/**
 	 * Directory where the different pathnames file are stored. 
 	 */
-	private static final String pathNames = "pathnames-data";
+	private static final String PATHNAMES = "pathnames-data";
 
 	/**
 	 * Initialization of the Google JSON parser.
@@ -244,11 +245,6 @@ public class FileDataHandlerImpl implements DataHandler {
 			return;
 		}
 
-		//
-		// As the method-name explains, we create the directory.
-		//
-		createIfNeededDirectory(saveDir);
-
 		if (log.isDebugEnabled()) {
 			log.debug(String.format("Saving %d staff members into file %s.", company.size(), STAFF_FILENAME));
 			final StringBuilder sb = new StringBuilder();
@@ -323,7 +319,7 @@ public class FileDataHandlerImpl implements DataHandler {
 			try {
 				Files.createDirectories(path);
 			} catch (Exception e) {
-				throw new ApplicationException(CODE_IO_ERROR, MessageFormat.format(MESSAGE_IO_ERROR, savedChanges), e);
+				throw new ApplicationException(CODE_IO_ERROR, MessageFormat.format(MESSAGE_IO_ERROR, SAVED_CHANGES), e);
 			}
 		}
 
@@ -337,7 +333,7 @@ public class FileDataHandlerImpl implements DataHandler {
 	 * @return the filename to be used.
 	 */
 	private String generateChangesCsvFilename(Project project) {
-		return savedChanges + INTERNAL_FILE_SEPARATORCHAR + project.getId() + "-changes.csv";
+		return SAVED_CHANGES + INTERNAL_FILE_SEPARATORCHAR + project.getId() + "-changes.csv";
 	}
 
 	/**
@@ -348,7 +344,7 @@ public class FileDataHandlerImpl implements DataHandler {
 	 * @return the filename to be used.
 	 */
 	private String generateProjectLayersJsonFilename(Project project) {
-		return savedChanges + INTERNAL_FILE_SEPARATORCHAR + project.getId() + "-project-layers.json";
+		return SAVED_CHANGES + INTERNAL_FILE_SEPARATORCHAR + project.getId() + "-project-layers.json";
 	}
 
 	/**
@@ -359,7 +355,7 @@ public class FileDataHandlerImpl implements DataHandler {
 	 * @return the filename to be used.
 	 */
 	private String generateProjectDetectedExperiencesJsonFilename(Project project) {
-		return savedChanges + INTERNAL_FILE_SEPARATORCHAR + project.getId() + "-project-detected-experiences.json";
+		return SAVED_CHANGES + INTERNAL_FILE_SEPARATORCHAR + project.getId() + "-project-detected-experiences.json";
 	}
 
 	/**
@@ -370,7 +366,7 @@ public class FileDataHandlerImpl implements DataHandler {
 	 * @return the filename to be used.
 	 */
 	private String generateConstellationsJsonFilename(LocalDate month) {
-		return constellationsLocation + INTERNAL_FILE_SEPARATORCHAR + String.format("constellations-%d-%d.json", month.getYear(), month.getMonthValue());
+		return CONSTELLATIONS_LOCATION + INTERNAL_FILE_SEPARATORCHAR + String.format("constellations-%d-%d.json", month.getYear(), month.getMonthValue());
 	}
 
 	@Override
@@ -379,7 +375,7 @@ public class FileDataHandlerImpl implements DataHandler {
 		//
 		// As the method-name explains, we create the directory.
 		//
-		createIfNeededDirectory(savedChanges);
+		createIfNeededDirectory(SAVED_CHANGES);
 
 		final String filename = generateChangesCsvFilename(project);
 
@@ -627,7 +623,7 @@ public class FileDataHandlerImpl implements DataHandler {
 		//
 		// As the method-name explains, we create the directory which will hoist the file.
 		//
-		createIfNeededDirectory(pathNames);
+		createIfNeededDirectory(PATHNAMES);
 
 		List<String> directories = changes.keySet().stream()
 				.map(this::extractDirectory)
@@ -738,7 +734,7 @@ public class FileDataHandlerImpl implements DataHandler {
 		}
 
 		return String.format(
-				"%s/%d-%s-%s.txt", pathNames, 
+				"%s/%d-%s-%s.txt", PATHNAMES, 
 				project.getId(), 
 				project.getBranch().replace(" ", "_").replace("/", "_"),
 				pathsType.getTypeOfPath());
@@ -802,7 +798,7 @@ public class FileDataHandlerImpl implements DataHandler {
 		//
 		// As the method-name explains, we create the directory.
 		//
-		createIfNeededDirectory(constellationsLocation);
+		createIfNeededDirectory(CONSTELLATIONS_LOCATION);
 
 		final String filename = generateConstellationsJsonFilename(month);
 
@@ -824,7 +820,7 @@ public class FileDataHandlerImpl implements DataHandler {
 		//
 		// As the method-name explains, we create the directory.
 		//
-		createIfNeededDirectory(savedChanges);
+		createIfNeededDirectory(SAVED_CHANGES);
 
 		final String filename = generateProjectLayersJsonFilename(project);
 
@@ -847,7 +843,7 @@ public class FileDataHandlerImpl implements DataHandler {
 	 * @return the filename to be used.
 	 */
 	private String generateProjectBuildingJsonFilename(Project project) {
-		return savedChanges + INTERNAL_FILE_SEPARATORCHAR + project.getId() + "-project-building.json";
+		return SAVED_CHANGES + INTERNAL_FILE_SEPARATORCHAR + project.getId() + "-project-building.json";
 	}
 
 	@Override
@@ -885,7 +881,7 @@ public class FileDataHandlerImpl implements DataHandler {
 		//
 		// As the method-name explains, we create the directory.
 		//
-		createIfNeededDirectory(savedChanges);
+		createIfNeededDirectory(SAVED_CHANGES);
 
 		final String filename = generateProjectBuildingJsonFilename(project);
 
