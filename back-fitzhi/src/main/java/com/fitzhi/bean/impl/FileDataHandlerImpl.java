@@ -970,13 +970,13 @@ public class FileDataHandlerImpl implements DataHandler {
 
 	}	
 
-	private void removePathnamesFile (Project project, PathsType pathsType ) throws ApplicationException {
+	void removePathnamesFile (Project project, PathsType pathsType ) throws ApplicationException {
 		String filename = this.generatePathnamesFile(project, pathsType);
 		File f = rootLocation.resolve(filename).toFile();
 		removeFile(f);
 	}
 
-	private void removeFile (File f) throws ApplicationException {
+	public static void removeFile (File f) throws ApplicationException {
 		if (f.exists()) {
 			if (log.isDebugEnabled()) {
 				log.debug (String.format("Removing file %s", f.getAbsolutePath()));
