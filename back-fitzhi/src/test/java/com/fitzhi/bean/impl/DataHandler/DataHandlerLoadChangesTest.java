@@ -6,6 +6,7 @@ import com.fitzhi.bean.DataHandler;
 import com.fitzhi.data.internal.Project;
 import com.fitzhi.data.internal.SourceControlChanges;
 import com.fitzhi.exception.ApplicationException;
+import com.fitzhi.exception.NotFoundException;
 import com.fitzhi.source.crawler.git.SourceChange;
 import com.fitzhi.source.crawler.git.SourceFileHistory;
 
@@ -67,11 +68,11 @@ public class DataHandlerLoadChangesTest {
 	}
 
 	/**
-	 * loadChanges returns {@code NULL} if the changes file does exist.
+	 * loadChanges throws a NotFoundException if no changes file does exist
 	 */
-	@Test
+	@Test (expected = NotFoundException.class)
 	public void LoadChangesReturnNull() throws ApplicationException {
 		final Project p = new Project(1939, "Bad year");
-		Assert.assertNull("loadChanges returns {@code NULL} if the changes file does exist", dataHandler.loadChanges(p));
+		dataHandler.loadChanges(p);
 	}
 }

@@ -885,12 +885,16 @@ public class ProjectHandlerImpl extends AbstractDataSaverLifeCycleImpl implement
 				continue;
 			}
 
-			final SourceControlChanges changes = this.dataHandler.loadChanges(project);
-			// If the changes file does not exist, we skiip this project
-			if (changes == null) {
+			SourceControlChanges changes = null;
+			try {
+				changes = this.dataHandler.loadChanges(project);
+			} catch (NotFoundException nfe) {
+				if (log.isDebugEnabled()) {
+					log.debug(nfe.getMessage());
+				}
 				continue;
-
 			}
+
 			ProjectDetectedExperiences experiences = getProjectDetectedExperiences(project);
 			ecosystemAnalyzer.calculateExperiences(project, skills, changes, experiences);
 			if (log.isDebugEnabled()) {

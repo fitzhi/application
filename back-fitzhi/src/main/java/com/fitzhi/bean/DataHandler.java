@@ -17,6 +17,7 @@ import com.fitzhi.data.internal.Skill;
 import com.fitzhi.data.internal.SourceControlChanges;
 import com.fitzhi.data.internal.Staff;
 import com.fitzhi.exception.ApplicationException;
+import com.fitzhi.exception.NotFoundException;
 
 /**
  * Interface in charge of saving and loading data.
@@ -97,8 +98,9 @@ public interface DataHandler {
 	 * Load the changes stored in a CSV file.
 	 * </p>
 	 * @param project the current active project
-	 * @return the container of all commits changes, or {@code null} if the changes file does not exist
+	 * @return the container of all commits changes
 	 * @throws ApplicationException thrown if an exception occurs during the loading process, most probably an {@link java.io.IOException}
+	 * @throws NotFoundException thrown if the changes file has not been found
 	 */
 	SourceControlChanges loadChanges(Project project) throws ApplicationException;
 
@@ -138,16 +140,17 @@ public interface DataHandler {
 	/**
 	 * <p>
 	 * Load the corresponding collection of paths saved previously on the File System. 
-	 * The main goal for this method, is to store the states of the {@link RepositoryAnalysis analysis container}  on file system.
+	 * The main goal for this method, is to store the state of the {@link RepositoryAnalysis analysis container}  on file system.
 	 * </p>.
 	 * @param project the current projet for which these paths should be saved. 
 	 * @param pathsType the {@link com.fitzhi.bean.impl.FileDataHandlerImpl.PathsType kind of path} .
-	 * @return the loaded paths retrieved on file system, or {@code null} if none exists.
+	 * @return the loaded paths retrieved on file system
+	 * @throws ApplicationException thrown if any problem occurs, most probably an {@link IOException}.
+	 * @throws NotFoundException thrown if there is no corresponding file.
 	 * @see PathsType
 	 * @see #savePaths(Project, List, PathsType)
-	 * @throws ApplicationException thrown if any problem occurs, most probably an {@link IOException}
 	 */
-	List<String> loadPaths(Project project, PathsType pathsType) throws ApplicationException;
+	List<String> loadPaths(Project project, PathsType pathsType) throws ApplicationException, NotFoundException;
 
 	/**
 	 * <p>

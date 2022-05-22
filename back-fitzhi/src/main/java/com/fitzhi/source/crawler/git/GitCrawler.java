@@ -98,6 +98,7 @@ import com.fitzhi.data.source.importance.AssessorImportance;
 import com.fitzhi.data.source.importance.FileSizeImportance;
 import com.fitzhi.data.source.importance.ImportanceCriteria;
 import com.fitzhi.exception.ApplicationException;
+import com.fitzhi.exception.NotFoundException;
 import com.fitzhi.source.crawler.EcosystemAnalyzer;
 import com.fitzhi.source.crawler.impl.AbstractScannerDataGenerator;
 import com.google.gson.Gson;
@@ -776,16 +777,17 @@ public class GitCrawler extends AbstractScannerDataGenerator {
 	@Override
 	public RepositoryAnalysis retrieveRepositoryAnalysis(Project project, Repository repository) throws ApplicationException {
 
-		RepositoryAnalysis analysis = dataSaver.loadRepositoryAnalysis(project);
-		if (analysis == null) {
-			analysis = new RepositoryAnalysis(project);
-		} else  {
+		RepositoryAnalysis analysis = null;
+		try {			
+			analysis = dataSaver.loadRepositoryAnalysis(project);
 			if (log.isDebugEnabled()) {
 				log.debug (String.format("Project %s analysis repository contains %d files for %d changes", 
 					project.getName(), analysis.numberOfFiles(), analysis.numberOfChanges()));
 			}
+		} catch (NotFoundException nfe) {
+			analysis = new RepositoryAnalysis(project);
 		}
-		
+
 		fillRepositoryAnalysis(project, analysis, repository);
 
 		dataSaver.saveRepositoryAnalysis(project, analysis);

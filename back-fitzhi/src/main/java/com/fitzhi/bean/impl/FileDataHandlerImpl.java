@@ -57,6 +57,7 @@ import com.fitzhi.data.internal.SourceCodeDiffChange;
 import com.fitzhi.data.internal.SourceControlChanges;
 import com.fitzhi.data.internal.Staff;
 import com.fitzhi.exception.ApplicationException;
+import com.fitzhi.exception.NotFoundException;
 import com.fitzhi.source.crawler.git.SourceChange;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -420,7 +421,7 @@ public class FileDataHandlerImpl implements DataHandler {
 			if (log.isDebugEnabled()) {
 				log.debug(String.format("But, the file %s does not exist", file.getAbsolutePath()));
 			}
-			return null;
+			throw new NotFoundException(CODE_FILE_DOES_NOT_EXIST, MessageFormat.format(MESSAGE_FILE_DOES_NOT_EXIST, file.getAbsolutePath()));
 		}
 
 		try (Reader filereader = new FileReader(file)) {
@@ -681,16 +682,16 @@ public class FileDataHandlerImpl implements DataHandler {
 	}
 
 	/**
-	 * Load the content of the given filename in a list of {@code String} format.
+	 * Load the content of the given filename in a {@code List} of {@code String}.
 	 * @param filename the filename which content has to be loaded.
-	 * @return the content of the file in {@code String} format, or {@code null} if none exists. 
-	 * @throws ApplicationException if any problems occurs, most probably an {@link IOException}
+	 * @return the content of the file in {@code String} format
+	 * @throws ApplicationException if any problems occurs, most probably a {@link NotFoundException} or an {@link IOException}
 	 */
 	private List<String> loadTxtFile(String filename) throws ApplicationException {
 
 		Path path = rootLocation.resolve(filename);
 		if (!path.toFile().exists()) {
-			return null;
+			throw new NotFoundException(CODE_FILE_DOES_NOT_EXIST, MessageFormat.format(MESSAGE_FILE_DOES_NOT_EXIST, path.toFile().getAbsolutePath()));
 		}
 
 		try (Reader reader = new FileReader(path.toFile())) {
@@ -934,27 +935,15 @@ public class FileDataHandlerImpl implements DataHandler {
 	}
 
 	@Override
-	public RepositoryAnalysis loadRepositoryAnalysis(Project project) throws ApplicationException {
+	public RepositoryAnalysis loadRepositoryAnalysis(Project project) throws ApplicationException, NotFoundException {
 
 		SourceControlChanges changes = loadChanges(project);
-		if (changes == null) {
-			return null;
-		}
 
 		List<String> pathsAdded = loadPaths(project, PathsType.PATHS_ADDED);
-		if (pathsAdded == null) {
-			return null;
-		}
 
 		List<String> pathsModified = loadPaths(project, PathsType.PATHS_MODIFIED);
-		if (pathsModified == null) {
-			return null;
-		}
 
 		List<String> pathsCandidate = loadPaths(project, PathsType.PATHS_CANDIDATE);
-		if (pathsCandidate == null) {
-			return null;
-		}
 
 		RepositoryAnalysis analysis = new RepositoryAnalysis(project);
 		analysis.setChanges(changes);
