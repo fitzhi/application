@@ -31,6 +31,10 @@ public class ProjectHandlerActiveProjectsTest {
 	@Test
 	public void activeProjects() throws ApplicationException {
 
+		// WTF the project 1515 might have been added by anoter test and kept for an unknown reason.
+		// Shame on me.
+		projectHandler.removeProject(1515);
+
 		if (log.isInfoEnabled()) {
 			if (projectHandler.activeProjects().size() != 3) {
 				projectHandler.activeProjects().stream().forEach(p -> log.info(p.getId() + " " + p.getName()));
