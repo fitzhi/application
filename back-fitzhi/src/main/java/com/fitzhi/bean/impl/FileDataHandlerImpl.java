@@ -253,11 +253,12 @@ public class FileDataHandlerImpl implements DataHandler {
 			log.debug(sb.toString());
 		}
 
-		System.out.println(rootLocation.resolve(STAFF_FILENAME).toFile().getAbsolutePath());
 		try (FileWriter fw = new FileWriter(rootLocation.resolve(STAFF_FILENAME).toFile())) {
 			fw.write(gson.toJson(company));
 		} catch (final Exception e) {
-			e.printStackTrace();
+			if (log.isWarnEnabled()) {
+				log.warn(getStackTrace(e));
+			}
 			throw new ApplicationException(CODE_IO_ERROR, MessageFormat.format(MESSAGE_IO_ERROR, STAFF_FILENAME), e);
 		}
 	}
@@ -934,7 +935,7 @@ public class FileDataHandlerImpl implements DataHandler {
 	}
 
 	@Override
-	public RepositoryAnalysis loadRepositoryAnalysis(Project project) throws ApplicationException, NotFoundException {
+	public RepositoryAnalysis loadRepositoryAnalysis(Project project) throws ApplicationException {
 
 		SourceControlChanges changes = loadChanges(project);
 

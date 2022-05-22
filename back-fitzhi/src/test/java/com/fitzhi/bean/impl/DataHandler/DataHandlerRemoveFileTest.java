@@ -41,6 +41,7 @@ public class DataHandlerRemoveFileTest {
 	@Test
 	public void doNotRemove() throws ApplicationException {
 		File f = new File("/path/unknown/file");
+		Assert.assertFalse(Files.exists(f.toPath()));
 		FileDataHandlerImpl.removeFile(f);
 	}
 
