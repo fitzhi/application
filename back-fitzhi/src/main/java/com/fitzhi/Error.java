@@ -151,6 +151,12 @@ public class Error {
 	public static final int CODE_INVALID_OPTIONAL_STORAGE = -1045;
 	public static final String MESSAGE_INVALID_OPTIONAL_STORAGE = "INTERNAL ERROR {0} is empty.";
 
+	public static final int CODE_HTTP_CLIENT_ERROR = -1046;
+	public static final String MESSAGE_HTTP_CLIENT_ERROR = "HTTP Error when accessing {0}.";
+
+	public static final int CODE_HTTP_ERROR = -1047;
+	public static final String MESSAGE_HTTP_ERROR = "HTTP Error \"{0}\" when accessing {1}.";
+	
 	private Error() {
 	}
 	

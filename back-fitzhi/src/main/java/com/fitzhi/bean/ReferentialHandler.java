@@ -11,7 +11,7 @@ public interface ReferentialHandler<T> {
      * Load and parse a referential JSON file from the file system.
      * The content of the file is returned into a list. 
      * 
-     * @param filename the <b>name</b> of the referential file <bi(without path)</i>
+     * @param filename the <b>name</b> of the referential file <i>(without path)</i>
      * @param typeToken the type of Generic. 
      * <p>
      * This parameter is linked to java Type erasure. Generics are only known at compile time.<br/>

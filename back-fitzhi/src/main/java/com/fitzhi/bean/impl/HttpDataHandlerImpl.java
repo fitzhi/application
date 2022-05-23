@@ -6,6 +6,7 @@ import java.util.Map;
 
 import com.fitzhi.ApplicationRuntimeException;
 import com.fitzhi.bean.DataHandler;
+import com.fitzhi.bean.HttpAccessHandler;
 import com.fitzhi.data.internal.Constellation;
 import com.fitzhi.data.internal.Project;
 import com.fitzhi.data.internal.ProjectBuilding;
@@ -16,18 +17,16 @@ import com.fitzhi.data.internal.Skill;
 import com.fitzhi.data.internal.SourceControlChanges;
 import com.fitzhi.data.internal.Staff;
 import com.fitzhi.exception.ApplicationException;
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
+import com.google.gson.reflect.TypeToken;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Service;
 
-import lombok.extern.slf4j.Slf4j;
-
-
 /**
  * <p>
- * Implementation of DataSaver based on HTTP interaction. 
+ * Implementation of DataHandler based on HTTP interaction. 
  * This implementation is planned to be used bythe slave mode.
  * </p>
  * 
@@ -35,32 +34,22 @@ import lombok.extern.slf4j.Slf4j;
  */
 @Profile("slave")
 @Service
-public class HttpDataHandlerImpl implements DataHandler {
+public class HttpDataHandlerImpl<T> implements DataHandler {
 
 	/**
-	 * <p>Type of path</p>
-	 * <p>
-	 * Application stores different types of paths on filesystem in order to re-gerenerate a consistent {@link RepositoryAnalysis}
-	 * </p>
+	 * URL of the backend which hosts the main application.
 	 */
-	public enum PathsType {    
-		PATHS_ALL("pathsAll"), PATHS_MODIFIED("pathsModified"), PATHS_CANDIDATE("pathsCandidate"), PATHS_ADDED("pathsAdded");
-
-		String typeOfPath;
-		
-		private PathsType(String typeOfPath) {  
-			this.typeOfPath = typeOfPath ;  
-		}
-		
-		public String getTypeOfPath() {
-			return this.typeOfPath;
-		}		
-	}
+	@Value("${applicationUrl}")
+	private String applicationUrl;
 
 	/**
-	 * Initialization of the Google JSON parser.
+	 * Organization name. This name is unique and therefore can be considered as an ID.
 	 */
-	private static Gson gson = new GsonBuilder().create();
+	@Value("${organization}")
+	private String organization;
+
+	@Autowired
+	HttpAccessHandler<Staff> httpAccessStaff; 
 
 	@Override
 	public void saveProjects(Map<Integer, Project> projects) throws ApplicationException {
@@ -79,7 +68,8 @@ public class HttpDataHandlerImpl implements DataHandler {
 
 	@Override
 	public Map<Integer, Staff> loadStaff() throws ApplicationException {
-		throw new ApplicationRuntimeException("Not implemented yet");
+		String url = applicationUrl + "/api/staff";
+		return httpAccessStaff.loadMap(url, new TypeToken<Map<Integer, Staff>>() {});
 	}
 
 	@Override

@@ -1,11 +1,18 @@
 package com.fitzhi.bean.impl.DataHandler;
 
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.Mockito.when;
+
+import java.io.IOException;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Map;
 
 import com.fitzhi.ApplicationRuntimeException;
 import com.fitzhi.bean.DataHandler;
+import com.fitzhi.bean.HttpAccessHandler;
 import com.fitzhi.bean.ShuffleService;
 import com.fitzhi.bean.impl.FileDataHandlerImpl.PathsType;
 import com.fitzhi.bean.impl.HttpDataHandlerImpl;
@@ -15,8 +22,10 @@ import com.fitzhi.data.internal.ProjectDetectedExperiences;
 import com.fitzhi.data.internal.ProjectLayers;
 import com.fitzhi.data.internal.RepositoryAnalysis;
 import com.fitzhi.data.internal.SourceControlChanges;
+import com.fitzhi.data.internal.Staff;
 import com.fitzhi.exception.ApplicationException;
 
+import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,6 +35,7 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.annotation.DirtiesContext.ClassMode;
 import org.springframework.test.context.ActiveProfiles;
+import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.context.junit4.SpringRunner;
 
 /**
@@ -36,6 +46,7 @@ import org.springframework.test.context.junit4.SpringRunner;
 @RunWith(SpringRunner.class)
 @SpringBootTest
 @DirtiesContext(classMode=ClassMode.AFTER_CLASS)
+@TestPropertySource(properties = {"applicationUrl=http://mock-url", "organization=fitzhi" })
 @ActiveProfiles("slave")
 public class HttpDataHandlerTest {
  
@@ -43,11 +54,14 @@ public class HttpDataHandlerTest {
 	DataHandler dataHandler;
 
 	@MockBean
+	HttpAccessHandler<Staff> httpAccessHandler;
+
+	@MockBean
 	ShuffleService shuffleService;
 
 	@Value("${applicationOutDirectory}")
 	private String saveDir;
-
+	
 	@Test (expected = ApplicationRuntimeException.class)
 	public void saveProjects() throws Exception {
 		dataHandler.saveProjects(new HashMap<>());
@@ -63,9 +77,14 @@ public class HttpDataHandlerTest {
 		dataHandler.saveStaff(new HashMap<>());
 	}
 
-	@Test (expected = ApplicationRuntimeException.class)
-	public void loadStaff() throws ApplicationException {
-		dataHandler.loadStaff();
+	@Test
+	public void loadStaff() throws IOException, ApplicationException {
+		Map<Integer, Staff> theStaff = new HashMap<>();
+		theStaff.put(1, new Staff(1, "firstName", "lastName", "nickName", "login", "email", "level"));
+		when(httpAccessHandler.loadMap(anyString(), any())).thenReturn(theStaff);
+		
+		Map<Integer, Staff> res = dataHandler.loadStaff();
+		Assert.assertEquals(1, res.size());
 	}
 
 	@Test (expected = ApplicationRuntimeException.class)
