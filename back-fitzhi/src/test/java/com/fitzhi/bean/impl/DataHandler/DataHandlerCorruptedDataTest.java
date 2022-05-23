@@ -4,7 +4,9 @@ import java.time.LocalDate;
 
 import com.fitzhi.bean.DataHandler;
 import com.fitzhi.bean.ShuffleService;
+import com.fitzhi.data.internal.Project;
 import com.fitzhi.exception.ApplicationException;
+import com.fitzhi.exception.NotFoundException;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -58,4 +60,15 @@ public class DataHandlerCorruptedDataTest {
 		dataHandler.loadSkillsConstellations(LocalDate.of(2022, 5, 8));
 	}
 
+	@Test (expected = ApplicationException.class)
+	public void loadProjectBuilding() throws Exception {
+		Project p = new Project(1789, "project");
+		dataHandler.loadProjectBuilding(p);
+	}
+
+	@Test (expected = NotFoundException.class)
+	public void loadRepositoryAnalysis() throws Exception {
+		Project p = new Project(1789, "project");
+		dataHandler.loadRepositoryAnalysis(p);
+	}
 }
