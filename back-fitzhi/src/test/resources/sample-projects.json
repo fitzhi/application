@@ -1,0 +1,112 @@
+[
+	{
+		"id": 1,
+		"name": "Fitzhi",
+		"active": true,
+		"connectionSettings": 3,
+		"branch": "release-1.9",
+		"urlRepository": "https://github.com/fitzhi/application",
+		"locationRepository": "/Users/fredericvidal/work/projects/application/deploy/data/repos/1",
+		"username": "",
+		"password": null,
+		"connectionSettingsFile": null,
+		"skills": {
+			"16": {
+				"idSkill": 16,
+				"numberOfFiles": 1,
+				"totalFilesSize": 2733
+			},
+			"1": {
+				"idSkill": 1,
+				"numberOfFiles": 506,
+				"totalFilesSize": 1694991
+			},
+			"18": {
+				"idSkill": 18,
+				"numberOfFiles": 1,
+				"totalFilesSize": 2733
+			},
+			"3": {
+				"idSkill": 3,
+				"numberOfFiles": 1,
+				"totalFilesSize": 18573
+			},
+			"5": {
+				"idSkill": 5,
+				"numberOfFiles": 1,
+				"totalFilesSize": 10
+			},
+			"21": {
+				"idSkill": 21,
+				"numberOfFiles": 1,
+				"totalFilesSize": 18573
+			},
+			"22": {
+				"idSkill": 22,
+				"numberOfFiles": 1,
+				"totalFilesSize": 18573
+			},
+			"8": {
+				"idSkill": 8,
+				"numberOfFiles": 444,
+				"totalFilesSize": 1336882
+			},
+			"24": {
+				"idSkill": 24,
+				"numberOfFiles": 35,
+				"totalFilesSize": 18842
+			},
+			"25": {
+				"idSkill": 25,
+				"numberOfFiles": 3,
+				"totalFilesSize": 1403
+			},
+			"12": {
+				"idSkill": 12,
+				"numberOfFiles": 3,
+				"totalFilesSize": 3044
+			}
+		},
+		"ghosts": [
+			{
+				"pseudo": "frvidal",
+				"idStaff": -1,
+				"technical": false,
+				"firstCommit": "2019-01-20",
+				"lastCommit": "2021-12-30",
+				"numberOfCommits": 6890,
+				"numberOfFiles": 749
+			},
+			{
+				"pseudo": "Fitzhì",
+				"idStaff": -1,
+				"technical": false,
+				"firstCommit": "2020-02-12",
+				"lastCommit": "2022-05-02",
+				"numberOfCommits": 6,
+				"numberOfFiles": 5
+			}
+		],
+		"libraries": [
+			{
+				"exclusionDirectory": "docs",
+				"type": 2
+			}
+		],
+		"urlCodeFactorIO": "https://www.codefactor.io/repository/github/fitzhi/application",
+		"urlSonarServer": null,
+		"sonarProjects": [],
+		"audit": {},
+		"auditEvaluation": 0,
+		"staffEvaluation": 0,
+		"ecosystems": [
+			0,
+			2,
+			10,
+			9,
+			3,
+			13,
+			5
+		]
+	}
+]

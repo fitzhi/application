@@ -6,16 +6,14 @@ import static com.fitzhi.Error.MESSAGE_HTTP_CLIENT_ERROR;
 import static com.fitzhi.Error.MESSAGE_HTTP_ERROR;
 
 import java.io.IOException;
-import java.lang.reflect.Type;
 import java.text.MessageFormat;
 import java.util.List;
 import java.util.Map;
 
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fitzhi.bean.HttpAccessHandler;
 import com.fitzhi.exception.ApplicationException;
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
-import com.google.gson.reflect.TypeToken;
 
 import org.apache.http.HttpResponse;
 import org.apache.http.HttpStatus;
@@ -23,8 +21,11 @@ import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.impl.client.HttpClientBuilder;
 import org.apache.http.util.EntityUtils;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Service;
+
+import lombok.extern.slf4j.Slf4j;
 
 /**
  * Implementation of the data access handler.
@@ -32,61 +33,53 @@ import org.springframework.stereotype.Service;
  * @author Fr&eacute;d&eacute;ric VIDAL
  */
 @Service
+@Slf4j
 @Profile("slave")
 public class HttpAccessHandlerImpl<T> implements HttpAccessHandler<T> {
-
-	/**
-	 * Initialization of the Google JSON parser.
-	 */
-	private static Gson gson = new GsonBuilder().create();
+	
+	@Autowired
+	private ObjectMapper objectMapper;
 
 	HttpClient client = null;
 
 	@Override
-	public Map<Integer, T> loadMap(String url, TypeToken<Map<Integer, T>> typeToken) throws ApplicationException {
+	public Map<Integer, T> loadMap(String url, TypeReference<Map<Integer, T>> typeReference) throws ApplicationException {
 		try {
 			HttpClient client = httpClient();
 			HttpResponse response = client.execute(new HttpGet(url));
 			int statusCode = response.getStatusLine().getStatusCode();
 			if (statusCode == HttpStatus.SC_OK) {
-				System.out.println(EntityUtils.toString(response.getEntity()));
-				Type listEntityType = typeToken.getType();
-				Map<Integer, T> theMap = gson.fromJson(EntityUtils.toString(response.getEntity()), listEntityType);
+				Map<Integer, T> theMap = objectMapper.readValue(EntityUtils.toString(response.getEntity()), typeReference);
 				return theMap;
 			} else {
-				System.out.println(response.getStatusLine().getStatusCode());
-				System.out.println(response.getStatusLine().getReasonPhrase());
+				if (log.isWarnEnabled()) {
+					log.warn(String.format("Http error with %s %s %s", url, response.getStatusLine().getStatusCode(), response.getStatusLine().getReasonPhrase()));
+				}
 				throw new ApplicationException(CODE_HTTP_ERROR, MessageFormat.format(MESSAGE_HTTP_ERROR, response.getStatusLine().getReasonPhrase(), url));
 			}
 		} catch (final IOException ioe) {
 			throw new ApplicationException(
-				CODE_HTTP_CLIENT_ERROR, 
-				MessageFormat.format(MESSAGE_HTTP_CLIENT_ERROR, url), 
-				ioe);
+				CODE_HTTP_CLIENT_ERROR,  MessageFormat.format(MESSAGE_HTTP_CLIENT_ERROR, url), ioe);
 		}
 	}
 
 	@Override
-	public List<T> loadList(String url, TypeToken<List<T>> typeToken) throws ApplicationException {
+	public List<T> loadList(String url, TypeReference<List<T>> typeReference) throws ApplicationException {
 		try {
 			HttpClient client = httpClient();
 			HttpResponse response = client.execute(new HttpGet(url));
 			int statusCode = response.getStatusLine().getStatusCode();
 			if (statusCode == HttpStatus.SC_OK) {
-				System.out.println(EntityUtils.toString(response.getEntity()));
-				Type listEntityType = typeToken.getType();
-				List<T> theList = gson.fromJson(EntityUtils.toString(response.getEntity()), listEntityType);
+				List<T> theList = objectMapper.readValue(EntityUtils.toString(response.getEntity()), typeReference);
 				return theList;
 			} else {
-				System.out.println(response.getStatusLine().getStatusCode());
-				System.out.println(response.getStatusLine().getReasonPhrase());
+				if (log.isWarnEnabled()) {
+					log.warn(String.format("Http error with %s %s %s", url, response.getStatusLine().getStatusCode(), response.getStatusLine().getReasonPhrase()));
+				}
 				throw new ApplicationException(CODE_HTTP_ERROR, MessageFormat.format(MESSAGE_HTTP_ERROR, response.getStatusLine().getReasonPhrase(), url));
 			}
 		} catch (final IOException ioe) {
-			throw new ApplicationException(
-				CODE_HTTP_CLIENT_ERROR, 
-				MessageFormat.format(MESSAGE_HTTP_CLIENT_ERROR, url), 
-				ioe);
+			throw new ApplicationException(CODE_HTTP_CLIENT_ERROR, MessageFormat.format(MESSAGE_HTTP_CLIENT_ERROR, url), ioe);
 		}
 	}
 

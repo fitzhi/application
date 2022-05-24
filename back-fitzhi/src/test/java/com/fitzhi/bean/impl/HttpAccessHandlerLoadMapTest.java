@@ -7,9 +7,9 @@ import static org.mockito.Mockito.when;
 import java.io.IOException;
 import java.util.Map;
 
+import com.fasterxml.jackson.core.type.TypeReference;
 import com.fitzhi.bean.HttpAccessHandler;
 import com.fitzhi.exception.ApplicationException;
-import com.google.gson.reflect.TypeToken;
 
 import org.apache.http.HttpResponse;
 import org.apache.http.StatusLine;
@@ -61,7 +61,7 @@ public class HttpAccessHandlerLoadMapTest {
 		when(statusLine.getReasonPhrase()).thenReturn("a good reason to fail");
 
 		httpAccessHandler.setHttpClient(httpClient);
-		httpAccessHandler.loadMap("url", new TypeToken<Map<Integer, String>>() {});
+		httpAccessHandler.loadMap("url", new TypeReference<Map<Integer, String>>(){});
 	}
 
 	@Test (expected = ApplicationException.class)
@@ -70,7 +70,7 @@ public class HttpAccessHandlerLoadMapTest {
 		when(httpClient.execute(any(HttpGet.class))).thenThrow(new IOException("WTF NETWORK ERROR"));
 
 		httpAccessHandler.setHttpClient(httpClient);
-		httpAccessHandler.loadMap("url", new TypeToken<Map<Integer, String>>() {});
+		httpAccessHandler.loadMap("url", new TypeReference<Map<Integer, String>>(){});
 	}
 
 	@Test
@@ -82,7 +82,7 @@ public class HttpAccessHandlerLoadMapTest {
 		when(httpResponse.getEntity()).thenReturn(new StringEntity("{ \"1\": \"one\" }"));
 
 		httpAccessHandler.setHttpClient(httpClient);
-		httpAccessHandler.loadMap("url", new TypeToken<Map<Integer, String>>() {});
+		httpAccessHandler.loadMap("url", new TypeReference<Map<Integer, String>>(){});
 	}
 
 }

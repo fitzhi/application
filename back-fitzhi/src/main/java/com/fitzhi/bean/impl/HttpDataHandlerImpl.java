@@ -5,6 +5,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.fasterxml.jackson.core.type.TypeReference;
 import com.fitzhi.ApplicationRuntimeException;
 import com.fitzhi.bean.DataHandler;
 import com.fitzhi.bean.HttpAccessHandler;
@@ -18,7 +19,6 @@ import com.fitzhi.data.internal.Skill;
 import com.fitzhi.data.internal.SourceControlChanges;
 import com.fitzhi.data.internal.Staff;
 import com.fitzhi.exception.ApplicationException;
-import com.google.gson.reflect.TypeToken;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -66,7 +66,7 @@ public class HttpDataHandlerImpl<T> implements DataHandler {
 	@Override
 	public Map<Integer, Project> loadProjects() throws ApplicationException {
 		String url = applicationUrl + "/api/project";
-		List<Project> projects = httpAccessProject.loadList(url, new TypeToken<List<Project>>() {});
+		List<Project> projects = httpAccessProject.loadList(url, new TypeReference<List<Project>>(){});
 		Map<Integer, Project> map = new HashMap<>();
 		projects.forEach(p -> map.put(p.getId(), p));
 		return map;
@@ -80,7 +80,7 @@ public class HttpDataHandlerImpl<T> implements DataHandler {
 	@Override
 	public Map<Integer, Staff> loadStaff() throws ApplicationException {
 		String url = applicationUrl + "/api/staff";
-		return httpAccessStaff.loadMap(url, new TypeToken<Map<Integer, Staff>>() {});
+		return httpAccessStaff.loadMap(url, new TypeReference<Map<Integer, Staff>>(){});
 	}
 
 	@Override
@@ -159,7 +159,7 @@ public class HttpDataHandlerImpl<T> implements DataHandler {
 	@Override
 	public Map<Integer, Skill> loadSkills() throws ApplicationException {
 		String url = applicationUrl + "/api/skill";
-		return httpAccessSkill.loadMap(url, new TypeToken<Map<Integer, Skill>>() {});
+		return httpAccessSkill.loadMap(url, new TypeReference<Map<Integer, Skill>>(){});
 	}
 
 	@Override
