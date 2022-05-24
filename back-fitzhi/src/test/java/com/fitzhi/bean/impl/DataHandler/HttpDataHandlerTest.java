@@ -54,7 +54,10 @@ public class HttpDataHandlerTest {
 	DataHandler dataHandler;
 
 	@MockBean
-	HttpAccessHandler<Staff> httpAccessHandler;
+	HttpAccessHandler<Staff> httpAccessHandlerStaff;
+
+	@MockBean
+	HttpAccessHandler<Project> httpAccessHandlerProject;
 
 	@MockBean
 	ShuffleService shuffleService;
@@ -67,8 +70,21 @@ public class HttpDataHandlerTest {
 		dataHandler.saveProjects(new HashMap<>());
 	}
 
-	@Test (expected = ApplicationRuntimeException.class)
+	@Test
 	public void loadProjects() throws ApplicationException {
+		Map<Integer, Project> projects = new HashMap<>();
+		projects.put(1, new Project(1, "one"));
+		projects.put(2, new Project(2, "two"));
+		when(httpAccessHandlerProject.loadMap(anyString(), any())).thenReturn(projects);
+		
+		Map<Integer, Project> res = dataHandler.loadProjects();
+		Assert.assertEquals(2, res.size());
+		Assert.assertEquals("two", res.get(2).getName());
+	}
+
+	@Test (expected = ApplicationException.class)
+	public void loadProjectsInError() throws ApplicationException {
+		when(httpAccessHandlerProject.loadMap(anyString(), any())).thenThrow(new ApplicationException());
 		dataHandler.loadProjects();
 	}
 
@@ -81,10 +97,16 @@ public class HttpDataHandlerTest {
 	public void loadStaff() throws IOException, ApplicationException {
 		Map<Integer, Staff> theStaff = new HashMap<>();
 		theStaff.put(1, new Staff(1, "firstName", "lastName", "nickName", "login", "email", "level"));
-		when(httpAccessHandler.loadMap(anyString(), any())).thenReturn(theStaff);
+		when(httpAccessHandlerStaff.loadMap(anyString(), any())).thenReturn(theStaff);
 		
 		Map<Integer, Staff> res = dataHandler.loadStaff();
 		Assert.assertEquals(1, res.size());
+	}
+
+	@Test (expected = ApplicationException.class)
+	public void loadStaffInError() throws IOException, ApplicationException {
+		when(httpAccessHandlerStaff.loadMap(anyString(), any())).thenThrow(new ApplicationException());
+		dataHandler.loadStaff();
 	}
 
 	@Test (expected = ApplicationRuntimeException.class)
