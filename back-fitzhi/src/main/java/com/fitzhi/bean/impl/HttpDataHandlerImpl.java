@@ -54,6 +54,9 @@ public class HttpDataHandlerImpl<T> implements DataHandler {
 	@Autowired
 	HttpAccessHandler<Project> httpAccessProject; 
 
+	@Autowired
+	HttpAccessHandler<Skill> httpAccessSkill; 
+
 	@Override
 	public void saveProjects(Map<Integer, Project> projects) throws ApplicationException {
 		throw new ApplicationRuntimeException("Not implemented yet");
@@ -151,7 +154,8 @@ public class HttpDataHandlerImpl<T> implements DataHandler {
 
 	@Override
 	public Map<Integer, Skill> loadSkills() throws ApplicationException {
-		throw new ApplicationRuntimeException("Not implemented yet");
+		String url = applicationUrl + "/api/skill";
+		return httpAccessSkill.loadMap(url, new TypeToken<Map<Integer, Skill>>() {});
 	}
 
 	@Override

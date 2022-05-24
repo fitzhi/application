@@ -21,6 +21,7 @@ import com.fitzhi.data.internal.ProjectBuilding;
 import com.fitzhi.data.internal.ProjectDetectedExperiences;
 import com.fitzhi.data.internal.ProjectLayers;
 import com.fitzhi.data.internal.RepositoryAnalysis;
+import com.fitzhi.data.internal.Skill;
 import com.fitzhi.data.internal.SourceControlChanges;
 import com.fitzhi.data.internal.Staff;
 import com.fitzhi.exception.ApplicationException;
@@ -58,6 +59,9 @@ public class HttpDataHandlerTest {
 
 	@MockBean
 	HttpAccessHandler<Project> httpAccessHandlerProject;
+
+	@MockBean
+	HttpAccessHandler<Skill> httpAccessHandlerSkill;
 
 	@MockBean
 	ShuffleService shuffleService;
@@ -182,8 +186,21 @@ public class HttpDataHandlerTest {
 		dataHandler.loadProjectBuilding(new Project());
 	}
 
-	@Test (expected = ApplicationRuntimeException.class)
+	@Test
 	public void loadSkills() throws ApplicationException {
+		Map<Integer, Skill> skills = new HashMap<>();
+		skills.put(1, new Skill(1, "one"));
+		skills.put(2, new Skill(2, "two"));
+		when(httpAccessHandlerSkill.loadMap(anyString(), any())).thenReturn(skills);
+		
+		Map<Integer, Skill> res = dataHandler.loadSkills();
+		Assert.assertEquals(2, res.size());
+		Assert.assertEquals("two", res.get(2).getTitle());
+	}
+
+	@Test (expected = ApplicationException.class)
+	public void loadSkillsInError() throws ApplicationException {
+		when(httpAccessHandlerSkill.loadMap(anyString(), any())).thenThrow(new ApplicationException());
 		dataHandler.loadSkills();
 	}
 
