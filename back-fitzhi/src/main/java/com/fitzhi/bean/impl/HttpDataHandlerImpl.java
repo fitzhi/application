@@ -1,6 +1,7 @@
 package com.fitzhi.bean.impl;
 
 import java.time.LocalDate;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -65,7 +66,10 @@ public class HttpDataHandlerImpl<T> implements DataHandler {
 	@Override
 	public Map<Integer, Project> loadProjects() throws ApplicationException {
 		String url = applicationUrl + "/api/project";
-		return httpAccessProject.loadMap(url, new TypeToken<Map<Integer, Project>>() {});
+		List<Project> projects = httpAccessProject.loadList(url, new TypeToken<List<Project>>() {});
+		Map<Integer, Project> map = new HashMap<>();
+		projects.forEach(p -> map.put(p.getId(), p));
+		return map;
 	}
 
 	@Override

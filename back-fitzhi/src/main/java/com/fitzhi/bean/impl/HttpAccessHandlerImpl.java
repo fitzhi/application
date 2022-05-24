@@ -8,6 +8,7 @@ import static com.fitzhi.Error.MESSAGE_HTTP_ERROR;
 import java.io.IOException;
 import java.lang.reflect.Type;
 import java.text.MessageFormat;
+import java.util.List;
 import java.util.Map;
 
 import com.fitzhi.bean.HttpAccessHandler;
@@ -48,10 +49,37 @@ public class HttpAccessHandlerImpl<T> implements HttpAccessHandler<T> {
 			HttpResponse response = client.execute(new HttpGet(url));
 			int statusCode = response.getStatusLine().getStatusCode();
 			if (statusCode == HttpStatus.SC_OK) {
+				System.out.println(EntityUtils.toString(response.getEntity()));
 				Type listEntityType = typeToken.getType();
 				Map<Integer, T> theMap = gson.fromJson(EntityUtils.toString(response.getEntity()), listEntityType);
 				return theMap;
 			} else {
+				System.out.println(response.getStatusLine().getStatusCode());
+				System.out.println(response.getStatusLine().getReasonPhrase());
+				throw new ApplicationException(CODE_HTTP_ERROR, MessageFormat.format(MESSAGE_HTTP_ERROR, response.getStatusLine().getReasonPhrase(), url));
+			}
+		} catch (final IOException ioe) {
+			throw new ApplicationException(
+				CODE_HTTP_CLIENT_ERROR, 
+				MessageFormat.format(MESSAGE_HTTP_CLIENT_ERROR, url), 
+				ioe);
+		}
+	}
+
+	@Override
+	public List<T> loadList(String url, TypeToken<List<T>> typeToken) throws ApplicationException {
+		try {
+			HttpClient client = httpClient();
+			HttpResponse response = client.execute(new HttpGet(url));
+			int statusCode = response.getStatusLine().getStatusCode();
+			if (statusCode == HttpStatus.SC_OK) {
+				System.out.println(EntityUtils.toString(response.getEntity()));
+				Type listEntityType = typeToken.getType();
+				List<T> theList = gson.fromJson(EntityUtils.toString(response.getEntity()), listEntityType);
+				return theList;
+			} else {
+				System.out.println(response.getStatusLine().getStatusCode());
+				System.out.println(response.getStatusLine().getReasonPhrase());
 				throw new ApplicationException(CODE_HTTP_ERROR, MessageFormat.format(MESSAGE_HTTP_ERROR, response.getStatusLine().getReasonPhrase(), url));
 			}
 		} catch (final IOException ioe) {

@@ -8,6 +8,7 @@ import java.io.IOException;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import com.fitzhi.ApplicationRuntimeException;
@@ -76,19 +77,20 @@ public class HttpDataHandlerTest {
 
 	@Test
 	public void loadProjects() throws ApplicationException {
-		Map<Integer, Project> projects = new HashMap<>();
-		projects.put(1, new Project(1, "one"));
-		projects.put(2, new Project(2, "two"));
-		when(httpAccessHandlerProject.loadMap(anyString(), any())).thenReturn(projects);
+		List<Project> projects = new ArrayList<>();
+		projects.add(new Project(1, "one"));
+		projects.add(new Project(2, "two"));
+		when(httpAccessHandlerProject.loadList(anyString(), any())).thenReturn(projects);
 		
 		Map<Integer, Project> res = dataHandler.loadProjects();
 		Assert.assertEquals(2, res.size());
+		Assert.assertEquals("one", res.get(1).getName());
 		Assert.assertEquals("two", res.get(2).getName());
 	}
 
 	@Test (expected = ApplicationException.class)
 	public void loadProjectsInError() throws ApplicationException {
-		when(httpAccessHandlerProject.loadMap(anyString(), any())).thenThrow(new ApplicationException());
+		when(httpAccessHandlerProject.loadList(anyString(), any())).thenThrow(new ApplicationException());
 		dataHandler.loadProjects();
 	}
 
