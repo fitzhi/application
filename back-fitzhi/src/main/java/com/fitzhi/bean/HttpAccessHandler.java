@@ -1,6 +1,5 @@
 package com.fitzhi.bean;
 
-import java.util.List;
 import java.util.Map;
 
 import com.fitzhi.exception.ApplicationException;
@@ -14,21 +13,6 @@ import org.apache.http.client.HttpClient;
  */
 public interface HttpAccessHandler<T> {
 	
-	/**
-	 * Load data on network through an HTTP GET to the backend server. The response body will be parsed and returned.
-	 * 
-	 * @param url the <b>url</b> of the backend server
-	 * @param typeToken the type of Generic. 
-	 * <p>
-	 * This parameter is linked to java Type erasure. Generics are only known at compile time.<br/>
-	 * Technical reference :
-	 * {@link https://stackoverflow.com/questions/14503881/strange-behavior-when-deserializing-nested-generic-classes-with-gson/14506181#14506181}
-	 * </p>
-	 * @return the resulting <b>list</b>
-	 * @throws ApplicationException thrown if any problem occurs. It might be either a NETWORK error, or a BACKEND error. 
-	 */
-	List<T> loadList(String url, TypeToken<List<T>> typeToken) throws ApplicationException;
-
 	/**
 	 * Load data on network through an HTTP GET to the backend server. The response body will be parsed and returned.
 	 * 
