@@ -114,7 +114,7 @@ export class ConnectUserComponent extends BaseDirective implements OnInit, OnDes
 
 	/**
 	 * We transfert the connection status to the parent.
-	 * @param connected boolean corresponding to the connection status
+	 * @param $event boolean corresponding to the connection status
 	 */
 	public onUserConnected($event) {
 		if (traceOn()) {
