@@ -40,6 +40,7 @@ public class HttpAccessHandlerImpl<T> implements HttpAccessHandler<T> {
 	@Autowired
 	private ObjectMapper objectMapper;
 
+
 	HttpClient client = null;
 
 	@Override
