@@ -9,6 +9,8 @@ import java.util.Map;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fitzhi.bean.HttpAccessHandler;
+import com.fitzhi.bean.HttpConnectionHandler;
+import com.fitzhi.data.internal.Token;
 import com.fitzhi.exception.ApplicationException;
 
 import org.apache.http.HttpResponse;
@@ -22,6 +24,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.context.junit4.SpringRunner;
@@ -38,7 +41,10 @@ public class HttpAccessHandlerLoadMapTest {
  
 	@Autowired
 	HttpAccessHandler<String> httpAccessHandler;
-  
+ 
+	@MockBean
+	HttpConnectionHandler httpConnectionHandler;
+	
 	private HttpClient httpClient;
 	private HttpResponse httpResponse;
 	private StatusLine statusLine;
@@ -52,6 +58,12 @@ public class HttpAccessHandlerLoadMapTest {
 		statusLine = mock(StatusLine.class);
 	}
 
+	private void injectToken() {
+		when(httpConnectionHandler.isConnected()).thenReturn(true);
+		when(httpConnectionHandler.getToken()).thenReturn(
+			new Token("access_token", "refresh_token", "token_type", 100, "scope"));
+	}
+
 	@Test (expected = ApplicationException.class)
 	public void loadServerError() throws IOException, ClientProtocolException, ApplicationException{
 		// When
@@ -59,6 +71,8 @@ public class HttpAccessHandlerLoadMapTest {
 		when(httpResponse.getStatusLine()).thenReturn(statusLine);
 		when(statusLine.getStatusCode()).thenReturn(401);
 		when(statusLine.getReasonPhrase()).thenReturn("a good reason to fail");
+
+		injectToken();
 
 		httpAccessHandler.setHttpClient(httpClient);
 		httpAccessHandler.loadMap("url", new TypeReference<Map<Integer, String>>(){});
@@ -68,6 +82,8 @@ public class HttpAccessHandlerLoadMapTest {
 	public void loadNetworkError() throws IOException, ClientProtocolException, ApplicationException{
 		// When
 		when(httpClient.execute(any(HttpGet.class))).thenThrow(new IOException("WTF NETWORK ERROR"));
+
+		injectToken();
 
 		httpAccessHandler.setHttpClient(httpClient);
 		httpAccessHandler.loadMap("url", new TypeReference<Map<Integer, String>>(){});
@@ -80,6 +96,22 @@ public class HttpAccessHandlerLoadMapTest {
 		when(httpResponse.getStatusLine()).thenReturn(statusLine);
 		when(statusLine.getStatusCode()).thenReturn(200);
 		when(httpResponse.getEntity()).thenReturn(new StringEntity("{ \"1\": \"one\" }"));
+
+		injectToken();
+
+		httpAccessHandler.setHttpClient(httpClient);
+		httpAccessHandler.loadMap("url", new TypeReference<Map<Integer, String>>(){});
+	}
+
+	@Test (expected = ApplicationException.class)
+	public void notConnected() throws IOException, ClientProtocolException, ApplicationException{
+		// When
+		when(httpClient.execute(any(HttpGet.class))).thenReturn(httpResponse);
+		when(httpResponse.getStatusLine()).thenReturn(statusLine);
+		when(statusLine.getStatusCode()).thenReturn(200);
+		when(httpResponse.getEntity()).thenReturn(new StringEntity("{ \"1\": \"one\" }"));
+
+		when(httpConnectionHandler.isConnected()).thenReturn(false);
 
 		httpAccessHandler.setHttpClient(httpClient);
 		httpAccessHandler.loadMap("url", new TypeReference<Map<Integer, String>>(){});

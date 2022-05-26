@@ -2,19 +2,24 @@ package com.fitzhi.bean.impl;
 
 import static com.fitzhi.Error.CODE_HTTP_CLIENT_ERROR;
 import static com.fitzhi.Error.CODE_HTTP_ERROR;
+import static com.fitzhi.Error.CODE_HTTP_NOT_CONNECTED;
 import static com.fitzhi.Error.MESSAGE_HTTP_CLIENT_ERROR;
 import static com.fitzhi.Error.MESSAGE_HTTP_ERROR;
+import static com.fitzhi.Error.MESSAGE_HTTP_NOT_CONNECTED;
 
 import java.io.IOException;
 import java.text.MessageFormat;
+import java.util.Base64;
 import java.util.List;
 import java.util.Map;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fitzhi.bean.HttpAccessHandler;
+import com.fitzhi.bean.HttpConnectionHandler;
 import com.fitzhi.exception.ApplicationException;
 
+import org.apache.http.HttpHeaders;
 import org.apache.http.HttpResponse;
 import org.apache.http.HttpStatus;
 import org.apache.http.client.HttpClient;
@@ -40,6 +45,8 @@ public class HttpAccessHandlerImpl<T> implements HttpAccessHandler<T> {
 	@Autowired
 	private ObjectMapper objectMapper;
 
+	@Autowired
+	private HttpConnectionHandler httpConnectionHandler;
 
 	HttpClient client = null;
 
@@ -47,7 +54,15 @@ public class HttpAccessHandlerImpl<T> implements HttpAccessHandler<T> {
 	public Map<Integer, T> loadMap(String url, TypeReference<Map<Integer, T>> typeReference) throws ApplicationException {
 		try {
 			HttpClient client = httpClient();
-			HttpResponse response = client.execute(new HttpGet(url));
+			HttpGet httpGet = new HttpGet(url);
+			
+			// Slave has not been connected to the backend. Cannot proceed the request then.
+			if (!httpConnectionHandler.isConnected()) {
+				throw new ApplicationException(CODE_HTTP_NOT_CONNECTED, MESSAGE_HTTP_NOT_CONNECTED);
+			}
+			httpGet.setHeader(HttpHeaders.AUTHORIZATION, "Bearer " + Base64.getEncoder().encodeToString((httpConnectionHandler.getToken().getAccess_token()).getBytes()));
+			
+			HttpResponse response = client.execute(httpGet);
 			int statusCode = response.getStatusLine().getStatusCode();
 			if (statusCode == HttpStatus.SC_OK) {
 				Map<Integer, T> theMap = objectMapper.readValue(EntityUtils.toString(response.getEntity()), typeReference);
@@ -68,7 +83,15 @@ public class HttpAccessHandlerImpl<T> implements HttpAccessHandler<T> {
 	public List<T> loadList(String url, TypeReference<List<T>> typeReference) throws ApplicationException {
 		try {
 			HttpClient client = httpClient();
-			HttpResponse response = client.execute(new HttpGet(url));
+			HttpGet httpGet = new HttpGet(url);
+			
+			// Slave has not been connected to the backend. Cannot proceed the request then.
+			if (!httpConnectionHandler.isConnected()) {
+				throw new ApplicationException(CODE_HTTP_NOT_CONNECTED, MESSAGE_HTTP_NOT_CONNECTED);
+			}
+			httpGet.setHeader(HttpHeaders.AUTHORIZATION, "Bearer " + Base64.getEncoder().encodeToString((httpConnectionHandler.getToken().getAccess_token()).getBytes()));
+
+			HttpResponse response = client.execute(httpGet);
 			int statusCode = response.getStatusLine().getStatusCode();
 			if (statusCode == HttpStatus.SC_OK) {
 				List<T> theList = objectMapper.readValue(EntityUtils.toString(response.getEntity()), typeReference);

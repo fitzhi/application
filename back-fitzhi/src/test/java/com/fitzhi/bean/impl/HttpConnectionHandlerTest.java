@@ -33,7 +33,7 @@ public class HttpConnectionHandlerTest {
 	
 	@Autowired()
 	HttpConnectionHandler httpConnectionHandler;
-
+ 
 	private HttpClient httpClient;
 	private HttpResponse httpResponse;
 	private StatusLine statusLine;

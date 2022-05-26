@@ -12,7 +12,9 @@ import java.util.List;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fitzhi.bean.HttpAccessHandler;
+import com.fitzhi.bean.HttpConnectionHandler;
 import com.fitzhi.data.internal.Project;
+import com.fitzhi.data.internal.Token;
 import com.fitzhi.exception.ApplicationException;
 
 import org.apache.http.HttpResponse;
@@ -26,6 +28,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.context.junit4.SpringRunner;
@@ -43,6 +46,9 @@ public class HttpAccessHandlerLoadListTest {
 	@Autowired
 	HttpAccessHandler<String> httpAccessHandler;
   
+	@MockBean
+	HttpConnectionHandler httpConnectionHandler;
+
 	@Autowired
 	HttpAccessHandler<Project> httpAccessHandlerProject;
 	
@@ -67,6 +73,8 @@ public class HttpAccessHandlerLoadListTest {
 		when(statusLine.getStatusCode()).thenReturn(401);
 		when(statusLine.getReasonPhrase()).thenReturn("a good reason to fail");
 
+		injectToken();
+
 		httpAccessHandler.setHttpClient(httpClient);
 		httpAccessHandler.loadList("url", new TypeReference<List<String>>(){});
 	}
@@ -75,6 +83,8 @@ public class HttpAccessHandlerLoadListTest {
 	public void loadNetworkError() throws IOException, ClientProtocolException, ApplicationException{
 		// When
 		when(httpClient.execute(any(HttpGet.class))).thenThrow(new IOException("WTF NETWORK ERROR"));
+
+		injectToken();
 
 		httpAccessHandler.setHttpClient(httpClient);
 		httpAccessHandler.loadList("url", new TypeReference<List<String>>(){});
@@ -88,15 +98,29 @@ public class HttpAccessHandlerLoadListTest {
 		when(statusLine.getStatusCode()).thenReturn(200);
 		when(httpResponse.getEntity()).thenReturn(new StringEntity("[ \"one\", \"two\" ]"));
 
+		injectToken();
+
 		httpAccessHandler.setHttpClient(httpClient);
 		httpAccessHandler.loadList("url", new TypeReference<List<String>>(){});
 	}
 
+	@Test (expected = ApplicationException.class)
+	public void notConnected() throws IOException, ClientProtocolException, ApplicationException{
+		// When
+		when(httpClient.execute(any(HttpGet.class))).thenReturn(httpResponse);
+		when(httpResponse.getStatusLine()).thenReturn(statusLine);
+		when(statusLine.getStatusCode()).thenReturn(200);
+		when(httpResponse.getEntity()).thenReturn(new StringEntity("[ \"one\", \"two\" ]"));
+
+		httpAccessHandler.setHttpClient(httpClient);
+		httpAccessHandler.loadList("url", new TypeReference<List<String>>(){});
+	}
 
 	@Test
 	public void loadProjects() throws IOException, ClientProtocolException, ApplicationException {
 		File file = new File("./target/test-classes/sample-projects.json");
-		System.out.println(file.getAbsolutePath());
+
+		injectToken();
 
 		try (BufferedReader br = Files.newBufferedReader(file.toPath())) {
 
@@ -114,4 +138,12 @@ public class HttpAccessHandlerLoadListTest {
 
 		} 
 	}
+
+	private void injectToken() {
+		when(httpConnectionHandler.isConnected()).thenReturn(true);
+		when(httpConnectionHandler.getToken()).thenReturn(
+			new Token("access_token", "refresh_token", "token_type", 100, "scope"));
+	}
+
+
 }

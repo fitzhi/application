@@ -78,7 +78,7 @@ public class HttpConnectionHandlerImpl implements HttpConnectionHandler {
 	
 			post.setHeader(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_FORM_URLENCODED.toString());
 			post.setHeader(HttpHeaders.AUTHORIZATION, "Basic " + Base64.getEncoder().encodeToString(("fitzhi-trusted-client:secret").getBytes()));
-
+			
 			List<NameValuePair> params = new ArrayList<>();
 			params.add(new BasicNameValuePair("username", login));
 			params.add(new BasicNameValuePair("password", pass));

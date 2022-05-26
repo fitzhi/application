@@ -157,6 +157,9 @@ public class Error {
 	public static final int CODE_HTTP_ERROR = -1047;
 	public static final String MESSAGE_HTTP_ERROR = "HTTP Error \"{0}\" when accessing {1}.";
 	
+	public static final int CODE_HTTP_NOT_CONNECTED = -1048;
+	public static final String MESSAGE_HTTP_NOT_CONNECTED = "Not connected.";
+
 	private Error() {
 	}
 	
