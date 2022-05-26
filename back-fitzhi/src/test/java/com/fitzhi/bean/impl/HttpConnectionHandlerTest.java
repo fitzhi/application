@@ -5,6 +5,7 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
 import com.fitzhi.bean.HttpConnectionHandler;
+import com.fitzhi.exception.ApplicationException;
 
 import org.apache.http.HttpResponse;
 import org.apache.http.StatusLine;
@@ -23,7 +24,7 @@ import org.springframework.test.context.junit4.SpringRunner;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest
-@TestPropertySource(properties = {"applicationUrl=http://localhost:8080", "organization=fitzhi" })
+@TestPropertySource(properties = {"applicationUrl=http://zorglub.com", "organization=fitzhi" })
 @ActiveProfiles("slave")
 public class HttpConnectionHandlerTest {
 	
@@ -43,8 +44,8 @@ public class HttpConnectionHandlerTest {
 		statusLine = mock(StatusLine.class);
 	}
 
-  @Test
-	public void test() throws Exception {
+  	@Test
+	public void ok() throws Exception {
 		// When
 		when(httpClient.execute(any(HttpPost.class))).thenReturn(httpResponse);
 		when(httpResponse.getStatusLine()).thenReturn(statusLine);
@@ -61,6 +62,11 @@ public class HttpConnectionHandlerTest {
 		Assert.assertEquals(httpConnectionHandler.getToken().getToken_type(), "Bearer");
 		Assert.assertEquals(httpConnectionHandler.getToken().getExpires_in(), 1789);
 
+	}
+
+	@Test (expected = ApplicationException.class)
+	public void networkError() throws Exception {
+		httpConnectionHandler.connection("admin", "nope");
 	}
 
 }
