@@ -1,12 +1,12 @@
 #!/bin/sh
 
-if [ $1 = "HTTPS" ]
+if [ $1 = "HTTPS" ];
 then 
 	echo "Starting backend Fitzhi in HTTPS mode"
 	echo "-------------------------------------"
 	echo "" 
 	cp ./back-fitzhi/src/main/resources/application-https.properties ./deploy/backend-fitzhi/application-https.properties
-elif [ $1 = "HTTP" ]
+elif [ $1 = "HTTP" ];
 then
 	echo "Starting backend Fitzhi in HTTP mode"
 	echo "------------------------------------"
@@ -17,4 +17,5 @@ else
 	exit 1
 fi
 
+rm ./deploy/backend-fitzhi/application-slave.properties
 ./deploy/backend-fitzhi/fitzhi-1.9-SNAPSHOT.jar --spring.profiles.active="application, $1"
