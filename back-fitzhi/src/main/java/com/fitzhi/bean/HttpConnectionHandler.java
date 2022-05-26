@@ -27,6 +27,11 @@ public interface HttpConnectionHandler {
 	Token getToken();
 
 	/**
+	 * @return <code>true</code> if a successfull connection has already been proceded (<em>a token has already been loaded</em>), <code>false</code> otherwise.
+	 */
+	boolean isConnected();
+
+	/**
 	 * This method exists only <u>for testing purpose</u>, in order to inject a mock a HttpClient.
 	 * @param httpClient the HTTP client to be used.
 	 */

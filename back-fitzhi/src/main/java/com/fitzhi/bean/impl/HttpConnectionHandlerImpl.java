@@ -62,7 +62,7 @@ public class HttpConnectionHandlerImpl implements HttpConnectionHandler {
 	/**
 	 * The authentication token sent back by the server.
 	 */
-	private Token token;
+	private Token token = null;
 
 	private HttpClient client;
 	
@@ -99,6 +99,11 @@ public class HttpConnectionHandlerImpl implements HttpConnectionHandler {
 		} catch (final IOException ioe) {
 			throw new ApplicationException(CODE_HTTP_CLIENT_ERROR, MessageFormat.format(MESSAGE_HTTP_CLIENT_ERROR, url), ioe);
 		}
+	}
+
+	@Override
+	public boolean isConnected() {
+		return (token != null);
 	}
 
 	@Override
