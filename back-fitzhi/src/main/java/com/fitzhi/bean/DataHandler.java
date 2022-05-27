@@ -32,7 +32,6 @@ public interface DataHandler {
 	 */
 	void saveProjects(Map<Integer, Project> projects) throws ApplicationException;
 	
-	
 	/**
 	 * Load the projects from a persistent media
 	 * @return the map of projects
@@ -284,4 +283,9 @@ public interface DataHandler {
 	 */
 	List<Constellation> loadSkillsConstellations(LocalDate month) throws ApplicationException;
 
+	/**
+	 * 
+	 * @return {@code true} if the data are loaded and saved locally on the <strong>LOCAL</strong> file system, {@code false} <em>(e.g. <strong>REMOTE</strong>)</em> otherwise.
+	 */
+	boolean isLocal();
 }

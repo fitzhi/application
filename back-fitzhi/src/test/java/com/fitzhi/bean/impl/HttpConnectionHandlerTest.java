@@ -57,7 +57,7 @@ public class HttpConnectionHandlerTest {
 			"{\"access_token\": \"access_token\", \"refresh_token\": \"refresh_token\", \"token_type\": \"Bearer\", \"expires_in\": 1789, \"scope\": \"read, write\"}"));
 
 		httpConnectionHandler.setHttpClient(httpClient);
-		httpConnectionHandler.connection("admin", "nope");
+		httpConnectionHandler.connect("admin", "nope");
 
 		Assert.assertEquals(httpConnectionHandler.getToken().getAccess_token(), "access_token");
 		Assert.assertEquals(httpConnectionHandler.getToken().getRefresh_token(), "refresh_token");
@@ -69,7 +69,7 @@ public class HttpConnectionHandlerTest {
 
 	@Test (expected = ApplicationException.class)
 	public void networkError() throws Exception {
-		httpConnectionHandler.connection("admin", "nope");
+		httpConnectionHandler.connect("admin", "nope");
 	}
 
 	@Test
@@ -87,7 +87,7 @@ public class HttpConnectionHandlerTest {
 			"{\"access_token\": \"access_token\", \"refresh_token\": \"refresh_token\", \"token_type\": \"Bearer\", \"expires_in\": 1789, \"scope\": \"read, write\"}"));
 
 		httpConnectionHandler.setHttpClient(httpClient);
-		httpConnectionHandler.connection("admin", "nope");
+		httpConnectionHandler.connect("admin", "nope");
 
 		Assert.assertTrue(httpConnectionHandler.isConnected());
 	}

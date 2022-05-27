@@ -971,6 +971,11 @@ public class FileDataHandlerImpl implements DataHandler {
 
 	}	
 
+	@Override
+	public boolean isLocal() {
+		return true;
+	}
+	
 	void removePathnamesFile (Project project, PathsType pathsType ) throws ApplicationException {
 		String filename = this.generatePathnamesFile(project, pathsType);
 		File f = rootLocation.resolve(filename).toFile();

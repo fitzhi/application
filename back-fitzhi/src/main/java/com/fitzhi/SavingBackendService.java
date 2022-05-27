@@ -63,6 +63,11 @@ public class SavingBackendService {
 			return;
 		}
 
+		// We do not save periodicaly the data if this data is not local.
+		if (!dataSaver.isLocal()) {
+			return;
+		}
+
 		synchronized (projectHandler.getLocker()) {
 			try {
 				if (projectHandler.isDataUpdated() | projectAuditHandler.isDataUpdated() ) {

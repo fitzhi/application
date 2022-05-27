@@ -14,6 +14,7 @@ import java.util.Map;
 import com.fitzhi.ApplicationRuntimeException;
 import com.fitzhi.bean.DataHandler;
 import com.fitzhi.bean.HttpAccessHandler;
+import com.fitzhi.bean.HttpConnectionHandler;
 import com.fitzhi.bean.ShuffleService;
 import com.fitzhi.bean.impl.FileDataHandlerImpl.PathsType;
 import com.fitzhi.bean.impl.HttpDataHandlerImpl;
@@ -25,9 +26,11 @@ import com.fitzhi.data.internal.RepositoryAnalysis;
 import com.fitzhi.data.internal.Skill;
 import com.fitzhi.data.internal.SourceControlChanges;
 import com.fitzhi.data.internal.Staff;
+import com.fitzhi.data.internal.Token;
 import com.fitzhi.exception.ApplicationException;
 
 import org.junit.Assert;
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -65,11 +68,20 @@ public class HttpDataHandlerTest {
 	HttpAccessHandler<Skill> httpAccessHandlerSkill;
 
 	@MockBean
+	HttpConnectionHandler httpConnectionHandler;
+
+	@MockBean
 	ShuffleService shuffleService;
 
 	@Value("${applicationOutDirectory}")
 	private String saveDir;
-	
+
+	@Before
+	public void before() {
+		when(httpConnectionHandler.isConnected()).thenReturn(true);
+		when(httpConnectionHandler.getToken()).thenReturn(new Token("access_token", "refresh_token", "token_type", 100, "scope"));
+	}
+
 	@Test (expected = ApplicationRuntimeException.class)
 	public void saveProjects() throws Exception {
 		dataHandler.saveProjects(new HashMap<>());
@@ -101,9 +113,9 @@ public class HttpDataHandlerTest {
 
 	@Test
 	public void loadStaff() throws IOException, ApplicationException {
-		Map<Integer, Staff> theStaff = new HashMap<>();
-		theStaff.put(1, new Staff(1, "firstName", "lastName", "nickName", "login", "email", "level"));
-		when(httpAccessHandlerStaff.loadMap(anyString(), any())).thenReturn(theStaff);
+		List<Staff> theStaff = new ArrayList<>();
+		theStaff.add(new Staff(1, "firstName", "lastName", "nickName", "login", "email", "level"));
+		when(httpAccessHandlerStaff.loadList(anyString(), any())).thenReturn(theStaff);
 		
 		Map<Integer, Staff> res = dataHandler.loadStaff();
 		Assert.assertEquals(1, res.size());
@@ -111,7 +123,7 @@ public class HttpDataHandlerTest {
 
 	@Test (expected = ApplicationException.class)
 	public void loadStaffInError() throws IOException, ApplicationException {
-		when(httpAccessHandlerStaff.loadMap(anyString(), any())).thenThrow(new ApplicationException());
+		when(httpAccessHandlerStaff.loadList(anyString(), any())).thenThrow(new ApplicationException());
 		dataHandler.loadStaff();
 	}
 
@@ -189,11 +201,16 @@ public class HttpDataHandlerTest {
 	}
 
 	@Test
+	public void testIsLocal() {
+		Assert.assertFalse(dataHandler.isLocal());
+	}
+
+	@Test
 	public void loadSkills() throws ApplicationException {
-		Map<Integer, Skill> skills = new HashMap<>();
-		skills.put(1, new Skill(1, "one"));
-		skills.put(2, new Skill(2, "two"));
-		when(httpAccessHandlerSkill.loadMap(anyString(), any())).thenReturn(skills);
+		List<Skill> skills = new ArrayList<>();
+		skills.add( new Skill(1, "one"));
+		skills.add(new Skill(2, "two"));
+		when(httpAccessHandlerSkill.loadList(anyString(), any())).thenReturn(skills);
 		
 		Map<Integer, Skill> res = dataHandler.loadSkills();
 		Assert.assertEquals(2, res.size());
@@ -202,7 +219,7 @@ public class HttpDataHandlerTest {
 
 	@Test (expected = ApplicationException.class)
 	public void loadSkillsInError() throws ApplicationException {
-		when(httpAccessHandlerSkill.loadMap(anyString(), any())).thenThrow(new ApplicationException());
+		when(httpAccessHandlerSkill.loadList(anyString(), any())).thenThrow(new ApplicationException());
 		dataHandler.loadSkills();
 	}
 

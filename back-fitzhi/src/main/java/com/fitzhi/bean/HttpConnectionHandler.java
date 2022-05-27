@@ -19,7 +19,7 @@ public interface HttpConnectionHandler {
 	 * @param pass the <b>password</b> to be used for the authentication
 	 * @throws ApplicationException thrown if any authentication of network error occurs.
 	 */
-	void connection(String login, String pass) throws ApplicationException;
+	void connect(String login, String pass) throws ApplicationException;
 
 	/**
 	 * @return the authentication token.

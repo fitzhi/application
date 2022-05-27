@@ -9,6 +9,7 @@ import com.fasterxml.jackson.core.type.TypeReference;
 import com.fitzhi.ApplicationRuntimeException;
 import com.fitzhi.bean.DataHandler;
 import com.fitzhi.bean.HttpAccessHandler;
+import com.fitzhi.bean.HttpConnectionHandler;
 import com.fitzhi.data.internal.Constellation;
 import com.fitzhi.data.internal.Project;
 import com.fitzhi.data.internal.ProjectBuilding;
@@ -37,6 +38,9 @@ import org.springframework.stereotype.Service;
 @Service
 public class HttpDataHandlerImpl<T> implements DataHandler {
 
+	@Autowired
+	HttpConnectionHandler httpConnectionHandler;
+
 	/**
 	 * URL of the backend which hosts the main application.
 	 */
@@ -48,6 +52,18 @@ public class HttpDataHandlerImpl<T> implements DataHandler {
 	 */
 	@Value("${organization}")
 	private String organization;
+
+	/**
+	 * Login used by the slave for the connection to the main Fitzhi applciation.
+	 */
+	@Value("${login}")
+	private String login;
+
+	/**
+	 * Password used by the slave for the connection to the main Fitzhi application.
+	 */
+	@Value("${pass}")
+	private String pass;
 
 	@Autowired
 	HttpAccessHandler<Staff> httpAccessStaff; 
@@ -65,6 +81,9 @@ public class HttpDataHandlerImpl<T> implements DataHandler {
 
 	@Override
 	public Map<Integer, Project> loadProjects() throws ApplicationException {
+		if (!httpConnectionHandler.isConnected()) {
+			httpConnectionHandler.connect(login, pass);
+		}
 		String url = applicationUrl + "/api/project";
 		List<Project> projects = httpAccessProject.loadList(url, new TypeReference<List<Project>>(){});
 		Map<Integer, Project> map = new HashMap<>();
@@ -79,8 +98,14 @@ public class HttpDataHandlerImpl<T> implements DataHandler {
 
 	@Override
 	public Map<Integer, Staff> loadStaff() throws ApplicationException {
+		if (!httpConnectionHandler.isConnected()) {
+			httpConnectionHandler.connect(login, pass);
+		}
 		String url = applicationUrl + "/api/staff";
-		return httpAccessStaff.loadMap(url, new TypeReference<Map<Integer, Staff>>(){});
+		List<Staff> staff = httpAccessStaff.loadList(url, new TypeReference<List<Staff>>(){});
+		Map<Integer, Staff> map = new HashMap<>();
+		staff.forEach(s -> map.put(s.getIdStaff(), s));
+		return map;
 	}
 
 	@Override
@@ -158,8 +183,14 @@ public class HttpDataHandlerImpl<T> implements DataHandler {
 
 	@Override
 	public Map<Integer, Skill> loadSkills() throws ApplicationException {
+		if (!httpConnectionHandler.isConnected()) {
+			httpConnectionHandler.connect(login, pass);
+		}
 		String url = applicationUrl + "/api/skill";
-		return httpAccessSkill.loadMap(url, new TypeReference<Map<Integer, Skill>>(){});
+		List<Skill> skills = httpAccessSkill.loadList(url, new TypeReference<List<Skill>>(){});
+		Map<Integer, Skill> map = new HashMap<>();
+		skills.forEach(s -> map.put(s.getId(), s));
+		return map;
 	}
 
 	@Override
@@ -197,6 +228,11 @@ public class HttpDataHandlerImpl<T> implements DataHandler {
 	@Override
 	public List<Constellation> loadSkillsConstellations(LocalDate month) throws ApplicationException {
 		throw new ApplicationRuntimeException("Not implemented yet");
+	}
+
+	@Override
+	public boolean isLocal() {
+		return false;
 	}
 
 }

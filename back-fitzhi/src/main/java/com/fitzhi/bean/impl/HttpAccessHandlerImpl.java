@@ -9,7 +9,6 @@ import static com.fitzhi.Error.MESSAGE_HTTP_NOT_CONNECTED;
 
 import java.io.IOException;
 import java.text.MessageFormat;
-import java.util.Base64;
 import java.util.List;
 import java.util.Map;
 
@@ -60,7 +59,7 @@ public class HttpAccessHandlerImpl<T> implements HttpAccessHandler<T> {
 			if (!httpConnectionHandler.isConnected()) {
 				throw new ApplicationException(CODE_HTTP_NOT_CONNECTED, MESSAGE_HTTP_NOT_CONNECTED);
 			}
-			httpGet.setHeader(HttpHeaders.AUTHORIZATION, "Bearer " + Base64.getEncoder().encodeToString((httpConnectionHandler.getToken().getAccess_token()).getBytes()));
+			httpGet.setHeader(HttpHeaders.AUTHORIZATION, "Bearer " + httpConnectionHandler.getToken().getAccess_token());
 			
 			HttpResponse response = client.execute(httpGet);
 			int statusCode = response.getStatusLine().getStatusCode();
@@ -89,7 +88,7 @@ public class HttpAccessHandlerImpl<T> implements HttpAccessHandler<T> {
 			if (!httpConnectionHandler.isConnected()) {
 				throw new ApplicationException(CODE_HTTP_NOT_CONNECTED, MESSAGE_HTTP_NOT_CONNECTED);
 			}
-			httpGet.setHeader(HttpHeaders.AUTHORIZATION, "Bearer " + Base64.getEncoder().encodeToString((httpConnectionHandler.getToken().getAccess_token()).getBytes()));
+			httpGet.setHeader(HttpHeaders.AUTHORIZATION, "Bearer " + httpConnectionHandler.getToken().getAccess_token());
 
 			HttpResponse response = client.execute(httpGet);
 			int statusCode = response.getStatusLine().getStatusCode();
