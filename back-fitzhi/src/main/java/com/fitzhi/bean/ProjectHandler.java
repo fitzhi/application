@@ -52,7 +52,7 @@ public interface ProjectHandler extends DataSaverLifeCycle {
 	List<Project> activeProjects() throws ApplicationException;
 
 	/**
-	 * Search for a project associated to the given name.
+	 * Search for a project with the given name.
 	 * 
 	 * @param projectName the name of the project to retrieve
 	 * @throws ApplicationException thrown most probably if an IO exception occurs
@@ -63,11 +63,11 @@ public interface ProjectHandler extends DataSaverLifeCycle {
 	/**
 	 * Search for a project associated to the passed criteria.
 	 * 
-	 * @param search the sarch string to retrieve as a critera
+	 * @param search the sarch string to retrieve a project in a criteria
 	 * @param criteria the criteria to filter the data
 	 * 
 	 * @throws ApplicationException thrown most probably if an IO exception occurs
-	 * @return an optional containing a project, or not
+	 * @return an optional object containing a project, or not
 	 * @see ProjectLookupCriteria
 	 */
 	Optional<Project> lookup(String search, ProjectLookupCriteria criteria) throws ApplicationException;
@@ -75,12 +75,10 @@ public interface ProjectHandler extends DataSaverLifeCycle {
 	/**
 	 * Retrieve a project from the portfolio on the given ID.
 	 * 
-	 * @param idProject
-	 *            project identifier
-	 * @return a project present in the projects repository or <code>NULL</code>
-	 *         if none exists for this id
-	 * @throws ApplicationException
-	 *             thrown most probably if an IO exception occurs
+	 * @param idProject project identifier
+	 * @return a project present in the projects repository or <code>NULL</code> if none exists for this id.
+	 *         
+	 * @throws ApplicationException thrown most probably if an IO exception occurs
 	 */
 	Project lookup(int idProject) throws ApplicationException;
 

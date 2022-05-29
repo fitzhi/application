@@ -9,6 +9,9 @@ import static com.fitzhi.service.ConnectionSettingsType.NO_LOGIN;
 import static com.fitzhi.service.ConnectionSettingsType.PUBLIC_LOGIN;
 import static com.fitzhi.service.ConnectionSettingsType.REMOTE_FILE_LOGIN;
 
+import static com.fitzhi.data.internal.ProjectLookupCriteria.Name;
+import static com.fitzhi.data.internal.ProjectLookupCriteria.UrlRepository;
+
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.text.MessageFormat;
@@ -161,9 +164,23 @@ public class ProjectHandlerImpl extends AbstractDataSaverLifeCycleImpl implement
 
 	@Override
 	public Optional<Project> lookup(String search, ProjectLookupCriteria criteria) throws ApplicationException {
-		return getProjects().values().stream()
-				.filter( (Project project) -> project.getName().equals(search))
-				.findFirst();
+
+		Optional<Project> oProject = null;
+		switch (criteria) {
+			case Name:
+				oProject = getProjects().values().stream()
+						.filter( (Project project) -> project.getName().equals(search))
+						.findFirst();
+				break;
+			case UrlRepository:
+				oProject = getProjects().values().stream()
+					.filter( (Project project) -> project.getUrlRepository().equals(search))
+					.findFirst();
+				break;
+			default:
+				throw new ApplicationRuntimeException("Should NOT pass here!");
+		}
+		return oProject;
 	}
 
 	@Override
