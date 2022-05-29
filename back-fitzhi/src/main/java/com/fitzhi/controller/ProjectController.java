@@ -1,12 +1,14 @@
 package com.fitzhi.controller;
 
 import static com.fitzhi.Error.CODE_DASHBOARD_START;
+import static com.fitzhi.Error.CODE_ENDPOINT_DEDICATED_SLAVE;
 import static com.fitzhi.Error.CODE_GIT_ERROR;
 import static com.fitzhi.Error.CODE_IO_EXCEPTION;
 import static com.fitzhi.Error.CODE_MULTIPLE_TASK;
 import static com.fitzhi.Error.CODE_PROJECT_IS_NOT_EMPTY;
 import static com.fitzhi.Error.CODE_PROJECT_NOFOUND;
 import static com.fitzhi.Error.MESSAGE_DASHBOARD_START;
+import static com.fitzhi.Error.MESSAGE_ENDPOINT_DEDICATED_SLAVE;
 import static com.fitzhi.Error.MESSAGE_GIT_ERROR;
 import static com.fitzhi.Error.MESSAGE_MULTIPLE_TASK_WITH_PARAM;
 import static com.fitzhi.Error.MESSAGE_PROJECT_IS_NOT_EMPTY;
@@ -568,6 +570,32 @@ public class ProjectController  {
 		scanner.generateAsync(project, settings);
 
 		throw new InformationException (CODE_DASHBOARD_START, MESSAGE_DASHBOARD_START);
+	}
+
+	/**
+	 * <p>
+	 * This end-proint is provided by the slave to proceed the analysis of the project.
+	 * </p>
+	 * 
+	 * @param repositoryUrl <string>URL</strong> of the GIT repository to be processed. 
+	 */
+	@ResponseBody
+	@ApiOperation(
+		value = "Proceed the analysis of the given project and send the collected data into the main application.",
+		notes = "This endpoint is dedicated to the slave profile of Fitzhi."
+	)
+	@PutMapping("/sunburst")
+	public void analysis(@RequestBody SettingsGeneration settings) throws ApplicationException {
+		// 
+		// 2 profiles coexist.
+		// - the profile "application" for the Main instance of Fitzhi. Data are therefore local and dataHandler.isLocal() is returning TRUE
+		// - the profile "slave" for the slaves of Fitzhi. Data are remotely saved and dataHandler.isLocal() is returning FALSE
+		//
+		// Therefore, we use isLocal() as a convenient way to check if we are in salve mode or not.
+		//
+		if (dataHandler.isLocal()) {
+			throw new ApplicationException(CODE_ENDPOINT_DEDICATED_SLAVE, MessageFormat.format(MESSAGE_ENDPOINT_DEDICATED_SLAVE, "/api/project/analysis"));
+		}
 	}
 
 	/**
