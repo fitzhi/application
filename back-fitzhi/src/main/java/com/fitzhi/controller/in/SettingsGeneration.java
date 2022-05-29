@@ -16,6 +16,12 @@ public @Data class SettingsGeneration {
 	private int idProject;
 
 	/**
+	 * Project repository URL 
+	 * <em>This url set by the <code>Github action</code> will be used to retrieve the corresponding Fitzhi project.
+	 */
+	private String urlRepository = null;
+
+	/**
 	 * Starting date of investigation.
 	 */
 	private long startingDate;
@@ -26,7 +32,7 @@ public @Data class SettingsGeneration {
 	private int idStaffSelected;
 
 	/**
-	 * ParamSunburst.
+	 * Empty construction of this object.
 	 */
 	public SettingsGeneration() {
 	}
@@ -36,6 +42,14 @@ public @Data class SettingsGeneration {
 	 */
 	public SettingsGeneration(final int idProject) {
 		this.idProject = idProject;
+	}
+
+	/**
+	 * @param urlRepository the project repository URL 
+	 * <em>This url will be given by the <code>Github action</code> to the slave, in order to to retrieve the corresponding Fitzhi project</em>.
+	 */
+	public SettingsGeneration(String urlRepository) {
+		this.urlRepository = urlRepository;
 	}
 
 	/**

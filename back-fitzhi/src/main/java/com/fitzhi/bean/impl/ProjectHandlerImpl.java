@@ -40,6 +40,7 @@ import com.fitzhi.data.internal.ExperienceDetectionTemplate;
 import com.fitzhi.data.internal.FilesStats;
 import com.fitzhi.data.internal.Ghost;
 import com.fitzhi.data.internal.Library;
+import com.fitzhi.data.internal.ProjectLookupCriteria;
 import com.fitzhi.data.internal.Project;
 import com.fitzhi.data.internal.ProjectDetectedExperiences;
 import com.fitzhi.data.internal.ProjectSkill;
@@ -159,10 +160,15 @@ public class ProjectHandlerImpl extends AbstractDataSaverLifeCycleImpl implement
 	}
 
 	@Override
-	public Optional<Project> lookup(final String projectName) throws ApplicationException {
+	public Optional<Project> lookup(String search, ProjectLookupCriteria criteria) throws ApplicationException {
 		return getProjects().values().stream()
-				.filter( (Project project) -> project.getName().equals(projectName))
+				.filter( (Project project) -> project.getName().equals(search))
 				.findFirst();
+	}
+
+	@Override
+	public Optional<Project> lookup(final String projectName) throws ApplicationException {
+		return lookup (projectName, ProjectLookupCriteria.Name);
 	}
 
 	@Override

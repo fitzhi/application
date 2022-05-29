@@ -284,7 +284,14 @@ public interface DataHandler {
 	List<Constellation> loadSkillsConstellations(LocalDate month) throws ApplicationException;
 
 	/**
-	 * 
+	 * <p>2 profiles coexist in the Fitzhi system:</p>
+	 * <ul>
+	 * <li>the profile  <strong>"application"</strong> for the Main instance of Fitzhi. Data are therefore local and {@code dataHandler.isLocal()} is returning {@code TRUE}<br/></li>
+	 * <li>the profile <strong>"slave"</strong> for the slaves of Fitzhi. Data are remotely stored and {@code dataHandler.isLocal()} is returning {@code FALSE}</li>
+	 * </ul>
+	 * <p>
+	 *  Therefore, we use isLocal() as a convenient way to check if we are in slave mode or not.
+	 * </p>
 	 * @return {@code true} if the data are loaded and saved locally on the <strong>LOCAL</strong> file system, {@code false} <em>(e.g. <strong>REMOTE</strong>)</em> otherwise.
 	 */
 	boolean isLocal();

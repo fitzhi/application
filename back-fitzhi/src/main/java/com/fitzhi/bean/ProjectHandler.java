@@ -14,6 +14,7 @@ import com.fitzhi.data.internal.ExperienceDetectionTemplate;
 import com.fitzhi.data.internal.FilesStats;
 import com.fitzhi.data.internal.Ghost;
 import com.fitzhi.data.internal.Library;
+import com.fitzhi.data.internal.ProjectLookupCriteria;
 import com.fitzhi.data.internal.Mission;
 import com.fitzhi.data.internal.Project;
 import com.fitzhi.data.internal.ProjectSkill;
@@ -51,14 +52,25 @@ public interface ProjectHandler extends DataSaverLifeCycle {
 	List<Project> activeProjects() throws ApplicationException;
 
 	/**
-	 * Search for a project associated to the passed name.
+	 * Search for a project associated to the given name.
 	 * 
-	 * @param projectName
-	 * @throws ApplicationException
-	 *             thrown most probably if an IO exception occurs
-	 * @return
+	 * @param projectName the name of the project to retrieve
+	 * @throws ApplicationException thrown most probably if an IO exception occurs
+	 * @return an optional containing a project, or not
 	 */
 	Optional<Project> lookup(String projectName) throws ApplicationException;
+
+	/**
+	 * Search for a project associated to the passed criteria.
+	 * 
+	 * @param search the sarch string to retrieve as a critera
+	 * @param criteria the criteria to filter the data
+	 * 
+	 * @throws ApplicationException thrown most probably if an IO exception occurs
+	 * @return an optional containing a project, or not
+	 * @see ProjectLookupCriteria
+	 */
+	Optional<Project> lookup(String search, ProjectLookupCriteria criteria) throws ApplicationException;
 
 	/**
 	 * Retrieve a project from the portfolio on the given ID.
