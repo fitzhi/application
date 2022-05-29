@@ -53,7 +53,7 @@ import org.springframework.test.context.junit4.SpringRunner;
 @DirtiesContext(classMode=ClassMode.AFTER_CLASS)
 @TestPropertySource(properties = {"applicationUrl=http://mock-url", "organization=fitzhi" })
 @ActiveProfiles("slave")
-public class HttpDataHandlerTest {
+public class HttpDataHandlerSlaveTest {
  
 	@Autowired
 	DataHandler dataHandler;

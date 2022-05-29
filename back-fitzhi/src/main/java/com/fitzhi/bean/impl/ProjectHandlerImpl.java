@@ -9,9 +9,6 @@ import static com.fitzhi.service.ConnectionSettingsType.NO_LOGIN;
 import static com.fitzhi.service.ConnectionSettingsType.PUBLIC_LOGIN;
 import static com.fitzhi.service.ConnectionSettingsType.REMOTE_FILE_LOGIN;
 
-import static com.fitzhi.data.internal.ProjectLookupCriteria.Name;
-import static com.fitzhi.data.internal.ProjectLookupCriteria.UrlRepository;
-
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.text.MessageFormat;
@@ -20,10 +17,10 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.NoSuchElementException;
 import java.util.Objects;
 import java.util.Optional;
-import java.util.Map.Entry;
 import java.util.stream.Collectors;
 
 import javax.validation.constraints.NotNull;
@@ -43,9 +40,9 @@ import com.fitzhi.data.internal.ExperienceDetectionTemplate;
 import com.fitzhi.data.internal.FilesStats;
 import com.fitzhi.data.internal.Ghost;
 import com.fitzhi.data.internal.Library;
-import com.fitzhi.data.internal.ProjectLookupCriteria;
 import com.fitzhi.data.internal.Project;
 import com.fitzhi.data.internal.ProjectDetectedExperiences;
+import com.fitzhi.data.internal.ProjectLookupCriteria;
 import com.fitzhi.data.internal.ProjectSkill;
 import com.fitzhi.data.internal.ProjectSonarMetricValue;
 import com.fitzhi.data.internal.Skill;
