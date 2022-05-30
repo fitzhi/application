@@ -4,6 +4,9 @@ import static com.fitzhi.Error.CODE_PROJECT_NOFOUND;
 import static com.fitzhi.Error.CODE_SONAR_KEY_NOFOUND;
 import static com.fitzhi.Error.MESSAGE_PROJECT_NOFOUND;
 import static com.fitzhi.Error.MESSAGE_SONAR_KEY_NOFOUND;
+import static com.fitzhi.Error.CODE_METHOD_DEDICATED_SLAVE;
+import static com.fitzhi.Error.MESSAGE_METHOD_DEDICATED_SLAVE;
+
 import static com.fitzhi.service.ConnectionSettingsType.DIRECT_LOGIN;
 import static com.fitzhi.service.ConnectionSettingsType.NO_LOGIN;
 import static com.fitzhi.service.ConnectionSettingsType.PUBLIC_LOGIN;
@@ -1041,4 +1044,16 @@ public class ProjectHandlerImpl extends AbstractDataSaverLifeCycleImpl implement
 			}
 		}
 	}
+
+	@Override
+	public void setProjects(Map<Integer, Project> projects) throws ApplicationException {
+		if (dataHandler.isLocal()) {
+			throw new ApplicationException(CODE_METHOD_DEDICATED_SLAVE, MESSAGE_METHOD_DEDICATED_SLAVE);
+		}
+		this.projects = projects;
+		if (log.isDebugEnabled()) {
+			log.debug (String.format("The new collection of projects contains %d projects.", this.projects.values().size()));
+		}
+	}
+
 }

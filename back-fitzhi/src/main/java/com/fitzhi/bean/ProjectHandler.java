@@ -14,9 +14,9 @@ import com.fitzhi.data.internal.ExperienceDetectionTemplate;
 import com.fitzhi.data.internal.FilesStats;
 import com.fitzhi.data.internal.Ghost;
 import com.fitzhi.data.internal.Library;
-import com.fitzhi.data.internal.ProjectLookupCriteria;
 import com.fitzhi.data.internal.Mission;
 import com.fitzhi.data.internal.Project;
+import com.fitzhi.data.internal.ProjectLookupCriteria;
 import com.fitzhi.data.internal.ProjectSkill;
 import com.fitzhi.data.internal.ProjectSonarMetricValue;
 import com.fitzhi.data.internal.SonarEvaluation;
@@ -435,5 +435,21 @@ public interface ProjectHandler extends DataSaverLifeCycle {
 	 */
 	void updateStaffSkillSystemLevel (final int idStaff, final int idEDT, final int value, Map<Integer, ExperienceDetectionTemplate> templates, List<ExperienceAbacus> abacus)
 		throws ApplicationException;
+
+	/**
+	 * <p>
+	 * Inject in new collection of projects inside the handler.
+	 * </p>
+	 * <p>
+	 * <em>
+	 * This method does not set the status{@code "dataUpdated"} to{@code true} because this method is dedicated to the <strong>slave of Fitzhi</strong>.
+	 * A check of the caller is processed when entering in the method. Only slave are allowed to invoke this method. 
+	 * </strong>
+	 * </p>
+	 * 
+	 * @param projects the Map containing the projects in order to override the current collection
+	 * @throws ApplicationException thrown if this method is called from the wrong context
+	 */
+	void setProjects(Map<Integer, Project> projects) throws ApplicationException;
 
 }

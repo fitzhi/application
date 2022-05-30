@@ -14,6 +14,11 @@ import static com.fitzhi.Error.MESSAGE_MULTIPLE_TASK_WITH_PARAM;
 import static com.fitzhi.Error.MESSAGE_PROJECT_IS_NOT_EMPTY;
 import static com.fitzhi.Error.MESSAGE_PROJECT_NOFOUND;
 import static com.fitzhi.Error.UNKNOWN_PROJECT;
+import static com.fitzhi.Error.CODE_ENDPOINT_SLAVE_URL_GIT_MANDATORY;
+import static com.fitzhi.Error.MESSAGE_ENDPOINT_SLAVE_URL_GIT_MANDATORY;
+import static com.fitzhi.Error.CODE_PROJECT_NOT_FOUND_URL_GIT;
+import static com.fitzhi.Error.MESSAGE_PROJECT_NOT_FOUND_URL_GIT;
+
 import static com.fitzhi.Global.DASHBOARD_GENERATION;
 import static com.fitzhi.Global.PROJECT;
 import static com.fitzhi.Global.deepClone;
@@ -44,6 +49,7 @@ import com.fitzhi.controller.util.ProjectLoader;
 import com.fitzhi.data.external.ProjectContributors;
 import com.fitzhi.data.external.Sunburst;
 import com.fitzhi.data.internal.Project;
+import com.fitzhi.data.internal.ProjectLookupCriteria;
 import com.fitzhi.data.internal.ProjectSkill;
 import com.fitzhi.data.internal.RiskDashboard;
 import com.fitzhi.data.internal.Skill;
@@ -584,10 +590,10 @@ public class ProjectController  {
 		value = "Proceed the analysis of the given project and send the collected data into the main application.",
 		notes = "This endpoint is dedicated to the slave profile of Fitzhi."
 	)
-	@PutMapping("/sunburst")
-	public void analysis(@RequestBody SettingsGeneration settings) throws ApplicationException {
+	@PutMapping("/analysis")
+	public void slaveGate(@RequestBody SettingsGeneration settings) throws ApplicationException {
 		// 
-		// 2 profiles coexist.
+		// 2 spring profiles co-exist.
 		// - the profile "application" for the Main instance of Fitzhi. Data are therefore local and dataHandler.isLocal() is returning TRUE
 		// - the profile "slave" for the slaves of Fitzhi. Data are remotely saved and dataHandler.isLocal() is returning FALSE
 		//
@@ -596,6 +602,16 @@ public class ProjectController  {
 		if (dataHandler.isLocal()) {
 			throw new ApplicationException(CODE_ENDPOINT_DEDICATED_SLAVE, MessageFormat.format(MESSAGE_ENDPOINT_DEDICATED_SLAVE, "/api/project/analysis"));
 		}
+
+		if ((settings.getUrlRepository() == null) || (settings.getUrlRepository().isEmpty())) {
+			throw new ApplicationException(CODE_ENDPOINT_SLAVE_URL_GIT_MANDATORY, MESSAGE_ENDPOINT_SLAVE_URL_GIT_MANDATORY);
+		}
+
+		Optional<Project> oProject = projectHandler.lookup(settings.getUrlRepository(), ProjectLookupCriteria.UrlRepository);
+		if (oProject.isEmpty()) {
+			throw new ApplicationException(CODE_PROJECT_NOT_FOUND_URL_GIT, MessageFormat.format(MESSAGE_PROJECT_NOT_FOUND_URL_GIT, settings.getUrlRepository()));
+		}
+
 	}
 
 	/**

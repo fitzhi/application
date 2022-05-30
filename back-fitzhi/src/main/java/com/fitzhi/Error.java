@@ -156,16 +156,25 @@ public class Error {
 
 	public static final int CODE_HTTP_ERROR = -1047;
 	public static final String MESSAGE_HTTP_ERROR = "HTTP Error \"{0}\" when accessing {1}.";
-	
+
 	public static final int CODE_HTTP_NOT_CONNECTED = -1048;
 	public static final String MESSAGE_HTTP_NOT_CONNECTED = "Not connected.";
-	
+
 	public static final int CODE_ENDPOINT_DEDICATED_SLAVE= -1049;
 	public static final String MESSAGE_ENDPOINT_DEDICATED_SLAVE = "{0} is an end-point dedicated to slaves.";
 
+	public static final int CODE_ENDPOINT_SLAVE_URL_GIT_MANDATORY = -1050;
+	public static final String MESSAGE_ENDPOINT_SLAVE_URL_GIT_MANDATORY = "The URL of the GIT repository is mandatory.";
+
+	public static final int CODE_PROJECT_NOT_FOUND_URL_GIT = -1051;
+	public static final String MESSAGE_PROJECT_NOT_FOUND_URL_GIT = "Cannot find a project associated with the GIT url {0}.";
+
+	public static final int CODE_METHOD_DEDICATED_SLAVE = -1052;
+	public static final String MESSAGE_METHOD_DEDICATED_SLAVE = "This method is only allowed for the slaves of Fitzhi.";
+
 	private Error() {
 	}
-	
+
 	/**
 	 * @param e the exception
 	 * @return the stack trace in {@code String} format
