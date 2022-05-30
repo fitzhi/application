@@ -63,7 +63,7 @@ public class SavingBackendService {
 			return;
 		}
 
-		// We do not save periodicaly the data if this data is not local.
+		// We do not save periodicaly the data if this data is not 
 		if (!dataSaver.isLocal()) {
 			return;
 		}
