@@ -1,24 +1,23 @@
 package com.fitzhi.controller;
 
 import static com.fitzhi.Error.CODE_DASHBOARD_START;
-import static com.fitzhi.Error.CODE_ENDPOINT_DEDICATED_SLAVE;
+import static com.fitzhi.Error.CODE_ENDPOINT_SLAVE_ONLY;
+import static com.fitzhi.Error.CODE_ENDPOINT_SLAVE_URL_GIT_MANDATORY;
 import static com.fitzhi.Error.CODE_GIT_ERROR;
 import static com.fitzhi.Error.CODE_IO_EXCEPTION;
 import static com.fitzhi.Error.CODE_MULTIPLE_TASK;
 import static com.fitzhi.Error.CODE_PROJECT_IS_NOT_EMPTY;
 import static com.fitzhi.Error.CODE_PROJECT_NOFOUND;
+import static com.fitzhi.Error.CODE_PROJECT_NOT_FOUND_URL_GIT;
 import static com.fitzhi.Error.MESSAGE_DASHBOARD_START;
-import static com.fitzhi.Error.MESSAGE_ENDPOINT_DEDICATED_SLAVE;
+import static com.fitzhi.Error.MESSAGE_ENDPOINT_SLAVE_ONLY;
+import static com.fitzhi.Error.MESSAGE_ENDPOINT_SLAVE_URL_GIT_MANDATORY;
 import static com.fitzhi.Error.MESSAGE_GIT_ERROR;
 import static com.fitzhi.Error.MESSAGE_MULTIPLE_TASK_WITH_PARAM;
 import static com.fitzhi.Error.MESSAGE_PROJECT_IS_NOT_EMPTY;
 import static com.fitzhi.Error.MESSAGE_PROJECT_NOFOUND;
-import static com.fitzhi.Error.UNKNOWN_PROJECT;
-import static com.fitzhi.Error.CODE_ENDPOINT_SLAVE_URL_GIT_MANDATORY;
-import static com.fitzhi.Error.MESSAGE_ENDPOINT_SLAVE_URL_GIT_MANDATORY;
-import static com.fitzhi.Error.CODE_PROJECT_NOT_FOUND_URL_GIT;
 import static com.fitzhi.Error.MESSAGE_PROJECT_NOT_FOUND_URL_GIT;
-
+import static com.fitzhi.Error.UNKNOWN_PROJECT;
 import static com.fitzhi.Global.DASHBOARD_GENERATION;
 import static com.fitzhi.Global.PROJECT;
 import static com.fitzhi.Global.deepClone;
@@ -29,7 +28,9 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import java.util.function.Function;
 import java.util.stream.Collectors;
@@ -600,16 +601,35 @@ public class ProjectController  {
 		// Therefore, we use isLocal() as a convenient way to check if we are in salve mode or not.
 		//
 		if (dataHandler.isLocal()) {
-			throw new ApplicationException(CODE_ENDPOINT_DEDICATED_SLAVE, MessageFormat.format(MESSAGE_ENDPOINT_DEDICATED_SLAVE, "/api/project/analysis"));
+			throw new ApplicationException(CODE_ENDPOINT_SLAVE_ONLY, MessageFormat.format(MESSAGE_ENDPOINT_SLAVE_ONLY, "/api/project/analysis"));
 		}
 
 		if ((settings.getUrlRepository() == null) || (settings.getUrlRepository().isEmpty())) {
 			throw new ApplicationException(CODE_ENDPOINT_SLAVE_URL_GIT_MANDATORY, MESSAGE_ENDPOINT_SLAVE_URL_GIT_MANDATORY);
 		}
 
+		//
+		// We filter the collection of projects on one single element, corresponding to the current project being analyzed.
+		//
 		Optional<Project> oProject = projectHandler.lookup(settings.getUrlRepository(), ProjectLookupCriteria.UrlRepository);
 		if (oProject.isEmpty()) {
-			throw new ApplicationException(CODE_PROJECT_NOT_FOUND_URL_GIT, MessageFormat.format(MESSAGE_PROJECT_NOT_FOUND_URL_GIT, settings.getUrlRepository()));
+			throw new NotFoundException(CODE_PROJECT_NOT_FOUND_URL_GIT, MessageFormat.format(MESSAGE_PROJECT_NOT_FOUND_URL_GIT, settings.getUrlRepository()));
+		}
+		Map<Integer, Project> projects = new HashMap<>();
+		projects.put(oProject.get().getId(), oProject.get());
+		projectHandler.setProjects(projects);
+
+		if (log.isInfoEnabled()) {
+			log.info(String.format("Starting the analysis of %d %s", oProject.get().getId(), oProject.get().getName()));
+		}
+
+		// We start the generation
+		try {
+			scanner.generate(oProject.get(), settings);
+		} catch (IOException | GitAPIException e) {
+			log.error(String.format("generateAsync for (%d, %s)", oProject.get().getId(), oProject.get().getName()), e);
+			throw new ApplicationException(
+				CODE_GIT_ERROR, MessageFormat.format(MESSAGE_GIT_ERROR, oProject.get().getId(), oProject.get().getName()), e);
 		}
 
 	}

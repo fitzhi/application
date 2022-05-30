@@ -160,8 +160,8 @@ public class Error {
 	public static final int CODE_HTTP_NOT_CONNECTED = -1048;
 	public static final String MESSAGE_HTTP_NOT_CONNECTED = "Not connected.";
 
-	public static final int CODE_ENDPOINT_DEDICATED_SLAVE= -1049;
-	public static final String MESSAGE_ENDPOINT_DEDICATED_SLAVE = "{0} is an end-point dedicated to slaves.";
+	public static final int CODE_ENDPOINT_SLAVE_ONLY= -1049;
+	public static final String MESSAGE_ENDPOINT_SLAVE_ONLY = "{0} is an end-point dedicated to slaves.";
 
 	public static final int CODE_ENDPOINT_SLAVE_URL_GIT_MANDATORY = -1050;
 	public static final String MESSAGE_ENDPOINT_SLAVE_URL_GIT_MANDATORY = "The URL of the GIT repository is mandatory.";
