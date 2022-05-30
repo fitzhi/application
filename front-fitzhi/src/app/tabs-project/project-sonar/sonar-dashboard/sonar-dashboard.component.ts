@@ -116,7 +116,7 @@ export class SonarDashboardComponent extends BaseDirective implements OnInit, On
 				.subscribe(svg => {
 					if (svg) {
 						// The SVG has been sanitized.
-						this.safeBadge.push(this.sanitizer.bypassSecurityTrustHtml(svg)); //NOSONAR
+						this.safeBadge.push(this.sanitizer.bypassSecurityTrustHtml(svg)); // tslint:disable-line:comment-format  //NOSONAR
 						this.safeBadgeLength = this.safeBadge.length;
 						this.loadBadge(badgeNumero + 1);
 					} else {

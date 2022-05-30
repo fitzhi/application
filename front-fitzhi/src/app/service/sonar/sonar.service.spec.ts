@@ -267,15 +267,15 @@ describe('SonarService', () => {
 
 	it('isActive() should ALWAYS return FALSE if the given URL is an unregistered url.', () => {
 		const sonarServer = new SonarServer('1.0', 'urlSonar', true);
-		sonarService.sonarServers.push(sonarServer)
+		sonarService.sonarServers.push(sonarServer);
 		expect(sonarService.isActive('unregistered')).toBe(false);
 	});
 
 	it('isActive() should ALWAYS return FALSE if 2 (WTF) servers correspond to the given URL.', () => {
 		const sonarServer1 = new SonarServer('1.0', 'urlSonar', true);
 		const sonarServer2 = new SonarServer('1.0', 'urlSonar', true);
-		sonarService.sonarServers.push(sonarServer1)
-		sonarService.sonarServers.push(sonarServer2)
+		sonarService.sonarServers.push(sonarServer1);
+		sonarService.sonarServers.push(sonarServer2);
 		expect(sonarService.isActive('urlSonar')).toBe(false);
 	});
 
@@ -285,17 +285,17 @@ describe('SonarService', () => {
 			next: (res) => {
 				expect(res).toBe(true);
 				done();
-			} 
+			}
 		});
 	});
-	
+
 	it('should NOT include the organization to the query params, if the Sonar server is not declared in it.', done => {
 		const sonarServer = new SonarServer('1.0', 'urlSonar', true);
 		sonarService.loadComponents$(sonarServer, 'TRK').subscribe({
 			next: (component) => {
 				expect(component).toBeDefined();
 				done();
-			} 
+			}
 		});
 
 		const req = httpTestingController.expectOne('urlSonar/api/components/search?qualifiers=TRK&ps=500');
@@ -304,12 +304,12 @@ describe('SonarService', () => {
 	});
 
 	it('should include the organization to the query params, if the Sonar server is declared in it (this is most likely the sonarcloud.io use case).', done => {
-		const sonarServer = new SonarServer('1.0', 'urlSonar', true, "fitzhi");
+		const sonarServer = new SonarServer('1.0', 'urlSonar', true, 'fitzhi');
 		sonarService.loadComponents$(sonarServer, 'TRK').subscribe({
 			next: (component) => {
 				expect(component).toBeDefined();
 				done();
-			} 
+			}
 		});
 
 		const req = httpTestingController.expectOne('urlSonar/api/components/search?qualifiers=TRK&ps=500&organization=fitzhi');

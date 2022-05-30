@@ -94,9 +94,8 @@ export class AppComponent extends BaseDirective implements OnInit, AfterViewInit
 	 * Initialize the workspace of the application.
 	 */
 	initWorkspaceFitzhi() {
-		if (traceOn()) {
-			console.log ('initWorkspaceFitzhi');
-		}
+		traceOn() && console.log ('initWorkspaceFitzhi');
+
 		//
 		// Loading the referentials.
 		//
@@ -121,17 +120,15 @@ export class AppComponent extends BaseDirective implements OnInit, AfterViewInit
 		switch (this.activeContext) {
 			case Constants.TABS_STAFF_LIST:
 			case Constants.DEVELOPERS_SEARCH:
-				if (traceOn()) {
+				(traceOn()) &&
 					console.log(
 						'Searching %s staff members for the search criteria %s',
 						(this.activeOnly ? 'only active' : 'all'),
 						this.criteria);
-				}
+
 				if (this.criteria) {
 					if ( isNumber(this.criteria) ) {
-						if (traceOn()) {
-							console.log ('Looking a developer with id %s', this.criteria);
-						}
+						(traceOn()) && console.log ('Looking a developer with id %s', this.criteria);
 						this.router.navigate(['/user/' + this.criteria]);
 					} else {
 						if (this.criteria.length > 0) {
@@ -141,9 +138,7 @@ export class AppComponent extends BaseDirective implements OnInit, AfterViewInit
 				}
 				break;
 			case Constants.SKILLS_SEARCH: {
-				if (traceOn()) {
-					console.log('Reloading skills for search criteria ' + this.criteria);
-				}
+				(traceOn()) && console.log('Reloading skills for search criteria ' + this.criteria);
 				this.skillService.allSkillsLoaded$.pipe(take(1)).subscribe({
 					next: doneAndOk => {
 						if (doneAndOk) {
@@ -155,9 +150,7 @@ export class AppComponent extends BaseDirective implements OnInit, AfterViewInit
 				break;
 			}
 			case Constants.PROJECT_SEARCH: {
-				if (traceOn()) {
-					console.log('Reloading %s projects for search criteria %s', (this.activeOnly ? 'active' : ''), this.criteria);
-				}
+				(traceOn()) && console.log('Reloading %s projects for search criteria %s', (this.activeOnly ? 'active' : ''), this.criteria);
 				this.listProjectsService.search(this.criteria, this.activeOnly);
 				break;
 			}
@@ -210,9 +203,7 @@ export class AppComponent extends BaseDirective implements OnInit, AfterViewInit
 	 */
 	public onChangeForm($event: number) {
 		this.activeContext = $event;
-		if (traceOn()) {
-			console.log('Changing to mode', Constants.CONTEXT[$event]);
-		}
+		(traceOn()) && console.log('Changing to mode', Constants.CONTEXT[$event]);
 		if (this.activeContext === Constants.BACK_TO_LIST) {
 			this.list();
 		}
@@ -242,9 +233,7 @@ export class AppComponent extends BaseDirective implements OnInit, AfterViewInit
 	 */
 	onChangeActiveOnly($event: boolean) {
 		this.activeOnly = $event;
-		if (traceOn()) {
-			console.log((this.activeOnly) ? 'Filter only active records' : 'Select all records');
-		}
+		(traceOn()) && console.log((this.activeOnly) ? 'Filter only active records' : 'Select all records');
 		this.search();
 	}
 
@@ -253,9 +242,7 @@ export class AppComponent extends BaseDirective implements OnInit, AfterViewInit
 	 * @param $event the criteria typed by the end-user
 	 */
 	onRequestQuery($event: string) {
-		if (traceOn()) {
-			console.log('Request of a query on criteria', $event);
-		}
+		(traceOn()) && console.log('Request of a query on criteria', $event);
 		this.criteria = $event;
 		this.search();
 	}

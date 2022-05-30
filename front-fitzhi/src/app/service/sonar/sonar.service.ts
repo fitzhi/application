@@ -155,7 +155,7 @@ export class SonarService extends InternalService {
 				.pipe(
 					take(1),
 					switchMap((version: string) => {
-						const sonarServer = new SonarServer(version, sonar.urlSonarServer, true, sonar.organization, 
+						const sonarServer = new SonarServer(version, sonar.urlSonarServer, true, sonar.organization,
 							sonar.user, sonar.password, sonar.login);
 						if (traceOn()) {
 							console.log('Sonar version ' + sonarServer.sonarVersion + ' installed at the URL ' + sonarServer.urlSonar);
@@ -187,7 +187,7 @@ export class SonarService extends InternalService {
 			return false;
 		}
 		const servers = this.sonarServers.filter(sonarServer => sonarServer.urlSonar === url);
-		if (servers && (servers.length != 1)) {
+		if (servers && (servers.length !== 1)) {
 			if (traceOn() && (servers.length > 1)) {
 				console.log ('WTF !!!', servers);
 			}

@@ -51,7 +51,7 @@ export class ConnectUserFormComponent implements OnInit {
 					console.log ('Auto connnection to Fitzhi.');
 				}
 				// This is not a security leak. This is just an "anonymous" password
-				this.connectionGroup.setValue({ username: 'guest', password: 'anonymous' }); //NOSONAR
+				this.connectionGroup.setValue({ username: 'guest', password: 'anonymous' }); // tslint:disable-line:comment-format //NOSONAR
 				this.onSubmit();
 			}, 1000);
 		}
