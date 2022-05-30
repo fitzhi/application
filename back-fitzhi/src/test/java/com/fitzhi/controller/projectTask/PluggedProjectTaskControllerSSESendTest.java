@@ -54,7 +54,6 @@ public class PluggedProjectTaskControllerSSESendTest {
 	@Autowired
 	AsyncTask asyncTask;
 	
-
 	private String MARK_END_OF_OPERATION = "end of operation";
 			
 	private final ScheduledExecutorService executorService = Executors.newSingleThreadScheduledExecutor();
@@ -65,6 +64,9 @@ public class PluggedProjectTaskControllerSSESendTest {
 	public void before() throws ApplicationException {
 		Project p = new Project (1789, "Revolutionnary project");
 		projectHandler.addNewProject(p);
+		// We disable any unexpected save on the file system.
+		projectHandler.dataAreSaved();
+
 		asyncTask.addTask("nopeOperation", "mockProject", 1789);
 		asyncTask.logMessage("nopeOperation", "mockProject", 1789, "my first message", 0);
 		

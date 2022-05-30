@@ -39,6 +39,8 @@ public class GitCrawlerLoadRepositoryFromCacheIfAnyTest {
 	public void before() throws Exception {		
 		Project project = new Project(1789, "Revolutionnary project");
 		projectHandler.addNewProject(project);
+		// We disable any unexpected save on the file system.
+		projectHandler.dataAreSaved();
 	}
 	
 	@Test
@@ -55,6 +57,6 @@ public class GitCrawlerLoadRepositoryFromCacheIfAnyTest {
 	
 	@After
 	public void after()throws Exception {
-		projectHandler.getProjects().remove(1789);
+		projectHandler.removeProject(1789);
 	}
 }

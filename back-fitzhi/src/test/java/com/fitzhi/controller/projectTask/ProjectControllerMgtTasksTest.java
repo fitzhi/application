@@ -70,7 +70,9 @@ public class ProjectControllerMgtTasksTest {
 	@Before
 	public void before() throws ApplicationException {
 		Project p = new Project (1789, "Revolutionnary project");
-		projectHandler.addNewProject(p);		
+		projectHandler.addNewProject(p);
+		// We disable any unexpected save on the file system.
+		projectHandler.dataAreSaved();
 	}
 
 	/**
