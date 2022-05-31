@@ -56,6 +56,9 @@ public class ResourceServerConfiguration extends ResourceServerConfigurerAdapter
 				"/api/admin/openId/**",
 				"/api/test/ping",
 
+				// gate dedicated to the slaves of Fitzhi
+				"/api/project/analysis", 
+
 				// All projets are broadcasted ? (it's a question. I do not know why the complete list of projects has to to be broadcast)
 				"/api/project", 
 
