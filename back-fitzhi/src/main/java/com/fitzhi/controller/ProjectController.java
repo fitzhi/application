@@ -52,6 +52,7 @@ import com.fitzhi.data.external.Sunburst;
 import com.fitzhi.data.internal.Project;
 import com.fitzhi.data.internal.ProjectLookupCriteria;
 import com.fitzhi.data.internal.ProjectSkill;
+import com.fitzhi.data.internal.RepositoryAnalysis;
 import com.fitzhi.data.internal.RiskDashboard;
 import com.fitzhi.data.internal.Skill;
 import com.fitzhi.data.internal.Staff;
@@ -598,7 +599,7 @@ public class ProjectController  {
 		// - the profile "application" for the Main instance of Fitzhi. Data are therefore local and dataHandler.isLocal() is returning TRUE
 		// - the profile "slave" for the slaves of Fitzhi. Data are remotely saved and dataHandler.isLocal() is returning FALSE
 		//
-		// Therefore, we use isLocal() as a convenient way to check if we are in salve mode or not.
+		// It's a convenient way to use isLocal() to check if we are in slave mode, or not.
 		//
 		if (dataHandler.isLocal()) {
 			throw new ApplicationException(CODE_ENDPOINT_SLAVE_ONLY, MessageFormat.format(MESSAGE_ENDPOINT_SLAVE_ONLY, "/api/project/analysis"));
@@ -623,6 +624,7 @@ public class ProjectController  {
 			log.info(String.format("Starting the analysis of %d %s", oProject.get().getId(), oProject.get().getName()));
 		}
 
+		tasks.addTask(DASHBOARD_GENERATION, PROJECT, oProject.get().getId());
 		// We start the generation
 		try {
 			scanner.generate(oProject.get(), settings);
@@ -631,7 +633,34 @@ public class ProjectController  {
 			throw new ApplicationException(
 				CODE_GIT_ERROR, MessageFormat.format(MESSAGE_GIT_ERROR, oProject.get().getId(), oProject.get().getName()), e);
 		}
+		tasks.completeTask(DASHBOARD_GENERATION, PROJECT, oProject.get().getId());
+	}
 
+	/**
+	 * <p>
+	 * This end-proint is provided to store the analysis processed by the slave, on the main application.
+	 * </p>
+	 * 
+	 * @param idProject the project identifier
+	 * @param analysis the processed analysis
+	 * 
+	 * @throws ApplicationException thrown if any problem occurs during the treatment
+	 */
+	@ResponseBody
+	@ApiOperation(
+		value = "Save the analysis processed on the instance of slave."
+	)
+	@PutMapping(value = "/{idProject}/analysis")
+	public void saveAnalysis (@PathVariable("idProject") int idProject, @RequestBody RepositoryAnalysis analysis) throws ApplicationException {
+
+		if (!projectHandler.containsProject(idProject)) {
+			throw new NotFoundException(CODE_PROJECT_NOFOUND, MessageFormat.format(MESSAGE_PROJECT_NOFOUND, idProject + ""));
+		}
+		Project project = projectHandler.getProject(idProject);
+		if (log.isInfoEnabled()) {
+			log.info(String.format("Saving the analysis of project %d %s", project.getId(), project.getName()));
+		}
+		dataHandler.saveRepositoryAnalysis(project, analysis);
 	}
 
 	/**
