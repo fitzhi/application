@@ -1,6 +1,3 @@
-/**
- * 
- */
 package com.fitzhi.bean;
 
 import com.fitzhi.data.internal.Task;
