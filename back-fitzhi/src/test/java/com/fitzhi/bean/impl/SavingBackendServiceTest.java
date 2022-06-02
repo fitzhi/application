@@ -28,7 +28,7 @@ import org.springframework.test.context.junit4.SpringRunner;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest
-@DirtiesContext (classMode = ClassMode.BEFORE_EACH_TEST_METHOD)
+@DirtiesContext (classMode = ClassMode.BEFORE_CLASS)
 public class SavingBackendServiceTest {
 	
 	@Autowired
