@@ -672,6 +672,35 @@ public class ProjectController  {
 	}
 
 	/**
+	 * <p>
+	 * This end-proint is provided to store the changes processed by the slave, on the main application.
+	 * </p>
+	 * 
+	 * @param idProject the project identifier
+	 * @param analysis the processed analysis
+	 * 
+	 * @throws ApplicationException thrown if any problem occurs during the treatment
+	 */
+	@ResponseBody
+	@ApiOperation(
+		value = "Save a collection of paths collected on an instance of slave for the given project."
+	)
+	@PutMapping(value = "/{idProject}/pathsType")
+	public void savePaths (@PathVariable("idProject") int idProject, @PathVariable("pathsType") String pathsType, @RequestBody List<String> paths) throws ApplicationException {
+
+		if (!projectHandler.containsProject(idProject)) {
+			throw new NotFoundException(CODE_PROJECT_NOFOUND, MessageFormat.format(MESSAGE_PROJECT_NOFOUND, idProject + ""));
+		}
+		Project project = projectHandler.getProject(idProject);
+		if (log.isInfoEnabled()) {
+			log.info(String.format("Saving the analysis of project %d %s", project.getId(), project.getName()));
+		}
+
+		dataHandler.savePaths(project, paths, DataHandler.PathsType.valueOf(pathsType));
+
+	}
+
+	/**
 	 * @param idProject the project identifier
 	 * @return the contributors who have been involved in the project
 	 */
