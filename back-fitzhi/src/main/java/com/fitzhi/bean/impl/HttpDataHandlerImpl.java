@@ -12,6 +12,7 @@ import java.io.StringWriter;
 import java.io.Writer;
 import java.text.MessageFormat;
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -145,7 +146,9 @@ public class HttpDataHandlerImpl<T> implements DataHandler {
 	@Override
 	public void saveRepositoryAnalysis(Project project, RepositoryAnalysis analysis) throws ApplicationException {
 		saveChanges(project, analysis.getChanges());
-		// savePaths(project, new ArrayList<>(analysis.getPathsAdded()), PathsType.PATHS_ADDED);
+		savePaths(project, new ArrayList<>(analysis.getPathsAdded()), PathsType.PATHS_ADDED);
+		savePaths(project, new ArrayList<>(analysis.getPathsAdded()), PathsType.PATHS_MODIFIED);
+		savePaths(project, new ArrayList<>(analysis.getPathsAdded()), PathsType.PATHS_CANDIDATE);
 	}
 
 	@Override

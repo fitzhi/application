@@ -1,6 +1,7 @@
 package com.fitzhi.bean.impl.DataHandler;
 
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyList;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.spy;
@@ -151,8 +152,10 @@ public class HttpDataHandlerSlaveTest {
 
 		DataHandler spyDataHandler = spy(dataHandler);
 		doNothing().when(spyDataHandler).saveChanges(any(Project.class), any(SourceControlChanges.class));
+		doNothing().when(spyDataHandler).savePaths(any(Project.class), anyList(), any(PathsType.class));
 		spyDataHandler.saveRepositoryAnalysis(p, analysis);
 		verify(spyDataHandler, times(1)).saveChanges(any(Project.class), any(SourceControlChanges.class));
+		verify(spyDataHandler, times(3)).savePaths(any(Project.class), anyList(), any(PathsType.class));
 	}
 
 	@Test (expected = NotFoundException.class)
