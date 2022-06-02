@@ -89,26 +89,6 @@ import lombok.extern.slf4j.Slf4j;
 public class FileDataHandlerImpl implements DataHandler {
 
 	/**
-	 * <p>Type of path</p>
-	 * <p>
-	 * Application stores different types of paths on filesystem in order to re-gerenerate a consistent {@link RepositoryAnalysis}
-	 * </p>
-	 */
-	public enum PathsType {    
-		PATHS_ALL("pathsAll"), PATHS_MODIFIED("pathsModified"), PATHS_CANDIDATE("pathsCandidate"), PATHS_ADDED("pathsAdded");
-
-		String typeOfPath;
-		
-		private PathsType(String typeOfPath) {  
-			this.typeOfPath = typeOfPath ;  
-		}
-		
-		public String getTypeOfPath() {
-			return this.typeOfPath;
-		}		
-	}
-
-	/**
 	 * Are we in shuffle-mode? In that scenario, the saving process will be
 	 * unplugged.
 	 */

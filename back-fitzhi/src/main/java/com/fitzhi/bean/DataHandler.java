@@ -5,7 +5,6 @@ import java.time.LocalDate;
 import java.util.List;
 import java.util.Map;
 
-import com.fitzhi.bean.impl.FileDataHandlerImpl.PathsType;
 import com.fitzhi.data.internal.Constellation;
 import com.fitzhi.data.internal.DetectedExperience;
 import com.fitzhi.data.internal.Project;
@@ -24,6 +23,26 @@ import com.fitzhi.exception.NotFoundException;
  * @author Fr&eacute;d&eacute;ric VIDAL
  */
 public interface DataHandler {
+
+	/**
+	 * <p>Type of path</p>
+	 * <p>
+	 * Application stores different types of paths on filesystem in order to re-gerenerate a consistent {@link RepositoryAnalysis}
+	 * </p>
+	 */
+	public enum PathsType {    
+		PATHS_ALL("pathsAll"), PATHS_MODIFIED("pathsModified"), PATHS_CANDIDATE("pathsCandidate"), PATHS_ADDED("pathsAdded");
+
+		String typeOfPath;
+		
+		private PathsType(String typeOfPath) {  
+			this.typeOfPath = typeOfPath ;  
+		}
+		
+		public String getTypeOfPath() {
+			return this.typeOfPath;
+		}		
+	}
 
 	/**
 	 * Save projects on a persistent media

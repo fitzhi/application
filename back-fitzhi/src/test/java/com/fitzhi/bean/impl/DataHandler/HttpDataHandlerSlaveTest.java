@@ -22,7 +22,7 @@ import com.fitzhi.bean.DataHandler;
 import com.fitzhi.bean.HttpAccessHandler;
 import com.fitzhi.bean.HttpConnectionHandler;
 import com.fitzhi.bean.ShuffleService;
-import com.fitzhi.bean.impl.FileDataHandlerImpl.PathsType;
+import com.fitzhi.bean.DataHandler.PathsType;
 import com.fitzhi.bean.impl.HttpDataHandlerImpl;
 import com.fitzhi.data.internal.Project;
 import com.fitzhi.data.internal.ProjectBuilding;

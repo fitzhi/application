@@ -6,7 +6,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.fitzhi.bean.DataHandler;
-import com.fitzhi.bean.impl.FileDataHandlerImpl.PathsType;
+import com.fitzhi.bean.DataHandler.PathsType;
 import com.fitzhi.data.internal.Project;
 import com.fitzhi.exception.ApplicationException;
 

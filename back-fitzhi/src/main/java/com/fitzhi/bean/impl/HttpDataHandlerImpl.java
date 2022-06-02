@@ -12,6 +12,7 @@ import java.io.StringWriter;
 import java.io.Writer;
 import java.text.MessageFormat;
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -144,6 +145,7 @@ public class HttpDataHandlerImpl<T> implements DataHandler {
 	@Override
 	public void saveRepositoryAnalysis(Project project, RepositoryAnalysis analysis) throws ApplicationException {
 		saveChanges(project, analysis.getChanges());
+		// savePaths(project, new ArrayList<>(analysis.getPathsAdded()), PathsType.PATHS_ADDED);
 	}
 
 	@Override
@@ -254,14 +256,19 @@ public class HttpDataHandlerImpl<T> implements DataHandler {
 	}
 
 	@Override
-	public void savePaths(Project project, List<String> paths,
-			com.fitzhi.bean.impl.FileDataHandlerImpl.PathsType pathsType) throws ApplicationException {
+	public void savePaths(Project project, List<String> paths, PathsType pathsType) throws ApplicationException {
+
+		if (!httpConnectionHandler.isConnected()) {
+			httpConnectionHandler.connect(login, pass);
+		}
+
+
+
 		throw new ApplicationRuntimeException (NOT_IMPLEMENTED_YET);
 	}
 
 	@Override
-	public List<String> loadPaths(Project project, com.fitzhi.bean.impl.FileDataHandlerImpl.PathsType pathsType)
-			throws ApplicationException {
+	public List<String> loadPaths(Project project, PathsType pathsType) throws ApplicationException {
 		throw new ApplicationRuntimeException (NOT_IMPLEMENTED_YET);
 	}
 
