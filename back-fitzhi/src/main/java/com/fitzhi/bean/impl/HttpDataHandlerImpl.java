@@ -12,7 +12,6 @@ import java.io.StringWriter;
 import java.io.Writer;
 import java.text.MessageFormat;
 import java.time.LocalDate;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -257,14 +256,11 @@ public class HttpDataHandlerImpl<T> implements DataHandler {
 
 	@Override
 	public void savePaths(Project project, List<String> paths, PathsType pathsType) throws ApplicationException {
-
 		if (!httpConnectionHandler.isConnected()) {
 			httpConnectionHandler.connect(login, pass);
 		}
-
-
-
-		throw new ApplicationRuntimeException (NOT_IMPLEMENTED_YET);
+		String url = applicationUrl + "/api/project/" + project.getId() + "/" + pathsType.getTypeOfPath();
+		httpAccess.putList(url, paths);
 	}
 
 	@Override

@@ -71,17 +71,10 @@ public interface HttpAccessHandler<T> {
 	 * 
 	 * @param url the <b>url</b> of the backend server
 	 * @param list the collection to be sent
-	 * @param typeReference the reference to the generic hosted by the list
-	 * <blockquote>
-	 * This parameter is linked to java Type erasure. Generics are only known at compile time.
-	 * <p>
-	 * Technical reference : {@link https://stackoverflow.com/questions/14503881/strange-behavior-when-deserializing-nested-generic-classes-with-gson/14506181#14506181}
-	 * </p>
-	 * </blockquote>
      *
 	 * @throws ApplicationException thrown if any problem occurs. It might be either a NETWORK error, or a BACKEND error. 
 	 */
-	void putList(String url, List<T> list, TypeReference<List<T>> typeReference) throws ApplicationException;
+	void putList(String url, List<T> list) throws ApplicationException;
 
 	/**
 	 * This method exists only <u>for testing purpose</u>, in order to inject a mock of HttpClient.

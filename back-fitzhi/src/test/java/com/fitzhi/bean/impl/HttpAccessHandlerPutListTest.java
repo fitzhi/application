@@ -76,7 +76,7 @@ public class HttpAccessHandlerPutListTest {
 		injectToken();
 
 		httpAccessHandler.setHttpClient(httpClient);
-		httpAccessHandler.putList("url", mockListData(), new TypeReference<List<String>>(){});
+		httpAccessHandler.putList("url", mockListData());
 	}
 
 
@@ -88,7 +88,7 @@ public class HttpAccessHandlerPutListTest {
 		injectToken();
 
 		httpAccessHandler.setHttpClient(httpClient);
-		httpAccessHandler.putList("url", mockListData(), new TypeReference<List<String>>(){});
+		httpAccessHandler.putList("url", mockListData());
 	}
 
 	@Test
@@ -102,7 +102,7 @@ public class HttpAccessHandlerPutListTest {
 		injectToken();
 
 		httpAccessHandler.setHttpClient(httpClient);
-		httpAccessHandler.putList("url", Collections.emptyList(), new TypeReference<List<String>>(){});
+		httpAccessHandler.putList("url", Collections.emptyList());
 	}
 
 	@Test
@@ -115,7 +115,7 @@ public class HttpAccessHandlerPutListTest {
 		injectToken();
 
 		httpAccessHandler.setHttpClient(httpClient);
-		httpAccessHandler.putList("url", mockListData(), new TypeReference<List<String>>(){});
+		httpAccessHandler.putList("url", mockListData());
 	}
 
 	@Test (expected = ApplicationException.class)
@@ -124,7 +124,7 @@ public class HttpAccessHandlerPutListTest {
 		when(httpConnectionHandler.isConnected()).thenReturn(false);
 
 		httpAccessHandler.setHttpClient(httpClient);
-		httpAccessHandler.putList("url", mockListData(), new TypeReference<List<String>>(){});
+		httpAccessHandler.putList("url", mockListData());
 	}
 
 	private List<String> mockListData() {

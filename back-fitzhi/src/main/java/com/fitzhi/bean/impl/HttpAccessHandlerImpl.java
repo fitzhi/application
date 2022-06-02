@@ -164,7 +164,7 @@ public class HttpAccessHandlerImpl<T> implements HttpAccessHandler<T> {
 	}
 
 	@Override
-	public void putList(String url, List<T> list, TypeReference<List<T>> typeReference) throws ApplicationException {
+	public void putList(String url, List<T> list) throws ApplicationException {
 		try {
 			HttpClient client = (httpClient != null) ? httpClient : HttpClientBuilder.create().build();
 			HttpPut httpPut = new HttpPut(url);

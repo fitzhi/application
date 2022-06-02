@@ -231,11 +231,6 @@ public class HttpDataHandlerSlaveTest {
 	}
 
 	@Test (expected = ApplicationRuntimeException.class)
-	public void savePaths() throws ApplicationException {
-		dataHandler.savePaths(new Project(), new ArrayList<>(), PathsType.PATHS_ALL);
-	}
-
-	@Test (expected = ApplicationRuntimeException.class)
 	public void loadPaths()
 			throws ApplicationException {
 		dataHandler.loadPaths(new Project(), PathsType.PATHS_ALL);
