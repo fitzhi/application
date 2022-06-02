@@ -15,8 +15,6 @@ import java.util.Optional;
 import com.fitzhi.bean.SkillHandler;
 import com.fitzhi.controller.SkillController;
 import com.fitzhi.data.internal.Skill;
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -46,11 +44,6 @@ public class SkillControllerSearchTest {
 
 	@MockBean
 	private SkillHandler skillHandler;
-
-	/**
-	 * Initialization of the Google JSON parser.
-	 */
-	Gson gson = new GsonBuilder().create();
 
 	@Test
 	@WithMockUser
