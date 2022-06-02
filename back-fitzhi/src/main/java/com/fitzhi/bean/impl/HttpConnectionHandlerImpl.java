@@ -93,9 +93,9 @@ public class HttpConnectionHandlerImpl implements HttpConnectionHandler {
 				if (log.isWarnEnabled()) {
 					log.warn(String.format("Http error with %s %s %s.", url, response.getStatusLine().getStatusCode(), response.getStatusLine().getReasonPhrase()));
 				}
-				System.out.println(response);
 				throw new ApplicationException(CODE_HTTP_ERROR, MessageFormat.format(MESSAGE_HTTP_ERROR, response.getStatusLine().getReasonPhrase(), url));
 			}
+			
 		} catch (final IOException ioe) {
 			throw new ApplicationException(CODE_HTTP_CLIENT_ERROR, MessageFormat.format(MESSAGE_HTTP_CLIENT_ERROR, url), ioe);
 		}

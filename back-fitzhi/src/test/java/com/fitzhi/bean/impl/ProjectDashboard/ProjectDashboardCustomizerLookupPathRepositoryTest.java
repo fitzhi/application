@@ -73,7 +73,6 @@ public class ProjectDashboardCustomizerLookupPathRepositoryTest {
 	@Test
 	public void testcountriesWithIInEurope() throws ApplicationException {
 		List<String> resultingPaths = projectDashboardCustomizer.lookupPathRepository(project, "europe/back-wibkac/i");
-		resultingPaths.stream().forEach(System.out::println);
 		Assert.assertEquals("2 contries begin in europe/back-wibkac/", 2, resultingPaths.size());
 	}
 	

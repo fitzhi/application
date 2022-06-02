@@ -51,7 +51,6 @@ public class DataHandlerSaveSkillTest {
 		
 		Path path = Paths.get(saveDir).resolve("skill.json");
 		if (Files.exists(path)) {
-			System.out.println(path.toString());
 			Files.delete(path);
 		}
 	}
@@ -90,7 +89,6 @@ public class DataHandlerSaveSkillTest {
 	public void after() throws Exception {
 		Path path = Paths.get(saveDir).resolve("skills.json");
 		if (Files.exists(path)) {
-			System.out.println(path.toString());
 			Files.delete(path);
 		}
 	}

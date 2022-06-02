@@ -172,6 +172,9 @@ public class Error {
 	public static final int CODE_METHOD_DEDICATED_SLAVE = -1052;
 	public static final String MESSAGE_METHOD_DEDICATED_SLAVE = "This method is only allowed for the slaves of Fitzhi.";
 
+	public static final int CODE_METHOD_NOT_FOUND_EXCEPTION = -1053;
+	public static final String MESSAGE_METHOD_NOT_FOUND_EXCEPTION = "slave does not save the analysis. Therefore, loading will throw a NotFoundException!";
+
 	private Error() {
 	}
 

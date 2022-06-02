@@ -48,7 +48,6 @@ public class DataHandlerRemoveFileTest {
 	@Test (expected = ApplicationException.class)
 	public void error() throws Exception {
 		File f = new File("./target");
-		System.out.println(f.getAbsolutePath());
 		FileDataHandlerImpl.removeFile(f);
 	}
 }

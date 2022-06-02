@@ -36,6 +36,7 @@ import java.util.function.Function;
 import java.util.stream.Collectors;
 
 import javax.annotation.PostConstruct;
+import javax.servlet.http.HttpServletResponse;
 
 import com.fitzhi.ApplicationRuntimeException;
 import com.fitzhi.bean.AsyncTask;
@@ -45,6 +46,7 @@ import com.fitzhi.bean.ProjectHandler;
 import com.fitzhi.bean.ShuffleService;
 import com.fitzhi.bean.SkillHandler;
 import com.fitzhi.bean.StaffHandler;
+import com.fitzhi.bean.impl.HttpDataHandlerImpl;
 import com.fitzhi.controller.in.SettingsGeneration;
 import com.fitzhi.controller.util.ProjectLoader;
 import com.fitzhi.data.external.ProjectContributors;
@@ -52,9 +54,9 @@ import com.fitzhi.data.external.Sunburst;
 import com.fitzhi.data.internal.Project;
 import com.fitzhi.data.internal.ProjectLookupCriteria;
 import com.fitzhi.data.internal.ProjectSkill;
-import com.fitzhi.data.internal.RepositoryAnalysis;
 import com.fitzhi.data.internal.RiskDashboard;
 import com.fitzhi.data.internal.Skill;
+import com.fitzhi.data.internal.SourceControlChanges;
 import com.fitzhi.data.internal.Staff;
 import com.fitzhi.data.source.Contributor;
 import com.fitzhi.exception.ApplicationException;
@@ -62,11 +64,13 @@ import com.fitzhi.exception.InformationException;
 import com.fitzhi.exception.NotFoundException;
 import com.fitzhi.source.crawler.RepoScanner;
 
+import org.apache.http.HttpHeaders;
 import org.eclipse.jgit.api.errors.GitAPIException;
 import org.eclipse.jgit.lib.Ref;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -638,7 +642,7 @@ public class ProjectController  {
 
 	/**
 	 * <p>
-	 * This end-proint is provided to store the analysis processed by the slave, on the main application.
+	 * This end-proint is provided to store the changes processed by the slave, on the main application.
 	 * </p>
 	 * 
 	 * @param idProject the project identifier
@@ -648,10 +652,10 @@ public class ProjectController  {
 	 */
 	@ResponseBody
 	@ApiOperation(
-		value = "Save the analysis processed on the instance of slave."
+		value = "Save the changes processed on the instance of slave."
 	)
-	@PutMapping(value = "/{idProject}/analysis")
-	public void saveAnalysis (@PathVariable("idProject") int idProject, @RequestBody RepositoryAnalysis analysis) throws ApplicationException {
+	@PutMapping(value = "/{idProject}/changes", consumes = MediaType.TEXT_PLAIN_VALUE)
+	public void saveChanges (HttpServletResponse response, @PathVariable("idProject") int idProject, @RequestBody String changes) throws ApplicationException {
 
 		if (!projectHandler.containsProject(idProject)) {
 			throw new NotFoundException(CODE_PROJECT_NOFOUND, MessageFormat.format(MESSAGE_PROJECT_NOFOUND, idProject + ""));
@@ -660,7 +664,11 @@ public class ProjectController  {
 		if (log.isInfoEnabled()) {
 			log.info(String.format("Saving the analysis of project %d %s", project.getId(), project.getName()));
 		}
-		dataHandler.saveRepositoryAnalysis(project, analysis);
+
+		SourceControlChanges scc = HttpDataHandlerImpl.deserializeChanges(changes);
+		dataHandler.saveChanges(project, scc);
+
+		response.setHeader(HttpHeaders.CONTENT_TYPE, MediaType.TEXT_PLAIN_VALUE);
 	}
 
 	/**

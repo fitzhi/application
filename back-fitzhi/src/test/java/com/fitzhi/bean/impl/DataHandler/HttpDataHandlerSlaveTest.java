@@ -2,7 +2,11 @@ package com.fitzhi.bean.impl.DataHandler;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.Mockito.doNothing;
+import static org.mockito.Mockito.spy;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.times;
 
 import java.io.IOException;
 import java.time.LocalDate;
@@ -11,7 +15,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.fasterxml.jackson.core.type.TypeReference;
 import com.fitzhi.ApplicationRuntimeException;
+import com.fitzhi.Global;
 import com.fitzhi.bean.DataHandler;
 import com.fitzhi.bean.HttpAccessHandler;
 import com.fitzhi.bean.HttpConnectionHandler;
@@ -24,10 +30,13 @@ import com.fitzhi.data.internal.ProjectDetectedExperiences;
 import com.fitzhi.data.internal.ProjectLayers;
 import com.fitzhi.data.internal.RepositoryAnalysis;
 import com.fitzhi.data.internal.Skill;
+import com.fitzhi.data.internal.SourceCodeDiffChange;
 import com.fitzhi.data.internal.SourceControlChanges;
 import com.fitzhi.data.internal.Staff;
 import com.fitzhi.data.internal.Token;
 import com.fitzhi.exception.ApplicationException;
+import com.fitzhi.exception.NotFoundException;
+import com.fitzhi.source.crawler.git.SourceChange;
 
 import org.junit.Assert;
 import org.junit.Before;
@@ -66,6 +75,9 @@ public class HttpDataHandlerSlaveTest {
 
 	@MockBean
 	HttpAccessHandler<Skill> httpAccessHandlerSkill;
+
+	@MockBean
+	HttpAccessHandler<String> httpAccessHandler;
 
 	@MockBean
 	HttpConnectionHandler httpConnectionHandler;
@@ -132,20 +144,75 @@ public class HttpDataHandlerSlaveTest {
 		dataHandler.saveSkills(new HashMap<>());		
 	}
 
-	@Test (expected = ApplicationRuntimeException.class)
+	@Test
 	public void saveRepositoryAnalysis() throws ApplicationException {
 		Project p = new Project();
-		dataHandler.saveRepositoryAnalysis(p, new RepositoryAnalysis(p));		
+		RepositoryAnalysis analysis = new RepositoryAnalysis(p);
+
+		DataHandler spyDataHandler = spy(dataHandler);
+		doNothing().when(spyDataHandler).saveChanges(any(Project.class), any(SourceControlChanges.class));
+		spyDataHandler.saveRepositoryAnalysis(p, analysis);
+		verify(spyDataHandler, times(1)).saveChanges(any(Project.class), any(SourceControlChanges.class));
 	}
 
-	@Test (expected = ApplicationRuntimeException.class)
+	@Test (expected = NotFoundException.class)
 	public void loadRepositoryAnalysis() throws ApplicationException {
-		dataHandler.loadRepositoryAnalysis(new Project());
+		dataHandler.loadRepositoryAnalysis(new Project(1789, "Not found"));
 	}
 
-	@Test (expected = ApplicationRuntimeException.class)
-	public void saveChanges() throws ApplicationException {
-		dataHandler.saveChanges(new Project(), new SourceControlChanges());
+	@Test
+	public void serializeEmptyChanges() throws ApplicationException {
+		SourceControlChanges changes = new SourceControlChanges();
+		String s = HttpDataHandlerImpl.serializeChanges(changes);
+		Assert.assertEquals("\"Commit\";\"Path\";\"Date\";\"Author\";\"Email\";\"diff\"" + Global.LN, s);
+	}
+
+	@Test
+	public void serializeChanges() throws ApplicationException {
+		SourceControlChanges changes = new SourceControlChanges();
+		changes.addChange("fullPath-one", 
+			new SourceChange("cmt-one", LocalDate.of(2022, 1, 1), "frunknown", "frunknown@nope.com"));
+		changes.addChange("fullPath-two", 
+			new SourceChange("cmt-two", LocalDate.of(2022, 1, 1), "frunknown", "frunknown@nope.com", 1, new SourceCodeDiffChange("file-one", 2, 10)));
+		String s = HttpDataHandlerImpl.serializeChanges(changes);
+
+		final String expected = "\"Commit\";\"Path\";\"Date\";\"Author\";\"Email\";\"diff\"" + Global.LN +
+			"\"cmt-two\";\"fullPath-two\";\"2022-01-01\";\"frunknown\";\"frunknown@nope.com\";\"8\"" + Global.LN +
+			"\"cmt-one\";\"fullPath-one\";\"2022-01-01\";\"frunknown\";\"frunknown@nope.com\";\"0\"" + Global.LN ;
+
+		Assert.assertEquals(expected, s);
+	}
+
+	@Test
+	public void deserializeChanges() throws ApplicationException {
+
+		final String input = "\"Commit\";\"Path\";\"Date\";\"Author\";\"Email\";\"diff\"" + Global.LN +
+			"\"cmt-two\";\"fullPath-two\";\"2022-01-01\";\"frunknown\";\"frunknown@nope.com\";\"8\"" + Global.LN +
+			"\"cmt-one\";\"fullPath-one\";\"2022-01-01\";\"frunknown\";\"frunknown@nope.com\";\"0\"" + Global.LN ;
+
+		SourceControlChanges changes = HttpDataHandlerImpl.deserializeChanges(input);
+		Assert.assertEquals(2, changes.entrySet().size());
+		Assert.assertNotNull(changes.getChanges().get("fullPath-two"));
+
+//			new SourceChange("cmt-two", LocalDate.of(2022, 1, 1), "frunknown", "frunknown@nope.com", 1, new SourceCodeDiffChange("file-one", 2, 10)));
+	}
+	
+
+	@Test
+	public void saveChangesOk() throws ApplicationException {
+		when(httpAccessHandler.put(
+			"/api/project/1789/changes", 
+			"\"Commit\";\"Path\";\"Date\";\"Author\";\"Email\";\"diff\"" + Global.LN, 
+			new TypeReference<String>(){})).thenReturn("the Server response");
+		dataHandler.saveChanges(new Project(1789, "The French revolution"), new SourceControlChanges());
+		verify(httpAccessHandler, times(1)).put(anyString(), anyString(), any());
+	}
+
+	@Test (expected = ApplicationException.class)
+	public void saveChangesKo() throws ApplicationException {
+		when(httpAccessHandler.put(anyString(), anyString(), any())).thenThrow(new ApplicationException());
+		dataHandler.saveChanges(new Project(1789, "The French revolution"), new SourceControlChanges());
+		verify(httpAccessHandler, times(1)).put(anyString(), anyString(), any());
 	}
 
 	@Test (expected = ApplicationRuntimeException.class)

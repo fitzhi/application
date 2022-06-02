@@ -51,7 +51,6 @@ public class DataHandlerSaveStaffTest {
 	public void before() throws Exception {
 		Path path = Paths.get(saveDir).resolve("staff.json");
 		if (Files.exists(path)) {
-			System.out.println(path.toString());
 			Files.delete(path);
 		}
 	}
@@ -90,7 +89,6 @@ public class DataHandlerSaveStaffTest {
 	public void after() throws Exception {
 		Path path = Paths.get(saveDir).resolve("staff.json");
 		if (Files.exists(path)) {
-			System.out.println(path.toString());
 			Files.delete(path);
 		}
 	}

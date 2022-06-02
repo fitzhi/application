@@ -400,7 +400,7 @@ public class FileDataHandlerImpl implements DataHandler {
 				}
 			}
 		} catch (IOException ioe) {
-			log.error(getStackTrace(ioe));
+			log.error(ioe.getMessage(), ioe);
 			throw new ApplicationException(CODE_IO_ERROR, MessageFormat.format(MESSAGE_IO_ERROR, filename), ioe);
 		}
 	}

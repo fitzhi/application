@@ -20,11 +20,11 @@ public interface HttpAccessHandler<T> {
 	 * 
 	 * @param url the <b>url</b> of the backend server
 	 * @param typeReference the reference to the generic
-	 * <p>
-	 * This parameter is linked to java Type erasure. Generics are only known at compile time.<br/>
+	 * <blockquote>
+	 * This parameter is linked to java Type erasure. Generics are only known at compile time.
 	 * Technical reference :
 	 * {@link https://stackoverflow.com/questions/14503881/strange-behavior-when-deserializing-nested-generic-classes-with-gson/14506181#14506181}
-	 * </p>
+	 * </blockquote>
 	 * @return the resulting <b>map</b>
 	 * @throws ApplicationException thrown if any problem occurs. It might be either a NETWORK error, or a BACKEND error. 
 	 */
@@ -35,18 +35,38 @@ public interface HttpAccessHandler<T> {
 	 * 
 	 * @param url the <b>url</b> of the backend server
 	 * @param typeReference the reference to the generic
-	 * <p>
-	 * This parameter is linked to java Type erasure. Generics are only known at compile time.<br/>
+	 * <blockquote>
+	 * This parameter is linked to java Type erasure. Generics are only known at compile time.
 	 * Technical reference :
 	 * {@link https://stackoverflow.com/questions/14503881/strange-behavior-when-deserializing-nested-generic-classes-with-gson/14506181#14506181}
-	 * </p>
+	 * </blockquote>
 	 * @return the resulting <b>list</b>
 	 * @throws ApplicationException thrown if any problem occurs. It might be either a NETWORK error, or a BACKEND error. 
 	 */
 	List<T> loadList(String url, TypeReference<List<T>> typeReference) throws ApplicationException;
 
+
 	/**
-	 * This method exists only <u>for testing purpose</u>, in order to inject a mock a HttpClient.
+	 * Send data on network through an <strong>HTTP PUT</strong> to the backend server. The response body will be parsed and returned.
+	 * 
+	 * @param url the <b>url</b> of the backend server
+	 * @param o the object to be sent in the body of the request
+	 * @param typeReference the reference to the generic
+	 * <blockquote>
+	 * This parameter is linked to java Type erasure. Generics are only known at compile time.
+	 * <p>
+	 * Technical reference : {@link https://stackoverflow.com/questions/14503881/strange-behavior-when-deserializing-nested-generic-classes-with-gson/14506181#14506181}
+	 * </p>
+	 * </blockquote>
+     *
+	 * @return the content of the response from server
+	 * 
+	 * @throws ApplicationException thrown if any problem occurs. It might be either a NETWORK error, or a BACKEND error. 
+	 */
+	T put(String url, Object o, TypeReference<T> typeReference) throws ApplicationException;
+
+	/**
+	 * This method exists only <u>for testing purpose</u>, in order to inject a mock of HttpClient.
 	 * @param httpClient the HTTP client to be used.
 	 */
 	void setHttpClient(HttpClient httpClient);

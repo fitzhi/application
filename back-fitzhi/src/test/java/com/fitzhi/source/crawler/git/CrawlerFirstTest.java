@@ -155,7 +155,6 @@ public class CrawlerFirstTest {
 		RepositoryAnalysis analysis = new RepositoryAnalysis(project);
 		scanner.fillRepositoryAnalysis(project, analysis, repository);
 		scanner.finalizeListChanges(String.format(DIR_GIT, FIRST_TEST), analysis);
-		analysis.getPathsAll().stream().forEach(System.out::println);
 	}
 
 	/**
