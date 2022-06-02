@@ -5,30 +5,27 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 
 import com.fasterxml.jackson.core.type.TypeReference;
-import com.fitzhi.ApplicationRuntimeException;
 import com.fitzhi.bean.HttpAccessHandler;
 import com.fitzhi.bean.HttpConnectionHandler;
 import com.fitzhi.data.internal.Token;
 import com.fitzhi.exception.ApplicationException;
 
-import org.apache.http.HttpHeaders;
-import org.apache.http.Header;
 import org.apache.http.HttpResponse;
 import org.apache.http.StatusLine;
 import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpPut;
-import org.apache.http.entity.StringEntity;
-import org.apache.http.message.BasicHeader;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.http.MediaType;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.context.junit4.SpringRunner;
@@ -41,7 +38,7 @@ import org.springframework.test.context.junit4.SpringRunner;
 @SpringBootTest
 @TestPropertySource(properties = {"applicationUrl=my-mock-url", "organization=fitzhi" })
 @ActiveProfiles("slave")
-public class HttpAccessHandlerPutTest {
+public class HttpAccessHandlerPutListTest {
  
 	@Autowired
 	HttpAccessHandler<String> httpAccessHandler;
@@ -79,8 +76,9 @@ public class HttpAccessHandlerPutTest {
 		injectToken();
 
 		httpAccessHandler.setHttpClient(httpClient);
-		httpAccessHandler.put("url", (Object) "body to be sent", new TypeReference<String>(){});
+		httpAccessHandler.putList("url", mockListData(), new TypeReference<List<String>>(){});
 	}
+
 
 	@Test (expected = ApplicationException.class)
 	public void loadNetworkError() throws IOException, ClientProtocolException, ApplicationException{
@@ -90,37 +88,7 @@ public class HttpAccessHandlerPutTest {
 		injectToken();
 
 		httpAccessHandler.setHttpClient(httpClient);
-		httpAccessHandler.put("url", (Object) "body to be sent", new TypeReference<String>(){});
-	}
-
-	@Test (expected = ApplicationRuntimeException.class)
-	public void noContentType() throws IOException, ClientProtocolException, ApplicationException{
-		// When
-		when(httpClient.execute(any(HttpPut.class))).thenReturn(httpResponse);
-		when(httpResponse.getStatusLine()).thenReturn(statusLine);
-		when(statusLine.getStatusCode()).thenReturn(200);
-		when(httpResponse.getEntity()).thenReturn(new StringEntity("\"the response from the backend\""));
-
-		injectToken();
-
-		httpAccessHandler.setHttpClient(httpClient);
-		httpAccessHandler.put("url", (Object) "body to be sent", new TypeReference<String>(){});
-	}
-
-	@Test (expected = ApplicationRuntimeException.class)
-	public void invalidContentType() throws IOException, ClientProtocolException, ApplicationException{
-		// When
-		when(httpClient.execute(any(HttpPut.class))).thenReturn(httpResponse);
-		when(httpResponse.getStatusLine()).thenReturn(statusLine);
-		Header invalidHeader = new BasicHeader(HttpHeaders.CONTENT_TYPE, "WTF unknown...");
-		when(httpResponse.getFirstHeader(HttpHeaders.CONTENT_TYPE)).thenReturn( invalidHeader );
-		when(statusLine.getStatusCode()).thenReturn(200);
-		when(httpResponse.getEntity()).thenReturn(new StringEntity("\"the response from the backend\""));
-
-		injectToken();
-
-		httpAccessHandler.setHttpClient(httpClient);
-		httpAccessHandler.put("url", (Object) "body to be sent", new TypeReference<String>(){});
+		httpAccessHandler.putList("url", mockListData(), new TypeReference<List<String>>(){});
 	}
 
 	@Test
@@ -129,17 +97,12 @@ public class HttpAccessHandlerPutTest {
 		when(httpClient.execute(any(HttpPut.class))).thenReturn(httpResponse);
 		when(httpResponse.getStatusLine()).thenReturn(statusLine);
 		when(statusLine.getStatusCode()).thenReturn(200);
-		
-		Header textPlainHeader = new BasicHeader(HttpHeaders.CONTENT_TYPE, MediaType.TEXT_PLAIN_VALUE);
-		when(httpResponse.getFirstHeader(HttpHeaders.CONTENT_TYPE)).thenReturn( textPlainHeader );
-		when(httpResponse.getHeaders(HttpHeaders.CONTENT_TYPE)).thenReturn(new Header[0]);
-
 		when(httpResponse.getEntity()).thenReturn(null);
 
 		injectToken();
 
 		httpAccessHandler.setHttpClient(httpClient);
-		httpAccessHandler.put("url", (Object) "body to be sent", new TypeReference<String>(){});
+		httpAccessHandler.putList("url", Collections.emptyList(), new TypeReference<List<String>>(){});
 	}
 
 	@Test
@@ -149,16 +112,10 @@ public class HttpAccessHandlerPutTest {
 		when(httpResponse.getStatusLine()).thenReturn(statusLine);
 		when(statusLine.getStatusCode()).thenReturn(200);
 		
-		Header textPlainHeader = new BasicHeader(HttpHeaders.CONTENT_TYPE, MediaType.TEXT_PLAIN_VALUE);
-		when(httpResponse.getFirstHeader(HttpHeaders.CONTENT_TYPE)).thenReturn( textPlainHeader );
-		when(httpResponse.getHeaders(HttpHeaders.CONTENT_TYPE)).thenReturn(new Header[0]);
-
-		when(httpResponse.getEntity()).thenReturn(new StringEntity("\"the response from the backend\""));
-
 		injectToken();
 
 		httpAccessHandler.setHttpClient(httpClient);
-		httpAccessHandler.put("url", (Object) "body to be sent", new TypeReference<String>(){});
+		httpAccessHandler.putList("url", mockListData(), new TypeReference<List<String>>(){});
 	}
 
 	@Test (expected = ApplicationException.class)
@@ -167,7 +124,15 @@ public class HttpAccessHandlerPutTest {
 		when(httpConnectionHandler.isConnected()).thenReturn(false);
 
 		httpAccessHandler.setHttpClient(httpClient);
-		httpAccessHandler.put("url", (Object) "body to be sent", new TypeReference<String>(){});
+		httpAccessHandler.putList("url", mockListData(), new TypeReference<List<String>>(){});
+	}
+
+	private List<String> mockListData() {
+		List<String> l = new ArrayList<>();
+		l.add("one");
+		l.add("two");
+		l.add("three");
+		return l;
 	}
 
 }

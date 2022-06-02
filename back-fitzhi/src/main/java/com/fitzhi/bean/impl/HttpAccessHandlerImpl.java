@@ -163,6 +163,36 @@ public class HttpAccessHandlerImpl<T> implements HttpAccessHandler<T> {
 		}
 	}
 
+	@Override
+	public void putList(String url, List<T> list, TypeReference<List<T>> typeReference) throws ApplicationException {
+		try {
+			HttpClient client = (httpClient != null) ? httpClient : HttpClientBuilder.create().build();
+			HttpPut httpPut = new HttpPut(url);
+			
+			// Slave has not been connected to the backend. Cannot proceed the request then.
+			if (!httpConnectionHandler.isConnected()) {
+				throw new ApplicationException(CODE_HTTP_NOT_CONNECTED, MESSAGE_HTTP_NOT_CONNECTED);
+			}
+			httpPut.setHeader(HttpHeaders.AUTHORIZATION, "Bearer " + httpConnectionHandler.getToken().getAccess_token());
+
+			httpPut.setEntity(new StringEntity(objectMapper.writeValueAsString(list)));
+			httpPut.setHeader(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_UTF8.toString());
+
+			HttpResponse response = client.execute(httpPut);
+			int statusCode = response.getStatusLine().getStatusCode();
+
+			if (statusCode != HttpStatus.SC_OK) {
+				if (log.isWarnEnabled()) {
+					log.warn(String.format("Http error with %s %s %s", url, response.getStatusLine().getStatusCode(), response.getStatusLine().getReasonPhrase()));
+				}
+				throw new ApplicationException(CODE_HTTP_ERROR, MessageFormat.format(MESSAGE_HTTP_ERROR, response.getStatusLine().getReasonPhrase(), url));
+			}
+		} catch (final IOException ioe) {
+			log.error(ioe.getMessage(), ioe);
+			throw new ApplicationException(CODE_HTTP_CLIENT_ERROR, MessageFormat.format(MESSAGE_HTTP_CLIENT_ERROR, url), ioe);
+		}
+	}
+
 	@SuppressWarnings("unchecked")
 	private T cast(Object o) {
 		return (T) o;
