@@ -18,7 +18,7 @@ public class Global {
 
 	public static final char INTERNAL_FILE_SEPARATORCHAR = '/';
 
-	public static final String LN = System.getProperty("line.separator");
+	public static final String LN = System.lineSeparator();
 
 	public static final String BACKEND_RETURN_CODE = "backend.return_code";
 	

@@ -18,6 +18,7 @@ import java.util.Map;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fitzhi.ApplicationRuntimeException;
+import com.fitzhi.Global;
 import com.fitzhi.bean.DataHandler;
 import com.fitzhi.bean.HttpAccessHandler;
 import com.fitzhi.bean.HttpConnectionHandler;
@@ -176,7 +177,7 @@ public class HttpDataHandlerImpl<T> implements DataHandler {
 
 		try (Writer writer = new StringWriter()) {
 			try (CSVWriter csvWriter = new CSVWriter(writer, ';', CSVWriter.DEFAULT_QUOTE_CHARACTER,
-					CSVWriter.DEFAULT_ESCAPE_CHARACTER, CSVWriter.DEFAULT_LINE_END)) {
+					CSVWriter.DEFAULT_ESCAPE_CHARACTER, Global.LN)) {
 				csvWriter.writeNext(new String[] { "Commit", "Path", "Date", "Author", "Email", "diff" });
 	
 				for (String path : changes.keySet()) {

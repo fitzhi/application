@@ -366,7 +366,7 @@ public class FileDataHandlerImpl implements DataHandler {
 		try (Writer writer = new FileWriter(rootLocation.resolve(filename).toFile())) {
 
 			try (CSVWriter csvWriter = new CSVWriter(writer, ';', CSVWriter.DEFAULT_QUOTE_CHARACTER,
-					CSVWriter.DEFAULT_ESCAPE_CHARACTER, CSVWriter.DEFAULT_LINE_END)) {
+					CSVWriter.DEFAULT_ESCAPE_CHARACTER, Global.LN)) {
 				csvWriter.writeNext(new String[] { "Commit", "Path", "Date", "Author", "Email", "diff" });
 
 				for (String path : changes.keySet()) {
