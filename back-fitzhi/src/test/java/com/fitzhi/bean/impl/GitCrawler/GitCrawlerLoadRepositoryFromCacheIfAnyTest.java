@@ -46,6 +46,8 @@ public class GitCrawlerLoadRepositoryFromCacheIfAnyTest {
 	public void before() throws Exception {
 		Project project = new Project(4, "NOPE");
 		projectHandler.addNewProject(project);
+		// We avoid to save the projects on the file-system
+		projectHandler.dataAreSaved();
 	}
 	
 	@Test
@@ -60,7 +62,7 @@ public class GitCrawlerLoadRepositoryFromCacheIfAnyTest {
 	
 	@After
 	public void after() throws Exception {
-		projectHandler.getProjects().remove(4);
+		projectHandler.removeProject(4);
 	}
 
 }
