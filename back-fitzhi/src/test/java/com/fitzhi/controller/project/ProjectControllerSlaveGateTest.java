@@ -139,8 +139,10 @@ public class ProjectControllerSlaveGateTest {
 	public void Ok() throws Exception {
 
 		when(dataHandler.isLocal()).thenReturn(false);
+		Project p = new Project(1789, "Revolution", "https://myUrlRepository");
+		p.setActive(true);
 		when(projectHandler.lookup("https://myUrlRepository", ProjectLookupCriteria.UrlRepository)).thenReturn(
-			Optional.of(new Project(1789, "Revolution", "https://myUrlRepository")));
+			Optional.of(p));
 
 		when(scanner.generate(any(Project.class), any(SettingsGeneration.class))).thenReturn(
 			new RiskDashboard(new DataChart(""), Collections.emptyList()));
@@ -152,7 +154,7 @@ public class ProjectControllerSlaveGateTest {
 			.content(objectMapper.writeValueAsString(settings))
 			.contentType(MediaType.APPLICATION_JSON_UTF8))
 
-			.andExpect(status().isOk())
+			.andExpect(status().isNoContent())
 
 			.andDo(print())
 			.andReturn();

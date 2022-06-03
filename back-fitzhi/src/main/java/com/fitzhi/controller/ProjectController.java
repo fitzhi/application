@@ -27,6 +27,7 @@ import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -599,7 +600,7 @@ public class ProjectController  {
 		notes = "This endpoint is dedicated to the slave profile of Fitzhi."
 	)
 	@PutMapping("/analysis")
-	public void slaveGate(@RequestBody SettingsGeneration settings) throws ApplicationException {
+	public ResponseEntity<Void> slaveGate(@RequestBody SettingsGeneration settings) throws ApplicationException {
 		// 
 		// 2 spring profiles co-exist.
 		// - the profile "application" for the Main instance of Fitzhi. Data are therefore local and dataHandler.isLocal() is returning TRUE
@@ -622,24 +623,42 @@ public class ProjectController  {
 		if (oProject.isEmpty()) {
 			throw new NotFoundException(CODE_PROJECT_NOT_FOUND_URL_GIT, MessageFormat.format(MESSAGE_PROJECT_NOT_FOUND_URL_GIT, settings.getUrlRepository()));
 		}
+		Project project = oProject.get();
+
+		// You cannot anymore update an INACTIVE project
+		if (!project.isActive()) {
+			return ResponseEntity.status(HttpStatus.METHOD_NOT_ALLOWED).build();
+		}
+		
 		Map<Integer, Project> projects = new HashMap<>();
-		projects.put(oProject.get().getId(), oProject.get());
+
+		// We cleanup the project with information non-related to this analysis 
+		project.setSonarProjects(Collections.emptyList());
+		project.setAudit(Collections.emptyMap());
+		project.setAuditEvaluation(-1);
+		// We reset the location repository. We might inject later the GIT local repository.
+		project.setLocationRepository(null);
+		
+		projects.put(project.getId(), project);
 		projectHandler.setProjects(projects);
 
 		if (log.isInfoEnabled()) {
 			log.info(String.format("Starting the analysis of %d %s", oProject.get().getId(), oProject.get().getName()));
 		}
 
-		tasks.addTask(DASHBOARD_GENERATION, PROJECT, oProject.get().getId());
+		tasks.addTask(DASHBOARD_GENERATION, PROJECT, project.getId());
 		// We start the generation
 		try {
-			scanner.generate(oProject.get(), settings);
+			scanner.generate(project, settings);
 		} catch (IOException | GitAPIException e) {
 			log.error(String.format("generateAsync for (%d, %s)", oProject.get().getId(), oProject.get().getName()), e);
 			throw new ApplicationException(
 				CODE_GIT_ERROR, MessageFormat.format(MESSAGE_GIT_ERROR, oProject.get().getId(), oProject.get().getName()), e);
 		}
 		tasks.completeTask(DASHBOARD_GENERATION, PROJECT, oProject.get().getId());
+
+		return ResponseEntity.noContent().build();
+
 	}
 
 	/**
