@@ -1,6 +1,3 @@
-/**
- * 
- */
 package com.fitzhi.bean.impl;
 
 import static com.fitzhi.bean.impl.RepositoryState.REPOSITORY_NOT_FOUND;

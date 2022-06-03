@@ -175,6 +175,7 @@ public class HttpAccessHandlerImpl<T> implements HttpAccessHandler<T> {
 			}
 			httpPut.setHeader(HttpHeaders.AUTHORIZATION, "Bearer " + httpConnectionHandler.getToken().getAccess_token());
 
+			System.out.println(objectMapper.writeValueAsString(list));
 			httpPut.setEntity(new StringEntity(objectMapper.writeValueAsString(list)));
 			httpPut.setHeader(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_UTF8.toString());
 
@@ -184,6 +185,7 @@ public class HttpAccessHandlerImpl<T> implements HttpAccessHandler<T> {
 			if (statusCode != HttpStatus.SC_OK) {
 				if (log.isWarnEnabled()) {
 					log.warn(String.format("Http error with %s %s %s", url, response.getStatusLine().getStatusCode(), response.getStatusLine().getReasonPhrase()));
+					log.warn(EntityUtils.toString(response.getEntity()));
 				}
 				throw new ApplicationException(CODE_HTTP_ERROR, MessageFormat.format(MESSAGE_HTTP_ERROR, response.getStatusLine().getReasonPhrase(), url));
 			}

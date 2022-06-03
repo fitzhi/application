@@ -491,7 +491,6 @@ public class FileDataHandlerImpl implements DataHandler {
 		
 	}
 	
-
 	/**
 	 * Extract the directory path from the file path.
 	 * 
@@ -602,7 +601,7 @@ public class FileDataHandlerImpl implements DataHandler {
 	public void saveRepositoryDirectories(Project project, SourceControlChanges changes) throws ApplicationException {
 
 		//
-		// As the method-name explains, we create the directory which will hoist the file.
+		// As the method-name explains, we create the directory which will host the file.
 		//
 		createIfNeededDirectory(PATHNAMES);
 
@@ -618,6 +617,11 @@ public class FileDataHandlerImpl implements DataHandler {
 
 	@Override
 	public void savePaths(Project project, List<String> paths, PathsType pathsType) throws ApplicationException {
+
+		//
+		// As the method-name explains, we create the directory which will host the file.
+		//
+		createIfNeededDirectory(PATHNAMES);
 
 		String filename = this.generatePathnamesFile(project, pathsType);
 

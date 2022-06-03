@@ -685,7 +685,7 @@ public class ProjectController  {
 	@ApiOperation(
 		value = "Save a collection of paths collected on an instance of slave for the given project."
 	)
-	@PutMapping(value = "/{idProject}/pathsType")
+	@PutMapping(value = "/{idProject}/{pathsType}")
 	public void savePaths (@PathVariable("idProject") int idProject, @PathVariable("pathsType") String pathsType, @RequestBody List<String> paths) throws ApplicationException {
 
 		if (!projectHandler.containsProject(idProject)) {
@@ -693,11 +693,19 @@ public class ProjectController  {
 		}
 		Project project = projectHandler.getProject(idProject);
 		if (log.isInfoEnabled()) {
-			log.info(String.format("Saving the analysis of project %d %s", project.getId(), project.getName()));
+			log.info(String.format("Saving the paths of type %s of project %d %s", pathsType, project.getId(), project.getName()));
 		}
 
-		dataHandler.savePaths(project, paths, DataHandler.PathsType.valueOf(pathsType));
+		// We transform a pathsAdded into a PATHS_ADDED.
+		String keyPathsType = (pathsType.substring(0, 5) + '_' + pathsType.substring(5)).toUpperCase(); 
 
+		DataHandler.PathsType thePathsType = DataHandler.PathsType.valueOf(keyPathsType);
+		if (log.isDebugEnabled()) {
+			log.debug (String.format("PathsType %s", thePathsType));
+		}
+		System.out.println("dataHandler.savePaths(...)");
+		paths.stream().forEach(p -> System.out.println(p));
+		dataHandler.savePaths(project, paths, thePathsType);
 	}
 
 	/**

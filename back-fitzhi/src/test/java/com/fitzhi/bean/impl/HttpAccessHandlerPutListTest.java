@@ -20,6 +20,7 @@ import org.apache.http.StatusLine;
 import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpPut;
+import org.apache.http.entity.StringEntity;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -70,6 +71,7 @@ public class HttpAccessHandlerPutListTest {
 		// When
 		when(httpClient.execute(any(HttpPut.class))).thenReturn(httpResponse);
 		when(httpResponse.getStatusLine()).thenReturn(statusLine);
+		when(httpResponse.getEntity()).thenReturn(new StringEntity("error message"));
 		when(statusLine.getStatusCode()).thenReturn(401);
 		when(statusLine.getReasonPhrase()).thenReturn("a good reason to fail");
 

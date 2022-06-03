@@ -28,6 +28,7 @@ import com.fitzhi.bean.impl.HttpDataHandlerImpl;
 import com.fitzhi.data.internal.Project;
 import com.fitzhi.data.internal.ProjectBuilding;
 import com.fitzhi.data.internal.ProjectDetectedExperiences;
+import com.fitzhi.data.internal.ProjectLayer;
 import com.fitzhi.data.internal.ProjectLayers;
 import com.fitzhi.data.internal.RepositoryAnalysis;
 import com.fitzhi.data.internal.Skill;
@@ -79,6 +80,9 @@ public class HttpDataHandlerSlaveTest {
 
 	@MockBean
 	HttpAccessHandler<String> httpAccessHandler;
+
+	@MockBean
+	HttpAccessHandler<ProjectLayer> httpAccessHandlerProjectLayer;
 
 	@MockBean
 	HttpConnectionHandler httpConnectionHandler;
@@ -152,9 +156,13 @@ public class HttpDataHandlerSlaveTest {
 
 		DataHandler spyDataHandler = spy(dataHandler);
 		doNothing().when(spyDataHandler).saveChanges(any(Project.class), any(SourceControlChanges.class));
+		doNothing().when(spyDataHandler).saveRepositoryDirectories(any(Project.class),  any(SourceControlChanges.class));
 		doNothing().when(spyDataHandler).savePaths(any(Project.class), anyList(), any(PathsType.class));
+		
 		spyDataHandler.saveRepositoryAnalysis(p, analysis);
+
 		verify(spyDataHandler, times(1)).saveChanges(any(Project.class), any(SourceControlChanges.class));
+		verify(spyDataHandler, times(1)).saveRepositoryDirectories(any(Project.class),  any(SourceControlChanges.class));
 		verify(spyDataHandler, times(3)).savePaths(any(Project.class), anyList(), any(PathsType.class));
 	}
 
@@ -238,10 +246,12 @@ public class HttpDataHandlerSlaveTest {
 		dataHandler.loadPaths(new Project(), PathsType.PATHS_ALL);
 	}
 
-	@Test (expected = ApplicationRuntimeException.class)
+	@Test
 	public void saveSkylineLayers() throws ApplicationException {
-		Project p = new Project();
-		dataHandler.saveSkylineLayers(p, new ProjectLayers(p));
+		Project project = new Project(1789, "The French revolution");
+		doNothing().when(httpAccessHandlerProjectLayer).putList(anyString(), anyList());
+		dataHandler.saveSkylineLayers(project, new ProjectLayers(project, new ArrayList<>()));
+		verify(httpAccessHandlerProjectLayer, times(1)).putList(anyString(), anyList());
 	}
 
 	@Test (expected = ApplicationRuntimeException.class)
@@ -287,9 +297,11 @@ public class HttpDataHandlerSlaveTest {
 		dataHandler.loadSkills();
 	}
 
-	@Test (expected = ApplicationRuntimeException.class)
+	@Test
 	public void saveRepositoryDirectories() throws ApplicationException {
+		doNothing().when(httpAccessHandler).putList(anyString(), anyList());
 		dataHandler.saveRepositoryDirectories(new Project(), new SourceControlChanges());
+		verify(httpAccessHandler, times(1)).putList(anyString(), anyList());
 	}
 
 	@Test (expected = ApplicationRuntimeException.class)

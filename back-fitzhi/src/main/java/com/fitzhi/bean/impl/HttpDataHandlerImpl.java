@@ -4,18 +4,22 @@ import static com.fitzhi.Error.CODE_IO_ERROR;
 import static com.fitzhi.Error.CODE_METHOD_NOT_FOUND_EXCEPTION;
 import static com.fitzhi.Error.MESSAGE_IO_ERROR;
 import static com.fitzhi.Error.MESSAGE_METHOD_NOT_FOUND_EXCEPTION;
+import static com.fitzhi.Global.INTERNAL_FILE_SEPARATORCHAR;
+import static com.fitzhi.Error.getStackTrace;
 
 import java.io.IOException;
 import java.io.Reader;
 import java.io.StringReader;
 import java.io.StringWriter;
 import java.io.Writer;
+import java.nio.file.Paths;
 import java.text.MessageFormat;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fitzhi.ApplicationRuntimeException;
@@ -27,6 +31,7 @@ import com.fitzhi.data.internal.Constellation;
 import com.fitzhi.data.internal.Project;
 import com.fitzhi.data.internal.ProjectBuilding;
 import com.fitzhi.data.internal.ProjectDetectedExperiences;
+import com.fitzhi.data.internal.ProjectLayer;
 import com.fitzhi.data.internal.ProjectLayers;
 import com.fitzhi.data.internal.RepositoryAnalysis;
 import com.fitzhi.data.internal.Skill;
@@ -102,6 +107,9 @@ public class HttpDataHandlerImpl<T> implements DataHandler {
 	@Autowired
 	HttpAccessHandler<String> httpAccess; 
 
+	@Autowired
+	HttpAccessHandler<ProjectLayer> httpAccessProjectLayer;
+
 	private static String NOT_IMPLEMENTED_YET = "Not implemented yet";
 
 	@Override
@@ -145,10 +153,17 @@ public class HttpDataHandlerImpl<T> implements DataHandler {
 
 	@Override
 	public void saveRepositoryAnalysis(Project project, RepositoryAnalysis analysis) throws ApplicationException {
+		System.out.println("Paths Added() :");
+		analysis.getPathsAdded().stream().forEach(System.out::println);
+		System.out.println("Paths Modified() :");
+		analysis.getPathsModified().stream().forEach(System.out::println);
+		System.out.println("Paths Candidate() :");
+		analysis.getPathsCandidate().stream().forEach(System.out::println);
 		saveChanges(project, analysis.getChanges());
+		saveRepositoryDirectories(project, analysis.getChanges());
 		savePaths(project, new ArrayList<>(analysis.getPathsAdded()), PathsType.PATHS_ADDED);
-		savePaths(project, new ArrayList<>(analysis.getPathsAdded()), PathsType.PATHS_MODIFIED);
-		savePaths(project, new ArrayList<>(analysis.getPathsAdded()), PathsType.PATHS_CANDIDATE);
+		savePaths(project, new ArrayList<>(analysis.getPathsModified()), PathsType.PATHS_MODIFIED);
+		savePaths(project, new ArrayList<>(analysis.getPathsCandidate()), PathsType.PATHS_CANDIDATE);
 	}
 
 	@Override
@@ -264,6 +279,7 @@ public class HttpDataHandlerImpl<T> implements DataHandler {
 			httpConnectionHandler.connect(login, pass);
 		}
 		String url = applicationUrl + "/api/project/" + project.getId() + "/" + pathsType.getTypeOfPath();
+
 		httpAccess.putList(url, paths);
 	}
 
@@ -274,7 +290,14 @@ public class HttpDataHandlerImpl<T> implements DataHandler {
 
 	@Override
 	public void saveSkylineLayers(Project project, ProjectLayers layers) throws ApplicationException {
-		throw new ApplicationRuntimeException (NOT_IMPLEMENTED_YET);
+
+		if (!httpConnectionHandler.isConnected()) {
+			httpConnectionHandler.connect(login, pass);
+		}
+		String url = applicationUrl + "/api/project/" + project.getId() + "/projectLayers";
+
+		httpAccessProjectLayer.putList(url, layers.getLayers());
+
 	}
 
 	@Override
@@ -311,7 +334,14 @@ public class HttpDataHandlerImpl<T> implements DataHandler {
 
 	@Override
 	public void saveRepositoryDirectories(Project project, SourceControlChanges changes) throws ApplicationException {
-		throw new ApplicationRuntimeException (NOT_IMPLEMENTED_YET);
+		List<String> directories = changes.keySet().stream()
+				.map(this::extractDirectory)
+				.distinct()
+				.filter(path -> isDirectory(project, path))
+				.sorted()
+				.collect(Collectors.toList());
+
+		savePaths(project, directories, PathsType.PATHS_ALL);
 	}
 
 	@Override
@@ -349,6 +379,55 @@ public class HttpDataHandlerImpl<T> implements DataHandler {
 	@Override
 	public boolean isLocal() {
 		return false;
+	}
+
+	/**
+	 * Extract the directory path from the file path.
+	 * 
+	 * @param pathFilename path filename
+	 * @return the path of the directory
+	 */
+	private String extractDirectory(String pathFilename) {
+		int lastIndexOf = pathFilename.lastIndexOf('/');
+		if (lastIndexOf == -1) {
+			return pathFilename;
+		} else {
+			return pathFilename.substring(0, lastIndexOf);
+		}
+	}
+
+	/**
+	 * <p>
+	 * Test <b>on the file system</b> if the given pathname is a directory in the
+	 * repository.
+	 * </p>
+	 * <p>
+	 * We use java IO API to validate that the given path is
+	 * effectively a directory.
+	 * </p>
+	 * 
+	 * @param project  the current project whose repository is analyzed.
+	 * <em>We use this parameter to retrieve the location of the GIT local repository.</em>
+	 * @param pathname the given pathname
+	 * @return {@code true} if the pathname is a directory, {@code false} otherwise 
+	 */
+	private boolean isDirectory(final Project project, final String pathname)  {
+
+		if (pathname.indexOf(INTERNAL_FILE_SEPARATORCHAR) != -1) {
+			return true;
+		}
+		if (log.isDebugEnabled()) {
+			log.debug(String.format("Examining if %s is a directory",
+					project.getLocationRepository() + INTERNAL_FILE_SEPARATORCHAR + pathname));
+		}
+		try {
+			return Paths.get(project.getLocationRepository() + INTERNAL_FILE_SEPARATORCHAR + pathname)
+					.toFile()
+					.isDirectory();
+		} catch (final Exception e) {
+			log.error(getStackTrace(e));
+			return false;
+		}
 	}
 
 }

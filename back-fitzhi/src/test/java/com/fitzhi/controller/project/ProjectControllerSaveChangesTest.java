@@ -12,6 +12,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -77,7 +78,8 @@ public class ProjectControllerSaveChangesTest {
 			.andExpect(status().isNotFound())
 			.andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
 			.andExpect(jsonPath("$.message", is("There is no project for the identifier 1788")))
-			.andExpect(jsonPath("$.code", is(CODE_PROJECT_NOFOUND)));
+			.andExpect(jsonPath("$.code", is(CODE_PROJECT_NOFOUND)))
+			.andDo(print());
 
 		verify(projectHandler, never()).getProject(1789);
 	}
