@@ -52,6 +52,8 @@ import com.fitzhi.controller.util.ProjectLoader;
 import com.fitzhi.data.external.ProjectContributors;
 import com.fitzhi.data.external.Sunburst;
 import com.fitzhi.data.internal.Project;
+import com.fitzhi.data.internal.ProjectLayer;
+import com.fitzhi.data.internal.ProjectLayers;
 import com.fitzhi.data.internal.ProjectLookupCriteria;
 import com.fitzhi.data.internal.ProjectSkill;
 import com.fitzhi.data.internal.RiskDashboard;
@@ -677,7 +679,8 @@ public class ProjectController  {
 	 * </p>
 	 * 
 	 * @param idProject the project identifier
-	 * @param analysis the processed analysis
+	 * @param pathsType the type of paths
+	 * @param paths the collection of paths
 	 * 
 	 * @throws ApplicationException thrown if any problem occurs during the treatment
 	 */
@@ -703,9 +706,36 @@ public class ProjectController  {
 		if (log.isDebugEnabled()) {
 			log.debug (String.format("PathsType %s", thePathsType));
 		}
-		System.out.println("dataHandler.savePaths(...)");
-		paths.stream().forEach(p -> System.out.println(p));
 		dataHandler.savePaths(project, paths, thePathsType);
+	}
+
+	/**
+	 * <p>
+	 * This end-proint is provided to store the Project layers processed by the slave, on the main application.
+	 * </p>
+	 * 
+	 * @param idProject the project identifier
+	 * @param layers the list of {@link ProjectLayer}
+	 * 
+	 * @throws ApplicationException thrown if any problem occurs during the treatment
+	 */
+	@ResponseBody
+	@ApiOperation(
+		value = "Save a collection of paths collected on an instance of slave for the given project."
+	)
+	@PutMapping(value = "/{idProject}/projectLayers")
+	public void saveLayers (@PathVariable("idProject") int idProject, @RequestBody List<ProjectLayer> layers) throws ApplicationException {
+
+		if (!projectHandler.containsProject(idProject)) {
+			throw new NotFoundException(CODE_PROJECT_NOFOUND, MessageFormat.format(MESSAGE_PROJECT_NOFOUND, idProject + ""));
+		}
+
+		Project project = projectHandler.getProject(idProject);
+		if (log.isInfoEnabled()) {
+			log.info(String.format("Saving %d layers of project %d %s", layers.size(), project.getId(), project.getName()));
+		}
+
+		dataHandler.saveSkylineLayers(project, new ProjectLayers(project, layers));
 	}
 
 	/**

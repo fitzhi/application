@@ -1,6 +1,7 @@
 package com.fitzhi.data.internal;
 
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 /**
  * <p>
@@ -9,6 +10,7 @@ import lombok.Data;
  * 
  * @author Fr&eacute;d&eacute;ric VIDAL
  */
+@NoArgsConstructor
 public @Data class ProjectLayer implements Comparable<ProjectLayer> {
 
     /**

@@ -153,12 +153,6 @@ public class HttpDataHandlerImpl<T> implements DataHandler {
 
 	@Override
 	public void saveRepositoryAnalysis(Project project, RepositoryAnalysis analysis) throws ApplicationException {
-		System.out.println("Paths Added() :");
-		analysis.getPathsAdded().stream().forEach(System.out::println);
-		System.out.println("Paths Modified() :");
-		analysis.getPathsModified().stream().forEach(System.out::println);
-		System.out.println("Paths Candidate() :");
-		analysis.getPathsCandidate().stream().forEach(System.out::println);
 		saveChanges(project, analysis.getChanges());
 		saveRepositoryDirectories(project, analysis.getChanges());
 		savePaths(project, new ArrayList<>(analysis.getPathsAdded()), PathsType.PATHS_ADDED);
