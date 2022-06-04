@@ -708,7 +708,7 @@ public class ProjectController  {
 		value = "Save a collection of paths collected on an instance of slave for the given project."
 	)
 	@PutMapping(value = "/{idProject}/{pathsType}")
-	public void savePaths (@PathVariable("idProject") int idProject, @PathVariable("pathsType") String pathsType, @RequestBody List<String> paths) throws ApplicationException {
+	public ResponseEntity<Void> savePaths (@PathVariable("idProject") int idProject, @PathVariable("pathsType") String pathsType, @RequestBody List<String> paths) throws ApplicationException {
 
 		if (!projectHandler.containsProject(idProject)) {
 			throw new NotFoundException(CODE_PROJECT_NOFOUND, MessageFormat.format(MESSAGE_PROJECT_NOFOUND, idProject + ""));
@@ -726,6 +726,8 @@ public class ProjectController  {
 			log.debug (String.format("PathsType %s", thePathsType));
 		}
 		dataHandler.savePaths(project, paths, thePathsType);
+
+		return ResponseEntity.noContent().build();
 	}
 
 	/**
@@ -743,7 +745,7 @@ public class ProjectController  {
 		value = "Save a collection of paths collected on an instance of slave for the given project."
 	)
 	@PutMapping(value = "/{idProject}/projectLayers")
-	public void saveLayers (@PathVariable("idProject") int idProject, @RequestBody List<ProjectLayer> layers) throws ApplicationException {
+	public ResponseEntity<Void> saveLayers (@PathVariable("idProject") int idProject, @RequestBody List<ProjectLayer> layers) throws ApplicationException {
 
 		if (!projectHandler.containsProject(idProject)) {
 			throw new NotFoundException(CODE_PROJECT_NOFOUND, MessageFormat.format(MESSAGE_PROJECT_NOFOUND, idProject + ""));
@@ -755,6 +757,8 @@ public class ProjectController  {
 		}
 
 		dataHandler.saveSkylineLayers(project, new ProjectLayers(project, layers));
+
+		return ResponseEntity.noContent().build();
 	}
 
 	/**

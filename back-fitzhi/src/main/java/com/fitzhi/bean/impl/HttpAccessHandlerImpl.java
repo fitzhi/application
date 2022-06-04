@@ -181,7 +181,7 @@ public class HttpAccessHandlerImpl<T> implements HttpAccessHandler<T> {
 			HttpResponse response = client.execute(httpPut);
 			int statusCode = response.getStatusLine().getStatusCode();
 
-			if (statusCode != HttpStatus.SC_OK) {
+			if (statusCode != HttpStatus.SC_NO_CONTENT) {
 				if (log.isWarnEnabled()) {
 					log.warn(String.format("Http error with %s %s %s", url, response.getStatusLine().getStatusCode(), response.getStatusLine().getReasonPhrase()));
 					log.warn(EntityUtils.toString(response.getEntity()));

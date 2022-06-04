@@ -16,6 +16,7 @@ import com.fitzhi.data.internal.Token;
 import com.fitzhi.exception.ApplicationException;
 
 import org.apache.http.HttpResponse;
+import org.apache.http.HttpStatus;
 import org.apache.http.StatusLine;
 import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.HttpClient;
@@ -98,8 +99,7 @@ public class HttpAccessHandlerPutListTest {
 		// When
 		when(httpClient.execute(any(HttpPut.class))).thenReturn(httpResponse);
 		when(httpResponse.getStatusLine()).thenReturn(statusLine);
-		when(statusLine.getStatusCode()).thenReturn(200);
-		when(httpResponse.getEntity()).thenReturn(null);
+		when(statusLine.getStatusCode()).thenReturn(HttpStatus.SC_NO_CONTENT);
 
 		injectToken();
 
@@ -112,7 +112,7 @@ public class HttpAccessHandlerPutListTest {
 		// When
 		when(httpClient.execute(any(HttpPut.class))).thenReturn(httpResponse);
 		when(httpResponse.getStatusLine()).thenReturn(statusLine);
-		when(statusLine.getStatusCode()).thenReturn(200);
+		when(statusLine.getStatusCode()).thenReturn(HttpStatus.SC_NO_CONTENT);
 		
 		injectToken();
 

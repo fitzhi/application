@@ -94,7 +94,7 @@ public class ProjectControllerSavePathsTest {
 		this.mvc.perform(put("/api/project/1789/pathsAdded")
 			.content(objectMapper.writeValueAsString(new ArrayList<>(new HashSet<String>())))
 			.contentType(MediaType.APPLICATION_JSON_UTF8))
-			.andExpect(status().isOk());
+			.andExpect(status().isNoContent());
 
 		verify(projectHandler, times(1)).getProject(1789);
 		verify(dataHandler, times(1)).savePaths(p, new ArrayList<>(), PathsType.PATHS_ADDED);
@@ -110,7 +110,7 @@ public class ProjectControllerSavePathsTest {
 		this.mvc.perform(put("/api/project/1789/pathsAdded")
 			.content(objectMapper.writeValueAsString(builPathsList()))
 			.contentType(MediaType.APPLICATION_JSON_UTF8))
-			.andExpect(status().isOk());
+			.andExpect(status().isNoContent());
 
 		verify(projectHandler, times(1)).getProject(1789);
 		verify(dataHandler, times(1)).savePaths(p, builPathsList(), PathsType.PATHS_ADDED);
@@ -126,7 +126,7 @@ public class ProjectControllerSavePathsTest {
 		this.mvc.perform(put("/api/project/1789/pathsModified")
 			.content(objectMapper.writeValueAsString(builPathsList()))
 			.contentType(MediaType.APPLICATION_JSON_UTF8))
-			.andExpect(status().isOk());
+			.andExpect(status().isNoContent());
 
 		verify(projectHandler, times(1)).getProject(1789);
 		verify(dataHandler, times(1)).savePaths(p, builPathsList(), PathsType.PATHS_MODIFIED);
@@ -142,7 +142,7 @@ public class ProjectControllerSavePathsTest {
 		this.mvc.perform(put("/api/project/1789/pathsCandidate")
 			.content(objectMapper.writeValueAsString(builPathsList()))
 			.contentType(MediaType.APPLICATION_JSON_UTF8))
-			.andExpect(status().isOk());
+			.andExpect(status().isNoContent());
 
 		verify(projectHandler, times(1)).getProject(1789);
 		verify(dataHandler, times(1)).savePaths(p, builPathsList(), PathsType.PATHS_CANDIDATE);

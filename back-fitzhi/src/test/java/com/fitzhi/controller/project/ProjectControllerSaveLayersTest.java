@@ -97,7 +97,7 @@ public class ProjectControllerSaveLayersTest {
 		this.mvc.perform(put("/api/project/1789/projectLayers")
 			.content(objectMapper.writeValueAsString(new ArrayList<>(new HashSet<ProjectLayer>())))
 			.contentType(MediaType.APPLICATION_JSON_UTF8))
-			.andExpect(status().isOk());
+			.andExpect(status().isNoContent());
 
 		verify(projectHandler, times(1)).getProject(1789);
 		verify(dataHandler, times(1)).saveSkylineLayers(p, new ProjectLayers(p, Collections.emptyList()));
@@ -114,7 +114,7 @@ public class ProjectControllerSaveLayersTest {
 		this.mvc.perform(put("/api/project/1789/projectLayers")
 			.content(objectMapper.writeValueAsString(builLayersList()))
 			.contentType(MediaType.APPLICATION_JSON_UTF8))
-			.andExpect(status().isOk());
+			.andExpect(status().isNoContent());
 
 		verify(projectHandler, times(1)).getProject(1789);
 		verify(dataHandler, times(1)).saveSkylineLayers(p, new ProjectLayers(p, builLayersList()));
