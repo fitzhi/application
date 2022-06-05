@@ -40,7 +40,7 @@ export class AuthService extends InternalService {
 
 		let headers: HttpHeaders = new HttpHeaders();
 		headers = headers.append('Content-Type', 'application/x-www-form-urlencoded');
-		headers = headers.append('Authorization', 'Basic ' + btoa('fitzhi-trusted-client' + ':secret'));
+		headers = headers.append('Authorization', 'Basic ' + btoa('fitzhi-trusted-client:secret'));
 
 		const params = new HttpParams()
 			.set('username', username)
