@@ -16,6 +16,7 @@ import com.fitzhi.data.internal.Ghost;
 import com.fitzhi.data.internal.Library;
 import com.fitzhi.data.internal.Mission;
 import com.fitzhi.data.internal.Project;
+import com.fitzhi.data.internal.ProjectAnalysis;
 import com.fitzhi.data.internal.ProjectLookupCriteria;
 import com.fitzhi.data.internal.ProjectSkill;
 import com.fitzhi.data.internal.ProjectSonarMetricValue;
@@ -134,10 +135,18 @@ public interface ProjectHandler extends DataSaverLifeCycle {
 	boolean containsProject(int idProject) throws ApplicationException;
 
 	/**
+	 * Save the project entity
 	 * @param project the project to save.
 	 * @throws ApplicationException thrown if any saving or encryption error occurs
 	 */
 	void saveProject(Project project) throws ApplicationException;
+
+	/**
+	 * Take in account the processed analysis.
+	 * @param projectAnalysis the project analysis to be taken in account
+	 * @throws ApplicationException thrown if any saving problem occurs
+	 */
+	void saveProjectAnalysis(ProjectAnalysis projectAnalysis) throws ApplicationException;
 
 	/**
 	 * Remove the given project from the collection.

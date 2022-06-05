@@ -44,6 +44,7 @@ import com.fitzhi.data.internal.FilesStats;
 import com.fitzhi.data.internal.Ghost;
 import com.fitzhi.data.internal.Library;
 import com.fitzhi.data.internal.Project;
+import com.fitzhi.data.internal.ProjectAnalysis;
 import com.fitzhi.data.internal.ProjectDetectedExperiences;
 import com.fitzhi.data.internal.ProjectLookupCriteria;
 import com.fitzhi.data.internal.ProjectSkill;
@@ -66,6 +67,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
+import ch.qos.logback.core.net.SyslogOutputStream;
 import lombok.extern.slf4j.Slf4j;
 
 
@@ -347,7 +349,51 @@ public class ProjectHandlerImpl extends AbstractDataSaverLifeCycleImpl implement
 		}
 	}
 	
-	
+	@Override
+	public void saveProjectAnalysis(ProjectAnalysis projectAnalysis) throws ApplicationException {
+		synchronized (lockDataUpdated) {
+			Project project = lookup(projectAnalysis.getId());
+			if (project == null) {
+				throw new ApplicationRuntimeException(String.format("SHOULD NOT PASS HERE : The project %d is supposed to exist !", projectAnalysis.getId()));
+			}
+
+			project.setStaffEvaluation(projectAnalysis.getStaffEvaluation());
+			// The ecosystems are only computed. We can for the values. 
+			project.setEcosystems(projectAnalysis.getEcosystems());
+
+			// We add new skills or we update the registered skills 
+			projectAnalysis.getSkills().values().stream().forEach(
+				(ProjectSkill ps) -> {
+					ProjectSkill former = project.getSkills().put(ps.getIdSkill(), ps);
+					if (former == null) {
+						log.debug(String.format("Skill %d added.", ps.getIdSkill()));
+					} else {
+						log.debug(String.format("Skill %d updated.", ps.getIdSkill()));
+					}
+				}
+			);
+
+			// We add new ghosts. WE DO NOT UPDATE THE REGISTERED GHOST.
+			projectAnalysis.getGhosts().stream().forEach(
+				(Ghost ghost) -> {
+					boolean exist = project.getGhosts().stream().anyMatch(g -> g.getPseudo().equals(ghost.getPseudo()));
+					if (!exist) {
+						project.getGhosts().add(ghost);
+						if (log.isDebugEnabled()) {
+							log.debug(String.format("Ghost %s added.", ghost.getPseudo()));
+						}
+					} else {
+						if (log.isDebugEnabled()) {
+							log.debug(String.format("Ghost %s already registered.", ghost.getPseudo()));
+						}
+					}
+				}
+			);
+
+			this.dataUpdated = true;
+		}
+	}
+
 	@Override
 	public void removeProject(int idProject) throws ApplicationException {
 		synchronized (lockDataUpdated) {

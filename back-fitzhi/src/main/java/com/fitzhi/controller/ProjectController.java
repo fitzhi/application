@@ -53,6 +53,7 @@ import com.fitzhi.controller.util.ProjectLoader;
 import com.fitzhi.data.external.ProjectContributors;
 import com.fitzhi.data.external.Sunburst;
 import com.fitzhi.data.internal.Project;
+import com.fitzhi.data.internal.ProjectAnalysis;
 import com.fitzhi.data.internal.ProjectLayer;
 import com.fitzhi.data.internal.ProjectLayers;
 import com.fitzhi.data.internal.ProjectLookupCriteria;
@@ -217,6 +218,45 @@ public class ProjectController  {
 		}
 
 		projectHandler.saveProject(project);
+
+		return ResponseEntity.noContent().build();
+
+	}
+
+	/**
+	 * <p>
+	 * Take in account the analysis of a project.
+	 * This result is processed by a slave of Fitzhi and sent to the main application.
+	 * </p>
+	 * 
+	 * @param idProject the project identifier. The projet identifier is hosted in the URL in accordance with the Rest naming conventions
+	 * @param project the project to update. This project is hosted inside the body of the {@code PUT} Medhod.
+	 * @return an empty content for an update request
+	 */
+	@ApiOperation(
+		value = "Take in account the project analysis.",
+		notes = "This result is processed by a slave of Fitzhi, and sent to the main application. The project will be updated there with these data.")
+	@PutMapping("/{idProject}/analysis")
+	public ResponseEntity<Void> updateProjectAnalysis(@PathVariable("idProject") int idProject, @RequestBody ProjectAnalysis projectAnalysis)
+			throws NotFoundException, ApplicationException {
+
+		if (idProject != projectAnalysis.getId()) {
+			log.error(String.format("Data parameters mismatch for project %d", idProject));
+			return ResponseEntity.badRequest().build();
+		}
+
+		if (!projectHandler.containsProject(idProject)) {
+			throw new NotFoundException(CODE_PROJECT_NOFOUND, MessageFormat.format(MESSAGE_PROJECT_NOFOUND, idProject));
+		}
+
+		Project project = projectHandler.getProject(idProject);
+
+		// You cannot anymore update an INACTIVE project
+		if (!project.isActive()) {
+			return ResponseEntity.status(HttpStatus.METHOD_NOT_ALLOWED).build();
+		}
+
+		projectHandler.saveProjectAnalysis(projectAnalysis);
 
 		return ResponseEntity.noContent().build();
 
