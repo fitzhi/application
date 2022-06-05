@@ -1,12 +1,11 @@
 package com.fitzhi.bean.impl;
 
+import static com.fitzhi.Error.CODE_METHOD_DEDICATED_SLAVE;
 import static com.fitzhi.Error.CODE_PROJECT_NOFOUND;
 import static com.fitzhi.Error.CODE_SONAR_KEY_NOFOUND;
+import static com.fitzhi.Error.MESSAGE_METHOD_DEDICATED_SLAVE;
 import static com.fitzhi.Error.MESSAGE_PROJECT_NOFOUND;
 import static com.fitzhi.Error.MESSAGE_SONAR_KEY_NOFOUND;
-import static com.fitzhi.Error.CODE_METHOD_DEDICATED_SLAVE;
-import static com.fitzhi.Error.MESSAGE_METHOD_DEDICATED_SLAVE;
-
 import static com.fitzhi.service.ConnectionSettingsType.DIRECT_LOGIN;
 import static com.fitzhi.service.ConnectionSettingsType.NO_LOGIN;
 import static com.fitzhi.service.ConnectionSettingsType.PUBLIC_LOGIN;
@@ -27,6 +26,10 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 import javax.validation.constraints.NotNull;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Component;
 
 import com.fitzhi.ApplicationRuntimeException;
 import com.fitzhi.bean.CacheDataHandler;
@@ -63,11 +66,6 @@ import com.fitzhi.exception.NotFoundException;
 import com.fitzhi.source.crawler.EcosystemAnalyzer;
 import com.fitzhi.source.crawler.javaparser.ExperienceParser;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.stereotype.Component;
-
-import ch.qos.logback.core.net.SyslogOutputStream;
 import lombok.extern.slf4j.Slf4j;
 
 

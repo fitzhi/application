@@ -1,15 +1,18 @@
 package com.fitzhi.bean.impl.ProjectAudit;
 
+import static org.mockito.Mockito.when;
+
 import java.util.HashMap;
 
-import org.junit.After;
 import org.junit.Assert;
-import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.test.annotation.DirtiesContext;
+import org.springframework.test.annotation.DirtiesContext.ClassMode;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import com.fitzhi.bean.ProjectAuditHandler;
@@ -30,28 +33,28 @@ import com.fitzhi.exception.ApplicationException;
 @RunWith(SpringRunner.class)
 @SpringBootTest
 @AutoConfigureMockMvc
+@DirtiesContext(classMode = ClassMode.AFTER_CLASS)
 public class ProjectAuditHandlerAddRemoveTopicTest {
 
 	@Autowired
 	ProjectAuditHandler projectAuditHandler;
 
-	@Autowired
+	@MockBean
 	ProjectHandler projectHandler;
 	
 	private Project project;
 	
 	private int ID_PROJECT = 314116;
 
-	@Before
-	public void before() throws ApplicationException {
-		project = projectHandler.addNewProject(new Project(ID_PROJECT, "PI 1"));
+	public Project project() throws ApplicationException {
+		project = new Project(ID_PROJECT, "PI 1");
 		project.setAudit(new HashMap<Integer, AuditTopic>());
 		AuditTopic auditTopic = new AuditTopic();
 		auditTopic.setEvaluation(40);
 		auditTopic.setWeight(100);
 		project.getAudit().put(1, new AuditTopic());
 		project.setAuditEvaluation(40);
-
+		return project;
 	}
 	
 	@Test(expected = ApplicationException.class)
@@ -61,7 +64,9 @@ public class ProjectAuditHandlerAddRemoveTopicTest {
 
 	@Test
 	public void addNewTopic() throws ApplicationException {
-		
+
+		when(projectHandler.lookup(ID_PROJECT)).thenReturn(project());
+
 		projectAuditHandler.addTopic(ID_PROJECT, 2);
 		Assert.assertTrue("addNewTopic did not succeed", project.getAudit().containsKey(2));
 		Assert.assertTrue("addNewTopic did not succeed", project.getAudit().get(2).getIdTopic() == 2);
@@ -78,12 +83,15 @@ public class ProjectAuditHandlerAddRemoveTopicTest {
 	
 	@Test(expected = ApplicationException.class)
 	public void removeTopicOnUnknownProject() throws ApplicationException {
+		when(projectHandler.lookup(666)).thenReturn(null);
 		projectAuditHandler.removeTopic(666, 1, false);
 	}
 
 	@Test
 	public void removeTopic() throws ApplicationException {
 		
+		when(projectHandler.lookup(ID_PROJECT)).thenReturn(project());
+
 		Assert.assertEquals("Evaluation is equal to 0", 40, project.getAuditEvaluation());
 		
 		projectAuditHandler.removeTopic(ID_PROJECT, 1, false);
@@ -97,6 +105,8 @@ public class ProjectAuditHandlerAddRemoveTopicTest {
 	
 	@Test
 	public void loadAnExistingTopic() throws ApplicationException {
+		when(projectHandler.lookup(ID_PROJECT)).thenReturn(project());
+
 		projectAuditHandler.addTopic(ID_PROJECT, 2);
 		AuditTopic auditTopic = projectAuditHandler.getTopic(ID_PROJECT, 2);
 		Assert.assertNotNull(auditTopic);
@@ -106,11 +116,8 @@ public class ProjectAuditHandlerAddRemoveTopicTest {
 
 	@Test(expected = ApplicationException.class)
 	public void loadfailedUnknownTopic() throws ApplicationException {
+		when(projectHandler.getProject(ID_PROJECT)).thenReturn(project());
 		projectAuditHandler.getTopic(ID_PROJECT, 666);		
 	}
 	
-	@After
-	public void after() throws ApplicationException {
-		projectHandler.removeProject(ID_PROJECT);
-	}
 }

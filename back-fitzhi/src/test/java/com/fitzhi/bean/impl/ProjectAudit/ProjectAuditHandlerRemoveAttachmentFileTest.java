@@ -1,15 +1,18 @@
 package com.fitzhi.bean.impl.ProjectAudit;
 
+import static org.mockito.Mockito.when;
+
 import java.util.HashMap;
 
-import org.junit.After;
 import org.junit.Assert;
-import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.test.annotation.DirtiesContext;
+import org.springframework.test.annotation.DirtiesContext.ClassMode;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import com.fitzhi.bean.ProjectAuditHandler;
@@ -32,41 +35,45 @@ import com.fitzhi.service.FileType;
 @RunWith(SpringRunner.class)
 @SpringBootTest
 @AutoConfigureMockMvc
+@DirtiesContext(classMode = ClassMode.AFTER_CLASS)
 public class ProjectAuditHandlerRemoveAttachmentFileTest {
 
 	@Autowired
 	ProjectAuditHandler projectAuditHandler;
 
-	@Autowired
+	@MockBean
 	ProjectHandler projectHandler;
 	
 	private Project project;
 	
 	private int ID_PROJECT = 314116;
 
-	@Before
-	public void before() throws ApplicationException {
-		project = projectHandler.addNewProject(new Project(ID_PROJECT, "PI 3"));
+	public Project project() throws ApplicationException {
+		project = new Project(ID_PROJECT, "PI 3");
 		project.setAudit(new HashMap<Integer, AuditTopic>());
 		AuditTopic auditTopic = new AuditTopic();
 		auditTopic.setEvaluation(40);
 		auditTopic.setWeight(100);
 		project.getAudit().put(1, new AuditTopic());
+		return project;
 
 	}
 	
 	@Test(expected = ApplicationException.class)
 	public void AttachmentFileOnUnknownProject() throws ApplicationException {
+		when(projectHandler.lookup(ID_PROJECT)).thenReturn(project());
 		projectAuditHandler.removeAttachmentFile(666, 1, 0);
 	}
 
 	@Test(expected = ApplicationException.class)
 	public void removeAttachmentFileOnUnknownTopic() throws ApplicationException {
+		when(projectHandler.lookup(ID_PROJECT)).thenReturn(project());
 		projectAuditHandler.removeAttachmentFile(ID_PROJECT, -1002, 0);
 	}
 	
 	@Test
 	public void removeAttachmentFile() throws ApplicationException {
+		when(projectHandler.lookup(ID_PROJECT)).thenReturn(project());
 		AuditTopic at = projectAuditHandler.getTopic(ID_PROJECT, 1);
 		Assert.assertEquals("Attachment list is empty", 0, at.getAttachmentList().size());
 		
@@ -81,6 +88,8 @@ public class ProjectAuditHandlerRemoveAttachmentFileTest {
 	
 	@Test
 	public void removeSecondAttachmentFile() throws ApplicationException {
+		when(projectHandler.lookup(ID_PROJECT)).thenReturn(project());
+
 		AuditTopic at = projectAuditHandler.getTopic(ID_PROJECT, 1);
 		Assert.assertEquals("Attachment list is empty", 0, at.getAttachmentList().size());
 		
@@ -103,11 +112,6 @@ public class ProjectAuditHandlerRemoveAttachmentFileTest {
 		Assert.assertEquals("2 attachment files", 2, at.getAttachmentList().size());
 		Assert.assertEquals("lastFileName.doc", at.getAttachmentList().get(1).getFileName());
 		Assert.assertEquals("last label", at.getAttachmentList().get(1).getLabel());	
-	}
-	
-	@After
-	public void after() throws ApplicationException {
-		projectHandler.removeProject(ID_PROJECT);	
 	}
 	
 }
