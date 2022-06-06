@@ -70,7 +70,13 @@ public class Application {
 	@Value("${gitcrawler.repositories.location:#{null}}")
 	private String reposDir;
 
-	
+	/** 
+	 * This settings is used by the scheduler launched on the Main application to execute the experiences detection task.
+	 * It is disable on the slave instance.
+	 */
+	@Value("${cron.experiences.detection}")
+	private String cronExperencesDetection;
+		
 	public static void main(String[] args) {
 		LoggerFactory.getLogger(Application.class.getCanonicalName()).info("Starting Backend 质 Fitzhì");
 		SpringApplication.run(Application.class, args);
@@ -95,6 +101,7 @@ public class Application {
 			LoggerFactory.getLogger(Application.class.getCanonicalName()).info("\t {}", dependenciesMarker);
 			LoggerFactory.getLogger(Application.class.getCanonicalName()).info(((collapseEmptyDirectory) ? "\tDirectories should be collapsed" : "\tDirectories should NOT be collaped"));
 			LoggerFactory.getLogger(Application.class.getCanonicalName()).info(((prefilterEligibility) ? "\tFile eligibility is PREfiltered" : "\tFile eligibility id POSTfiltered"));
+			LoggerFactory.getLogger(Application.class.getCanonicalName()).info( String.format("\tCRON settings for the task detection of experiences is \"%s\"", cronExperencesDetection));
 			if (reposDir == null) {
 				LoggerFactory.getLogger(Application.class.getCanonicalName()).info("\tLocal repositories are hosted in a temporary destination") ;
 			} else {
