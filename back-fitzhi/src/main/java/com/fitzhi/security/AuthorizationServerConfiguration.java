@@ -57,7 +57,7 @@ public class AuthorizationServerConfiguration extends AuthorizationServerConfigu
 		// There is a //NOSONAR comment on this line, 
 		// because the Security check from Sonar falsely detects a credential issue with the couple password/refresh_token.
 		clients.inMemory()
-		.withClient(TRUSTED_CLIENT_USERNAME)
+			.withClient(TRUSTED_CLIENT_USERNAME)
 			.authorizedGrantTypes("password", "refresh_token") //NOSONAR
 			.authorities(ROLE_TRUSTED_USER)
 			.scopes("read", "write", "trust")
