@@ -37,6 +37,7 @@ import java.util.stream.Collectors;
 
 import javax.annotation.PostConstruct;
 
+import com.fitzhi.ApplicationRuntimeException;
 import com.fitzhi.Global;
 import com.fitzhi.bean.DataHandler;
 import com.fitzhi.bean.ProjectHandler;
@@ -45,6 +46,7 @@ import com.fitzhi.data.internal.Author;
 import com.fitzhi.data.internal.Constellation;
 import com.fitzhi.data.internal.DetectedExperience;
 import com.fitzhi.data.internal.Project;
+import com.fitzhi.data.internal.ProjectAnalysis;
 import com.fitzhi.data.internal.ProjectBuilding;
 import com.fitzhi.data.internal.ProjectDetectedExperiences;
 import com.fitzhi.data.internal.ProjectFloor;
@@ -58,6 +60,7 @@ import com.fitzhi.data.internal.Staff;
 import com.fitzhi.exception.ApplicationException;
 import com.fitzhi.exception.NotFoundException;
 import com.fitzhi.source.crawler.git.SourceChange;
+import com.google.errorprone.annotations.OverridingMethodsMustInvokeSuper;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
@@ -241,6 +244,11 @@ public class FileDataHandlerImpl implements DataHandler {
 			}
 			throw new ApplicationException(CODE_IO_ERROR, MessageFormat.format(MESSAGE_IO_ERROR, STAFF_FILENAME), e);
 		}
+	}
+
+	@Override
+	public void saveStaff(Project project, Map<Integer, Staff> staff) throws ApplicationException {
+		throw new ApplicationRuntimeException("SHOULD NOT PASS HERE : This method with the Project parameter is dedicated to slaves.");
 	}
 
 	@Override
@@ -960,6 +968,11 @@ public class FileDataHandlerImpl implements DataHandler {
 		return true;
 	}
 	
+	@Override
+	public void saveProjectAnalysis(ProjectAnalysis projectAnalysis) throws ApplicationException {
+		throw new ApplicationRuntimeException("SHOULD NOT PASS HERE : This method with the ProjectAnalysis parameter is dedicated to slaves.");
+	}
+
 	void removePathnamesFile (Project project, PathsType pathsType ) throws ApplicationException {
 		String filename = this.generatePathnamesFile(project, pathsType);
 		File f = rootLocation.resolve(filename).toFile();

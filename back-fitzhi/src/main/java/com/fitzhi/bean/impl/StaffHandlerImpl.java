@@ -80,7 +80,7 @@ public class StaffHandlerImpl extends AbstractDataSaverLifeCycleImpl implements 
 	/**
 	 * The Project collection.
 	 */
-	private Map<Integer, Staff> theStaff;
+	private Map<Integer, Staff> theStaff = null;
 
 	/**
 	 * Bean in charge of saving/loading data.
@@ -639,7 +639,7 @@ public class StaffHandlerImpl extends AbstractDataSaverLifeCycleImpl implements 
 	@Override
 	public void createOffSetStaff() {
 		if (log.isDebugEnabled()) {
-			log.debug("Creation of the offset-staff member");
+			log.info("Creation of the offset-staff member");
 		}
 		addNewStaff(new Staff(SLAVE_OFFSET));
 	}

@@ -702,6 +702,15 @@ public class ProjectController  {
 			throw new ApplicationException(
 				CODE_GIT_ERROR, MessageFormat.format(MESSAGE_GIT_ERROR, oProject.get().getId(), oProject.get().getName()), e);
 		}
+		
+		if (log.isInfoEnabled()) {
+			log.info(String.format("Send %d eligibile staff members top the main application", staffHandler.getStaff().size()));
+		}
+		
+		
+		// We save the staff impacted by the analysis to the main application.
+		dataHandler.saveStaff(project, staffHandler.getStaff());
+		
 		tasks.completeTask(DASHBOARD_GENERATION, PROJECT, oProject.get().getId());
 
 		return ResponseEntity.noContent().build();

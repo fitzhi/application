@@ -4,8 +4,8 @@ import static com.fitzhi.Error.CODE_IO_ERROR;
 import static com.fitzhi.Error.CODE_METHOD_NOT_FOUND_EXCEPTION;
 import static com.fitzhi.Error.MESSAGE_IO_ERROR;
 import static com.fitzhi.Error.MESSAGE_METHOD_NOT_FOUND_EXCEPTION;
-import static com.fitzhi.Global.INTERNAL_FILE_SEPARATORCHAR;
 import static com.fitzhi.Error.getStackTrace;
+import static com.fitzhi.Global.INTERNAL_FILE_SEPARATORCHAR;
 
 import java.io.IOException;
 import java.io.Reader;
@@ -21,6 +21,11 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.Profile;
+import org.springframework.stereotype.Service;
+
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fitzhi.ApplicationRuntimeException;
 import com.fitzhi.Global;
@@ -29,6 +34,7 @@ import com.fitzhi.bean.HttpAccessHandler;
 import com.fitzhi.bean.HttpConnectionHandler;
 import com.fitzhi.data.internal.Constellation;
 import com.fitzhi.data.internal.Project;
+import com.fitzhi.data.internal.ProjectAnalysis;
 import com.fitzhi.data.internal.ProjectBuilding;
 import com.fitzhi.data.internal.ProjectDetectedExperiences;
 import com.fitzhi.data.internal.ProjectLayer;
@@ -46,11 +52,6 @@ import com.opencsv.CSVParserBuilder;
 import com.opencsv.CSVReader;
 import com.opencsv.CSVReaderBuilder;
 import com.opencsv.CSVWriter;
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.context.annotation.Profile;
-import org.springframework.stereotype.Service;
 
 import lombok.extern.slf4j.Slf4j;
 
@@ -128,10 +129,22 @@ public class HttpDataHandlerImpl<T> implements DataHandler {
 		projects.forEach(p -> map.put(p.getId(), p));
 		return map;
 	}
-
 	@Override
 	public void saveStaff(Map<Integer, Staff> staff) throws ApplicationException {
-		throw new ApplicationRuntimeException (NOT_IMPLEMENTED_YET);
+		throw new ApplicationRuntimeException("SHOULD NOT PASS HERE : Saving the staff collection from the slave requires a PROJECT.");
+	}
+
+	@Override
+	public void saveStaff(Project project, Map<Integer, Staff> staff) throws ApplicationException {
+		if (!httpConnectionHandler.isConnected()) {
+			httpConnectionHandler.connect(login, pass);
+		}
+		List<Staff> list = new ArrayList<>(staff.values());
+		if (log.isInfoEnabled()) {
+			log.info(String.format("Send %d eligibile staff members top the main application", list.size()));
+		}
+		String url = applicationUrl + "/api/project/" + project.getId() + "/staff";
+		httpAccessStaff.putList(url, list);
 	}
 
 	@Override
@@ -143,6 +156,9 @@ public class HttpDataHandlerImpl<T> implements DataHandler {
 		List<Staff> staff = httpAccessStaff.loadList(url, new TypeReference<List<Staff>>(){});
 		Map<Integer, Staff> map = new HashMap<>();
 		staff.forEach(s -> map.put(s.getIdStaff(), s));
+		if (log.isInfoEnabled()) {
+			log.info (String.format("%d staff have been loaded from the main application", map.size()));
+		}
 		return map;
 	}
 
@@ -373,6 +389,10 @@ public class HttpDataHandlerImpl<T> implements DataHandler {
 	@Override
 	public boolean isLocal() {
 		return false;
+	}
+
+	@Override
+	public void saveProjectAnalysis(ProjectAnalysis projectAnalysis) throws ApplicationException {
 	}
 
 	/**

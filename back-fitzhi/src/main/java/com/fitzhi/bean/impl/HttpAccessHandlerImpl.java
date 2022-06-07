@@ -12,19 +12,14 @@ import java.text.MessageFormat;
 import java.util.List;
 import java.util.Map;
 
-import com.fasterxml.jackson.core.type.TypeReference;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fitzhi.ApplicationRuntimeException;
-import com.fitzhi.bean.HttpAccessHandler;
-import com.fitzhi.bean.HttpConnectionHandler;
-import com.fitzhi.exception.ApplicationException;
-
 import org.apache.http.HttpHeaders;
 import org.apache.http.HttpResponse;
 import org.apache.http.HttpStatus;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPut;
+import org.apache.http.entity.ByteArrayEntity;
+import org.apache.http.entity.ContentType;
 import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.HttpClientBuilder;
 import org.apache.http.util.EntityUtils;
@@ -32,6 +27,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Profile;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Service;
+
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fitzhi.ApplicationRuntimeException;
+import com.fitzhi.bean.HttpAccessHandler;
+import com.fitzhi.bean.HttpConnectionHandler;
+import com.fitzhi.exception.ApplicationException;
 
 import lombok.extern.slf4j.Slf4j;
 
@@ -175,7 +177,7 @@ public class HttpAccessHandlerImpl<T> implements HttpAccessHandler<T> {
 			}
 			httpPut.setHeader(HttpHeaders.AUTHORIZATION, "Bearer " + httpConnectionHandler.getToken().getAccess_token());
 
-			httpPut.setEntity(new StringEntity(objectMapper.writeValueAsString(list)));
+			httpPut.setEntity(new ByteArrayEntity(objectMapper.writeValueAsBytes(list), ContentType.APPLICATION_JSON));
 			httpPut.setHeader(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_UTF8.toString());
 
 			HttpResponse response = client.execute(httpPut);

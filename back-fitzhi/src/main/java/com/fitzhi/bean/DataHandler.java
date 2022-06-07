@@ -8,6 +8,7 @@ import java.util.Map;
 import com.fitzhi.data.internal.Constellation;
 import com.fitzhi.data.internal.DetectedExperience;
 import com.fitzhi.data.internal.Project;
+import com.fitzhi.data.internal.ProjectAnalysis;
 import com.fitzhi.data.internal.ProjectBuilding;
 import com.fitzhi.data.internal.ProjectDetectedExperiences;
 import com.fitzhi.data.internal.ProjectLayers;
@@ -59,12 +60,29 @@ public interface DataHandler {
 	Map<Integer, Project> loadProjects() throws ApplicationException;
 
 	/**
-	 * Save the staff on a persistent media
+	 * <p>
+	 * Save the staff collection on a persistent media.
+	 * This global method will be used only by the Main application of Fitzhi.
+	 * </p>
 	 * @param staff list of staff
 	 * @throws ApplicationException thrown if exception occurs during the saving process
 	 */
 	void saveStaff(Map<Integer, Staff> staff) throws ApplicationException;
 	
+	/**
+	 * <p>
+	 * Save the staff collection on a persistent media
+	 * </p>
+	 * <p>
+	 * This method is only called by slaves, because changes made on staff members are dedicated to a project. 
+	 * </p>
+	 * @param project the given project
+	 * @param staff list of staff members
+	 * @throws ApplicationException thrown if exception occurs during the saving process
+	 */
+	void saveStaff(Project project, Map<Integer, Staff> staff) throws ApplicationException;
+
+
 	/**
 	 * Load the staff members from a persistent media
 	 * @return the staff
@@ -314,4 +332,19 @@ public interface DataHandler {
 	 * @return {@code true} if the data are loaded and saved locally on the <strong>LOCAL</strong> file system, {@code false} <em>(e.g. <strong>REMOTE</strong>)</em> otherwise.
 	 */
 	boolean isLocal();
+
+
+	/**
+	 * <p>
+	 * Save the data resulting from the project analysis executed by a slave of Fitzhi. 
+	 * The {@link ProjectAnalysis} object is a subset of the {@link Project} object, and is containing the data regarding ONLY with the Fitzhi analysis.
+	 * </p>
+	 * <p><em>
+	 * <strong>This method is dedicated to slaves.</strong>
+	 * </em></p>
+	 * @param projectAnalysis the project analysis container object
+	 * @throws ApplicationException thrown if exception occurs during the saving process
+	 */
+	void saveProjectAnalysis(ProjectAnalysis projectAnalysis) throws ApplicationException;
+
 }

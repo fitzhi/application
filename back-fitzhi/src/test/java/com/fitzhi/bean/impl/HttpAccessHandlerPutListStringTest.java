@@ -40,7 +40,7 @@ import org.springframework.test.context.junit4.SpringRunner;
 @SpringBootTest
 @TestPropertySource(properties = {"applicationUrl=my-mock-url", "organization=fitzhi" })
 @ActiveProfiles("slave")
-public class HttpAccessHandlerPutListTest {
+public class HttpAccessHandlerPutListStringTest {
  
 	@Autowired
 	HttpAccessHandler<String> httpAccessHandler;
