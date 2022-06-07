@@ -111,6 +111,14 @@ public @Data class Staff implements UserDetails {
 	}
 
 	/**
+	 * Build a staff member with his Staff identifier.
+	 */
+	public Staff(int idStaff) {
+		this();
+		this.idStaff = idStaff;
+	}
+
+	/**
 	 * Creation of a empty staff member just on a his login/password
 	 * 
 	 * @param idStaff  the staff identified of the newly created staff member

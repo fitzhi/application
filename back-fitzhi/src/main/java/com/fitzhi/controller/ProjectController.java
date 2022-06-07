@@ -656,6 +656,7 @@ public class ProjectController  {
 			throw new ApplicationException(CODE_ENDPOINT_SLAVE_URL_GIT_MANDATORY, MESSAGE_ENDPOINT_SLAVE_URL_GIT_MANDATORY);
 		}
 
+
 		//
 		// We filter the collection of projects on one single element, corresponding to the current project being analyzed.
 		//
@@ -687,6 +688,12 @@ public class ProjectController  {
 		}
 
 		tasks.addTask(DASHBOARD_GENERATION, PROJECT, project.getId());
+
+		//
+		// If we create new staff members during this analysis, we isolate them after an offset to facilitate the reconciliation on the Main application.
+		//
+		staffHandler.createOffSetStaff();;
+
 		// We start the generation
 		try {
 			scanner.generate(project, settings);
@@ -700,6 +707,41 @@ public class ProjectController  {
 		return ResponseEntity.noContent().build();
 
 	}
+
+	/**
+	 * <p>
+	 * Update the Fitzhi staff collection with the given list of collaborators.
+	 * This end-point is used by slaves to inform the main applications on change impacted by their analysis, to the staff members.
+	 * </p>
+	 * <p>
+	 * There might be <strong>UPDATE</strong>, or <strong>CREATION</strong> operations during this process.
+	 * A {@code PUT} Medhod is used therefore. There will be no return value because this end-point is supposed to be invoked by a slave.
+	 * </p>
+	 * @param staff the staff collection to be taken in account. This collection is sent inside the body of a {@code PUT} Medhod.
+	 */
+	@ApiOperation(
+		value =  
+			"Update the Fitzhi staff collection with the given list of collaborators. There might be UPDATE, or CREATION of staff when processing this operation."
+			+ "A PUT Medhod is used therefore. There will be no return value because this end-point is supposed to be invoked by a slave",
+		notes = "This end-point is used by slaves to inform the main application on change impacted by their analysis, to the staff members."	)
+	@PutMapping("/{idProject}/staff")
+	public ResponseEntity<Void> updateListStaff(@PathVariable("idProject") int idProject, @RequestBody List<Staff> staff)
+			throws NotFoundException, ApplicationException {
+
+		if (!projectHandler.containsProject(idProject)) {
+			throw new NotFoundException(CODE_PROJECT_NOFOUND, MessageFormat.format(MESSAGE_PROJECT_NOFOUND, idProject + ""));
+		}
+		Project project = projectHandler.getProject(idProject);
+		if (log.isInfoEnabled()) {
+			log.info(String.format("Taking in account the staff impacted by the analysis of project %d %s", project.getId(), project.getName()));
+		}
+		
+		staffHandler.updateStaffAfterAnalysis(project, staff);
+
+		return ResponseEntity.noContent().build();
+	}
+
+
 
 	/**
 	 * <p>

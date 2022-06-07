@@ -30,13 +30,13 @@ import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
 
 /**
- * Testing the URL {@code /staff/save} and the controller {@link StaffController}
+ * Testing the URL {@code /api/staff/{idStaff}} and the controller {@link StaffController}
  * @author Fr&eacute;d&eacute;ric VIDAL
  */
 @RunWith(SpringRunner.class)
 @SpringBootTest
 @AutoConfigureMockMvc
-public class StaffControllerSaveStaffMemberTest {
+public class StaffControllerUpdateStaffTest {
 
 	private final String STAFF_SAVE = "/api/staff";
 

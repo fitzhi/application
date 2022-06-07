@@ -5,6 +5,7 @@ import static com.fitzhi.Error.CODE_ENDPOINT_SLAVE_URL_GIT_MANDATORY;
 import static com.fitzhi.Error.CODE_PROJECT_NOT_FOUND_URL_GIT;
 import static org.hamcrest.Matchers.is;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -20,6 +21,7 @@ import java.util.Optional;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fitzhi.bean.DataHandler;
 import com.fitzhi.bean.ProjectHandler;
+import com.fitzhi.bean.StaffHandler;
 import com.fitzhi.controller.ProjectController;
 import com.fitzhi.controller.in.SettingsGeneration;
 import com.fitzhi.data.internal.DataChart;
@@ -59,6 +61,9 @@ public class ProjectControllerSlaveGateTest {
 
 	@MockBean
 	private ProjectHandler projectHandler;
+
+	@MockBean
+	private StaffHandler staffHandler;
 
 	@MockBean
 	private DataHandler dataHandler;
@@ -146,6 +151,8 @@ public class ProjectControllerSlaveGateTest {
 
 		when(scanner.generate(any(Project.class), any(SettingsGeneration.class))).thenReturn(
 			new RiskDashboard(new DataChart(""), Collections.emptyList()));
+
+		doNothing().when(staffHandler).createOffSetStaff();
 
 		SettingsGeneration settings = new SettingsGeneration();
 		settings.setUrlRepository("https://myUrlRepository");

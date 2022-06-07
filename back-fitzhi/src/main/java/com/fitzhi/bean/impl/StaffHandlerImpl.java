@@ -495,7 +495,6 @@ public class StaffHandlerImpl extends AbstractDataSaverLifeCycleImpl implements 
 						(fullname != null) ? fullname : "unknown"));
 			});
 		}
-		
 	}
 
 	@Override
@@ -638,6 +637,15 @@ public class StaffHandlerImpl extends AbstractDataSaverLifeCycleImpl implements 
 	}
 
 	@Override
+	public void createOffSetStaff() {
+		if (log.isDebugEnabled()) {
+			log.debug("Creation of the offset-staff member");
+		}
+		addNewStaff(new Staff(SLAVE_OFFSET));
+	}
+	
+
+	@Override
 	public Staff createStaffMember(OpenIdToken openIdToken) throws ApplicationException {
 
 		Staff staff = new Staff();
@@ -673,7 +681,7 @@ public class StaffHandlerImpl extends AbstractDataSaverLifeCycleImpl implements 
 	}
 
 	@Override
-	public void updateWorkforceMember(Staff input) throws ApplicationException {
+	public void updateStaff(Staff input) throws ApplicationException {
 
 		controlWorkforceMember(input);
 
@@ -700,6 +708,52 @@ public class StaffHandlerImpl extends AbstractDataSaverLifeCycleImpl implements 
 			getStaff().put(updStaff.getIdStaff(), updStaff);
 			this.dataUpdated = true;
 		}
+	}
+
+
+	@Override
+	public void updateStaffAfterAnalysis(Project project, List<Staff> listStaff) throws ApplicationException {
+
+		if (log.isDebugEnabled()) {
+			log.debug(String.format("Taking in account %d staff members", listStaff.size()));
+		}
+
+		//
+		// First we revoke this project from the global staff collection
+		//
+		List<Integer> toBeCleaned = new ArrayList<>();
+		for (Staff staff : getStaff().values()) {
+			if (staff.getMissions().stream().anyMatch(m -> m.getIdProject() == project.getId())) {
+				toBeCleaned.add(staff.getIdStaff());
+			}
+		}
+		if (log.isDebugEnabled()) {
+			log.debug(String.format("%d staff had mission with project %d %s", toBeCleaned.size(), project.getId(), project.getName()));
+		}
+		for (Integer idStaff : toBeCleaned) {
+			removeMission(idStaff, project.getId());
+		}
+
+		//
+		// Then 
+		// either we add the updated missions to the existing staff member 
+		// or we create new staff members
+		//
+		for (Staff staff : listStaff) {
+			if (staff.getMissions().stream().anyMatch(m -> m.getIdProject() == project.getId())) {
+				Mission mission = staff.getMissions().stream().filter(m -> m.getIdProject() == project.getId()).findAny().get();
+				// It's an existing staff member
+				if (staff.getIdStaff() < StaffHandler.SLAVE_OFFSET) {
+					// We Update the staff from the company() collection.
+					addMission(getStaff().get(staff.getIdStaff()), mission);
+				} else {
+					// We force the renumeration of the Staff identifier for the creation
+					staff.setIdStaff(-1);
+					addNewStaff(staff);
+				}
+			}
+		}
+
 	}
 
 	@Override
@@ -790,16 +844,19 @@ public class StaffHandlerImpl extends AbstractDataSaverLifeCycleImpl implements 
 	}
 
 	@Override
-	public void addMission(int idStaff, int idProject, String projectName) {
-		
-		final Staff staff = getStaff().get(idStaff);
-		if (staff == null) {
-			throw new ApplicationRuntimeException(
-				"SEVERE DATA CONSISTENCY ERROR " + MessageFormat.format(Error.MESSAGE_STAFF_NOFOUND, idStaff));
+	public void addMission(int idStaff, int idProject, String projectName) {		
+		try {
+			Staff staff = getStaff(idStaff);
+			addMission(staff, new Mission (idStaff, idProject, projectName));
+		} catch (NotFoundException nfe) {
+			throw new ApplicationRuntimeException("SEVERE DATA CONSISTENCY ERROR " + MessageFormat.format(Error.MESSAGE_STAFF_NOFOUND, idStaff));
 		}
-		
+	}
+
+	@Override
+	public void addMission(Staff staff, Mission mission) {
 		synchronized (lockDataUpdated) {
-			staff.getMissions().add(new Mission (idStaff, idProject, projectName));
+			staff.getMissions().add(mission);
 			this.dataUpdated = true;
 		}
 	}
@@ -971,6 +1028,12 @@ public class StaffHandlerImpl extends AbstractDataSaverLifeCycleImpl implements 
 		}
 	}
 	
+	@Override
+	public boolean hasMission(int idStaff, int idProject) throws NotFoundException {
+		Staff staff = getStaff(idStaff);
+		return staff.getMissions().stream().anyMatch(pr -> (pr.getIdProject() == idProject));
+	}
+
 	@Override
 	public void updateSkillSystemLevel(int idStaff, int idSkill, int level) throws ApplicationException {
 		synchronized (lockDataUpdated) {

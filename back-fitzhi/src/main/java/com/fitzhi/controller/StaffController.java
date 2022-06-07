@@ -179,7 +179,7 @@ public class StaffController {
 			log.debug (String.format("staff.toString() : %s ", staff.toString()));
 		}
 
-		staffHandler.updateWorkforceMember(staff);
+		staffHandler.updateStaff(staff);
 
 		return ResponseEntity.noContent().build();
 	}
@@ -652,6 +652,5 @@ public class StaffController {
 		}
 		return constellations;
 	}
-
 
 }
