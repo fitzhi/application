@@ -747,14 +747,34 @@ public class StaffHandlerImpl extends AbstractDataSaverLifeCycleImpl implements 
 					// We Update the staff from the company() collection.
 					addMission(getStaff().get(staff.getIdStaff()), mission);
 				} else {
-					// We force the renumeration of the Staff identifier for the creation
-					staff.setIdStaff(-1);
+					int nextIdStaff = nextIdStaff();
+					renumber(staff, nextIdStaff);
 					addNewStaff(staff);
 				}
 			}
 		}
-
 	}
+
+	/**
+	 * Renumber the staff container with the next ID.
+	 * @param staff the staff object to be updated with the new ID number
+	 * @param nextIdStaff the new ID number
+	 */
+	public static void renumber(Staff staff, int nextIdStaff) {
+		int formerIdStaff = staff.getIdStaff();
+		staff.setIdStaff(nextIdStaff);
+		staff.getMissions().stream().forEach(m -> {
+			if (m.getIdStaff() == formerIdStaff) {
+				m.setIdStaff(nextIdStaff);
+				m.getStaffActivitySkill().values().stream()
+					.forEach( sas -> {
+						sas.setIdStaff(nextIdStaff);
+					}
+				);
+			}
+		});
+	}
+
 
 	@Override
 	public Staff removeStaff(int idStaff) {

@@ -149,35 +149,5 @@
         "accountNonLocked": true,
         "credentialsNonExpired": true,
         "username": "Frédéric VIDAL"
-    },
-    {
-        "idStaff": 1000000,
-        "firstName": null,
-        "lastName": null,
-        "nickName": null,
-        "login": null,
-        "email": null,
-        "level": null,
-        "password": null,
-        "forceActiveState": false,
-        "active": true,
-        "dateInactive": null,
-        "application": null,
-        "typeOfApplication": 0,
-        "external": false,
-        "missions": [],
-        "experiences": [],
-        "authorities": [
-            {
-                "authority": "ROLE_TRUSTED_USER"
-            }
-        ],
-        "openIds": [],
-        "empty": true,
-        "enabled": true,
-        "accountNonExpired": true,
-        "accountNonLocked": true,
-        "credentialsNonExpired": true,
-        "username": null
     }
 ]
