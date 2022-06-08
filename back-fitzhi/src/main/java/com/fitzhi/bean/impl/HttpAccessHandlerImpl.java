@@ -18,7 +18,6 @@ import org.apache.http.HttpStatus;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPut;
-import org.apache.http.entity.ByteArrayEntity;
 import org.apache.http.entity.ContentType;
 import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.HttpClientBuilder;
@@ -127,42 +126,45 @@ public class HttpAccessHandlerImpl<T> implements HttpAccessHandler<T> {
 				httpPut.setEntity(new StringEntity((String) o));
 				httpPut.setHeader(HttpHeaders.CONTENT_TYPE, MediaType.TEXT_PLAIN_VALUE);
 			} else {
-				httpPut.setEntity(new StringEntity(objectMapper.writeValueAsString(o)));
+				httpPut.setEntity(new StringEntity(objectMapper.writeValueAsString(o), ContentType.APPLICATION_JSON));
 				httpPut.setHeader(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_UTF8.toString());
 			}
 
 			HttpResponse response = client.execute(httpPut);
 			int statusCode = response.getStatusLine().getStatusCode();
-			if (statusCode == HttpStatus.SC_OK) {
-				if ((response.getHeaders(HttpHeaders.CONTENT_TYPE) != null) && (response.getFirstHeader(HttpHeaders.CONTENT_TYPE) != null)) {
-					String contentType = response.getFirstHeader(HttpHeaders.CONTENT_TYPE).getValue();
-					if (log.isDebugEnabled()) {
-						log.debug(String.format("Content Type %s.", contentType));
-					}
-					if ( (MediaType.APPLICATION_JSON_VALUE.equals (contentType)) || (MediaType.APPLICATION_JSON_UTF8_VALUE.equals (contentType))) {
-						return objectMapper.readValue(EntityUtils.toString(response.getEntity()), typeReference);
-					}
-					if ( (MediaType.TEXT_PLAIN_VALUE.equals (contentType)) ) {
-						if (typeReference.getType().equals(String.class)) {
-							return cast(response.getEntity());
-						} else {
-							throw new ApplicationRuntimeException("Not implemented yet!");
+			switch (statusCode) {
+				case HttpStatus.SC_OK:
+					if ((response.getHeaders(HttpHeaders.CONTENT_TYPE) != null) && (response.getFirstHeader(HttpHeaders.CONTENT_TYPE) != null)) {
+						String contentType = response.getFirstHeader(HttpHeaders.CONTENT_TYPE).getValue();
+						if (log.isDebugEnabled()) {
+							log.debug(String.format("Content Type %s.", contentType));
 						}
+						if ( (MediaType.APPLICATION_JSON_VALUE.equals (contentType)) || (MediaType.APPLICATION_JSON_UTF8_VALUE.equals (contentType))) {
+							return objectMapper.readValue(EntityUtils.toString(response.getEntity()), typeReference);
+						}
+						if ( (MediaType.TEXT_PLAIN_VALUE.equals (contentType)) ) {
+							if (typeReference.getType().equals(String.class)) {
+								return cast(response.getEntity());
+							} else {
+								throw new ApplicationRuntimeException("Not implemented yet!");
+							}
+						}
+						throw new ApplicationRuntimeException(String.format("Content-type %s not implemented yet!", contentType));
+					} else {
+						throw new ApplicationRuntimeException("No content-type found in response.");
 					}
-					throw new ApplicationRuntimeException(String.format("Content-type %s not implemented yet!", contentType));
-				} else {
-					throw new ApplicationRuntimeException("No content-type found in response.");
+				case HttpStatus.SC_NO_CONTENT:
+					return null;
+				default:
+					if (log.isWarnEnabled()) {
+						log.warn(String.format("Http error with %s %s %s", url, response.getStatusLine().getStatusCode(), response.getStatusLine().getReasonPhrase()));
+					}
+					throw new ApplicationException(CODE_HTTP_ERROR, MessageFormat.format(MESSAGE_HTTP_ERROR, response.getStatusLine().getReasonPhrase(), url));
 				}
-			} else {
-				if (log.isWarnEnabled()) {
-					log.warn(String.format("Http error with %s %s %s", url, response.getStatusLine().getStatusCode(), response.getStatusLine().getReasonPhrase()));
-				}
-				throw new ApplicationException(CODE_HTTP_ERROR, MessageFormat.format(MESSAGE_HTTP_ERROR, response.getStatusLine().getReasonPhrase(), url));
+			} catch (final IOException ioe) {
+				log.error(ioe.getMessage(), ioe);
+				throw new ApplicationException(CODE_HTTP_CLIENT_ERROR, MessageFormat.format(MESSAGE_HTTP_CLIENT_ERROR, url), ioe);
 			}
-		} catch (final IOException ioe) {
-			log.error(ioe.getMessage(), ioe);
-			throw new ApplicationException(CODE_HTTP_CLIENT_ERROR, MessageFormat.format(MESSAGE_HTTP_CLIENT_ERROR, url), ioe);
-		}
 	}
 
 	@Override
@@ -177,7 +179,11 @@ public class HttpAccessHandlerImpl<T> implements HttpAccessHandler<T> {
 			}
 			httpPut.setHeader(HttpHeaders.AUTHORIZATION, "Bearer " + httpConnectionHandler.getToken().getAccess_token());
 
-			httpPut.setEntity(new ByteArrayEntity(objectMapper.writeValueAsBytes(list), ContentType.APPLICATION_JSON));
+			String s = objectMapper.writeValueAsString(list);
+			if (log.isInfoEnabled()) {
+				log.info(String.format("Sending %s", s));
+			}
+			httpPut.setEntity(new StringEntity(s, ContentType.APPLICATION_JSON));
 			httpPut.setHeader(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_UTF8.toString());
 
 			HttpResponse response = client.execute(httpPut);

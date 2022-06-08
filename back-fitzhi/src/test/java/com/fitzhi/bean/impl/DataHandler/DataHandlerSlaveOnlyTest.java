@@ -1,35 +1,22 @@
 package com.fitzhi.bean.impl.DataHandler;
 
-import static org.mockito.Mockito.when;
-
-import org.junit.After;
-import org.junit.Assert;
-
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.HashMap;
-import java.util.Map;
 
-import com.fitzhi.ApplicationRuntimeException;
-import com.fitzhi.bean.DataHandler;
-import com.fitzhi.bean.ShuffleService;
-import com.fitzhi.data.internal.Project;
-import com.fitzhi.data.internal.ProjectAnalysis;
-import com.fitzhi.data.internal.Staff;
-import com.fitzhi.exception.ApplicationException;
-
-import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.annotation.DirtiesContext.ClassMode;
 import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.context.junit4.SpringRunner;
+
+import com.fitzhi.ApplicationRuntimeException;
+import com.fitzhi.bean.DataHandler;
+import com.fitzhi.data.internal.Project;
+import com.fitzhi.data.internal.ProjectAnalysis;
+import com.fitzhi.data.internal.Staff;
+import com.fitzhi.exception.ApplicationException;
 
 /**
  * Test of the method {@link DataHandler#saveStaff(java.util.Map)}

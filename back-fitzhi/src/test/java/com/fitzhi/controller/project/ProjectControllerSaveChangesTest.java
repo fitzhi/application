@@ -1,6 +1,7 @@
 package com.fitzhi.controller.project;
 
 import static com.fitzhi.Error.CODE_PROJECT_NOFOUND;
+
 import static org.hamcrest.Matchers.is;
 import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.never;
@@ -105,7 +106,7 @@ public class ProjectControllerSaveChangesTest {
 	@WithMockUser
 	public void saveWithRealData() throws Exception {
 
-		File file = new File("./src/test/resources/slave-save-changes/changes.csv");
+		File file = new File("./src/test/resources/slave-save-data/changes.csv");
 		final BufferedReader br = new BufferedReader(new FileReader(file));
 		StringBuilder analysis = br.lines().collect(StringBuilder::new, StringBuilder::append, StringBuilder::append);
 		br.close();

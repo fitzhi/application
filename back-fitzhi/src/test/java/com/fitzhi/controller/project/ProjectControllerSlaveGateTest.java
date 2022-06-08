@@ -5,6 +5,7 @@ import static com.fitzhi.Error.CODE_ENDPOINT_SLAVE_URL_GIT_MANDATORY;
 import static com.fitzhi.Error.CODE_PROJECT_NOT_FOUND_URL_GIT;
 import static org.hamcrest.Matchers.is;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyMap;
 import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
@@ -18,18 +19,6 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import java.util.Collections;
 import java.util.Optional;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fitzhi.bean.DataHandler;
-import com.fitzhi.bean.ProjectHandler;
-import com.fitzhi.bean.StaffHandler;
-import com.fitzhi.controller.ProjectController;
-import com.fitzhi.controller.in.SettingsGeneration;
-import com.fitzhi.data.internal.DataChart;
-import com.fitzhi.data.internal.Project;
-import com.fitzhi.data.internal.ProjectLookupCriteria;
-import com.fitzhi.data.internal.RiskDashboard;
-import com.fitzhi.source.crawler.RepoScanner;
-
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -40,6 +29,19 @@ import org.springframework.http.MediaType;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
+
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fitzhi.bean.DataHandler;
+import com.fitzhi.bean.ProjectHandler;
+import com.fitzhi.bean.StaffHandler;
+import com.fitzhi.controller.ProjectController;
+import com.fitzhi.controller.in.SettingsGeneration;
+import com.fitzhi.data.internal.DataChart;
+import com.fitzhi.data.internal.Project;
+import com.fitzhi.data.internal.ProjectAnalysis;
+import com.fitzhi.data.internal.ProjectLookupCriteria;
+import com.fitzhi.data.internal.RiskDashboard;
+import com.fitzhi.source.crawler.RepoScanner;
 
 /**
  * <p>
@@ -153,6 +155,8 @@ public class ProjectControllerSlaveGateTest {
 			new RiskDashboard(new DataChart(""), Collections.emptyList()));
 
 		doNothing().when(staffHandler).createOffSetStaff();
+		doNothing().when(dataHandler).saveStaff(any(Project.class), anyMap());
+		doNothing().when(dataHandler).saveProjectAnalysis(any(ProjectAnalysis.class));
 
 		SettingsGeneration settings = new SettingsGeneration();
 		settings.setUrlRepository("https://myUrlRepository");
@@ -166,7 +170,8 @@ public class ProjectControllerSlaveGateTest {
 			.andDo(print())
 			.andReturn();
 		
-		verify(scanner, times(1)).generate(any(Project.class), any(SettingsGeneration.class));
+		verify(dataHandler, times(1)).saveStaff(any(Project.class), anyMap());
+		verify(dataHandler, times(1)).saveProjectAnalysis(any(ProjectAnalysis.class));
 	}
 
 

@@ -1,5 +1,8 @@
 package com.fitzhi.controller.project;
 
+import static com.fitzhi.Error.CODE_PROJECT_NOFOUND;
+
+import static org.hamcrest.Matchers.is;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.never;
@@ -7,7 +10,10 @@ import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fitzhi.bean.ProjectHandler;
@@ -37,8 +43,6 @@ import org.springframework.test.web.servlet.MockMvc;
 @AutoConfigureMockMvc
 public class ProjectControllerSaveProjectAnalysisTest {
 
-	private int UNKNOWN_ID_PROJECT = 999999;
-	
 	@Autowired
 	private MockMvc mvc;
 	
@@ -51,14 +55,20 @@ public class ProjectControllerSaveProjectAnalysisTest {
 	@Test
 	@WithMockUser
 	public void testUpdateUnknownProject() throws Exception {
-		when(projectHandler.containsProject(UNKNOWN_ID_PROJECT)).thenReturn(false);
+		when(projectHandler.containsProject(999)).thenReturn(false);
 
-		this.mvc.perform(put("/api/project/" + UNKNOWN_ID_PROJECT)
+		this.mvc.perform(put("/api/project/999/analysis")
 			.contentType(MediaType.APPLICATION_JSON_UTF8)
-			.content(objectMapper.writeValueAsString(new ProjectAnalysis(UNKNOWN_ID_PROJECT))))
-			.andExpect(status().isNotFound());
+			.content(objectMapper.writeValueAsString(new ProjectAnalysis(999))))
 
-		verify(projectHandler, never()).getProject(UNKNOWN_ID_PROJECT);
+			.andExpect(status().isNotFound())
+			.andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
+			.andExpect(jsonPath("$.message", is("There is no project for the identifier 999")))
+			.andExpect(jsonPath("$.code", is(CODE_PROJECT_NOFOUND)))
+			.andDo(print());
+
+
+		verify(projectHandler, never()).getProject(999);
 		verify(projectHandler, never()).saveProjectAnalysis(any(ProjectAnalysis.class));
 	}
 	

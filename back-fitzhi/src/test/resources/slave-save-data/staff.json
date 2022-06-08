@@ -1,0 +1,183 @@
+[
+    {
+        "idStaff": 1,
+        "firstName": null,
+        "lastName": null,
+        "nickName": null,
+        "login": "myFakeUser",
+        "email": null,
+        "level": null,
+        "password": "$2a$10$0gTbR5tDXqyKiPVXmX.cSexlPCkjmwSuGTJYDoGdXZM6nccC4SKHm",
+        "forceActiveState": false,
+        "active": true,
+        "dateInactive": null,
+        "application": null,
+        "typeOfApplication": 0,
+        "external": false,
+        "missions": [],
+        "experiences": [],
+        "authorities": [
+            {
+                "authority": "ROLE_TRUSTED_USER"
+            }
+        ],
+        "openIds": [],
+        "empty": true,
+        "enabled": true,
+        "accountNonExpired": true,
+        "accountNonLocked": true,
+        "credentialsNonExpired": true,
+        "username": "myFakeUser"
+    },
+    {
+        "idStaff": 1000001,
+        "firstName": "Frédéric",
+        "lastName": "VIDAL",
+        "nickName": "Frédéric VIDAL",
+        "login": "Frédéric VIDAL",
+        "email": "frederic.vidal@fitzhi.com",
+        "level": null,
+        "password": null,
+        "forceActiveState": false,
+        "active": true,
+        "dateInactive": null,
+        "application": null,
+        "typeOfApplication": 0,
+        "external": false,
+        "missions": [
+            {
+                "idStaff": 1000001,
+                "idProject": 1,
+                "name": "Fitzhi",
+                "firstCommit": "2018-06-07",
+                "lastCommit": "2022-06-07",
+                "numberOfCommits": 2636,
+                "numberOfFiles": 1211,
+                "staffActivitySkill": {
+                    "1": {
+                        "idStaff": 1000001,
+                        "idSkill": 1,
+                        "firstCommit": "2018-07-25",
+                        "lastCommit": "2022-06-07",
+                        "numberOfChanges": 3950
+                    },
+                    "21": {
+                        "idStaff": 1000001,
+                        "idSkill": 21,
+                        "firstCommit": "2018-07-25",
+                        "lastCommit": "2022-05-06",
+                        "numberOfChanges": 89
+                    },
+                    "8": {
+                        "idStaff": 1000001,
+                        "idSkill": 8,
+                        "firstCommit": "2018-06-07",
+                        "lastCommit": "2022-06-05",
+                        "numberOfChanges": 5015
+                    },
+                    "24": {
+                        "idStaff": 1000001,
+                        "idSkill": 24,
+                        "firstCommit": "2019-04-08",
+                        "lastCommit": "2022-05-26",
+                        "numberOfChanges": 96
+                    },
+                    "25": {
+                        "idStaff": 1000001,
+                        "idSkill": 25,
+                        "firstCommit": "2020-02-15",
+                        "lastCommit": "2022-05-19",
+                        "numberOfChanges": 35
+                    },
+                    "12": {
+                        "idStaff": 1000001,
+                        "idSkill": 12,
+                        "firstCommit": "2020-07-09",
+                        "lastCommit": "2022-04-30",
+                        "numberOfChanges": 4
+                    }
+                }
+            }
+        ],
+        "experiences": [
+            {
+                "id": 1,
+                "level": 1,
+                "forced": false,
+                "systemLevel": -1
+            },
+            {
+                "id": 21,
+                "level": 1,
+                "forced": false,
+                "systemLevel": -1
+            },
+            {
+                "id": 24,
+                "level": 1,
+                "forced": false,
+                "systemLevel": -1
+            },
+            {
+                "id": 8,
+                "level": 1,
+                "forced": false,
+                "systemLevel": -1
+            },
+            {
+                "id": 25,
+                "level": 1,
+                "forced": false,
+                "systemLevel": -1
+            },
+            {
+                "id": 12,
+                "level": 1,
+                "forced": false,
+                "systemLevel": -1
+            }
+        ],
+        "authorities": [
+            {
+                "authority": "ROLE_TRUSTED_USER"
+            }
+        ],
+        "openIds": [],
+        "empty": false,
+        "enabled": true,
+        "accountNonExpired": true,
+        "accountNonLocked": true,
+        "credentialsNonExpired": true,
+        "username": "Frédéric VIDAL"
+    },
+    {
+        "idStaff": 1000000,
+        "firstName": null,
+        "lastName": null,
+        "nickName": null,
+        "login": null,
+        "email": null,
+        "level": null,
+        "password": null,
+        "forceActiveState": false,
+        "active": true,
+        "dateInactive": null,
+        "application": null,
+        "typeOfApplication": 0,
+        "external": false,
+        "missions": [],
+        "experiences": [],
+        "authorities": [
+            {
+                "authority": "ROLE_TRUSTED_USER"
+            }
+        ],
+        "openIds": [],
+        "empty": true,
+        "enabled": true,
+        "accountNonExpired": true,
+        "accountNonLocked": true,
+        "credentialsNonExpired": true,
+        "username": null
+    }
+]

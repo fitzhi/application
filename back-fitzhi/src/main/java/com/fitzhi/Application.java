@@ -2,6 +2,7 @@ package com.fitzhi;
 
 import java.util.Locale;
 
+import com.fitzhi.bean.DataHandler;
 import com.fitzhi.bean.StaffHandler;
 import com.fitzhi.service.StorageService;
 import com.fitzhi.service.impl.storageservice.ApplicationStorageProperties;
@@ -9,6 +10,7 @@ import com.fitzhi.service.impl.storageservice.AuditAttachmentStorageProperties;
 import com.fitzhi.source.crawler.git.GitCrawler;
 
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.CommandLineRunner;
@@ -77,6 +79,9 @@ public class Application {
 	@Value("${cron.experiences.detection}")
 	private String cronExperencesDetection;
 		
+	@Autowired
+	DataHandler dataHandler;
+
 	public static void main(String[] args) {
 		LoggerFactory.getLogger(Application.class.getCanonicalName()).info("Starting Backend 质 Fitzhì");
 		SpringApplication.run(Application.class, args);
@@ -101,7 +106,8 @@ public class Application {
 			LoggerFactory.getLogger(Application.class.getCanonicalName()).info("\t {}", dependenciesMarker);
 			LoggerFactory.getLogger(Application.class.getCanonicalName()).info(((collapseEmptyDirectory) ? "\tDirectories should be collapsed" : "\tDirectories should NOT be collaped"));
 			LoggerFactory.getLogger(Application.class.getCanonicalName()).info(((prefilterEligibility) ? "\tFile eligibility is PREfiltered" : "\tFile eligibility id POSTfiltered"));
-			LoggerFactory.getLogger(Application.class.getCanonicalName()).info( String.format("\tCRON settings for the task detection of experiences is \"%s\"", cronExperencesDetection));
+			LoggerFactory.getLogger(Application.class.getCanonicalName()).info( dataHandler.isLocal() ? "This is the main application" : "This is a slave");
+			LoggerFactory.getLogger(Application.class.getCanonicalName()).info( String.format("\tCRON settings for the detection of experiences is \"%s\"", cronExperencesDetection));
 			if (reposDir == null) {
 				LoggerFactory.getLogger(Application.class.getCanonicalName()).info("\tLocal repositories are hosted in a temporary destination") ;
 			} else {

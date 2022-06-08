@@ -111,6 +111,9 @@ public class HttpDataHandlerImpl<T> implements DataHandler {
 	@Autowired
 	HttpAccessHandler<ProjectLayer> httpAccessProjectLayer;
 
+	@Autowired
+	HttpAccessHandler<Void> httpAccessVoid;
+
 	private static String NOT_IMPLEMENTED_YET = "Not implemented yet";
 
 	@Override
@@ -393,6 +396,11 @@ public class HttpDataHandlerImpl<T> implements DataHandler {
 
 	@Override
 	public void saveProjectAnalysis(ProjectAnalysis projectAnalysis) throws ApplicationException {
+		if (!httpConnectionHandler.isConnected()) {
+			httpConnectionHandler.connect(login, pass);
+		}
+		String url = applicationUrl + "/api/project/" + projectAnalysis.getId() + "/analysis";
+		httpAccessVoid.put(url, projectAnalysis, new TypeReference<Void>(){});
 	}
 
 	/**

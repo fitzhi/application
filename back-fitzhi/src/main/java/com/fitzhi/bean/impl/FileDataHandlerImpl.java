@@ -37,6 +37,11 @@ import java.util.stream.Collectors;
 
 import javax.annotation.PostConstruct;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.Profile;
+import org.springframework.stereotype.Service;
+
 import com.fitzhi.ApplicationRuntimeException;
 import com.fitzhi.Global;
 import com.fitzhi.bean.DataHandler;
@@ -60,7 +65,6 @@ import com.fitzhi.data.internal.Staff;
 import com.fitzhi.exception.ApplicationException;
 import com.fitzhi.exception.NotFoundException;
 import com.fitzhi.source.crawler.git.SourceChange;
-import com.google.errorprone.annotations.OverridingMethodsMustInvokeSuper;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
@@ -69,11 +73,6 @@ import com.opencsv.CSVParserBuilder;
 import com.opencsv.CSVReader;
 import com.opencsv.CSVReaderBuilder;
 import com.opencsv.CSVWriter;
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.context.annotation.Profile;
-import org.springframework.stereotype.Service;
 
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;

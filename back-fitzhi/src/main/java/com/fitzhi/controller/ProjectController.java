@@ -678,8 +678,7 @@ public class ProjectController  {
 		project.setAudit(Collections.emptyMap());
 		project.setAuditEvaluation(-1);
 		// We reset the location repository. We might inject later the GIT local repository.
-		project.setLocationRepository(null);
-		
+		project.setLocationRepository(null);	
 		projects.put(project.getId(), project);
 		projectHandler.setProjects(projects);
 
@@ -707,10 +706,13 @@ public class ProjectController  {
 			log.info(String.format("Send %d eligibile staff members top the main application", staffHandler.getStaff().size()));
 		}
 		
+		// We save the project analysis data
+		ProjectAnalysis projectAnalysis = new ProjectAnalysis(project);
+		dataHandler.saveProjectAnalysis(projectAnalysis);
 		
 		// We save the staff impacted by the analysis to the main application.
 		dataHandler.saveStaff(project, staffHandler.getStaff());
-		
+
 		tasks.completeTask(DASHBOARD_GENERATION, PROJECT, oProject.get().getId());
 
 		return ResponseEntity.noContent().build();
@@ -743,6 +745,11 @@ public class ProjectController  {
 		Project project = projectHandler.getProject(idProject);
 		if (log.isInfoEnabled()) {
 			log.info(String.format("Taking in account the staff impacted by the analysis of project %d %s", project.getId(), project.getName()));
+		}
+		
+		// You cannot anymore update an INACTIVE project
+		if (!project.isActive()) {
+			return ResponseEntity.status(HttpStatus.METHOD_NOT_ALLOWED).build();
 		}
 		
 		staffHandler.updateStaffAfterAnalysis(project, staff);

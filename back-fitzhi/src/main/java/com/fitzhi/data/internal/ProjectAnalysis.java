@@ -56,4 +56,15 @@ public @Data class ProjectAnalysis {
 		this.id = id;
 	}
 
+	/**
+	 * @param project Project the given project
+	 */
+	public ProjectAnalysis(Project project) {
+		id = project.getId();
+		skills = project.getSkills();
+		ghosts = project.getGhosts();
+		staffEvaluation = project.getStaffEvaluation();
+		ecosystems = project.getEcosystems();
+	}
+
 }
