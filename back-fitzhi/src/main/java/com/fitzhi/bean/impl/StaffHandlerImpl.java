@@ -42,6 +42,7 @@ import com.fitzhi.data.internal.OpenId;
 import com.fitzhi.data.internal.OpenIdToken;
 import com.fitzhi.data.internal.PeopleCountExperienceMap;
 import com.fitzhi.data.internal.Project;
+import com.fitzhi.data.internal.ProjectLayers;
 import com.fitzhi.data.internal.ResumeSkill;
 import com.fitzhi.data.internal.Staff;
 import com.fitzhi.data.internal.StaffActivitySkill;
@@ -748,7 +749,11 @@ public class StaffHandlerImpl extends AbstractDataSaverLifeCycleImpl implements 
 					addMission(getStaff().get(staff.getIdStaff()), mission);
 				} else {
 					int nextIdStaff = nextIdStaff();
+					if (log.isInfoEnabled()) {
+						log.info(String.format("%d renumbered into %d", staff.getIdStaff(), nextIdStaff));
+					}
 					renumber(staff, nextIdStaff);
+					renumber(project, staff.getIdStaff(), nextIdStaff);
 					addNewStaff(staff);
 				}
 			}
@@ -760,7 +765,8 @@ public class StaffHandlerImpl extends AbstractDataSaverLifeCycleImpl implements 
 	 * @param staff the staff object to be updated with the new ID number
 	 * @param nextIdStaff the new ID number
 	 */
-	public static void renumber(Staff staff, int nextIdStaff) {
+	@Override
+	public void renumber(Staff staff, int nextIdStaff) {
 		int formerIdStaff = staff.getIdStaff();
 		staff.setIdStaff(nextIdStaff);
 		staff.getMissions().stream().forEach(m -> {
@@ -775,6 +781,14 @@ public class StaffHandlerImpl extends AbstractDataSaverLifeCycleImpl implements 
 		});
 	}
 
+	@Override
+	public void renumber(Project project, int currentIdStaff, int newIdStaff) throws ApplicationException {
+		ProjectLayers layers = dataSaver.loadSkylineLayers(project);
+ 		layers.getLayers().stream()
+		 	.filter(layer -> layer.getIdStaff() == currentIdStaff)
+			.forEach(layer -> layer.setIdStaff(newIdStaff));
+		dataSaver.saveSkylineLayers(project, layers);
+	}
 
 	@Override
 	public Staff removeStaff(int idStaff) {

@@ -180,8 +180,8 @@ public class HttpAccessHandlerImpl<T> implements HttpAccessHandler<T> {
 			httpPut.setHeader(HttpHeaders.AUTHORIZATION, "Bearer " + httpConnectionHandler.getToken().getAccess_token());
 
 			String s = objectMapper.writeValueAsString(list);
-			if (log.isInfoEnabled()) {
-				log.info(String.format("Sending %s", s));
+			if (log.isDebugEnabled()) {
+				log.debug(String.format("Sending %s", s));
 			}
 			httpPut.setEntity(new StringEntity(s, ContentType.APPLICATION_JSON));
 			httpPut.setHeader(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_UTF8.toString());

@@ -1,7 +1,12 @@
 package com.fitzhi.bean.impl.StaffHandler;
 
+import static org.mockito.ArgumentMatchers.anyInt;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.spy;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.times;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -88,6 +93,8 @@ public class StaffHandlerUpdateStaffAfterAnalysisTest {
 		staff.addMission(new Mission(StaffHandler.SLAVE_OFFSET+1, 312, "Milvius", LocalDate.of(2021, 6, 1), LocalDate.of(2021, 7, 2), 7, 777));
 		list.add(staff);
 
+		doNothing().when(spy).renumber(any(Project.class), anyInt(), anyInt());
+
 		Project project = new Project(312, "Milvius battle");
 		spy.updateStaffAfterAnalysis(project, list);
 
@@ -97,6 +104,9 @@ public class StaffHandlerUpdateStaffAfterAnalysisTest {
 		Assert.assertEquals(1, staff.getMissions().size());
 		Assert.assertEquals(7, staff.getMissions().get(0).getNumberOfCommits());
 		Assert.assertEquals(777, staff.getMissions().get(0).getNumberOfFiles());
+
+		verify(spy, times(1)).renumber(any(Project.class), anyInt(), anyInt());
+		verify(spy, times(1)).renumber(any(Staff.class), anyInt());
 	}
 
 }

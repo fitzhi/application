@@ -19,6 +19,7 @@ import com.fitzhi.data.internal.OpenId;
 import com.fitzhi.data.internal.OpenIdToken;
 import com.fitzhi.data.internal.PeopleCountExperienceMap;
 import com.fitzhi.data.internal.Project;
+import com.fitzhi.data.internal.ProjectLayer;
 import com.fitzhi.data.internal.ResumeSkill;
 import com.fitzhi.data.internal.Staff;
 import com.fitzhi.data.source.Contributor;
@@ -302,6 +303,24 @@ public interface StaffHandler extends DataSaverLifeCycle {
 	 * @throws ApplicationException thrown if any problems occurs during the validation of this staff
 	 */
 	void updateStaffAfterAnalysis(Project project, List<Staff> staff) throws ApplicationException;
+
+	/**
+	 * <p>Renumber the staff object with the given ID.</p>
+	 * <em>This method is used by the main application to take in account the staff member created by slaves.</em>
+	 * @param staff the staff object to be updated with the new ID
+	 * @param newIdStaff the new ID number
+	 */
+	void renumber(Staff staff, int newIdStaff);
+
+	/**
+	 * <p>Renumber the {@link ProjectLayer} object with the given ID.</p>
+	 * <em>This method is used by the main application to take in account the staff member created by slaves.</em>
+	 * @param project the project concerned by the renumbering
+	 * @param currentIdStaff the current ID to use to be replaced
+	 * @param newIdStaff the new ID to use to replace the actual ID
+	 * @throws ApplicationException thrown if any problem occurs during the operation, most probably an {@link IOException}
+	 */
+	void renumber(Project project, int currentIdStaff, int newIdStaff) throws ApplicationException;
 
 	/**
 	 * <p>
