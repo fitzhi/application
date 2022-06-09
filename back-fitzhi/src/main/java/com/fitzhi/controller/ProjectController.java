@@ -740,7 +740,7 @@ public class ProjectController  {
 			throws NotFoundException, ApplicationException {
 
 		if (!projectHandler.containsProject(idProject)) {
-			throw new NotFoundException(CODE_PROJECT_NOFOUND, MessageFormat.format(MESSAGE_PROJECT_NOFOUND, idProject + ""));
+			throw new NotFoundException(CODE_PROJECT_NOFOUND, MessageFormat.format(MESSAGE_PROJECT_NOFOUND, idProject));
 		}
 		Project project = projectHandler.getProject(idProject);
 		if (log.isInfoEnabled()) {
@@ -777,7 +777,7 @@ public class ProjectController  {
 	public void saveChanges (HttpServletResponse response, @PathVariable("idProject") int idProject, @RequestBody String changes) throws ApplicationException {
 
 		if (!projectHandler.containsProject(idProject)) {
-			throw new NotFoundException(CODE_PROJECT_NOFOUND, MessageFormat.format(MESSAGE_PROJECT_NOFOUND, idProject + ""));
+			throw new NotFoundException(CODE_PROJECT_NOFOUND, MessageFormat.format(MESSAGE_PROJECT_NOFOUND, idProject));
 		}
 		Project project = projectHandler.getProject(idProject);
 		if (log.isInfoEnabled()) {
@@ -809,7 +809,7 @@ public class ProjectController  {
 	public ResponseEntity<Void> savePaths (@PathVariable("idProject") int idProject, @PathVariable("pathsType") String pathsType, @RequestBody List<String> paths) throws ApplicationException {
 
 		if (!projectHandler.containsProject(idProject)) {
-			throw new NotFoundException(CODE_PROJECT_NOFOUND, MessageFormat.format(MESSAGE_PROJECT_NOFOUND, idProject + ""));
+			throw new NotFoundException(CODE_PROJECT_NOFOUND, MessageFormat.format(MESSAGE_PROJECT_NOFOUND, idProject));
 		}
 		Project project = projectHandler.getProject(idProject);
 		if (log.isInfoEnabled()) {
@@ -846,7 +846,7 @@ public class ProjectController  {
 	public ResponseEntity<Void> saveLayers (@PathVariable("idProject") int idProject, @RequestBody List<ProjectLayer> layers) throws ApplicationException {
 
 		if (!projectHandler.containsProject(idProject)) {
-			throw new NotFoundException(CODE_PROJECT_NOFOUND, MessageFormat.format(MESSAGE_PROJECT_NOFOUND, idProject + ""));
+			throw new NotFoundException(CODE_PROJECT_NOFOUND, MessageFormat.format(MESSAGE_PROJECT_NOFOUND, idProject));
 		}
 
 		Project project = projectHandler.getProject(idProject);

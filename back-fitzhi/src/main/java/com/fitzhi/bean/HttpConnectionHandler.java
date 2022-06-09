@@ -21,6 +21,13 @@ public interface HttpConnectionHandler {
 	 */
 	void connect(String login, String pass) throws ApplicationException;
 
+	/**. 
+	 * Refresh the {@code access_token} by using the {@code refresh_token}.
+	 * 
+	 * @throws ApplicationException thrown if any authentication of network error occurs.
+	 */
+	void refreshToken() throws ApplicationException;
+
 	/**
 	 * @return the authentication token.
 	 */

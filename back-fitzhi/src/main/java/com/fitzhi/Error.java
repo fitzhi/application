@@ -13,10 +13,10 @@ public class Error {
 	public static final String MESSAGE_REPO_MUST_BE_ALREADY_CLONED = "The repository must be already cloned on the file system";
 
 	public static final int CODE_STAFF_NOFOUND = -1001;
-	public static final String MESSAGE_STAFF_NOFOUND = "There is no staff member for id {0}";
+	public static final String MESSAGE_STAFF_NOFOUND = "There is no staff member for id {0,number,#}";
 
 	public static final int CODE_PROJECT_NOFOUND = -1002;
-	public static final String MESSAGE_PROJECT_NOFOUND = "There is no project for the identifier {0}";
+	public static final String MESSAGE_PROJECT_NOFOUND = "There is no project for the identifier {0,number,#}";
 	public static final int UNKNOWN_PROJECT = -1;
 			
 	public static final int CODE_IO_ERROR = -1003;

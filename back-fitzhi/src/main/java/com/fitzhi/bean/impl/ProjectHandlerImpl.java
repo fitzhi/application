@@ -156,8 +156,7 @@ public class ProjectHandlerImpl extends AbstractDataSaverLifeCycleImpl implement
 	public Project getProject(final int idProject) throws ApplicationException {
 		Project project = getProjects().get(idProject);
 		if (project == null) {
-			throw new NotFoundException(CODE_PROJECT_NOFOUND, 
-				MessageFormat.format(MESSAGE_PROJECT_NOFOUND, idProject));
+			throw new NotFoundException(CODE_PROJECT_NOFOUND, MessageFormat.format(MESSAGE_PROJECT_NOFOUND, idProject));
 		}
 		return project;
 	}

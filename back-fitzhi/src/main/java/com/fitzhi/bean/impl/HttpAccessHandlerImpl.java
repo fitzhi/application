@@ -54,6 +54,11 @@ public class HttpAccessHandlerImpl<T> implements HttpAccessHandler<T> {
 
 	HttpClient httpClient = null;
 
+	/**
+	 * This status is hosting the fact that a method from this bean is invoked for the first time.
+	 */
+	private boolean firstLaunch = true;
+
 	@Override
 	public Map<Integer, T> loadMap(String url, TypeReference<Map<Integer, T>> typeReference) throws ApplicationException {
 		try {
@@ -153,7 +158,16 @@ public class HttpAccessHandlerImpl<T> implements HttpAccessHandler<T> {
 					} else {
 						throw new ApplicationRuntimeException("No content-type found in response.");
 					}
+				case HttpStatus.SC_UNAUTHORIZED:
+					if (firstLaunch) {
+						firstLaunch = false;
+						httpConnectionHandler.refreshToken();
+						return put(url, o, typeReference);
+					} else {
+						throw new ApplicationException(CODE_HTTP_ERROR, MessageFormat.format(MESSAGE_HTTP_ERROR, response.getStatusLine().getReasonPhrase(), url));
+					}
 				case HttpStatus.SC_NO_CONTENT:
+					// Operation is successfull but nothing to deserialize from the response.
 					return null;
 				default:
 					if (log.isWarnEnabled()) {
@@ -189,13 +203,25 @@ public class HttpAccessHandlerImpl<T> implements HttpAccessHandler<T> {
 			HttpResponse response = client.execute(httpPut);
 			int statusCode = response.getStatusLine().getStatusCode();
 
-			if (statusCode != HttpStatus.SC_NO_CONTENT) {
-				if (log.isWarnEnabled()) {
-					log.warn(String.format("Http error with %s %s %s", url, response.getStatusLine().getStatusCode(), response.getStatusLine().getReasonPhrase()));
-					log.warn(EntityUtils.toString(response.getEntity()));
-				}
-				throw new ApplicationException(CODE_HTTP_ERROR, MessageFormat.format(MESSAGE_HTTP_ERROR, response.getStatusLine().getReasonPhrase(), url));
+			switch (statusCode) {
+				case HttpStatus.SC_NO_CONTENT:
+					break;
+				case HttpStatus.SC_UNAUTHORIZED:
+					if (firstLaunch) {
+						firstLaunch = false;
+						httpConnectionHandler.refreshToken();
+						putList(url, list);
+					} else {
+						throw new ApplicationException(CODE_HTTP_ERROR, MessageFormat.format(MESSAGE_HTTP_ERROR, response.getStatusLine().getReasonPhrase(), url));
+					}
+				default:
+					if (log.isWarnEnabled()) {
+						log.warn(String.format("Http error with %s %s %s", url, response.getStatusLine().getStatusCode(), response.getStatusLine().getReasonPhrase()));
+						log.warn(EntityUtils.toString(response.getEntity()));
+					}
+					throw new ApplicationException(CODE_HTTP_ERROR, MessageFormat.format(MESSAGE_HTTP_ERROR, response.getStatusLine().getReasonPhrase(), url));
 			}
+
 		} catch (final IOException ioe) {
 			log.error(ioe.getMessage(), ioe);
 			throw new ApplicationException(CODE_HTTP_CLIENT_ERROR, MessageFormat.format(MESSAGE_HTTP_CLIENT_ERROR, url), ioe);

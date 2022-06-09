@@ -102,6 +102,40 @@ public class HttpConnectionHandlerImpl implements HttpConnectionHandler {
 	}
 
 	@Override
+	public void refreshToken() throws ApplicationException {
+		final String url = applicationUrl + "/oauth/token";
+		if (log.isDebugEnabled()) {
+			log.debug("Refreshing token.");
+		}
+		try {
+			HttpClient client = httpClient();
+			HttpPost post = new HttpPost(url);
+	
+			post.setHeader(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_FORM_URLENCODED.toString());
+			post.setHeader(HttpHeaders.AUTHORIZATION, "Basic " + Base64.getEncoder().encodeToString(("fitzhi-trusted-client:secret").getBytes()));
+			
+			List<NameValuePair> params = new ArrayList<>();
+			params.add(new BasicNameValuePair("refresh_token", token.getRefresh_token()));
+			params.add(new BasicNameValuePair("grant_type", "refresh_token"));
+			post.setEntity(new UrlEncodedFormEntity(params));
+			
+			HttpResponse response = client.execute(post);
+			int statusCode = response.getStatusLine().getStatusCode();
+			if (statusCode == HttpStatus.SC_OK) {
+				token = objectMapper.readValue(EntityUtils.toString(response.getEntity()), Token.class);
+			} else {
+				if (log.isWarnEnabled()) {
+					log.warn(String.format("Http error with %s %s %s.", url, response.getStatusLine().getStatusCode(), response.getStatusLine().getReasonPhrase()));
+				}
+				throw new ApplicationException(CODE_HTTP_ERROR, MessageFormat.format(MESSAGE_HTTP_ERROR, response.getStatusLine().getReasonPhrase(), url));
+			}
+			
+		} catch (final IOException ioe) {
+			throw new ApplicationException(CODE_HTTP_CLIENT_ERROR, MessageFormat.format(MESSAGE_HTTP_CLIENT_ERROR, url), ioe);
+		}
+	}
+
+	@Override
 	public boolean isConnected() {
 		return (token != null);
 	}

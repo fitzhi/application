@@ -15,6 +15,8 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
+import java.text.MessageFormat;
+
 import com.fitzhi.bean.AsyncTask;
 import com.fitzhi.bean.CacheDataHandler;
 import com.fitzhi.bean.DataHandler;
@@ -35,6 +37,8 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.security.test.context.support.WithMockUser;
+import org.springframework.test.annotation.DirtiesContext;
+import org.springframework.test.annotation.DirtiesContext.ClassMode;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
 
@@ -112,13 +116,13 @@ public class ProjectControllerResetSunburstChartTest {
 	public void resetSunburstDataKO() throws Exception {
 
 		when(projectHandler.getProject(666)).thenThrow(
-			new NotFoundException(CODE_PROJECT_NOFOUND, MESSAGE_PROJECT_NOFOUND));
+			new NotFoundException(CODE_PROJECT_NOFOUND, MessageFormat.format(MESSAGE_PROJECT_NOFOUND, 666)));
 
 		this.mvc.perform(delete("/api/project/666/sunburst")
 			.contentType(MediaType.APPLICATION_JSON_UTF8)
 			.content(gson.toJson(new SettingsGeneration())))
 			.andExpect(jsonPath("$.code", is(CODE_PROJECT_NOFOUND)))
-			.andExpect(jsonPath("$.message", is(MESSAGE_PROJECT_NOFOUND)))
+			.andExpect(jsonPath("$.message", is("There is no project for the identifier 666")))
 			.andExpect(status().isNotFound());
 
 		verify(projectHandler, times(1)).getProject(666);
