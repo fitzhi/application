@@ -1,23 +1,15 @@
 package com.fitzhi.controller.project;
 
-import static org.mockito.BDDMockito.given;
+import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
-import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
-
 
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
-
-import com.fitzhi.bean.ProjectHandler;
-import com.fitzhi.bean.StaffHandler;
-import com.fitzhi.data.internal.Staff;
-import com.fitzhi.data.source.Contributor;
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -35,6 +27,11 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.util.Assert;
 
+import com.fitzhi.bean.ProjectHandler;
+import com.fitzhi.bean.StaffHandler;
+import com.fitzhi.data.internal.Staff;
+import com.fitzhi.data.source.Contributor;
+
 import lombok.extern.slf4j.Slf4j;
 
 /**
@@ -47,11 +44,6 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 @DirtiesContext(classMode = ClassMode.BEFORE_CLASS)
 public class ProjectControllerContributorsInShuffleModeTest {
-
-	/**
-	 * Initialization of the Google JSON parser.
-	 */
-	Gson gson = new GsonBuilder().create();
 
 	@Autowired
 	public MockMvc mvc;
@@ -72,7 +64,7 @@ public class ProjectControllerContributorsInShuffleModeTest {
 		
 		List<Contributor> contributors = new ArrayList<>();
 		contributors.add(new Contributor(ID_STAFF, LocalDate.now(), LocalDate.now(), 100, 200));
-		given(this.projectHandler.contributors(666)).willReturn(contributors);
+		when(this.projectHandler.contributors(666)).thenReturn(contributors);
 
 		MvcResult result = this.mvc.perform(get("/api/project/666/contributors"))
 			.andExpect(status().isOk())
