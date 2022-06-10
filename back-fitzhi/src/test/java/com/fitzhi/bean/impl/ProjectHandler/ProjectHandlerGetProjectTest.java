@@ -19,8 +19,6 @@ import com.fitzhi.bean.ProjectHandler;
 import com.fitzhi.data.internal.Project;
 import com.fitzhi.exception.ApplicationException;
 
-import lombok.extern.slf4j.Slf4j;
-
 /**
  * This class tests the method {@link ProjectHandler#getProject(int)}
  * 
@@ -28,7 +26,6 @@ import lombok.extern.slf4j.Slf4j;
  */
 @RunWith(SpringRunner.class)
 @SpringBootTest
-@Slf4j
 @DirtiesContext(classMode=ClassMode.BEFORE_CLASS)
 public class ProjectHandlerGetProjectTest {
 

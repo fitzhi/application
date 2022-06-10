@@ -17,6 +17,18 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 import java.text.MessageFormat;
 
+import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.http.MediaType;
+import org.springframework.security.test.context.support.WithMockUser;
+import org.springframework.test.context.junit4.SpringRunner;
+import org.springframework.test.web.servlet.MockMvc;
+
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fitzhi.bean.AsyncTask;
 import com.fitzhi.bean.CacheDataHandler;
 import com.fitzhi.bean.DataHandler;
@@ -26,21 +38,6 @@ import com.fitzhi.controller.in.SettingsGeneration;
 import com.fitzhi.data.internal.Project;
 import com.fitzhi.exception.NotFoundException;
 import com.fitzhi.source.crawler.RepoScanner;
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
-
-import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.http.MediaType;
-import org.springframework.security.test.context.support.WithMockUser;
-import org.springframework.test.annotation.DirtiesContext;
-import org.springframework.test.annotation.DirtiesContext.ClassMode;
-import org.springframework.test.context.junit4.SpringRunner;
-import org.springframework.test.web.servlet.MockMvc;
 
 /**
  * @author Fr&eacute;d&eacute;ric VIDAL
@@ -50,11 +47,6 @@ import org.springframework.test.web.servlet.MockMvc;
 @SpringBootTest
 @AutoConfigureMockMvc
 public class ProjectControllerResetSunburstChartTest {
-
-	/**
-	 * Initialization of the Google JSON parser.
-	 */
-	Gson gson = new GsonBuilder().create();
 
 	@Autowired
 	private MockMvc mvc;
@@ -77,6 +69,9 @@ public class ProjectControllerResetSunburstChartTest {
 	@MockBean
 	private DataHandler dataHandler;
 	
+	@Autowired
+	private ObjectMapper objectMapper;
+
 	/**
 	 * Reset the Sunburst data
 	 * @throws Exception
@@ -96,7 +91,7 @@ public class ProjectControllerResetSunburstChartTest {
 
 		this.mvc.perform(delete("/api/project/1789/sunburst")
 			.contentType(MediaType.APPLICATION_JSON_UTF8)
-			.content(gson.toJson(new SettingsGeneration())))
+			.content(objectMapper. writeValueAsBytes(new SettingsGeneration())))
 			.andExpect(status().isAccepted());
 
 		verify(projectHandler, times(1)).getProject(1789);
@@ -120,7 +115,7 @@ public class ProjectControllerResetSunburstChartTest {
 
 		this.mvc.perform(delete("/api/project/666/sunburst")
 			.contentType(MediaType.APPLICATION_JSON_UTF8)
-			.content(gson.toJson(new SettingsGeneration())))
+			.content(objectMapper.writeValueAsBytes(new SettingsGeneration())))
 			.andExpect(jsonPath("$.code", is(CODE_PROJECT_NOFOUND)))
 			.andExpect(jsonPath("$.message", is("There is no project for the identifier 666")))
 			.andExpect(status().isNotFound());
