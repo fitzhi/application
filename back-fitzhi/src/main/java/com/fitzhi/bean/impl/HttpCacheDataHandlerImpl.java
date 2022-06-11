@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Service;
 
+import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fitzhi.ApplicationRuntimeException;
 import com.fitzhi.bean.CacheDataHandler;
@@ -74,19 +75,23 @@ public class HttpCacheDataHandlerImpl implements CacheDataHandler {
 		throw new ApplicationRuntimeException("Should not pass here");
 	}
 
+	/**
+	 * This instance is created mostly for testing purpose.
+	 */
+	public static TypeReference<Void> typeReference = new TypeReference<>(){};
+
 	@Override
 	public void saveRepository(Project project, CommitRepository repository) throws ApplicationException {
 		if (log.isInfoEnabled()) {
 			log.info(String.format("saving repository for project %d %s", project.getId(), project.getName()));
 		}
-/* 
+
 		if (!httpConnectionHandler.isConnected()) {
 			httpConnectionHandler.connect(login, pass);
 		}
-		String url = applicationUrl + "/api/project/" + project.getId() + "commit-repository";
-		httpAccess.put(url, repository.getData(), new TypeReference<Void>(){});
-*/
-		//		throw new ApplicationRuntimeException("Not implemented yet");
+		String url = applicationUrl + "/api/project/" + project.getId() + "/commit-repository";
+		httpAccess.put(url, repository.getData(), typeReference);
+
 	}
 	
 	@Override
