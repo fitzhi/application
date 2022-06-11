@@ -32,7 +32,7 @@ public class HttpCacheDataHandlerImplTest {
 	CacheDataHandler cacheDataHandler;
 
 	@Test
-	public void retrieveRepositoryState () throws IOException {
+	public void retrieveRepositoryState () throws ApplicationException {
 		Assert.assertEquals(RepositoryState.REPOSITORY_NOT_FOUND, cacheDataHandler.retrieveRepositoryState(new Project()));
 	}
 	

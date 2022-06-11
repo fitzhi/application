@@ -74,21 +74,25 @@ public class FileCacheDataHandlerImpl implements CacheDataHandler {
 	ObjectMapper objectMapper;
 
 	@Override
-	public RepositoryState retrieveRepositoryState(Project project) throws IOException {
+	public RepositoryState retrieveRepositoryState(Project project) throws ApplicationException {
 		Path savedProject = Paths.get(generateCacheFilename(project));
 		if (log.isDebugEnabled()) {
 			log.debug(String.format("Examining %s", savedProject.toFile().getAbsolutePath()));
 		}
-		if (savedProject.toFile().exists()) {
-			FileTime lastModified = Files.getLastModifiedTime(savedProject);
-			if ( lastModified.toMillis() + (cacheDuration * NUMBER_OF_MS_PER_DAY) < System.currentTimeMillis() ) {
-				cleanUp(savedProject);
-				return REPOSITORY_OUT_OF_DATE;
-			} else {
-				return REPOSITORY_READY;
+		try {
+			if (savedProject.toFile().exists()) {
+				FileTime lastModified = Files.getLastModifiedTime(savedProject);
+				if ( lastModified.toMillis() + (cacheDuration * NUMBER_OF_MS_PER_DAY) < System.currentTimeMillis() ) {
+					cleanUp(savedProject);
+					return REPOSITORY_OUT_OF_DATE;
+				} else {
+					return REPOSITORY_READY;
+				}
 			}
+			return REPOSITORY_NOT_FOUND;
+		} catch (final IOException ioe) {
+			throw new ApplicationException(CODE_IO_ERROR, MessageFormat.format(MESSAGE_IO_ERROR, generateCacheFilename(project)), ioe);
 		}
-		return REPOSITORY_NOT_FOUND;
 	}
 	
 	/**

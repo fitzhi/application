@@ -27,9 +27,9 @@ public interface CacheDataHandler {
 	 * </ul>
 	 * @param project the current project
 	 * @return the state of the Fitzhi internal repository.
-	 * @throws IOException if an IOException occurs
+	 * @throws ApplicationException thrown if an problem occurs, most probably an {@link IOException}.
 	 */
-	RepositoryState retrieveRepositoryState (Project project) throws IOException;
+	RepositoryState retrieveRepositoryState (Project project) throws ApplicationException;
 	
 	/**
 	 * <p>
@@ -37,7 +37,7 @@ public interface CacheDataHandler {
 	 * <p>
 	 * @param project the current project
 	 * @return the repository associated to the project
-	 * @throws ApplicationException if an problem occurs, either a {@link IOException} or an HTTP error.
+	 * @throws ApplicationException thrown if any problem occurs, either a {@link IOException} or an HTTP error.
 	 */
 	CommitRepository getRepository (Project project) throws ApplicationException;
 	
@@ -47,7 +47,7 @@ public interface CacheDataHandler {
 	 * </p>
 	 * @param project the current project
 	 * @param repository the repository issued from this project
-	 * @throws ApplicationException if an problem occurs, either a {@link IOException} or an HTTP error.
+	 * @throws ApplicationException thrown if any problem occurs, either a {@link IOException} or an HTTP error.
 	 */
 	void saveRepository (Project project, CommitRepository repository) throws ApplicationException;
 	
@@ -55,7 +55,7 @@ public interface CacheDataHandler {
 	 * Remove the repository on the file system, for this project.<br/>
 	 * @param project the current project
 	 * @return {@code true} if the deletion is successful, {@code false} otherwise
-	 * @throws ApplicationException if an exception occurs during the removal, most probably an {@link IOException}
+	 * @throws ApplicationException thrown if any exception occurs during the removal, most probably an {@link IOException}
 	 */
 	boolean removeRepository (Project project) throws ApplicationException;
 		

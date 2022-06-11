@@ -1758,15 +1758,11 @@ public class GitCrawler extends AbstractScannerDataGenerator {
 
 	@Override
 	public boolean hasAvailableGeneration(Project project) throws ApplicationException {
-		try {
-			boolean result = (cacheDataHandler.retrieveRepositoryState(project) == REPOSITORY_READY);
-			if (log.isDebugEnabled()) {
-				log.debug(String.format("hasAvailableGeneration(%d)? : %s", project.getId(), result));
-			}
-			return result;
-		} catch (IOException ioe) {
-			throw new ApplicationException(CODE_IO_EXCEPTION, ioe.getLocalizedMessage());
+		boolean result = (cacheDataHandler.retrieveRepositoryState(project) == REPOSITORY_READY);
+		if (log.isDebugEnabled()) {
+			log.debug(String.format("hasAvailableGeneration(%d)? : %s", project.getId(), result));
 		}
+		return result;
 	}
 
 	@Override

@@ -136,59 +136,55 @@ public class PropectDashboardCustomizerImpl implements ProjectDashboardCustomize
 	@Override
 	public synchronized void takeInAccountNewStaff(Project project, Staff staff) throws ApplicationException {
 
-		try {
-			if (cacheDataHandler.retrieveRepositoryState(project) == REPOSITORY_READY) {
-				if (log.isDebugEnabled()) {
-					log.debug(String.format("Using cache file for project %s", project.getName()));
-				}
+		if (cacheDataHandler.retrieveRepositoryState(project) == REPOSITORY_READY) {
+			if (log.isDebugEnabled()) {
+				log.debug(String.format("Using cache file for project %s", project.getName()));
+			}
 
-				CommitRepository repository = cacheDataHandler.getRepository(project);
-			
-				if (repository != null) {
-					List<String> candidates = repository.extractMatchingUnknownContributors(staffHandler, staff);
-					
-					if (candidates.size() == 0) {
-						if (log.isDebugEnabled()) {
-							log.debug(String.format("Cannot retrieve a candidate for %s", staff.fullName()) );
-						}
-						throw new ApplicationException (
-							CODE_CONTRIBUTOR_INVALID,
-							MessageFormat.format(MESSAGE_CONTRIBUTOR_INVALID, staff.fullName(), staff.getLogin(), project.getName()));
-					}
-					
-					for (String candidate : candidates) {
-						if (log.isDebugEnabled()) {
-							log.debug ("Registering the candidate "  + candidate);
-						}
-						repository.onBoardStaff(staffHandler, staff);
-						repository.removeGhost(candidate);
-					}
-					//
-					// Saving the repository :
-					//  - Unknown contributors who are identifier now, should disappear from the ghosts list
-					//  - The new staff identifier should have been propagated to the associated operations
-					//
-					cacheDataHandler.saveRepository(project, repository);
-					
+			CommitRepository repository = cacheDataHandler.getRepository(project);
+		
+			if (repository != null) {
+				List<String> candidates = repository.extractMatchingUnknownContributors(staffHandler, staff);
+				
+				if (candidates.size() == 0) {
 					if (log.isDebugEnabled()) {
-						log.debug("Involving the staff " + staff.fullName() + " inside the project " + project.getName());
+						log.debug(String.format("Cannot retrieve a candidate for %s", staff.fullName()) );
 					}
-					Contributor contributor = repository.extractStaffMetrics(staff);
-					if (contributor != null) {
-						staffHandler.involve(project, contributor);
-					} else { 
-						throw new ApplicationException (
-							CODE_CONTRIBUTOR_INVALID,
-							MessageFormat.format(MESSAGE_CONTRIBUTOR_INVALID, staff.fullName(), staff.getLogin(), project.getName()));
-					}
+					throw new ApplicationException (
+						CODE_CONTRIBUTOR_INVALID,
+						MessageFormat.format(MESSAGE_CONTRIBUTOR_INVALID, staff.fullName(), staff.getLogin(), project.getName()));
 				}
-			} else {
+				
+				for (String candidate : candidates) {
+					if (log.isDebugEnabled()) {
+						log.debug ("Registering the candidate "  + candidate);
+					}
+					repository.onBoardStaff(staffHandler, staff);
+					repository.removeGhost(candidate);
+				}
+				//
+				// Saving the repository :
+				//  - Unknown contributors who are identifier now, should disappear from the ghosts list
+				//  - The new staff identifier should have been propagated to the associated operations
+				//
+				cacheDataHandler.saveRepository(project, repository);
+				
 				if (log.isDebugEnabled()) {
-					log.debug (String.format("Project %s has no repository available.", project.getName()));
+					log.debug("Involving the staff " + staff.fullName() + " inside the project " + project.getName());
+				}
+				Contributor contributor = repository.extractStaffMetrics(staff);
+				if (contributor != null) {
+					staffHandler.involve(project, contributor);
+				} else { 
+					throw new ApplicationException (
+						CODE_CONTRIBUTOR_INVALID,
+						MessageFormat.format(MESSAGE_CONTRIBUTOR_INVALID, staff.fullName(), staff.getLogin(), project.getName()));
 				}
 			}
-		} catch (final IOException ioe) {
-			throw new ApplicationException(CODE_IO_EXCEPTION, ioe.getLocalizedMessage(), ioe);
+		} else {
+			if (log.isDebugEnabled()) {
+				log.debug (String.format("Project %s has no repository available.", project.getName()));
+			}
 		}
 	}
 	

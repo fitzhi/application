@@ -68,7 +68,7 @@ public class HttpCacheDataHandlerImpl implements CacheDataHandler {
 	HttpAccessHandler<Void> httpAccess;
 
 	@Override
-	public RepositoryState retrieveRepositoryState(Project project) throws IOException {
+	public RepositoryState retrieveRepositoryState(Project project) throws ApplicationException {
 		return RepositoryState.REPOSITORY_NOT_FOUND;
 	}
 	
