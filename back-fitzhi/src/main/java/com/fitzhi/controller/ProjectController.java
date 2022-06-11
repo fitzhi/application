@@ -62,7 +62,10 @@ import com.fitzhi.data.internal.RiskDashboard;
 import com.fitzhi.data.internal.Skill;
 import com.fitzhi.data.internal.SourceControlChanges;
 import com.fitzhi.data.internal.Staff;
+import com.fitzhi.data.source.BasicCommitRepository;
+import com.fitzhi.data.source.CommitRepository;
 import com.fitzhi.data.source.Contributor;
+import com.fitzhi.data.source.DataCommitRepository;
 import com.fitzhi.exception.ApplicationException;
 import com.fitzhi.exception.InformationException;
 import com.fitzhi.exception.NotFoundException;
@@ -757,8 +760,6 @@ public class ProjectController  {
 		return ResponseEntity.noContent().build();
 	}
 
-
-
 	/**
 	 * <p>
 	 * This end-proint is provided to store the changes processed by the slave, on the main application.
@@ -788,6 +789,40 @@ public class ProjectController  {
 		dataHandler.saveChanges(project, scc);
 
 		response.setHeader(HttpHeaders.CONTENT_TYPE, MediaType.TEXT_PLAIN_VALUE);
+	}
+
+	/**
+	 * <p>
+	 * This end-proint is provided to store the changes processed by the slave, on the main application.
+	 * </p>
+	 * 
+	 * @param idProject the project identifier
+	 * @param analysis the processed analysis
+	 * 
+	 * @throws ApplicationException thrown if any problem occurs during the treatment
+	 */
+	@ResponseBody
+	@ApiOperation(
+		value = "Save the repository of commits gathered on the instance of slave."
+	)
+	@PutMapping(value = "/{idProject}/commit-repository")
+	public ResponseEntity<Void> saveCommitRepository (
+		HttpServletResponse response, 
+		@PathVariable("idProject") int idProject, 
+		@RequestBody DataCommitRepository dataRepository) throws ApplicationException {
+
+		if (!projectHandler.containsProject(idProject)) {
+			throw new NotFoundException(CODE_PROJECT_NOFOUND, MessageFormat.format(MESSAGE_PROJECT_NOFOUND, idProject));
+		}
+		Project project = projectHandler.getProject(idProject);
+		if (log.isInfoEnabled()) {
+			log.info(String.format("Saving the repository of project %d %s", project.getId(), project.getName()));
+		}
+
+		CommitRepository repository = new BasicCommitRepository(dataRepository);
+		cacheDataHandler.saveRepository(project, repository);
+
+		return ResponseEntity.noContent().build();
 	}
 
 	/**

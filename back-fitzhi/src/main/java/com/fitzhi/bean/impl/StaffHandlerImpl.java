@@ -755,12 +755,13 @@ public class StaffHandlerImpl extends AbstractDataSaverLifeCycleImpl implements 
 					// We Update the staff from the company() collection.
 					addMission(getStaff().get(staff.getIdStaff()), mission);
 				} else {
+					int currentIdStaff = staff.getIdStaff();
 					int nextIdStaff = nextIdStaff();
 					if (log.isInfoEnabled()) {
-						log.info(String.format("%d renumbered into %d", staff.getIdStaff(), nextIdStaff));
+						log.info(String.format("%d renumbered into %d", currentIdStaff, nextIdStaff));
 					}
 					renumber(staff, nextIdStaff);
-					renumber(project, staff.getIdStaff(), nextIdStaff);
+					renumber(project, currentIdStaff, nextIdStaff);
 					addNewStaff(staff);
 				}
 			}
@@ -798,18 +799,10 @@ public class StaffHandlerImpl extends AbstractDataSaverLifeCycleImpl implements 
 		dataSaver.saveSkylineLayers(project, layers);
 
 		CommitRepository repository = cacheDataHandler.getRepository(project);
-		//FVI
-		log.info (currentIdStaff + " " + newIdStaff); 
-		log.info (repository.firstCommit(currentIdStaff).toString()); 
-		log.info (repository.firstCommit(newIdStaff).toString());
 		repository.getRepository().values().stream()
 			.flatMap(history -> history.getOperations().stream())
 			.filter(ope -> ope.getIdStaff() == currentIdStaff)
-			.forEach(sc -> { 
-				sc.setIdStaff(newIdStaff);
-			});
-		log.info (repository.firstCommit(currentIdStaff).toString()); 
-		log.info (repository.firstCommit(newIdStaff).toString());
+			.forEach(sc -> sc.setIdStaff(newIdStaff));
 		cacheDataHandler.saveRepository(project, repository);
 		
 	}

@@ -46,7 +46,22 @@ public class BasicCommitRepository implements CommitRepository {
 	 * but unrecognized during the parsing process.
 	 */
 	Set<String> unknownContributors = new HashSet<>();
-		
+
+	/**
+	 * Empty construction.
+	 */
+	public BasicCommitRepository() {
+	}
+
+	/**
+	 * Simple construction with data.
+	 * @param data the data to be loaded inside the container.
+	 */
+	public BasicCommitRepository(DataCommitRepository data) {
+		this.repo = data.getRepo();
+		this.unknownContributors = data.getUnknownContributors();
+	}
+	
 	@Override
 	public void addCommit(String sourceCodePath, int idStaff, String authorName, String authorEmail, LocalDate dateCommit, long importance) {
 		if (repo.containsKey(sourceCodePath)) {
