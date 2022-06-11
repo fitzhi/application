@@ -1,7 +1,5 @@
 package com.fitzhi.bean.impl.data_handler;
 
-import java.io.IOException;
-
 import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;

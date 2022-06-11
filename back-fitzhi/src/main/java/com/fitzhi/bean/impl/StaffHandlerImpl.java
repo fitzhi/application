@@ -10,7 +10,6 @@ import static com.fitzhi.Error.MESSAGE_MONTH_SKILLS_CONSTELLATION_NOFOUND;
 import static com.fitzhi.Error.MESSAGE_STAFF_NOFOUND;
 import static com.fitzhi.Global.UNKNOWN;
 
-import java.io.IOException;
 import java.text.MessageFormat;
 import java.text.Normalizer;
 import java.time.LocalDate;

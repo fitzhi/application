@@ -1,7 +1,6 @@
 package com.fitzhi.bean.impl.BasicCommitRepository;
 
 import java.io.File;
-import java.io.IOException;
 import java.text.MessageFormat;
 
 import org.junit.Assert;

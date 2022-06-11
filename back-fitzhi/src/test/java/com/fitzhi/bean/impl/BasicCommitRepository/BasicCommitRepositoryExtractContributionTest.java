@@ -1,6 +1,5 @@
 package com.fitzhi.bean.impl.BasicCommitRepository;
 
-import java.io.IOException;
 import java.time.LocalDate;
 
 import org.junit.Assert;

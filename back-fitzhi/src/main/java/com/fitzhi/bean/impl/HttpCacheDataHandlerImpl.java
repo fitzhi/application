@@ -3,14 +3,11 @@
  */
 package com.fitzhi.bean.impl;
 
-import java.io.IOException;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Service;
 
-import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fitzhi.ApplicationRuntimeException;
 import com.fitzhi.bean.CacheDataHandler;
@@ -18,7 +15,6 @@ import com.fitzhi.bean.HttpAccessHandler;
 import com.fitzhi.bean.HttpConnectionHandler;
 import com.fitzhi.data.internal.Project;
 import com.fitzhi.data.source.CommitRepository;
-import com.fitzhi.data.source.DataCommitRepository;
 import com.fitzhi.exception.ApplicationException;
 
 import lombok.extern.slf4j.Slf4j;

@@ -4,12 +4,10 @@
 package com.fitzhi.bean.impl;
 
 import static com.fitzhi.Error.CODE_CONTRIBUTOR_INVALID;
-import static com.fitzhi.Error.CODE_IO_EXCEPTION;
 import static com.fitzhi.Error.MESSAGE_CONTRIBUTOR_INVALID;
 import static com.fitzhi.Global.INTERNAL_FILE_SEPARATORCHAR;
 import static com.fitzhi.bean.impl.RepositoryState.REPOSITORY_READY;
 
-import java.io.IOException;
 import java.text.MessageFormat;
 import java.time.LocalDate;
 import java.util.Arrays;
@@ -23,6 +21,10 @@ import java.util.stream.Collectors;
 
 import javax.annotation.PostConstruct;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Service;
+
 import com.fitzhi.bean.CacheDataHandler;
 import com.fitzhi.bean.DataHandler;
 import com.fitzhi.bean.ProjectDashboardCustomizer;
@@ -33,10 +35,6 @@ import com.fitzhi.data.source.CommitRepository;
 import com.fitzhi.data.source.Contributor;
 import com.fitzhi.data.source.Operation;
 import com.fitzhi.exception.ApplicationException;
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.stereotype.Service;
 
 import lombok.extern.slf4j.Slf4j;
 

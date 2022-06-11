@@ -3,12 +3,12 @@
  */
 package com.fitzhi.bean.impl;
 
+import static com.fitzhi.Error.CODE_IO_ERROR;
 import static com.fitzhi.Error.CODE_IO_EXCEPTION;
+import static com.fitzhi.Error.MESSAGE_IO_ERROR;
 import static com.fitzhi.bean.impl.RepositoryState.REPOSITORY_NOT_FOUND;
 import static com.fitzhi.bean.impl.RepositoryState.REPOSITORY_OUT_OF_DATE;
 import static com.fitzhi.bean.impl.RepositoryState.REPOSITORY_READY;
-import static com.fitzhi.Error.CODE_IO_ERROR;
-import static com.fitzhi.Error.MESSAGE_IO_ERROR;
 
 import java.io.BufferedWriter;
 import java.io.File;
@@ -32,8 +32,6 @@ import com.fitzhi.data.source.BasicCommitRepository;
 import com.fitzhi.data.source.CommitRepository;
 import com.fitzhi.data.source.DataCommitRepository;
 import com.fitzhi.exception.ApplicationException;
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
 
 import lombok.extern.slf4j.Slf4j;
 
@@ -64,11 +62,6 @@ public class FileCacheDataHandlerImpl implements CacheDataHandler {
 	 * Number of milliseconds per day.
 	 */
 	private static final long NUMBER_OF_MS_PER_DAY = 1000l*3600*24; 
-	
-	/**
-	 * Initialization of the Google JSON parser.
-	 */
-	private static Gson gson = new GsonBuilder().create();
 	
 	@Autowired
 	ObjectMapper objectMapper;
