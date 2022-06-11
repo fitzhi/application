@@ -4,28 +4,29 @@
 package com.fitzhi.bean.impl;
 
 import static com.fitzhi.Error.CODE_IO_EXCEPTION;
-
 import static com.fitzhi.bean.impl.RepositoryState.REPOSITORY_NOT_FOUND;
-import static com.fitzhi.bean.impl.RepositoryState.REPOSITORY_READY;
 import static com.fitzhi.bean.impl.RepositoryState.REPOSITORY_OUT_OF_DATE;
+import static com.fitzhi.bean.impl.RepositoryState.REPOSITORY_READY;
 
 import java.io.BufferedWriter;
 import java.io.File;
-import java.io.FileReader;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.attribute.FileTime;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fitzhi.ApplicationRuntimeException;
 import com.fitzhi.bean.CacheDataHandler;
 import com.fitzhi.data.internal.Project;
 import com.fitzhi.data.source.BasicCommitRepository;
 import com.fitzhi.data.source.CommitRepository;
+import com.fitzhi.data.source.DataCommitRepository;
 import com.fitzhi.exception.ApplicationException;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -62,6 +63,9 @@ public class CacheDataHandlerImpl implements CacheDataHandler {
 	 */
 	private static Gson gson = new GsonBuilder().create();
 	
+	@Autowired
+	ObjectMapper objectMapper;
+
 	@Override
 	public RepositoryState retrieveRepositoryState(Project project) throws IOException {
 		Path savedProject = Paths.get(generateCacheFilename(project));
@@ -95,17 +99,18 @@ public class CacheDataHandlerImpl implements CacheDataHandler {
 	@Override
 	public CommitRepository getRepository(Project project) throws IOException {
 		
-		final FileReader fr = new FileReader(new File(generateCacheFilename(project)));
-
+		DataCommitRepository data = objectMapper.readValue(new File(generateCacheFilename(project)), DataCommitRepository.class);
+		
 		CommitRepository repository = new BasicCommitRepository();
-		repository = gson.fromJson(fr, repository.getClass());
+		repository.setUnknownContributors(data.getUnknownContributors());
+		repository.setRepository(data.getRepo());
+
 		if (log.isDebugEnabled()) {
 			log.debug(String.format(
-				"Repository of project %s  retrieved from the cache. It contains %d entries.", 
+				"Repository of project %s retrieved from the cache. It contains %d entries.", 
 				project.getName(), 
 				repository.size())); 
 		}
-		fr.close();
 
 		return repository;
 	}
@@ -115,10 +120,10 @@ public class CacheDataHandlerImpl implements CacheDataHandler {
 
 		//Get the repository path
 		Path path = Paths.get(generateCacheFilename(project));
-		
+
 		//Use try-with-resource to get auto-closeable buffered writer instance close
 		try (BufferedWriter writer = Files.newBufferedWriter(path)) {
-			gson.toJson(repository, writer);
+			writer.write(objectMapper.writeValueAsString(repository.getData()));
 		}
 	}
 	

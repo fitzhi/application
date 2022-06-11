@@ -21,6 +21,7 @@ import com.fitzhi.source.crawler.git.SourceChange;
 import com.fitzhi.source.crawler.git.SourceFileHistory;
 
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 /**
  * <p> 
@@ -37,9 +38,10 @@ import lombok.Data;
  * @author Fr&eacute;d&eacute;ric VIDAL
  */
 @Data
+@NoArgsConstructor
 public class RepositoryAnalysis {
 
-	final Project project;
+	Project project;
 	
 	/**
 	 * list of changes retrieved from the repository.

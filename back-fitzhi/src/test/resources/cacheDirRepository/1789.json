@@ -7,11 +7,7 @@
 			"operations": [
 				{
 					"idStaff": 1,
-					"dateCommit": {
-						"year": 2019,
-						"month": 12,
-						"day": 3
-					}
+					"dateCommit": "2019-12-03"
 				}
 			]
 		},
@@ -22,11 +18,7 @@
 			"operations": [
 				{
 					"idStaff": 1,
-					"dateCommit": {
-						"year": 2019,
-						"month": 12,
-						"day": 3
-					}
+					"dateCommit": "2019-12-03"
 				}
 			]
 		}

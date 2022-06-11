@@ -84,6 +84,12 @@ public interface CommitRepository {
 	Map<String, CommitHistory> getRepository();
 	
 	/**
+	 * @param repo the complete repository extracted as a Map, indexed by the complete source filename 
+	 * associated with its history of {@link com.fitzhi.data.source.CommitHistory CommitHistory}.
+	 */
+	void setRepository(Map<String, CommitHistory> repo);
+
+	/**
 	 * @param idStaff developer's identifier
 	 * @return the date/time of the <b>LAST</b> submission for the passed developer 
 	 */
@@ -168,6 +174,12 @@ public interface CommitRepository {
 	 * @see BasicCommitRepository#extract(Object, java.util.function.BiFunction, java.util.function.Function)
 	 */
 	Ghost extractGhostMetrics(Author author);
+
+	/**
+	 * Extract the date hosted by the object in order (most probably) to be serialized.
+	 * @return the data hosted by this object.
+	 */
+	DataCommitRepository getData();
 
 	/**
 	 * Dump the content of the repository.

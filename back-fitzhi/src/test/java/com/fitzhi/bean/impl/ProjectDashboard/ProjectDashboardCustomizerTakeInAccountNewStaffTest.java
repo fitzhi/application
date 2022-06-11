@@ -1,19 +1,22 @@
 package com.fitzhi.bean.impl.ProjectDashboard;
 
 
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.doNothing;
+import static org.mockito.Mockito.when;
+
 import java.io.File;
 import java.io.IOException;
 import java.text.MessageFormat;
 import java.time.LocalDate;
 import java.util.Optional;
 
-import org.junit.After;
 import org.junit.Assert;
-import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.boot.test.util.TestPropertyValues;
 import org.springframework.context.ApplicationContextInitializer;
 import org.springframework.context.ConfigurableApplicationContext;
@@ -21,14 +24,18 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.context.junit4.SpringRunner;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fitzhi.bean.CacheDataHandler;
 import com.fitzhi.bean.ProjectDashboardCustomizer;
 import com.fitzhi.bean.ProjectHandler;
 import com.fitzhi.bean.StaffHandler;
+import com.fitzhi.bean.impl.RepositoryState;
 import com.fitzhi.data.internal.Mission;
 import com.fitzhi.data.internal.Project;
 import com.fitzhi.data.internal.Staff;
+import com.fitzhi.data.source.BasicCommitRepository;
 import com.fitzhi.data.source.CommitRepository;
+import com.fitzhi.data.source.DataCommitRepository;
 import com.fitzhi.exception.ApplicationException;
 /**
  * Test the method {@link ProjectDashboardCustomizer#takeInAccountNewStaff(com.fitzhi.data.internal.Project, Staff)}.<br/>
@@ -67,22 +74,18 @@ public class ProjectDashboardCustomizerTakeInAccountNewStaffTest {
 	@Autowired
 	StaffHandler staffHandler;
 
-	@Autowired
+	@MockBean
 	CacheDataHandler cacheDataHandler;
 	
+	@Autowired
+	ObjectMapper objectMapper;
+
 	/**
 	 * The Commit repository is SAVED when starting the test for a backup pupose.
 	 * It will be RESTORED after the test in order to reset the system in the original state.
 	 */
 	CommitRepository savedRepository;
 	
-	@Before
-	public void before() throws IOException {
-		Project project = new Project(1917, "The Red Rev project");
-		savedRepository = cacheDataHandler.getRepository(project);
-	}
-	
-
 	/**
 	 * This TEST verifies 2 specific cases
 	 * The file has 4 commits detected.
@@ -101,28 +104,26 @@ public class ProjectDashboardCustomizerTakeInAccountNewStaffTest {
 	 */
 	@Test
 	public void onBoardingNominal() throws ApplicationException, IOException, Exception {
+
+		doNothing().when(cacheDataHandler).saveRepository(any(Project.class), any(CommitRepository.class));
 		Project project = new Project(1917, "The Red Revolutionary project");
-		
+		CommitRepository repository = getRepository(project);
+		when(cacheDataHandler.getRepository(any(Project.class))).thenReturn(repository);
+		when(cacheDataHandler.retrieveRepositoryState(any(Project.class))).thenReturn(RepositoryState.REPOSITORY_READY);
+
 		Staff staff = new Staff(1, "Frédéric", "VIDAL", "altF4", "fvidal", "frvidal@void.com", "OIM");
 		staffHandler.getStaff().put(1, staff);
 		Mission m1 = new Mission(1, 1919, "N/A");
 		m1.setNumberOfCommits(2);
 		m1.setNumberOfFiles(2);
 		staff.addMission(m1);
-		
-		
-		CommitRepository repository = cacheDataHandler.getRepository(project);
-		repository.dump();
-		
+						
 		// we start with 4 operations
 		Assert.assertEquals(4,
 				repository.getRepository().get("fr/test/test.java").operations.size());
 		
 		customizer.takeInAccountNewStaff(project, staff);
-		
-		repository = cacheDataHandler.getRepository(project);
-		repository.dump();
-		
+				
 		// Testing the result.
 		Assert.assertEquals(2,
 				repository.getRepository().get("fr/test/test.java").operations.size());
@@ -156,9 +157,17 @@ public class ProjectDashboardCustomizerTakeInAccountNewStaffTest {
 		
 	}
 	
-	@After
-	public void after() throws IOException {
-		Project project = new Project(1917, "The Red Rev project");
-		cacheDataHandler.saveRepository(project, savedRepository);
+	private CommitRepository getRepository(Project project) throws IOException {
+		
+		DataCommitRepository data = objectMapper.readValue(
+			new File("./target/test-classes/cacheDirRepository/1917.json"), 
+			DataCommitRepository.class);
+		
+		CommitRepository repository = new BasicCommitRepository();
+		repository.setUnknownContributors(data.getUnknownContributors());
+		repository.setRepository(data.getRepo());
+
+		return repository;
 	}
+
 }

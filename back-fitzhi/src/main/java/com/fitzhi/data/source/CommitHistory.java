@@ -15,6 +15,7 @@ import com.fitzhi.ApplicationRuntimeException;
 import com.fitzhi.bean.StaffHandler;
 
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 /**
  * <p>
@@ -23,6 +24,7 @@ import lombok.Data;
  * @author Fr&eacute;d&eacute;ric VIDAL
  */
 @Data
+@NoArgsConstructor
 public class CommitHistory {
 	
 	/**

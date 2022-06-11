@@ -8,56 +8,32 @@
 				{
 					"idStaff": 10001,
 					"authorName": "the 1 o o o one",
-					"dateCommit": {
-						"year": 2019,
-						"month": 12,
-						"day": 6
-					}
+					"dateCommit": "2019-12-06"
 				},
 				{
 					"idStaff": -1,
 					"authorName": "fvidal",
-					"dateCommit": {
-						"year": 2019,
-						"month": 12,
-						"day": 6
-					}
+					"dateCommit": "2019-12-06"
 				},
 				{
 					"idStaff": -1,
 					"authorName": "Frédéric VIDAL",
-					"dateCommit": {
-						"year": 2019,
-						"month": 12,
-						"day": 7
-					}
+					"dateCommit": "2019-12-07"
 				},
 				{
 					"idStaff": -1,
 					"authorName": "fvidal",
-					"dateCommit": {
-						"year": 2019,
-						"month": 12,
-						"day": 7
-					}
+					"dateCommit": "2019-12-07"
 				},
 				{
 					"idStaff": 10001,
 					"authorName": "the 1 o o o one",
-					"dateCommit": {
-						"year": 2019,
-						"month": 11,
-						"day": 6
-					}
+					"dateCommit": "2019-11-06"
 				},
 				{
 					"idStaff": 10001,
 					"authorName": "the 1 o o o one",
-					"dateCommit": {
-						"year": 2019,
-						"month": 11,
-						"day": 3
-					}
+					"dateCommit": "2019-11-03"
 				}
 			]
 		},
@@ -69,29 +45,17 @@
 				{
 					"idStaff": 1,
 					"authorName": "theAuthorOfOne",
-					"dateCommit": {
-						"year": 2019,
-						"month": 12,
-						"day": 6
-					}
+					"dateCommit": "2019-12-06"
 				},
 				{
 					"idStaff": -1,
 					"authorName": "Frederic VIDAL",
-					"dateCommit": {
-						"year": 2019,
-						"month": 12,
-						"day": 6
-					}
+					"dateCommit": "2019-12-06"
 				},
 				{
 					"idStaff": -1,
 					"authorName": "vidal frederic",
-					"dateCommit": {
-						"year": 2019,
-						"month": 12,
-						"day": 7
-					}
+					"dateCommit": "2019-12-07"
 				}
 			]
 		},
@@ -103,56 +67,32 @@
 				{
 					"idStaff": 10001,
 					"authorName": "the 1 o o o one",
-					"dateCommit": {
-						"year": 2019,
-						"month": 12,
-						"day": 1
-					}
+					"dateCommit": "2019-12-01"
 				},
 				{
 					"idStaff": 10001,
 					"authorName": "the 1 o o o one",
-					"dateCommit": {
-						"year": 2019,
-						"month": 12,
-						"day": 2
-					}
+					"dateCommit": "2019-12-02"
 				},
 				{
 					"idStaff": 1,
 					"authorName": "theAuthorOfOne",
-					"dateCommit": {
-						"year": 2019,
-						"month": 12,
-						"day": 6
-					}
+					"dateCommit": "2019-12-06"
 				},
 				{
 					"idStaff": -1,
 					"authorName": "Frederic VIDAL",
-					"dateCommit": {
-						"year": 2019,
-						"month": 12,
-						"day": 6
-					}
+					"dateCommit": "2019-12-06"
 				},
 				{
 					"idStaff": -1,
 					"authorName": "vidal frederic",
-					"dateCommit": {
-						"year": 2019,
-						"month": 12,
-						"day": 7
-					}
+					"dateCommit": "2019-12-07"
 				},
 				{
 					"idStaff": 10001,
 					"authorName": "the 1 o o o one",
-					"dateCommit": {
-						"year": 2019,
-						"month": 11,
-						"day": 21
-					}
+					"dateCommit": "2019-11-21"
 				}
 			]
 		}

@@ -8,9 +8,9 @@ import static com.fitzhi.Error.MESSAGE_INCONSISTENCY_ERROR_MULTI_OPENIDS;
 import static com.fitzhi.Error.MESSAGE_LOGIN_ALREADY_EXIST;
 import static com.fitzhi.Error.MESSAGE_MONTH_SKILLS_CONSTELLATION_NOFOUND;
 import static com.fitzhi.Error.MESSAGE_STAFF_NOFOUND;
-
 import static com.fitzhi.Global.UNKNOWN;
 
+import java.io.IOException;
 import java.text.MessageFormat;
 import java.text.Normalizer;
 import java.time.LocalDate;
@@ -30,8 +30,13 @@ import java.util.stream.Collectors;
 import javax.annotation.PostConstruct;
 import javax.validation.constraints.NotNull;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Component;
+
 import com.fitzhi.ApplicationRuntimeException;
 import com.fitzhi.Error;
+import com.fitzhi.bean.CacheDataHandler;
 import com.fitzhi.bean.DataHandler;
 import com.fitzhi.bean.StaffHandler;
 import com.fitzhi.data.internal.Author;
@@ -46,15 +51,12 @@ import com.fitzhi.data.internal.ProjectLayers;
 import com.fitzhi.data.internal.ResumeSkill;
 import com.fitzhi.data.internal.Staff;
 import com.fitzhi.data.internal.StaffActivitySkill;
+import com.fitzhi.data.source.CommitRepository;
 import com.fitzhi.data.source.Contributor;
 import com.fitzhi.exception.ApplicationException;
 import com.fitzhi.exception.NotFoundException;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.stereotype.Component;
 
 import lombok.extern.slf4j.Slf4j;
 
@@ -89,6 +91,12 @@ public class StaffHandlerImpl extends AbstractDataSaverLifeCycleImpl implements 
 	@Autowired
 	DataHandler dataSaver;
 		
+	/**
+	 * Bean in charge of saving & loading CACHE data
+	 */
+	@Autowired
+	CacheDataHandler cacheDataHandler;
+
 	/**
 	 * Number of days of inactivity before inactivation of a staff member.
 	 */
@@ -783,11 +791,32 @@ public class StaffHandlerImpl extends AbstractDataSaverLifeCycleImpl implements 
 
 	@Override
 	public void renumber(Project project, int currentIdStaff, int newIdStaff) throws ApplicationException {
+
 		ProjectLayers layers = dataSaver.loadSkylineLayers(project);
  		layers.getLayers().stream()
 		 	.filter(layer -> layer.getIdStaff() == currentIdStaff)
 			.forEach(layer -> layer.setIdStaff(newIdStaff));
 		dataSaver.saveSkylineLayers(project, layers);
+
+		try {
+			CommitRepository repository = cacheDataHandler.getRepository(project);
+			System.out.println(currentIdStaff + " " + newIdStaff); 
+			System.out.println(repository.firstCommit(currentIdStaff)); 
+			System.out.println(repository.firstCommit(newIdStaff));
+			repository.getRepository().values().stream()
+				.flatMap(history -> history.getOperations().stream())
+				.filter(ope -> ope.getIdStaff() == currentIdStaff)
+				.forEach(sc -> { 
+					sc.setIdStaff(newIdStaff);
+					System.out.print(".");
+				});
+				System.out.println(repository.firstCommit(currentIdStaff)); 
+				System.out.println(repository.firstCommit(newIdStaff));
+				cacheDataHandler.saveRepository(project, repository);
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		
 	}
 
 	@Override

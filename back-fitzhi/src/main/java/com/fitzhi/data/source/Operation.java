@@ -2,6 +2,8 @@ package com.fitzhi.data.source;
 
 import java.time.LocalDate;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonFormat.Shape;
 import com.fitzhi.bean.ProjectDashboardCustomizer;
 import com.fitzhi.data.internal.Staff;
 
@@ -40,8 +42,8 @@ public @Data class Operation {
 	/**
 	 * last of date for this commit. 
 	 */
+	@JsonFormat(shape = Shape.STRING, pattern = "yyyy-MM-dd")
 	private LocalDate dateCommit;
-
 	
 	/**
 	 * Empty construction for serialization purpose.

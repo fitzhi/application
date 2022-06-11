@@ -224,6 +224,11 @@ public class BasicCommitRepository implements CommitRepository {
 		return this.repo;
 	}
 
+	@Override
+	public void setRepository(Map<String, CommitHistory> repo) {
+		this.repo = repo;
+	}
+
 	/**
 	 * Working variable used by method {@link #lastCommit(int)}
 	 */
@@ -296,6 +301,25 @@ public class BasicCommitRepository implements CommitRepository {
 		return list;
 	}
 
+	@Override
+	public DataCommitRepository getData() {
+		return new DataCommitRepository (repo, unknownContributors);
+	}
+
+	@Override
+	public void dump() {
+		StringBuilder sb = new StringBuilder();
+		this.repo.values().forEach(history -> {
+			sb.append(history.getSourcePath()).append(LN);
+			history.operations.stream().forEach((Operation ope) -> {
+				sb.append("\t").append(ope.getIdStaff()).append(" ");
+				sb.append(ope.getAuthorName()).append(" ");
+				sb.append(ope.getDateCommit()).append(LN);
+			});
+		});
+		log.debug(sb.toString());
+	}
+
 	public void removeGhost(String unknownContributor) {
 		Iterator<String> ite = this. unknownContributors().iterator();
 		while (ite.hasNext()) {
@@ -309,19 +333,5 @@ public class BasicCommitRepository implements CommitRepository {
 				return;
 			}
 		}
-	}
-	
-	@Override
-	public void dump() {
-		StringBuilder sb = new StringBuilder();
-		this.repo.values().forEach(history -> {
-			sb.append(history.getSourcePath()).append(LN);
-			history.operations.stream().forEach((Operation ope) -> {
-				sb.append("\t").append(ope.getIdStaff()).append(" ");
-				sb.append(ope.getAuthorName()).append(" ");
-				sb.append(ope.getDateCommit()).append(LN);
-			});
-		});
-		log.debug(sb.toString());
 	}
 }
