@@ -29,6 +29,16 @@ curl -v -H "Content-Type:  application/json" -H "Authorization: Bearer ${ACCESS_
 echo "Creating my User"
 echo "----------------"
 echo ""
-curl -v -H "Content-Type:  application/json" -H "Authorization: Bearer ${ACCESS_TOKEN}"  -d '{"firstName":"Frédéric", "lastName":"Vidal", "login": "frvidal", "nickName":"altF4", "email":"frvidal@nope.com"}' http://localhost:8080/api/staff
+# curl -v -H "Content-Type:  application/json" -H "Authorization: Bearer ${ACCESS_TOKEN}"  -d '{"firstName":"Frédéric", "lastName":"Vidal", "login": "frvidal", "nickName":"altF4", "email":"frvidal@nope.com"}' http://localhost:8080/api/staff
+
+echo "Creating Spring Security Project"
+echo "---------------------------------"
+echo ""
+curl -v -H "Content-Type:  application/json" -H "Authorization: Bearer ${ACCESS_TOKEN}"  -d '{"name": "Spring Security", "connectionSettings": "3", "branch": "5.8.x", "urlRepository": "https://github.com/spring-projects/spring-security"}' http://localhost:8080/api/project
+
+echo "Creating Spring Security Oauth Project"
+echo "--------------------------------------"
+echo ""
+curl -v -H "Content-Type:  application/json" -H "Authorization: Bearer ${ACCESS_TOKEN}"  -d '{"name": "Spring Security Oauth", "connectionSettings": "3", "branch": "main", "urlRepository": "https://github.com/spring-projects/spring-security-oauth"}' http://localhost:8080/api/project
 
 
