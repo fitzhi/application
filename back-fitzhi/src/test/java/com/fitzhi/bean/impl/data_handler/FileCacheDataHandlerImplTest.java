@@ -1,4 +1,4 @@
-package com.fitzhi.bean.impl;
+package com.fitzhi.bean.impl.data_handler;
 
 import static com.fitzhi.bean.impl.RepositoryState.REPOSITORY_NOT_FOUND;
 import static com.fitzhi.bean.impl.RepositoryState.REPOSITORY_READY;
@@ -28,7 +28,7 @@ import org.springframework.test.context.junit4.SpringRunner;
 @RunWith(SpringRunner.class)
 @SpringBootTest
 @TestPropertySource(properties = { "cache_duration=1" }) 
-public class CacheDataHandlerImplTest {
+public class FileCacheDataHandlerImplTest {
 	
 	@Autowired
 	CacheDataHandler cacheDataHandler;

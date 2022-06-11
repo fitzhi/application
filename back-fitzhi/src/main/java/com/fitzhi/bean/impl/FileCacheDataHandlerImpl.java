@@ -18,6 +18,7 @@ import java.nio.file.attribute.FileTime;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Service;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -34,12 +35,15 @@ import com.google.gson.GsonBuilder;
 import lombok.extern.slf4j.Slf4j;
 
 /**
+ * This is the <strong>APPLICATION</strong> implementation of the interface {@link CacheDataHandler}.
+ * Data are saved on the file system
+ * 
  * @author Fr&eacute;d&eacute;ric VIDAL
- *
  */
 @Slf4j
 @Service
-public class CacheDataHandlerImpl implements CacheDataHandler {
+@Profile("application")
+public class FileCacheDataHandlerImpl implements CacheDataHandler {
 	
 	/**
 	 * cache directory for intermediate files representing the repositories.
