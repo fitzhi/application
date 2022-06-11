@@ -37,9 +37,9 @@ public interface CacheDataHandler {
 	 * <p>
 	 * @param project the current project
 	 * @return the repository associated to the project
-	 * @throws IOException if an IOException occurs
+	 * @throws ApplicationException if an problem occurs, either a {@link IOException} or an HTTP error.
 	 */
-	CommitRepository getRepository (Project project) throws IOException;
+	CommitRepository getRepository (Project project) throws ApplicationException;
 	
 	/**
 	 * <p>
@@ -47,7 +47,7 @@ public interface CacheDataHandler {
 	 * </p>
 	 * @param project the current project
 	 * @param repository the repository issued from this project
-	 * @throws ApplicationException if an problem occurs, either a {@link IOException} or an Http error.
+	 * @throws ApplicationException if an problem occurs, either a {@link IOException} or an HTTP error.
 	 */
 	void saveRepository (Project project, CommitRepository repository) throws ApplicationException;
 	

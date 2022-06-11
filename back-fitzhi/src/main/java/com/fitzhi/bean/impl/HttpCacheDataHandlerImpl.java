@@ -73,7 +73,7 @@ public class HttpCacheDataHandlerImpl implements CacheDataHandler {
 	}
 	
 	@Override
-	public CommitRepository getRepository(Project project) throws IOException {
+	public CommitRepository getRepository(Project project) throws ApplicationException {
 		// You do not load the repository from the slave instance.
 		throw new ApplicationRuntimeException("Should not pass here");
 	}

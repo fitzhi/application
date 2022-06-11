@@ -104,23 +104,28 @@ public class FileCacheDataHandlerImpl implements CacheDataHandler {
 	}
 	
 	@Override
-	public CommitRepository getRepository(Project project) throws IOException {
+	public CommitRepository getRepository(Project project) throws ApplicationException {
 		
-		DataCommitRepository data = objectMapper.readValue(new File(generateCacheFilename(project)), DataCommitRepository.class);
-		
-		CommitRepository repository = new BasicCommitRepository();
-		repository.setUnknownContributors(data.getUnknownContributors());
-		repository.setRepository(data.getRepo());
+		try {
 
-		if (log.isDebugEnabled()) {
-			log.debug(String.format(
-				"Repository of project %s retrieved from the cache. It contains %d entries.", 
-				project.getName(), 
-				repository.size())); 
+			DataCommitRepository data = objectMapper.readValue(new File(generateCacheFilename(project)), DataCommitRepository.class);
+			
+			CommitRepository repository = new BasicCommitRepository();
+			repository.setUnknownContributors(data.getUnknownContributors());
+			repository.setRepository(data.getRepo());
+
+			if (log.isDebugEnabled()) {
+				log.debug(String.format(
+					"Repository of project %s retrieved from the cache. It contains %d entries.", 
+					project.getName(), 
+					repository.size())); 
+			}
+
+			return repository;
+		} catch (final IOException ioe) {
+			throw new ApplicationException(CODE_IO_ERROR, MessageFormat.format(MESSAGE_IO_ERROR, generateCacheFilename(project)), ioe);
 		}
-
-		return repository;
-	}
+ }
 
 	@Override
 	public void saveRepository(Project project, CommitRepository repository) throws ApplicationException {

@@ -798,24 +798,20 @@ public class StaffHandlerImpl extends AbstractDataSaverLifeCycleImpl implements 
 			.forEach(layer -> layer.setIdStaff(newIdStaff));
 		dataSaver.saveSkylineLayers(project, layers);
 
-		try {
-			CommitRepository repository = cacheDataHandler.getRepository(project);
-			System.out.println(currentIdStaff + " " + newIdStaff); 
-			System.out.println(repository.firstCommit(currentIdStaff)); 
-			System.out.println(repository.firstCommit(newIdStaff));
-			repository.getRepository().values().stream()
-				.flatMap(history -> history.getOperations().stream())
-				.filter(ope -> ope.getIdStaff() == currentIdStaff)
-				.forEach(sc -> { 
-					sc.setIdStaff(newIdStaff);
-					System.out.print(".");
-				});
-				System.out.println(repository.firstCommit(currentIdStaff)); 
-				System.out.println(repository.firstCommit(newIdStaff));
-				cacheDataHandler.saveRepository(project, repository);
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
+		CommitRepository repository = cacheDataHandler.getRepository(project);
+		//FVI
+		log.info (currentIdStaff + " " + newIdStaff); 
+		log.info (repository.firstCommit(currentIdStaff).toString()); 
+		log.info (repository.firstCommit(newIdStaff).toString());
+		repository.getRepository().values().stream()
+			.flatMap(history -> history.getOperations().stream())
+			.filter(ope -> ope.getIdStaff() == currentIdStaff)
+			.forEach(sc -> { 
+				sc.setIdStaff(newIdStaff);
+			});
+		log.info (repository.firstCommit(currentIdStaff).toString()); 
+		log.info (repository.firstCommit(newIdStaff).toString());
+		cacheDataHandler.saveRepository(project, repository);
 		
 	}
 

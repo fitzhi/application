@@ -37,7 +37,7 @@ public class HttpCacheDataHandlerImplTest {
 	}
 	
 	@Test (expected = ApplicationRuntimeException.class)
-	public void getRepository () throws IOException {
+	public void getRepository () throws ApplicationException {
 		cacheDataHandler.getRepository(new Project());
 	}
 	

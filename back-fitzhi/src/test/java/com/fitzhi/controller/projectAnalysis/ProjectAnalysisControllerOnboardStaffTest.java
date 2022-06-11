@@ -91,7 +91,7 @@ public class ProjectAnalysisControllerOnboardStaffTest {
 	CommitRepository savedRepository;
 	
 	@Before
-	public void before() throws IOException {
+	public void before() throws ApplicationException {
 		Project project = new Project(1917, "The Red Rev project");
 		savedRepository = cacheDataHandler.getRepository(project);
 	}

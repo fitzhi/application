@@ -21,6 +21,7 @@ import com.fitzhi.bean.StaffHandler;
 import com.fitzhi.data.internal.Project;
 import com.fitzhi.data.internal.Staff;
 import com.fitzhi.data.source.CommitRepository;
+import com.fitzhi.exception.ApplicationException;
 
 @RunWith(SpringRunner.class)
 
@@ -52,7 +53,7 @@ public class BasicCommitRepositoryOnBoardStaffTest {
 	StaffHandler staffHandler;
 	
 	@Test
-	public void testNominal() throws IOException {
+	public void testNominal() throws ApplicationException {
 		
 		Project project = new Project(1917, "The Red Rev project");
 		CommitRepository repository = cacheDataHandler.getRepository(project);
