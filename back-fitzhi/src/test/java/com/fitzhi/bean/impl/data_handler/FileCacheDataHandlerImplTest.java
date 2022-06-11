@@ -9,6 +9,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 import com.fitzhi.bean.CacheDataHandler;
+import com.fitzhi.bean.impl.FileCacheDataHandlerImpl;
 import com.fitzhi.data.internal.Project;
 import com.fitzhi.data.source.BasicCommitRepository;
 import com.fitzhi.data.source.CommitRepository;
@@ -22,7 +23,8 @@ import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.context.junit4.SpringRunner;
 
 /**
- * Testing the class CacheDataHandlerImpl
+ * Testing the class {@link FileCacheDataHandlerImpl}.
+ * 
  * @author Fr&eacute;d&eacute;ric VIDAL
  */
 @RunWith(SpringRunner.class)

@@ -12,13 +12,15 @@ import org.springframework.test.context.junit4.SpringRunner;
 
 import com.fitzhi.ApplicationRuntimeException;
 import com.fitzhi.bean.CacheDataHandler;
+import com.fitzhi.bean.impl.HttpCacheDataHandlerImpl;
 import com.fitzhi.bean.impl.RepositoryState;
 import com.fitzhi.data.internal.Project;
 import com.fitzhi.data.source.BasicCommitRepository;
 import com.fitzhi.exception.ApplicationException;
 
 /**
- * Testing the class CacheDataHandlerImpl
+ * Testing the class {@link HttpCacheDataHandlerImpl}.
+ * 
  * @author Fr&eacute;d&eacute;ric VIDAL
  */
 @RunWith(SpringRunner.class)
@@ -39,7 +41,7 @@ public class HttpCacheDataHandlerImplTest {
 		cacheDataHandler.getRepository(new Project());
 	}
 	
-	@Test (expected = ApplicationRuntimeException.class)
+	@Test
 	public void saveRepository () throws IOException {
 		cacheDataHandler.saveRepository(new Project(), new BasicCommitRepository());
 	}

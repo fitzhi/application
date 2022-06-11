@@ -46,7 +46,10 @@ public class HttpCacheDataHandlerImpl implements CacheDataHandler {
 
 	@Override
 	public void saveRepository(Project project, CommitRepository repository) throws IOException {
-		throw new ApplicationRuntimeException("Not implemented yet");
+		if (log.isInfoEnabled()) {
+			log.info(String.format("saving repository for project %d %s", project.getId(), project.getName()));
+		}
+//		throw new ApplicationRuntimeException("Not implemented yet");
 	}
 	
 	@Override
