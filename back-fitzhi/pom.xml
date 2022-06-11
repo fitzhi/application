@@ -327,7 +327,6 @@
 			<scope>provided</scope>
 		</dependency>
 
-
 		<!-- **************************************************************** -->
 		<!-- THESE DEPENDENCIES ARE DECLARED TO BE ABLE TO BUILD THE PROJECT -->
 		<!-- ON A SYSTEM WITH A JDK 9 AND BEYOND -->
