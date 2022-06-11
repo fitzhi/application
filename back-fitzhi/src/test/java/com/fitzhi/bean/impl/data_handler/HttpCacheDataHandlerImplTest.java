@@ -42,7 +42,7 @@ public class HttpCacheDataHandlerImplTest {
 	}
 	
 	@Test
-	public void saveRepository () throws IOException {
+	public void saveRepository () throws ApplicationException {
 		cacheDataHandler.saveRepository(new Project(), new BasicCommitRepository());
 	}
 	

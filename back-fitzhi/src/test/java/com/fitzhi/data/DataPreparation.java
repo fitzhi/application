@@ -17,6 +17,7 @@ import com.fitzhi.bean.ShuffleService;
 import com.fitzhi.data.internal.Project;
 import com.fitzhi.data.source.CommitHistory;
 import com.fitzhi.data.source.CommitRepository;
+import com.fitzhi.exception.ApplicationException;
 
 /**
  * <p>
@@ -42,7 +43,7 @@ public class DataPreparation {
 	private String LIB_PROJECT = "VEGEO";
 
 	@Test
-	public void testAnonymizeInputFile() throws IOException {
+	public void testAnonymizeInputFile() throws ApplicationException, IOException {
 		Project project = new Project(ID_PROJECT, LIB_PROJECT);
 		CommitRepository repository = cacheDataHandler.getRepository(project);	
 		Assert.assertFalse(repository.getRepository().isEmpty());

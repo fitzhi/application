@@ -69,9 +69,6 @@ import lombok.extern.slf4j.Slf4j;
 @Profile("slave")
 public class HttpDataHandlerImpl<T> implements DataHandler {
 
-	@Autowired
-	HttpConnectionHandler httpConnectionHandler;
-
 	/**
 	 * URL of the backend which hosts the main application.
 	 */
@@ -97,10 +94,13 @@ public class HttpDataHandlerImpl<T> implements DataHandler {
 	private String pass;
 
 	@Autowired
+	HttpConnectionHandler httpConnectionHandler;
+
+	@Autowired
 	HttpAccessHandler<Staff> httpAccessStaff; 
 
 	@Autowired
-	HttpAccessHandler<Project> httpAccessProject; 
+	HttpAccessHandler<Project> httpAccessProject;
 
 	@Autowired
 	HttpAccessHandler<Skill> httpAccessSkill; 

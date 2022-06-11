@@ -1256,7 +1256,7 @@ public class GitCrawler extends AbstractScannerDataGenerator {
 	}
 
 	@Override
-	public void saveRepository(Project project, CommitRepository repository) throws IOException {
+	public void saveRepository(Project project, CommitRepository repository) throws ApplicationException {
 		if (log.isDebugEnabled()) {
 			log.debug(String.format("Saving the repository for the project %s", project.getName()));
 		}

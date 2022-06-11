@@ -13,6 +13,7 @@ import com.fitzhi.bean.impl.FileCacheDataHandlerImpl;
 import com.fitzhi.data.internal.Project;
 import com.fitzhi.data.source.BasicCommitRepository;
 import com.fitzhi.data.source.CommitRepository;
+import com.fitzhi.exception.ApplicationException;
 
 import org.junit.Assert;
 import org.junit.Test;
@@ -36,7 +37,7 @@ public class FileCacheDataHandlerImplTest {
 	CacheDataHandler cacheDataHandler;
 	
 	@Test
-	public void creation() throws IOException {
+	public void creation() throws ApplicationException, IOException {
 		Project project = new Project((int) System.currentTimeMillis(), "TEST_SKILLER");
 		CommitRepository repository = new BasicCommitRepository();
 		repository.addCommit("com/test.java", 1, "theAuthorOfOne", "email@nope.com", LocalDate.now(), 1);

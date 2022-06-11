@@ -7,6 +7,8 @@ import static com.fitzhi.Error.CODE_IO_EXCEPTION;
 import static com.fitzhi.bean.impl.RepositoryState.REPOSITORY_NOT_FOUND;
 import static com.fitzhi.bean.impl.RepositoryState.REPOSITORY_OUT_OF_DATE;
 import static com.fitzhi.bean.impl.RepositoryState.REPOSITORY_READY;
+import static com.fitzhi.Error.CODE_IO_ERROR;
+import static com.fitzhi.Error.MESSAGE_IO_ERROR;
 
 import java.io.BufferedWriter;
 import java.io.File;
@@ -15,6 +17,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.attribute.FileTime;
+import java.text.MessageFormat;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -120,7 +123,7 @@ public class FileCacheDataHandlerImpl implements CacheDataHandler {
 	}
 
 	@Override
-	public void saveRepository(Project project, CommitRepository repository) throws IOException {
+	public void saveRepository(Project project, CommitRepository repository) throws ApplicationException {
 
 		//Get the repository path
 		Path path = Paths.get(generateCacheFilename(project));
@@ -128,6 +131,8 @@ public class FileCacheDataHandlerImpl implements CacheDataHandler {
 		//Use try-with-resource to get auto-closeable buffered writer instance close
 		try (BufferedWriter writer = Files.newBufferedWriter(path)) {
 			writer.write(objectMapper.writeValueAsString(repository.getData()));
+		} catch (IOException ioe) {
+			throw new ApplicationException(CODE_IO_ERROR, MessageFormat.format(MESSAGE_IO_ERROR, generateCacheFilename(project)), ioe);
 		}
 	}
 	

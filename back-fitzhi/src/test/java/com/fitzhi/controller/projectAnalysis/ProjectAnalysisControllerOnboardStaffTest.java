@@ -18,6 +18,7 @@ import com.fitzhi.controller.util.LocalDateAdapter;
 import com.fitzhi.data.internal.Project;
 import com.fitzhi.data.internal.Staff;
 import com.fitzhi.data.source.CommitRepository;
+import com.fitzhi.exception.ApplicationException;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
@@ -116,7 +117,7 @@ public class ProjectAnalysisControllerOnboardStaffTest {
 	
 
 	@After
-	public void after() throws IOException {
+	public void after() throws ApplicationException {
 		Project project = new Project(1917, "The Red Rev project");
 		cacheDataHandler.saveRepository(project, savedRepository);
 	}

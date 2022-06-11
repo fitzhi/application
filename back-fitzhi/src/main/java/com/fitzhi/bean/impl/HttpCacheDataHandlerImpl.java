@@ -6,14 +6,19 @@ package com.fitzhi.bean.impl;
 import java.io.IOException;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Service;
 
+import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fitzhi.ApplicationRuntimeException;
 import com.fitzhi.bean.CacheDataHandler;
+import com.fitzhi.bean.HttpAccessHandler;
+import com.fitzhi.bean.HttpConnectionHandler;
 import com.fitzhi.data.internal.Project;
 import com.fitzhi.data.source.CommitRepository;
+import com.fitzhi.data.source.DataCommitRepository;
 import com.fitzhi.exception.ApplicationException;
 
 import lombok.extern.slf4j.Slf4j;
@@ -28,10 +33,39 @@ import lombok.extern.slf4j.Slf4j;
 @Service
 @Profile("slave")
 public class HttpCacheDataHandlerImpl implements CacheDataHandler {
-	
+
+	/**
+	 * URL of the backend which hosts the main application.
+	 */
+	@Value("${applicationUrl}")
+	private String applicationUrl;
+
+	/**
+	 * Organization name. This name is unique and therefore can be considered as an ID.
+	 */
+	@Value("${organization}")
+	private String organization;
+
+	/**
+	 * Login used by the slave for the connection to the main Fitzhi applciation.
+	 */
+	@Value("${login}")
+	private String login;
+
+	/**
+	 * Password used by the slave for the connection to the main Fitzhi application.
+	 */
+	@Value("${pass}")
+	private String pass;
+
+	@Autowired
+	HttpConnectionHandler httpConnectionHandler;
 	
 	@Autowired
 	ObjectMapper objectMapper;
+
+	@Autowired
+	HttpAccessHandler<Void> httpAccess;
 
 	@Override
 	public RepositoryState retrieveRepositoryState(Project project) throws IOException {
@@ -45,11 +79,18 @@ public class HttpCacheDataHandlerImpl implements CacheDataHandler {
 	}
 
 	@Override
-	public void saveRepository(Project project, CommitRepository repository) throws IOException {
+	public void saveRepository(Project project, CommitRepository repository) throws ApplicationException {
 		if (log.isInfoEnabled()) {
 			log.info(String.format("saving repository for project %d %s", project.getId(), project.getName()));
 		}
-//		throw new ApplicationRuntimeException("Not implemented yet");
+/* 
+		if (!httpConnectionHandler.isConnected()) {
+			httpConnectionHandler.connect(login, pass);
+		}
+		String url = applicationUrl + "/api/project/" + project.getId() + "commit-repository";
+		httpAccess.put(url, repository.getData(), new TypeReference<Void>(){});
+*/
+		//		throw new ApplicationRuntimeException("Not implemented yet");
 	}
 	
 	@Override

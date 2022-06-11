@@ -43,13 +43,13 @@ public interface CacheDataHandler {
 	
 	/**
 	 * <p>
-	 * Save the commit-repository on the file system
+	 * Save the commit-repository
 	 * </p>
 	 * @param project the current project
 	 * @param repository the repository issued from this project
-	 * @throws IOException if an IOException occurs
+	 * @throws ApplicationException if an problem occurs, either a {@link IOException} or an Http error.
 	 */
-	void saveRepository (Project project, CommitRepository repository) throws IOException;
+	void saveRepository (Project project, CommitRepository repository) throws ApplicationException;
 	
 	/**
 	 * Remove the repository on the file system, for this project.<br/>

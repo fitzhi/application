@@ -77,9 +77,9 @@ public interface RepoScanner {
 	 * </p>
 	 * @return {@code TRUE} if the repository has been updated somewhere, {@code FALSE} otherwise
 	 * @param project the current active project.
-	 * @throws IOException thrown if an IO exception occurs when writing the cache file.
+	 * @throws ApplicationException thrown if an problem occurs when writing the cache file (IO or HTTP error).
 	 */
-	void saveRepository(Project project, CommitRepository repository) throws IOException;
+	void saveRepository(Project project, CommitRepository repository) throws ApplicationException;
 
 	/**
 	 * <p>
