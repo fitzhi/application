@@ -10,10 +10,11 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public @Data class Token {
-	private String access_token;
-	private String refresh_token;
-	private String token_type;
-	private int expires_in;
+	// (Sonar) The token is declared here as it is returned by the authentication process.
+	private String access_token; //NOSONAR
+	private String refresh_token; //NOSONAR
+	private String token_type; //NOSONAR
+	private int expires_in; //NOSONAR
 	private String scope;
 }
 
