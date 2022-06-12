@@ -107,7 +107,8 @@ public class Application {
 			LoggerFactory.getLogger(Application.class.getCanonicalName()).info(((collapseEmptyDirectory) ? "\tDirectories should be collapsed" : "\tDirectories should NOT be collaped"));
 			LoggerFactory.getLogger(Application.class.getCanonicalName()).info(((prefilterEligibility) ? "\tFile eligibility is PREfiltered" : "\tFile eligibility id POSTfiltered"));
 			LoggerFactory.getLogger(Application.class.getCanonicalName()).info( dataHandler.isLocal() ? "This is the main application" : "This is a slave");
-			LoggerFactory.getLogger(Application.class.getCanonicalName()).info( String.format("\tCRON settings for the detection of experiences is \"%s\"", cronExperencesDetection));
+			LoggerFactory.getLogger(Application.class.getCanonicalName()).info( "\tCRON settings for the detection of experiences is \"{}\"", cronExperencesDetection);
+			
 			if (reposDir == null) {
 				LoggerFactory.getLogger(Application.class.getCanonicalName()).info("\tLocal repositories are hosted in a temporary destination") ;
 			} else {
