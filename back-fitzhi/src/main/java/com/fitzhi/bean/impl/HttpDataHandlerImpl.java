@@ -134,7 +134,7 @@ public class HttpDataHandlerImpl<T> implements DataHandler {
 		projects.forEach(p -> map.put(p.getId(), p));
 		return map;
 	}
-	
+
 	@Override
 	public void saveStaff(Map<Integer, Staff> staff) throws ApplicationException {
 		throw new ApplicationRuntimeException("SHOULD NOT PASS HERE : Saving the staff collection from the slave requires a PROJECT.");
