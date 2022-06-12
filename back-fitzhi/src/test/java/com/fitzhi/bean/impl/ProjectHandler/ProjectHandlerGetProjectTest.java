@@ -50,7 +50,7 @@ public class ProjectHandlerGetProjectTest {
 		Assert.assertEquals("Marignan", project.getName());
 	}
 	
-	@Test (expected = ApplicationException.class)
+	@Test
 	public void notFound() throws ApplicationException {
 
 		ProjectHandler spy = spy(projectHandler);
@@ -60,7 +60,6 @@ public class ProjectHandlerGetProjectTest {
 			spy.getProject(1807);
 		} catch (ApplicationException ae) {
 			Assert.assertEquals("There is no project for the identifier 1807", ae.getMessage());
-			throw ae;
 		}
 
 	}

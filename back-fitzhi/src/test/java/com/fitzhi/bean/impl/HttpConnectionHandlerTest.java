@@ -59,11 +59,11 @@ public class HttpConnectionHandlerTest {
 		httpConnectionHandler.setHttpClient(httpClient);
 		httpConnectionHandler.connect("admin", "nope");
 
-		Assert.assertEquals(httpConnectionHandler.getToken().getAccess_token(), "access_token");
-		Assert.assertEquals(httpConnectionHandler.getToken().getRefresh_token(), "refresh_token");
-		Assert.assertEquals(httpConnectionHandler.getToken().getScope(), "read, write");
-		Assert.assertEquals(httpConnectionHandler.getToken().getToken_type(), "Bearer");
-		Assert.assertEquals(httpConnectionHandler.getToken().getExpires_in(), 1789);
+		Assert.assertEquals("access_token", httpConnectionHandler.getToken().getAccess_token());
+		Assert.assertEquals("refresh_token", httpConnectionHandler.getToken().getRefresh_token());
+		Assert.assertEquals("read, write", httpConnectionHandler.getToken().getScope());
+		Assert.assertEquals("Bearer", httpConnectionHandler.getToken().getToken_type());
+		Assert.assertEquals(1789, httpConnectionHandler.getToken().getExpires_in());
 
 	}
 
