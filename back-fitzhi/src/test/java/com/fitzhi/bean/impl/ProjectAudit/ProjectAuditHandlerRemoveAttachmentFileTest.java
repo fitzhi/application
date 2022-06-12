@@ -35,7 +35,7 @@ import com.fitzhi.service.FileType;
 @RunWith(SpringRunner.class)
 @SpringBootTest
 @AutoConfigureMockMvc
-@DirtiesContext(classMode = ClassMode.AFTER_CLASS)
+@DirtiesContext(classMode = ClassMode.BEFORE_CLASS)
 public class ProjectAuditHandlerRemoveAttachmentFileTest {
 
 	@Autowired
@@ -60,7 +60,7 @@ public class ProjectAuditHandlerRemoveAttachmentFileTest {
 	}
 	
 	@Test(expected = ApplicationException.class)
-	public void AttachmentFileOnUnknownProject() throws ApplicationException {
+	public void attachmentFileOnUnknownProject() throws ApplicationException {
 		when(projectHandler.lookup(ID_PROJECT)).thenReturn(project());
 		projectAuditHandler.removeAttachmentFile(666, 1, 0);
 	}
