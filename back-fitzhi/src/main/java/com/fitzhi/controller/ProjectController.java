@@ -205,7 +205,7 @@ public class ProjectController  {
 	@ApiOperation(value = "Update the given project.")
 	@PutMapping("/{idProject}")
 	public ResponseEntity<Void> updateProject(@PathVariable("idProject") int idProject, @RequestBody Project project)
-			throws NotFoundException, ApplicationException {
+			throws ApplicationException {
 
 		if (idProject != project.getId()) {
 			throw new ApplicationRuntimeException("WTF : SHOULD NOT PASS HERE!");
@@ -241,7 +241,7 @@ public class ProjectController  {
 		notes = "This result is processed by a slave of Fitzhi, and sent to the main application. The project will be updated there with these data.")
 	@PutMapping("/{idProject}/analysis")
 	public ResponseEntity<Void> updateProjectAnalysis(@PathVariable("idProject") int idProject, @RequestBody ProjectAnalysis projectAnalysis)
-			throws NotFoundException, ApplicationException {
+			throws ApplicationException {
 
 		if (idProject != projectAnalysis.getId()) {
 			log.error(String.format("Data parameters mismatch for project %d", idProject));
@@ -305,7 +305,7 @@ public class ProjectController  {
 	@ApiOperation("Remove the given project.")
 	@DeleteMapping(value = "/{idProject}")
 	public void removeProject(@PathVariable("idProject") int idProject)
-			throws NotFoundException, ApplicationException {
+			throws ApplicationException {
 
 		Project project = projectHandler.getProject(idProject);
 
@@ -335,7 +335,7 @@ public class ProjectController  {
 	@ApiOperation(value = "Inactivate the project corresponding to the given identifier.")
 	@PostMapping(value = "/{idProject}/rpc/inactivation")
 	public void inactivateProject(@PathVariable("idProject") int idProject)
-			throws NotFoundException, ApplicationException {
+			throws ApplicationException {
 
 		Project project = projectHandler.getProject(idProject);
 		
@@ -353,7 +353,7 @@ public class ProjectController  {
 	@ApiOperation(value = "Reactivate the project corresponding to the given identifier.")
 	@PostMapping(value = "/{idProject}/rpc/reactivation")
 	public void reactivateProject(@PathVariable("idProject") int idProject)
-			throws NotFoundException, ApplicationException {
+			throws ApplicationException {
 		
 		Project project = projectHandler.getProject(idProject);
 
@@ -511,7 +511,7 @@ public class ProjectController  {
 	@ResponseBody
 	@ApiOperation(value = "Test the connection settings for a given project.")
 	@GetMapping(value = "/{idProject}/test")
-	public boolean scmConnect(@PathVariable("idProject") int idProject) throws NotFoundException, ApplicationException {
+	public boolean scmConnect(@PathVariable("idProject") int idProject) throws ApplicationException {
 		Project project = projectHandler.getProject(idProject);
 		boolean connected = this.scanner.testConnection(project);
 		return connected;
@@ -740,7 +740,7 @@ public class ProjectController  {
 		notes = "This end-point is used by slaves to inform the main application on change impacted by their analysis, to the staff members."	)
 	@PutMapping("/{idProject}/staff")
 	public ResponseEntity<Void> updateListStaff(@PathVariable("idProject") int idProject, @RequestBody List<Staff> staff)
-			throws NotFoundException, ApplicationException {
+			throws ApplicationException {
 
 		if (!projectHandler.containsProject(idProject)) {
 			throw new NotFoundException(CODE_PROJECT_NOFOUND, MessageFormat.format(MESSAGE_PROJECT_NOFOUND, idProject));
@@ -1009,7 +1009,7 @@ public class ProjectController  {
 		code = 202,
 		notes = "The verb is 'PATCH' to isolate this request from the initial request with a 'PUT' method."
 	)
-	public ResponseEntity<String> reloadSunburstChart(final @PathVariable("idProject") int idProject) throws NotFoundException, ApplicationException {
+	public ResponseEntity<String> reloadSunburstChart(final @PathVariable("idProject") int idProject) throws ApplicationException {
 		
 		if (log.isDebugEnabled()) {
 			log.debug(String.format("Request for the generation of the Sunburst chart for project %d", idProject));

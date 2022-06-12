@@ -78,7 +78,7 @@ public class HttpCacheDataHandlerImpl implements CacheDataHandler {
 	/**
 	 * This instance is created mostly for testing purpose.
 	 */
-	public static TypeReference<Void> typeReference = new TypeReference<>(){};
+	public static final TypeReference<Void> typeReference = new TypeReference<>(){};
 
 	@Override
 	public void saveRepository(Project project, CommitRepository repository) throws ApplicationException {

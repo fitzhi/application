@@ -81,7 +81,6 @@ public class HttpConnectionHandlerImpl implements HttpConnectionHandler {
 			log.debug(String.format("Login %s into %s.", login, url));
 		}
 		try {
-			HttpClient client = httpClient();
 			HttpPost post = new HttpPost(url);
 	
 			post.setHeader(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_FORM_URLENCODED.toString());
@@ -93,7 +92,7 @@ public class HttpConnectionHandlerImpl implements HttpConnectionHandler {
 			params.add(new BasicNameValuePair("grant_type", "password"));
 			post.setEntity(new UrlEncodedFormEntity(params));
 			
-			HttpResponse response = client.execute(post);
+			HttpResponse response = httpClient().execute(post);
 			int statusCode = response.getStatusLine().getStatusCode();
 			if (statusCode == HttpStatus.SC_OK) {
 				token = objectMapper.readValue(EntityUtils.toString(response.getEntity()), Token.class);
@@ -116,7 +115,6 @@ public class HttpConnectionHandlerImpl implements HttpConnectionHandler {
 			log.debug("Refreshing token.");
 		}
 		try {
-			HttpClient client = httpClient();
 			HttpPost post = new HttpPost(url);
 	
 			post.setHeader(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_FORM_URLENCODED.toString());
@@ -127,7 +125,7 @@ public class HttpConnectionHandlerImpl implements HttpConnectionHandler {
 			params.add(new BasicNameValuePair("grant_type", "refresh_token"));
 			post.setEntity(new UrlEncodedFormEntity(params));
 			
-			HttpResponse response = client.execute(post);
+			HttpResponse response = httpClient().execute(post);
 			int statusCode = response.getStatusLine().getStatusCode();
 			if (statusCode == HttpStatus.SC_OK) {
 				token = objectMapper.readValue(EntityUtils.toString(response.getEntity()), Token.class);

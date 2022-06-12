@@ -89,7 +89,7 @@ public class SkillController {
 		value ="Update an existing skill."
 	)
 	@PutMapping("/{idSkill}")
-	public ResponseEntity<Void> update(@PathVariable("idSkill") int idSkill, @RequestBody Skill skill) throws NotFoundException, ApplicationException {
+	public ResponseEntity<Void> update(@PathVariable("idSkill") int idSkill, @RequestBody Skill skill) throws ApplicationException {
 
 		if (idSkill != skill.getId()) {
 			throw new ApplicationRuntimeException("WTF : SHOULD NOT PASS HERE!");

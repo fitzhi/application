@@ -164,7 +164,7 @@ public class StaffController {
 	@ApiOperation(value = "Update an existing developer.")
 	@PutMapping("/{idStaff}")
 	public ResponseEntity<Void> updateStaff(@PathVariable("idStaff") int idStaff, @RequestBody Staff staff)
-			throws NotFoundException, ApplicationException {
+			throws ApplicationException {
 
 		if (idStaff != staff.getIdStaff()) {
 			throw new ApplicationRuntimeException("WTF : SHOULD NOT PASS HERE : idStaff in URL is distinct from idStaff in Staff object");
@@ -336,7 +336,7 @@ public class StaffController {
 	@ResponseBody
 	@ApiOperation(value = "Remove a developer from the company staff.")
 	@DeleteMapping(value = "/{idStaff}")
-	public void removeStaff(@PathVariable("idStaff") int idStaff) throws NotFoundException, ApplicationException {
+	public void removeStaff(@PathVariable("idStaff") int idStaff) throws ApplicationException {
 		// We test first the existence of a Staff member for this Staff identifier
 		staffHandler.getStaff(idStaff);
 		// Then We remove
