@@ -23,6 +23,7 @@ import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.entity.StringEntity;
+import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -101,7 +102,8 @@ public class HttpAccessHandlerLoadListTest {
 		injectToken();
 
 		httpAccessHandler.setHttpClient(httpClient);
-		httpAccessHandler.loadList("url", new TypeReference<List<String>>(){});
+		List<String> list = httpAccessHandler.loadList("url", new TypeReference<List<String>>(){});
+		Assert.assertEquals(2, list.size());
 	}
 
 	@Test (expected = ApplicationException.class)
@@ -113,7 +115,8 @@ public class HttpAccessHandlerLoadListTest {
 		when(httpResponse.getEntity()).thenReturn(new StringEntity("[ \"one\", \"two\" ]"));
 
 		httpAccessHandler.setHttpClient(httpClient);
-		httpAccessHandler.loadList("url", new TypeReference<List<String>>(){});
+		List<String> list = httpAccessHandler.loadList("url", new TypeReference<List<String>>(){});
+		Assert.assertEquals(2, list.size());
 	}
 
 	@Test
