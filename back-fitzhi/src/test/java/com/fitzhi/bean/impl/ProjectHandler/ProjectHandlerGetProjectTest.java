@@ -59,7 +59,6 @@ public class ProjectHandlerGetProjectTest {
 		try {
 			spy.getProject(1807);
 		} catch (ApplicationException ae) {
-			System.out.println(ae.getMessage());
 			Assert.assertEquals("There is no project for the identifier 1807", ae.getMessage());
 			throw ae;
 		}

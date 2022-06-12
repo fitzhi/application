@@ -748,8 +748,9 @@ public class StaffHandlerImpl extends AbstractDataSaverLifeCycleImpl implements 
 		// or we create new staff members
 		//
 		for (Staff staff : listStaff) {
-			if (staff.getMissions().stream().anyMatch(m -> m.getIdProject() == project.getId())) {
-				Mission mission = staff.getMissions().stream().filter(m -> m.getIdProject() == project.getId()).findAny().get();
+			Optional<Mission> oMission = staff.getMissions().stream().filter(m -> m.getIdProject() == project.getId()).findAny();
+			if (oMission.isPresent()) {
+				Mission mission = oMission.get();
 				// It's an existing staff member
 				if (staff.getIdStaff() < StaffHandler.SLAVE_OFFSET) {
 					// We Update the staff from the company() collection.
