@@ -781,11 +781,9 @@ public class StaffHandlerImpl extends AbstractDataSaverLifeCycleImpl implements 
 		staff.getMissions().stream().forEach(m -> {
 			if (m.getIdStaff() == formerIdStaff) {
 				m.setIdStaff(nextIdStaff);
-				m.getStaffActivitySkill().values().stream()
-					.forEach( sas -> {
-						sas.setIdStaff(nextIdStaff);
-					}
-				);
+				m.getStaffActivitySkill().values()
+					.stream()
+					.forEach( sas -> sas.setIdStaff(nextIdStaff));
 			}
 		});
 	}
