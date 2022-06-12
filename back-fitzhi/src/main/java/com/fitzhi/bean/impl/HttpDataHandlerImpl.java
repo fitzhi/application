@@ -114,7 +114,7 @@ public class HttpDataHandlerImpl<T> implements DataHandler {
 	@Autowired
 	HttpAccessHandler<Void> httpAccessVoid;
 
-	private static String NOT_IMPLEMENTED_YET = "Not implemented yet";
+	private final static String NOT_IMPLEMENTED_YET = "Not implemented yet";
 
 	@Override
 	public void saveProjects(Map<Integer, Project> projects) throws ApplicationException {
