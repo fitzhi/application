@@ -66,6 +66,12 @@ public class HttpConnectionHandlerImpl implements HttpConnectionHandler {
 
 	private HttpClient client;
 	
+	private String BASIC = "Basic ";
+
+	private String clientName = "fitzhi-trusted-client";
+
+	private String secret = "secret";
+
 	@Override
 	public void connect(String login, String pass) throws ApplicationException {
 		final String url = applicationUrl + "/oauth/token";
@@ -77,7 +83,7 @@ public class HttpConnectionHandlerImpl implements HttpConnectionHandler {
 			HttpPost post = new HttpPost(url);
 	
 			post.setHeader(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_FORM_URLENCODED.toString());
-			post.setHeader(HttpHeaders.AUTHORIZATION, "Basic " + Base64.getEncoder().encodeToString(("fitzhi-trusted-client:secret").getBytes()));
+			post.setHeader(HttpHeaders.AUTHORIZATION, BASIC + Base64.getEncoder().encodeToString((clientName + ":" + secret).getBytes()));
 			
 			List<NameValuePair> params = new ArrayList<>();
 			params.add(new BasicNameValuePair("username", login));
@@ -112,7 +118,7 @@ public class HttpConnectionHandlerImpl implements HttpConnectionHandler {
 			HttpPost post = new HttpPost(url);
 	
 			post.setHeader(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_FORM_URLENCODED.toString());
-			post.setHeader(HttpHeaders.AUTHORIZATION, "Basic " + Base64.getEncoder().encodeToString(("fitzhi-trusted-client:secret").getBytes()));
+			post.setHeader(HttpHeaders.AUTHORIZATION, BASIC + Base64.getEncoder().encodeToString((clientName + ":" + secret).getBytes()));
 			
 			List<NameValuePair> params = new ArrayList<>();
 			params.add(new BasicNameValuePair("refresh_token", token.getRefresh_token()));
