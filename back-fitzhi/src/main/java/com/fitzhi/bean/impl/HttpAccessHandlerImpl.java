@@ -46,6 +46,8 @@ import lombok.extern.slf4j.Slf4j;
 @Profile("slave")
 public class HttpAccessHandlerImpl<T> implements HttpAccessHandler<T> {
 	
+	private static final String HTTP_ERROR_WITH_S_S_S = "Http error with %s %s %s";
+
 	@Autowired
 	private ObjectMapper objectMapper;
 
@@ -77,7 +79,7 @@ public class HttpAccessHandlerImpl<T> implements HttpAccessHandler<T> {
 				return objectMapper.readValue(EntityUtils.toString(response.getEntity()), typeReference);
 			} else {
 				if (log.isWarnEnabled()) {
-					log.warn(String.format("Http error with %s %s %s", url, response.getStatusLine().getStatusCode(), response.getStatusLine().getReasonPhrase()));
+					log.warn(String.format(HTTP_ERROR_WITH_S_S_S, url, response.getStatusLine().getStatusCode(), response.getStatusLine().getReasonPhrase()));
 				}
 				throw new ApplicationException(CODE_HTTP_ERROR, MessageFormat.format(MESSAGE_HTTP_ERROR, response.getStatusLine().getReasonPhrase(), url));
 			}
@@ -105,7 +107,7 @@ public class HttpAccessHandlerImpl<T> implements HttpAccessHandler<T> {
 				return objectMapper.readValue(EntityUtils.toString(response.getEntity()), typeReference);
 			} else {
 				if (log.isWarnEnabled()) {
-					log.warn(String.format("Http error with %s %s %s", url, response.getStatusLine().getStatusCode(), response.getStatusLine().getReasonPhrase()));
+					log.warn(String.format(HTTP_ERROR_WITH_S_S_S, url, response.getStatusLine().getStatusCode(), response.getStatusLine().getReasonPhrase()));
 				}
 				throw new ApplicationException(CODE_HTTP_ERROR, MessageFormat.format(MESSAGE_HTTP_ERROR, response.getStatusLine().getReasonPhrase(), url));
 			}
@@ -171,7 +173,7 @@ public class HttpAccessHandlerImpl<T> implements HttpAccessHandler<T> {
 					return null;
 				default:
 					if (log.isWarnEnabled()) {
-						log.warn(String.format("Http error with %s %s %s", url, response.getStatusLine().getStatusCode(), response.getStatusLine().getReasonPhrase()));
+						log.warn(String.format(HTTP_ERROR_WITH_S_S_S, url, response.getStatusLine().getStatusCode(), response.getStatusLine().getReasonPhrase()));
 					}
 					throw new ApplicationException(CODE_HTTP_ERROR, MessageFormat.format(MESSAGE_HTTP_ERROR, response.getStatusLine().getReasonPhrase(), url));
 				}
@@ -216,7 +218,7 @@ public class HttpAccessHandlerImpl<T> implements HttpAccessHandler<T> {
 					}
 				default:
 					if (log.isWarnEnabled()) {
-						log.warn(String.format("Http error with %s %s %s", url, response.getStatusLine().getStatusCode(), response.getStatusLine().getReasonPhrase()));
+						log.warn(String.format(HTTP_ERROR_WITH_S_S_S, url, response.getStatusLine().getStatusCode(), response.getStatusLine().getReasonPhrase()));
 						log.warn(EntityUtils.toString(response.getEntity()));
 					}
 					throw new ApplicationException(CODE_HTTP_ERROR, MessageFormat.format(MESSAGE_HTTP_ERROR, response.getStatusLine().getReasonPhrase(), url));
