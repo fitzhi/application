@@ -164,12 +164,12 @@ public class ProjectHandlerImpl extends AbstractDataSaverLifeCycleImpl implement
 	@Override
 	public Optional<Project> lookup(String search, ProjectLookupCriteria criteria) throws ApplicationException {
 
-		Optional<Project> oProject = Optional.empty();
+		Optional<Project> oProject = null;
 		switch (criteria) {
 			case Name:
 				oProject = getProjects().values().stream()
-						.filter( (Project project) -> project.getName().equals(search))
-						.findFirst();
+					.filter( (Project project) -> project.getName().equals(search))
+					.findFirst();
 				break;
 			case UrlRepository:
 				oProject = getProjects().values().stream()

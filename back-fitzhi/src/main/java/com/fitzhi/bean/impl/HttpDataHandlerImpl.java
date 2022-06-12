@@ -114,9 +114,9 @@ public class HttpDataHandlerImpl<T> implements DataHandler {
 	@Autowired
 	HttpAccessHandler<Void> httpAccessVoid;
 
-	private final static String NOT_IMPLEMENTED_YET = "Not implemented yet";
+	private static final String NOT_IMPLEMENTED_YET = "Not implemented yet";
 
-	private final String apiProjectUrl = "/api/project/";
+	private final static String API_PROJECT = "/api/project/";
 
 	@Override
 	public void saveProjects(Map<Integer, Project> projects) throws ApplicationException {
@@ -128,7 +128,7 @@ public class HttpDataHandlerImpl<T> implements DataHandler {
 		if (!httpConnectionHandler.isConnected()) {
 			httpConnectionHandler.connect(login, pass);
 		}
-		String url = applicationUrl + apiProjectUrl;
+		String url = applicationUrl + API_PROJECT;
 		List<Project> projects = httpAccessProject.loadList(url, new TypeReference<List<Project>>(){});
 		Map<Integer, Project> map = new HashMap<>();
 		projects.forEach(p -> map.put(p.getId(), p));
@@ -149,7 +149,7 @@ public class HttpDataHandlerImpl<T> implements DataHandler {
 		if (log.isInfoEnabled()) {
 			log.info(String.format("Send %d eligibile staff members top the main application", list.size()));
 		}
-		String url = applicationUrl + apiProjectUrl + project.getId() + "/staff";
+		String url = applicationUrl + API_PROJECT + project.getId() + "/staff";
 		httpAccessStaff.putList(url, list);
 	}
 
@@ -192,7 +192,7 @@ public class HttpDataHandlerImpl<T> implements DataHandler {
 		if (!httpConnectionHandler.isConnected()) {
 			httpConnectionHandler.connect(login, pass);
 		}
-		String url = applicationUrl + apiProjectUrl + project.getId() + "/changes";
+		String url = applicationUrl + API_PROJECT + project.getId() + "/changes";
 		String body = serializeChanges(changes);
 		if (log.isDebugEnabled()) {
 			log.debug ("sending to url");
@@ -294,7 +294,7 @@ public class HttpDataHandlerImpl<T> implements DataHandler {
 		if (!httpConnectionHandler.isConnected()) {
 			httpConnectionHandler.connect(login, pass);
 		}
-		String url = applicationUrl + apiProjectUrl + project.getId() + "/" + pathsType.getTypeOfPath();
+		String url = applicationUrl + API_PROJECT + project.getId() + "/" + pathsType.getTypeOfPath();
 
 		httpAccess.putList(url, paths);
 	}
@@ -310,7 +310,7 @@ public class HttpDataHandlerImpl<T> implements DataHandler {
 		if (!httpConnectionHandler.isConnected()) {
 			httpConnectionHandler.connect(login, pass);
 		}
-		String url = applicationUrl + apiProjectUrl + project.getId() + "/projectLayers";
+		String url = applicationUrl + API_PROJECT + project.getId() + "/projectLayers";
 
 		httpAccessProjectLayer.putList(url, layers.getLayers());
 
@@ -402,7 +402,7 @@ public class HttpDataHandlerImpl<T> implements DataHandler {
 		if (!httpConnectionHandler.isConnected()) {
 			httpConnectionHandler.connect(login, pass);
 		}
-		String url = applicationUrl + apiProjectUrl + projectAnalysis.getId() + "/analysis";
+		String url = applicationUrl + API_PROJECT + projectAnalysis.getId() + "/analysis";
 		httpAccessVoid.put(url, projectAnalysis, new TypeReference<Void>(){});
 	}
 
