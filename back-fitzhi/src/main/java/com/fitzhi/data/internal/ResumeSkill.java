@@ -1,6 +1,7 @@
 package com.fitzhi.data.internal;
 
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 /**
  * A Resume
@@ -8,6 +9,7 @@ import lombok.Data;
  *
  */
 @Data
+@NoArgsConstructor
 public class ResumeSkill extends ResumeSkillIdentifier implements Comparable<ResumeSkill> {
 
 	static final int LIMIT_LANGUAGE = 8;
@@ -25,13 +27,6 @@ public class ResumeSkill extends ResumeSkillIdentifier implements Comparable<Res
 	public ResumeSkill(int idSkill, String title, long count) {
 		super(idSkill, count);
 		this.setTitle(title);
-	}
-
-	/**
-	 * Empty constructor.
-	 */
-	public ResumeSkill() {
-		super();
 	}
 
 	@Override
