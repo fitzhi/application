@@ -2,6 +2,7 @@ import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable, of } from 'rxjs';
 import { catchError, switchMap, take, tap } from 'rxjs/operators';
+import { Constants } from 'src/app/constants';
 import { OpenIdCredentials } from 'src/app/data/open-id-credentials';
 import { OpenIdTokenStaff } from 'src/app/data/openidtoken-staff';
 import { traceOn } from 'src/app/global';
@@ -45,7 +46,7 @@ export class AuthService extends InternalService {
 		const params = new HttpParams()
 			.set('username', username)
 			.set('password', password)
-			.set('grant_type', 'password');
+			.set(Constants.GRANT_TYPE, 'password');
 
 		return this.httpClient.post<Token>(
 			localStorage.getItem('backendUrl') + '/oauth/token',

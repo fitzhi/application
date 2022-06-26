@@ -5,6 +5,7 @@ import {
 } from '@angular/common/http/testing';
 import { TokenService } from '../token/token.service';
 import { Token } from '../token/token';
+import { HttpRequest } from '@angular/common/http';
 
 describe(`TokenService`, () => {
 	let httpMock: HttpTestingController;
@@ -56,6 +57,33 @@ describe(`TokenService`, () => {
 		const httpRequest = httpMock.expectOne('myBackendUrl/oauth/token?refresh_token=refresh_token_value&grant_type=refresh_token');
 		expect(httpRequest.request.headers.has('authorization')).toEqual(true);
 
+	});
+
+	it('should extract correctly the grant_type from the request if any.', () => {
+		const req = new HttpRequest(
+			'POST',
+			'url',
+			'user:myUser&password:MyPassword&grant_type:password');
+		const grant = tokenService.grant_type(req);
+		expect(grant).toBe('password');
+	});
+
+	it('should handle correctly a request without grant_type.', () => {
+		const req = new HttpRequest(
+			'POST',
+			'url',
+			'Nope...');
+		const grant = tokenService.grant_type(req);
+		expect(grant).toBeNull();
+	});
+
+	it('should handle correctly a request without body to extract the grant_type.', () => {
+		const req = new HttpRequest(
+			'POST',
+			'url',
+			null);
+		const grant = tokenService.grant_type(req);
+		expect(grant).toBeNull();
 	});
 
 	afterEach(() => {

@@ -20,7 +20,7 @@ import { CallbackGithubComponent } from './interaction/callback-github/callback-
 const routes: Routes = [
 	{ path: '', redirectTo: '/welcome', pathMatch: 'full' },
 	{ path: 'welcome', component: WelcomeComponent },
-	{ path: 'login', component: ConnectUserComponent },
+	{ path: 'login', component: WelcomeComponent },
 	{ path: 'callback/github', component: CallbackGithubComponent },
 	{ path: 'ciao', component: CiaoComponent },
 	{ path: 'dev-on-off', component: DevOnOffComponent },

@@ -140,5 +140,9 @@ export class Constants {
 	 */
 	public static SERVER_DOWN  = 'Server is down or unreachable';
 
+	/**
+	 * Specific paramated used by the authorization request.
+	 */
+	public static GRANT_TYPE = 'grant_type';
 }
 

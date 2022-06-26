@@ -1,6 +1,7 @@
 import { HttpClient, HttpHeaders, HttpParams, HttpRequest } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
+import { Constants } from 'src/app/constants';
 import { traceOn } from 'src/app/global';
 import { Token } from './token';
 
@@ -62,8 +63,10 @@ export class TokenService {
 	 */
 	addToken(req: HttpRequest<any>): HttpRequest<any> {
 		// We do not add an header if the request is an authentication request.
-		if (req.params.get('grant_type')) {
-			switch (req.params.get('grant_type')) {
+		traceOn() && console.log (req);
+		const grant_type = this.grant_type(req);
+		if (grant_type) {
+			switch (grant_type) {
 				case 'refresh_token':
 				case 'password':
 					return req;
@@ -71,6 +74,24 @@ export class TokenService {
 		}
 		return (this.token) ?
 			req.clone({ setHeaders: { Authorization: 'Bearer ' + this.token.access_token } }) : req;
+	}
+
+	/**
+	 * return the`grant_type`extracted from the body is any
+	 * @param req a normal request, or maybe an authentication request
+	 */
+	grant_type (req: HttpRequest<any>) {
+		
+		if (!req.body) {
+			return null;
+		}
+
+		const index = req.body.indexOf(Constants.GRANT_TYPE);
+		if (index === -1) {
+			return null;
+		}
+
+		return req.body.substring(index + Constants.GRANT_TYPE.length + 1);
 	}
 
 	/**

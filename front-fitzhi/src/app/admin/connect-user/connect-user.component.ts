@@ -118,7 +118,7 @@ export class ConnectUserComponent extends BaseDirective implements OnInit, OnDes
 	 */
 	public onUserConnected($event) {
 		if (traceOn()) {
-			console.log ('Tranfering the connection status %d', $event);
+			console.log ('Tranfering the connection status', $event);
 		}
 		this.messengerUserConnected$.emit($event);
 	}

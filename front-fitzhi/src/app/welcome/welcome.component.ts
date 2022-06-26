@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { BackendSetupService } from '../service/backend-setup/backend-setup.service';
 import { AuthService } from '../admin/service/auth/auth.service';
+import { traceOn } from '../global';
 
 @Component({
 	selector: 'app-welcome',
@@ -32,7 +33,7 @@ export class WelcomeComponent implements OnInit {
 	}
 
 	/**
-     * Return `TRUE` if the connection is requested.
+     * Return`TRUE`if the connection is requested.
 	 *
      * There are 2 possible reasons for that :
      * - This is the first connection on fitzhì
@@ -42,4 +43,11 @@ export class WelcomeComponent implements OnInit {
 		return (!this.authService.isConnected() && !this.firstLaunch);
 	}
 
+	/**
+	 * This method is fired by an`EventEmitter<boolean>`located in the connection form component.
+	 * @param $event the connection status : either`TRUE`, or`FALSE`.
+	 */
+	onUserConnected($event) {
+		traceOn() && console.log (($event) ? 'User connected' : 'User not connected');
+	}
 }

@@ -4,7 +4,7 @@
 
 <ng-template #normalLaunch>
 	<div id="setup" *ngIf="connectionIsNeeded()">
-		<app-connect-user></app-connect-user>
+		<app-connect-user (messengerUserConnected$)="onUserConnected($event)"></app-connect-user>
 	</div>
 	<div id="mainDashboard" *ngIf="this.authService.isConnected()">
 		<app-fitzhi-dashboard></app-fitzhi-dashboard>
