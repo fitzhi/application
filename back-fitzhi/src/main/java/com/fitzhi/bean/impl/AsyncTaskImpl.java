@@ -81,13 +81,13 @@ public class AsyncTaskImpl implements AsyncTask {
 		tasks.values().stream()
 			.filter(t -> !t.isComplete())
 			.sorted(Comparator.comparingInt(Task::getId))
-			.forEach(task -> {
+			.forEach(task -> 
 				sb.append(String.format("%s %s %d %d%%", 
 					task.getOperation(), 
 					task.getTitle(), 
 					task.getId(), 
-					task.getCurrentProgressionPercentage()) ).append(LN);
-			});
+					task.getCurrentProgressionPercentage()) ).append(LN)
+			);
 		return sb.toString();
 	}
 	

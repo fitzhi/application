@@ -568,8 +568,7 @@ public interface StaffHandler extends DataSaverLifeCycle {
 	 * either an {@link IOException}, 
 	 * or there is no constellationn registrered for the given month, 
 	 * or an unknown skill identifier has been detected.
-	 * @throws NotFoundException thrown if there is no constellation for the given month 
 	 */
-	List<Constellation> loadConstellations(LocalDate month) throws ApplicationException, NotFoundException;
+	List<Constellation> loadConstellations(LocalDate month) throws ApplicationException;
 
 }

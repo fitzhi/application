@@ -70,7 +70,7 @@ public class SavingBackendService {
 
 		synchronized (projectHandler.getLocker()) {
 			try {
-				if (projectHandler.isDataUpdated() | projectAuditHandler.isDataUpdated() ) {
+				if (projectHandler.isDataUpdated() || projectAuditHandler.isDataUpdated() ) {
 					dataSaver.saveProjects(projectHandler.getProjects());
 					projectHandler.dataAreSaved();
 				}

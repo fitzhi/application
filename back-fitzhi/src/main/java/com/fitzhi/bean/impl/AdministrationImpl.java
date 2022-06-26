@@ -115,7 +115,7 @@ public class AdministrationImpl implements Administration {
 		 */
 		if (isVeryFirstConnection()) {
 			if (log.isDebugEnabled()) {
-				log.debug (String.format("This is the very first connection in Fitzhi."));
+				log.debug ("This is the very first connection in Fitzhi.");
 			}
 			if (staff != null) {
 				staffHandler.savePassword(staff, encryptedPassword);

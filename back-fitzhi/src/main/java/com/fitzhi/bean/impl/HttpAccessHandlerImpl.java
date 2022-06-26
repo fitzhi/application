@@ -216,6 +216,7 @@ public class HttpAccessHandlerImpl<T> implements HttpAccessHandler<T> {
 					} else {
 						throw new ApplicationException(CODE_HTTP_ERROR, MessageFormat.format(MESSAGE_HTTP_ERROR, response.getStatusLine().getReasonPhrase(), url));
 					}
+					break;
 				default:
 					if (log.isWarnEnabled()) {
 						log.warn(String.format(HTTP_ERROR_WITH_S_S_S, url, response.getStatusLine().getStatusCode(), response.getStatusLine().getReasonPhrase()));

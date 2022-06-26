@@ -89,9 +89,8 @@ public interface ProjectHandler extends DataSaverLifeCycle {
 	 * @param idProject the given project identifier.
 	 * @return a non-nullable project retrieved in the projects repository.
 	 * @throws ApplicationException thrown if an error occurs during the search, most probably an {@link IOException}
-	 * @throws NotFoundException thrown if the project identifier is not retrieved in the application portfolio
 	 */
-	@NotNull Project getProject(int idProject) throws ApplicationException, NotFoundException;
+	@NotNull Project getProject(int idProject) throws ApplicationException;
 
 	/**
 	 * <p>
