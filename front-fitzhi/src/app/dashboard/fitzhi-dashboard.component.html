@@ -196,7 +196,7 @@
 				[active]="false"></app-treemap-projects>
 		</div>
 	</button>
-<!-- Nope -->
+
 	<a class="flipProjectsFilter" href="javascript:;" (click)="flip()"
 		*ngIf="(!(treemapProjectsFilter) && (projectService.allProjectsIsLoaded$|async) && (isSelected(selection.treeMapProjects)))">
 		<div class="d-flex flex-row-reverse expand-button">

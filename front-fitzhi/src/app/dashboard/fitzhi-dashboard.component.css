@@ -221,33 +221,6 @@ tr.evaluationDistributions td em {
 	color: var(--color-selected);
 }
 
-div.panelDeveloperBase {
-	width: 5px;
-	height: 25px;
-	border: 1px solid black;
-}
-
-div.panelDeveloperArrowRight {
-	width: 15px;
-	height: 25px;
-	border-top: 1px solid black;
-	border-bottom: 1px solid black;
-	border-right: 1px solid black;
-}
-
-div.panelDeveloperArrowLeft {
-	width: 15px;
-	height: 25px;
-	border-top: 1px solid black;
-	border-bottom: 1px solid black;
-	border-left: 1px solid black;
-}
-
-a.flipProjectsFilter {
-	color: black;
-	text-decoration: none;
-}
-
 div.camera {
 	width: 300px;
 	margin: 40vh auto;
