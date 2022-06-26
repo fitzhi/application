@@ -81,7 +81,7 @@ export class TokenService {
 	 * @param req a normal request, or maybe an authentication request
 	 */
 	grant_type (req: HttpRequest<any>) {
-		
+
 		if (!req.body) {
 			return null;
 		}
