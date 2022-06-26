@@ -16,7 +16,7 @@ export class TokenService {
 
 	/**
 	 * This method requests the backend server for a new access token.
-	 * @returns an `*observable*` emitting the returned token
+	 * @returns an`observable`emitting the returned token
 	 */
 	refreshToken$(): Observable<Token> {
 
