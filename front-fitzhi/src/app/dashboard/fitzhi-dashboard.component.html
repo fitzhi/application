@@ -196,29 +196,21 @@
 				[active]="false"></app-treemap-projects>
 		</div>
 	</button>
-
-	<a class="flipProjectsFilter" href="javascript:;" (click)="flip()">
-		<div class="d-flex justify-content-end m-1" 
-			*ngIf="(!(treemapProjectsFilter) && (projectService.allProjectsIsLoaded$|async) && (isSelected(selection.treeMapProjects)))">
-			<div class="p-0 m-0 panelDeveloperBase">
-			</div>
-			<div class="p-0 panelDeveloperArrowRight">
-				<span class="p-0">&#x25B6;</span>
-			</div>
+<!-- Nope -->
+	<a class="flipProjectsFilter" href="javascript:;" (click)="flip()"
+		*ngIf="(!(treemapProjectsFilter) && (projectService.allProjectsIsLoaded$|async) && (isSelected(selection.treeMapProjects)))">
+		<div class="d-flex flex-row-reverse expand-button">
+			<img src="./assets/img/right.png" class="expand-arrow m-1" />
 		</div>
 	</a>
 
-	<a class="flipProjectsFilter" href="javascript:;" (click)="flip()">
-		<div class="d-flex justify-content-end m-2" 
-			*ngIf="((treemapProjectsFilter) && (projectService.allProjectsIsLoaded$|async) && (isSelected(selection.treeMapProjects)))">
-			<div class="p-0 panelDeveloperArrowLeft">
-				<span class="p-0">&#9664;</span>
-			</div>
-			<div class="p-0 m-0 panelDeveloperBase">
-			</div>
-		</div>
-	</a>
-
+	<div class="d-flex flex-row-reverse expand-button"
+		*ngIf="((treemapProjectsFilter) && (projectService.allProjectsIsLoaded$|async) && (isSelected(selection.treeMapProjects)))" >
+		<a class="flipProjectsFilter" href="javascript:;" (click)="flip()">
+			<img src="./assets/img/left.png" class="expand-arrow m-1" />
+		</a>
+	</div>
+			
 	<button id="treeMap-skills" class="btn rounded treeMap-skills"
 		*ngIf="(staffListService.allStaffLoaded$|async) && (projectService.allProjectsIsLoaded$|async)"
 		[ngClass]="{

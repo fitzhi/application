@@ -80,6 +80,15 @@ div.styline-icon {
 	height: var(--sidebar-button-height);
 }
 
+div.expand-button {
+	width: var(--sidebar-width);
+}
+
+img.expand-arrow {
+	width: 30px;
+	height: 30px;
+	margin: 0;
+}
 
 button.starfield, button.technicalDate, button.pie, button.treeMap-skills, button.treeMap-projects, div.styline-icon {
 	width: var(--sidebar-button-width);
