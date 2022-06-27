@@ -86,6 +86,10 @@ export class TokenService {
 			return null;
 		}
 
+		if (typeof req.body !== 'string') {
+			return null;
+		}
+
 		const index = req.body.indexOf(Constants.GRANT_TYPE);
 		if (index === -1) {
 			return null;

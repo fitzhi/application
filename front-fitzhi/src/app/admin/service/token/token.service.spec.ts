@@ -86,6 +86,15 @@ describe(`TokenService`, () => {
 		expect(grant).toBeNull();
 	});
 
+	it('should handle correctly a request with a body containing a JSON content, to extract the grant_type.', () => {
+		const req = new HttpRequest(
+			'POST',
+			'url',
+			{a: 1, grant_type: "password"});
+		const grant = tokenService.grant_type(req);
+		expect(grant).toBeNull();
+	});
+
 	afterEach(() => {
 		localStorage.removeItem('backendUrl');
 		httpMock.verify();
