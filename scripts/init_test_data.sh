@@ -3,7 +3,7 @@
 echo "Creating Admin User"
 echo "-------------------"
 echo ""
-curl -X POST  -H "Content-Type: application/json" -d '{"login": "myFakeUser", "password": "myFakePassword" }'  http://localhost:8081/api/admin/classic/primeRegister
+curl -X POST  -H "Content-Type: application/json" -d '{"login": "myFakeUser", "password": "myFakePassword" }'  http://localhost:8080/api/admin/classic/primeRegister
 
 
 echo "Connecting Admin User"
@@ -13,6 +13,9 @@ curl -v -X POST  -u fitzhi-trusted-client:secret -H "Content-Type: application/x
 
 export ACCESS_TOKEN=$(jq .access_token out.json)
 export ACCESS_TOKEN=$(echo $ACCESS_TOKEN | cut -d "\"" -f 2)
+
+echo $ACCESS_TOKEN 
+echo "------------------------"
 
 rm out.json
 
