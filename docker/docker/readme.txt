@@ -1,1 +1,0 @@
-This directory contains the settings required for the Docker container & used by the build process.

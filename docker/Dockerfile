@@ -32,9 +32,9 @@ COPY spoq spoq
 COPY fitzhi fitzhi
 
 RUN	cd /; \
-	cp fitzhi/deploy/docker/default /etc/nginx/sites-enabled/default; \
-	cp fitzhi/deploy/docker/start-fitzhi.sh fitzhi/deploy/back-fitzhi/start-fitzhi.sh; \
-	cp fitzhi/deploy/docker/sonar-servers.json fitzhi/deploy/data/referential/sonar-servers.json; \
+	cp fitzhi/deploy/docker-server/default /etc/nginx/sites-enabled/default; \
+	cp fitzhi/deploy/docker-server/start-fitzhi.sh fitzhi/deploy/back-fitzhi/start-fitzhi.sh; \
+	cp fitzhi/deploy/docker-server/sonar-servers.json fitzhi/deploy/data/referential/sonar-servers.json; \
 	echo "export DOCKER_FITZHI_BUILDTIME=#buildingTime" >> ~/.bashrc
 
 WORKDIR /fitzhi/deploy/back-fitzhi
