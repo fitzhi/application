@@ -443,6 +443,11 @@ public class FileDataHandlerImpl implements DataHandler {
 	@Override
 	public void saveDetectedExperiences (Project project, ProjectDetectedExperiences experiences) throws ApplicationException {
 
+		//
+		// As the method-name suggests, we create the directory.
+		//
+		createIfNeededDirectory(SAVED_CHANGES);
+
 		final String filename = generateProjectDetectedExperiencesJsonFilename(project);
 
 		if (log.isDebugEnabled()) {
