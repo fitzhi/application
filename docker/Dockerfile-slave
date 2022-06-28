@@ -31,6 +31,6 @@ RUN	cd /; \
 
 WORKDIR /fitzhi/deploy/back-fitzhi
 
-ENTRYPOINT [ "./start-slave.sh" ]
+CMD ./start-slave.sh 
 
 EXPOSE 8081
