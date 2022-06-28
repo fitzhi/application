@@ -31,6 +31,9 @@ RUN	cd /; \
 
 WORKDIR /fitzhi/deploy/back-fitzhi
 
-CMD ./start-slave.sh 
+# Launching the slave AND
+# terminating the container from inside.
+# cf. https://stackoverflow.com/questions/31538314/stopping-docker-container-from-inside
+CMD ./start-slave.sh && trap "exit" SIGINT SIGTERM && kill -s SIGINT 1
 
 EXPOSE 8081
