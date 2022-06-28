@@ -1,8 +1,8 @@
 #!/bin/sh
 
-export VERSION_FITZHI=`cat ../back-fitzhi/VERSION_FITZHI`
-export SONAR_HOST_URL=`cat ./SONAR_HOST_URL`
-export SONAR_TOKEN_LOGIN=`cat ./SONAR_TOKEN_LOGIN`
+export VERSION_FITZHI=`cat ../../back-fitzhi/VERSION_FITZHI`
+export SONAR_HOST_URL=`cat ../SONAR_HOST_URL`
+export SONAR_TOKEN_LOGIN=`cat ../SONAR_TOKEN_LOGIN`
 
 
 # For debugging purpose only...
