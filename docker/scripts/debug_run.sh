@@ -6,9 +6,9 @@ export SONAR_TOKEN_LOGIN=`cat ../SONAR_TOKEN_LOGIN`
 
 
 # For debugging purpose only...
-docker run --name fitzhi  \
+docker run --network=host --name slave  \
   -e "organization=fitzhi" \
   -e "urlSonarServer=${SONAR_HOST_URL}" \
   -e "login=${SONAR_TOKEN_LOGIN}" \
   -v fitzhi-data:/fitzhi/deploy/ \
-  -p 80:80 -ti --rm fitzhi/application:1.9-SNAPSHOT /bin/bash
+  -p 80:80 -ti --rm fitzhi/slave:1.9-SNAPSHOT /bin/bash
