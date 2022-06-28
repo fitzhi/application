@@ -19,6 +19,10 @@ jobs:
         matrix:
             os: [ubuntu-latest]
 
+    - name: small test...
+      run: |
+        ls ./docker
+
     steps:
     - uses: actions/checkout@v3
   
