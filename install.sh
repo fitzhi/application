@@ -74,7 +74,7 @@ cp target/logback-spring.xml ../$dir/backend-fitzhi/logback-spring.xml
 
 # docker & nginx settings
 rm -rf ../$dir/docker
-cp -R ../docker/docker ../$dir
+cp -R ../docker/docker-server ../$dir
 
 if [ $force = "Y" ]
 then 
