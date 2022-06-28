@@ -22,12 +22,13 @@ docker pull fitzhi/slave:${VERSION_FITZHI}
 
 # Test inside the Fitzhi infrastructure.
 docker volume create fitzhi-data
-docker run --name slave  \
+docker run --network host --name slave  \
 -e "organization=fitzhi" \
--e "urlSonarServer=${SONAR_HOST_URL}" \
--e "login=${SONAR_TOKEN_LOGIN}" \
+-e "urlApplication=http://localhost:8080" \
+-e "login=myFakeUser" \
+-e "pass=myFakePassword" \
 -v fitzhi-data:/fitzhi/deploy/ \
--p 80:80 -d --rm fitzhi/slave:${VERSION_FITZHI}
+-d --rm fitzhi/slave:${VERSION_FITZHI}
 
 # For debugging purpose only...
 # docker run --name fitzhi  \
