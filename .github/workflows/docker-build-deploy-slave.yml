@@ -4,7 +4,7 @@
 # 
 # Author : Frederic VIDAL (June 2022)
 #
-name: Docker Fitzhi Image CI the the slave
+name: Docker Fitzhi Image CI for slave
 
 on:
   push:
