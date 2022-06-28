@@ -23,12 +23,12 @@ docker pull fitzhi/slave:${VERSION_FITZHI}
 # Test inside the Fitzhi infrastructure.
 docker volume create fitzhi-data
 docker run --network host --name slave  \
--e "organization=fitzhi" \
--e "urlApplication=http://localhost:8080" \
--e "login=myFakeUser" \
--e "pass=myFakePassword" \
--v fitzhi-data:/fitzhi/deploy/ \
--d --rm fitzhi/slave:${VERSION_FITZHI}
+   -e "organization=fitzhi" \
+   -e "urlApplication=http://localhost:8080" \
+   -e "login=myFakeUser" \
+   -e "pass=myFakePassword" \
+   -v fitzhi-data:/fitzhi/deploy/ \
+   --rm fitzhi/slave:${VERSION_FITZHI}
 
 # For debugging purpose only...
 # docker run --name fitzhi  \
