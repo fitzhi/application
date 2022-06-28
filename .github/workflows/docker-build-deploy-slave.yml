@@ -64,6 +64,7 @@ jobs:
         mv ./back-fitzhi/data fitzhi/deploy/data
         mv ./back-fitzhi/target/fitzhi-${VERSION_FITZHI}.jar	fitzhi/deploy/back-fitzhi/fitzhi-${VERSION_FITZHI}.jar
         mv ./back-fitzhi/target/application.properties	fitzhi/deploy/back-fitzhi/application.properties
+        mv ./back-fitzhi/src/main/resources/application-slave.properties fitzhi/deploy/back-fitzhi/application-slave.properties
         mv ./back-fitzhi/target/logback-spring.xml	fitzhi/deploy/back-fitzhi/logback-spring.xml
         mv ./docker/docker-slave fitzhi/deploy/
 
