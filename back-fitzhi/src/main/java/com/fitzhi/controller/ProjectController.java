@@ -33,12 +33,16 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
 import javax.annotation.PostConstruct;
 import javax.servlet.http.HttpServletResponse;
 
+import com.fitzhi.Application;
 import com.fitzhi.ApplicationRuntimeException;
 import com.fitzhi.bean.AsyncTask;
 import com.fitzhi.bean.CacheDataHandler;
@@ -76,6 +80,7 @@ import org.eclipse.jgit.api.errors.GitAPIException;
 import org.eclipse.jgit.lib.Ref;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.boot.SpringApplication;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -717,6 +722,19 @@ public class ProjectController  {
 		dataHandler.saveStaff(project, staffHandler.getStaff());
 
 		tasks.completeTask(DASHBOARD_GENERATION, PROJECT, oProject.get().getId());
+
+		// We gracefully halt the server after a very short delay.
+		ScheduledExecutorService executorService = Executors.newSingleThreadScheduledExecutor();
+		executorService.schedule(new Runnable() {
+			@Override
+			public void run() {
+				Application.end(1);
+				
+			} 
+		}, 10, TimeUnit.SECONDS);
+		if (log.isInfoEnabled()) {
+			log.info("Termination of server is scheduled.");
+		}
 
 		return ResponseEntity.noContent().build();
 

@@ -14,9 +14,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.CommandLineRunner;
+import org.springframework.boot.ExitCodeGenerator;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
+import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Bean;
 import org.springframework.scheduling.annotation.EnableAsync;
 import org.springframework.scheduling.annotation.EnableScheduling;
@@ -82,11 +84,16 @@ public class Application {
 	@Autowired
 	DataHandler dataHandler;
 
+	/**
+	 * Context obtained at startup.
+	 */
+	static ApplicationContext fitzhiContext;
+
 	public static void main(String[] args) {
 		LoggerFactory.getLogger(Application.class.getCanonicalName()).info("Starting Backend 质 Fitzhì");
-		SpringApplication.run(Application.class, args);
+		fitzhiContext = SpringApplication.run(Application.class, args);
 	}
-
+	
 	@Bean
 	CommandLineRunner init(
 			@Qualifier("Application") StorageService storageServiceApplication,
@@ -135,4 +142,18 @@ public class Application {
 	public ShallowEtagHeaderFilter shallowEtagHeaderFilter() {
 		return new ShallowEtagHeaderFilter();
 	} 
+
+	/**
+	 * End the whole application instance.
+	 * This method is supposed to be invoked only from slaves.
+	 * @param exitCode the exit code to return
+	 */
+	public static void end(final int exitCode) {
+		SpringApplication.exit(fitzhiContext, new ExitCodeGenerator() {
+			@Override
+			public int getExitCode() {
+				return exitCode;
+			}
+		});
+	}
 }
