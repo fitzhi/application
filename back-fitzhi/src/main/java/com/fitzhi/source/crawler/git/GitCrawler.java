@@ -802,7 +802,7 @@ public class GitCrawler extends AbstractScannerDataGenerator {
 		Set<String> allEligibleFiles = this.allEligibleFiles(project);
 
 		tasks.logMessage(DASHBOARD_GENERATION, PROJECT, project.getId(),
-				String.format("%d files in queue for analysis !", allEligibleFiles.size()), 30);
+				MessageFormat.format("{0} files in queue for analysis !", allEligibleFiles.size()), 30);
 		int numberOfFiles = 0;
 
 		if (log.isDebugEnabled()) {
@@ -816,7 +816,7 @@ public class GitCrawler extends AbstractScannerDataGenerator {
 		}
 
 		if (log.isInfoEnabled()) {
-			log.info(String.format("Retrieving %d files on the repository %s", allEligibleFiles.size(),
+			log.info(MessageFormat.format("Retrieving {0} files on the repository %s", allEligibleFiles.size(),
 					repository.getDirectory().getAbsoluteFile()));
 		}
 
@@ -853,7 +853,7 @@ public class GitCrawler extends AbstractScannerDataGenerator {
 					int progressionPercentage = progressionPercentage(totalNumberOfFiles, allEligibleFiles.size());
 					tasks.logMessage(
 						DASHBOARD_GENERATION, PROJECT, project.getId(),
-						String.format ("%d files have been analyzed !", totalNumberOfFiles),
+						MessageFormat.format ("{0} files have been analyzed !", totalNumberOfFiles),
 						progressionPercentage);
 						numberOfFiles = 0;
 				}
