@@ -8,6 +8,7 @@ import static com.fitzhi.Error.MESSAGE_HTTP_ERROR;
 import static com.fitzhi.Error.MESSAGE_HTTP_NOT_CONNECTED;
 
 import java.io.IOException;
+import java.net.SocketException;
 import java.text.MessageFormat;
 import java.util.List;
 import java.util.Map;
@@ -46,6 +47,8 @@ import lombok.extern.slf4j.Slf4j;
 @Profile("slave")
 public class HttpAccessHandlerImpl<T> implements HttpAccessHandler<T> {
 	
+	private static final String BROKEN_PIPE_WRITE_FAILED = "Broken pipe (Write failed)";
+
 	private static final String HTTP_ERROR_WITH_S_S_S = "Http error with %s %s %s";
 
 	@Autowired
@@ -137,7 +140,21 @@ public class HttpAccessHandlerImpl<T> implements HttpAccessHandler<T> {
 				httpPut.setHeader(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_UTF8.toString());
 			}
 
-			HttpResponse response = client.execute(httpPut);
+			HttpResponse response = null;
+			try {
+				response = client.execute(httpPut);
+			} catch (SocketException se) {
+				// We force the reconnection, and we retry this method. 
+				if (BROKEN_PIPE_WRITE_FAILED.equals(se.getMessage())) {
+					if (log.isWarnEnabled()) {
+						log.warn("We retry this method after a force reconnection");
+					}
+					httpClient = null;
+					return put(url, o, typeReference);
+				}
+				throw se;
+			}
+
 			int statusCode = response.getStatusLine().getStatusCode();
 			switch (statusCode) {
 				case HttpStatus.SC_OK:
