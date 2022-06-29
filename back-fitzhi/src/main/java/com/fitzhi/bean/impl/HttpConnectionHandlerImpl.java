@@ -98,7 +98,6 @@ public class HttpConnectionHandlerImpl implements HttpConnectionHandler {
 				token = objectMapper.readValue(EntityUtils.toString(response.getEntity()), Token.class);
 			} else {
 				if (log.isWarnEnabled()) {
-					log.warn(String.format("user/password KO : %s/%s", login, pass));
 					log.warn(String.format(HTTP_ERROR_WITH_S_S_S, url, response.getStatusLine().getStatusCode(), response.getStatusLine().getReasonPhrase()));
 				}
 				throw new ApplicationException(CODE_HTTP_ERROR, MessageFormat.format(MESSAGE_HTTP_ERROR, response.getStatusLine().getReasonPhrase(), url));

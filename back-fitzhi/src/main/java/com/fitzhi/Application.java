@@ -147,13 +147,15 @@ public class Application {
 	 * End the whole application instance.
 	 * This method is supposed to be invoked only from slaves.
 	 * @param exitCode the exit code to return
+	 * @return the exit code to be sent back to os
 	 */
-	public static void end(final int exitCode) {
+	public static int end(final int exitCode) {
 		SpringApplication.exit(fitzhiContext, new ExitCodeGenerator() {
 			@Override
 			public int getExitCode() {
 				return exitCode;
 			}
 		});
+		return exitCode;
 	}
 }

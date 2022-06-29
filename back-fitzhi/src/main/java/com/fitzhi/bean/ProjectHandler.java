@@ -26,7 +26,6 @@ import com.fitzhi.data.internal.StaffExperienceTemplate;
 import com.fitzhi.data.source.CommitHistory;
 import com.fitzhi.data.source.Contributor;
 import com.fitzhi.exception.ApplicationException;
-import com.fitzhi.exception.NotFoundException;
 
 /**
  * This interface is in charge of the Projects management.

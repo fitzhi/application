@@ -45,6 +45,7 @@ public class PingController {
 		
 		HttpHeaders headers = new HttpHeaders();
 		headers.setContentType(MediaType.TEXT_HTML);
+
 		return new ResponseEntity<>(
 				"pong", 
 				headers, 

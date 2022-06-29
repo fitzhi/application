@@ -80,7 +80,6 @@ import org.eclipse.jgit.api.errors.GitAPIException;
 import org.eclipse.jgit.lib.Ref;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.boot.SpringApplication;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -728,8 +727,7 @@ public class ProjectController  {
 		executorService.schedule(new Runnable() {
 			@Override
 			public void run() {
-				Application.end(1);
-				
+				System.exit(Application.end(1));				
 			} 
 		}, 10, TimeUnit.SECONDS);
 		if (log.isInfoEnabled()) {
