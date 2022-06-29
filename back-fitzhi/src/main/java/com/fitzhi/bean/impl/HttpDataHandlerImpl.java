@@ -145,7 +145,11 @@ public class HttpDataHandlerImpl<T> implements DataHandler {
 		if (!httpConnectionHandler.isConnected()) {
 			httpConnectionHandler.connect(login, pass);
 		}
-		List<Staff> list = new ArrayList<>(staff.values());
+		// We send back only the staff members involved in the project
+		List<Staff> list = staff.values().stream()
+			.filter(st -> st.isInvolvedInProject(project.getId()))
+			.collect(Collectors.toList());
+
 		if (log.isInfoEnabled()) {
 			log.info(String.format("Send %d eligibile staff members top the main application", list.size()));
 		}
