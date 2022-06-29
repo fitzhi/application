@@ -76,12 +76,11 @@ jobs:
         mv ./back-fitzhi/target/fitzhi-${VERSION_FITZHI}.jar	fitzhi/deploy/back-fitzhi/fitzhi-${VERSION_FITZHI}.jar
         mv ./back-fitzhi/target/application.properties	fitzhi/deploy/back-fitzhi/application.properties
         mv ./back-fitzhi/target/logback-spring.xml	fitzhi/deploy/back-fitzhi/logback-spring.xml
-        mv ./docker/docker fitzhi/deploy/
+        mv ./docker/docker-server fitzhi/deploy/
 
     - name: Build the image of Fitzhi
       run: |
         export VERSION_FITZHI=`cat ./back-fitzhi/VERSION_FITZHI`
-        docker build . --push --file ./docker/Dockerfile --platform=linux/amd64,linux/arm64 --tag fitzhi/application:${VERSION_FITZHI} --no-cache
-        # docker build . --push --file ./docker/Dockerfile --platform=linux/amd64,linux/arm64 --tag fitzhi/application:${VERSION_FITZHI} --no-cache
+        docker build . --push --file ./docker/Dockerfile-server --platform=linux/amd64,linux/arm64 --tag fitzhi/application:${VERSION_FITZHI} --no-cache
         docker images
   
