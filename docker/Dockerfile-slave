@@ -1,12 +1,10 @@
 # 
-# Ubuntu Fitzhi container
+# Ubuntu Fitzhi slave container
 # 
 FROM eclipse-temurin:11.0.15_10-jre
 LABEL Frederic VIDAL (frederic.vidal@fitzhi.com)
 
 ENV DEBIAN_FRONTEND noninteractive
-RUN apt-get update; \
-    apt-get -y install git nginx
 
 # Organization declared in sonarcloud.io 
 ARG organization
@@ -24,17 +22,12 @@ ARG pass
 COPY fitzhi fitzhi
 
 RUN	cd /; \
-	cp fitzhi/deploy/docker-slave/default /etc/nginx/sites-enabled/default; \
 	cp fitzhi/deploy/docker-slave/start-slave.sh fitzhi/deploy/back-fitzhi/start-slave.sh; \
-	cp fitzhi/deploy/docker-slave/sonar-servers.json fitzhi/deploy/data/referential/sonar-servers.json; \
 	echo "export DOCKER_FITZHI_BUILDTIME=#buildingTime" >> ~/.bashrc
 
 WORKDIR /fitzhi/deploy/back-fitzhi
 
-# Launching the slave AND
-# terminating the container from inside.
-# cf. https://stackoverflow.com/questions/31538314/stopping-docker-container-from-inside
-# trap "exit" SIGINT SIGTERM && kill -s SIGINT 1
+# Launch the slave, and terminate the container when the Spring container is ended.
 ENTRYPOINT [ "./start-slave.sh" ]
 
 EXPOSE 8081
