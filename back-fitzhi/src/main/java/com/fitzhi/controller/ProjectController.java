@@ -33,9 +33,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
-import java.util.concurrent.Executors;
-import java.util.concurrent.ScheduledExecutorService;
-import java.util.concurrent.TimeUnit;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
@@ -722,17 +719,8 @@ public class ProjectController  {
 
 		tasks.completeTask(DASHBOARD_GENERATION, PROJECT, oProject.get().getId());
 
-		// We gracefully halt the server after a very short delay.
-		ScheduledExecutorService executorService = Executors.newSingleThreadScheduledExecutor();
-		executorService.schedule(new Runnable() {
-			@Override
-			public void run() {
-				System.exit(Application.end(1));				
-			} 
-		}, 10, TimeUnit.SECONDS);
-		if (log.isInfoEnabled()) {
-			log.info("Termination of server is scheduled.");
-		}
+		// We schedule the termination of the application.
+		Application.scheduleEnd(1, 10);
 
 		return ResponseEntity.noContent().build();
 

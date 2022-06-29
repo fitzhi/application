@@ -1,6 +1,9 @@
 package com.fitzhi;
 
 import java.util.Locale;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
 
 import com.fitzhi.bean.DataHandler;
 import com.fitzhi.bean.StaffHandler;
@@ -8,6 +11,8 @@ import com.fitzhi.service.StorageService;
 import com.fitzhi.service.impl.storageservice.ApplicationStorageProperties;
 import com.fitzhi.service.impl.storageservice.AuditAttachmentStorageProperties;
 import com.fitzhi.source.crawler.git.GitCrawler;
+
+import lombok.extern.slf4j.Slf4j;
 
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,6 +36,7 @@ import org.springframework.web.filter.ShallowEtagHeaderFilter;
 @EnableConfigurationProperties({ApplicationStorageProperties.class, AuditAttachmentStorageProperties.class})
 @EnableScheduling
 @EnableAsync
+@Slf4j
 public class Application {
 
 	
@@ -142,6 +148,24 @@ public class Application {
 	public ShallowEtagHeaderFilter shallowEtagHeaderFilter() {
 		return new ShallowEtagHeaderFilter();
 	} 
+
+	/**
+	 * Schedule the termination of the server after a given delay in second
+	 * @param exitCode the exit code that the server should return back to the OS after termination.
+	 */
+	public static void scheduleEnd(final int exitCode, final int delay) {
+		// We gracefully halt the server after a very short delay.
+		ScheduledExecutorService executorService = Executors.newSingleThreadScheduledExecutor();
+		executorService.schedule(new Runnable() {
+			@Override
+			public void run() {
+				System.exit(Application.end(exitCode));				
+			} 
+		}, delay, TimeUnit.SECONDS);
+		if (log.isInfoEnabled()) {
+			log.info("Termination of server is scheduled.");
+		}
+	}
 
 	/**
 	 * End the whole application instance.

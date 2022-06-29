@@ -3,6 +3,7 @@
  */
 package com.fitzhi;
 
+import org.springframework.context.annotation.Profile;
 import org.springframework.core.Ordered;
 import org.springframework.core.annotation.Order;
 import org.springframework.http.HttpStatus;
@@ -25,7 +26,8 @@ import com.fitzhi.exception.InformationException;
  */
 @Order(Ordered.HIGHEST_PRECEDENCE)
 @ControllerAdvice
-public class RestExceptionHandler extends ResponseEntityExceptionHandler {
+@Profile("application")
+public class RestApplicationExceptionHandler extends ResponseEntityExceptionHandler {
 
 	@ExceptionHandler(ApplicationException.class)
 	protected ResponseEntity<Object> handleApplicationException(ApplicationException ex) {
