@@ -27,7 +27,7 @@ RUN	cd /; \
 
 WORKDIR /fitzhi/deploy/back-fitzhi
 
-# Launch the slave, and terminate the container when the Spring container is ended.
+# Launch the slave, and terminate the container when the Spring container has ended.
 ENTRYPOINT [ "./start-slave.sh" ]
 
 EXPOSE 8081
