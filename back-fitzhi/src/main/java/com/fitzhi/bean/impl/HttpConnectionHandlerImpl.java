@@ -88,6 +88,8 @@ public class HttpConnectionHandlerImpl implements HttpConnectionHandler {
 
 	@Override
 	public void connect(String login, String pass) throws ApplicationException {
+		// We initialize the HttpClient object.
+		client = null;
 		final String url = applicationUrl + "/oauth/token";
 		if (log.isDebugEnabled()) {
 			log.debug(String.format("Login %s into %s.", login, url));
@@ -183,7 +185,7 @@ public class HttpConnectionHandlerImpl implements HttpConnectionHandler {
 			SocketConfig sockerConfig = SocketConfig.custom().setSoTimeout(timeout * 1000).build();
 			client = HttpClientBuilder.create().setDefaultSocketConfig(sockerConfig).setDefaultRequestConfig(config).build();
 			if (log.isInfoEnabled()) {
-				log.info(MessageFormat.format("Client connected with a socket timeout of {0}.", timeout));
+				log.info(MessageFormat.format("HttpClient connected with a socket timeout of {0}s.", timeout));
 			}
 		} 
 		return client;
