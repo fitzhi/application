@@ -11,7 +11,7 @@ ARG organization
 
 # URL where the Fitzhi main server is installed
 # The slave will connect with this server.
-ARG urlApplication
+ARG applicationUrl
 
 # Login credential to connect with the main application.
 ARG login
