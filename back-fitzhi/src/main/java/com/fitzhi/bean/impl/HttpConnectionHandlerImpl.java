@@ -89,8 +89,8 @@ public class HttpConnectionHandlerImpl implements HttpConnectionHandler {
 	@Override
 	public void connect(String login, String pass) throws ApplicationException {
 		final String url = applicationUrl + "/oauth/token";
-		if (log.isDebugEnabled()) {
-			log.debug(String.format("Login %s into %s.", login, url));
+		if (log.isInfoEnabled()) {
+			log.info(String.format("Login %s into %s.", login, url));
 		}
 		try {
 			HttpPost post = new HttpPost(url);
@@ -119,6 +119,7 @@ public class HttpConnectionHandlerImpl implements HttpConnectionHandler {
 			}
 			
 		} catch (final IOException ioe) {
+			ioe.printStackTrace();
 			throw new ApplicationException(CODE_HTTP_CLIENT_ERROR, MessageFormat.format(MESSAGE_HTTP_CLIENT_ERROR, url), ioe);
 		}
 	}
