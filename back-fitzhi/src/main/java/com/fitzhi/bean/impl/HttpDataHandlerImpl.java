@@ -151,7 +151,7 @@ public class HttpDataHandlerImpl<T> implements DataHandler {
 			.collect(Collectors.toList());
 
 		if (log.isInfoEnabled()) {
-			log.info(String.format("Send %d eligibile staff members top the main application", list.size()));
+			log.info(String.format("Sending %d eligibile staff members to the main application.", list.size()));
 		}
 		String url = applicationUrl + API_PROJECT + project.getId() + "/staff";
 		httpAccessStaff.putList(url, list);

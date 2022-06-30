@@ -705,11 +705,7 @@ public class ProjectController  {
 			throw new ApplicationException(
 				CODE_GIT_ERROR, MessageFormat.format(MESSAGE_GIT_ERROR, oProject.get().getId(), oProject.get().getName()), e);
 		}
-		
-		if (log.isInfoEnabled()) {
-			log.info(String.format("Send %d eligibile staff members top the main application", staffHandler.getStaff().size()));
-		}
-		
+				
 		// We save the project analysis data
 		ProjectAnalysis projectAnalysis = new ProjectAnalysis(project);
 		dataHandler.saveProjectAnalysis(projectAnalysis);
