@@ -21,6 +21,13 @@ public interface HttpConnectionHandler {
 	 */
 	void connect(String login, String pass) throws ApplicationException;
 
+	/**
+	 * Retry the authentication to the server, with the successful login/password pair. 
+	 * 
+	 * @throws ApplicationException thrown if any authentication of network error occurs.
+	 */
+	void reconnect() throws ApplicationException;
+
 	/**. 
 	 * Refresh the {@code access_token} by using the {@code refresh_token}.
 	 * 

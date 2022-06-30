@@ -64,6 +64,12 @@ public class HttpAccessHandlerImpl<T> implements HttpAccessHandler<T> {
 	 */
 	private boolean firstLaunch = true;
 
+
+	/**
+	 * This status is hosting the fact a socket exception has failed, and a reconnection has been made.
+	 */
+	private boolean firstSocketFailure = true;
+
 	@Override
 	public Map<Integer, T> loadMap(String url, TypeReference<Map<Integer, T>> typeReference) throws ApplicationException {
 		try {
@@ -145,11 +151,13 @@ public class HttpAccessHandlerImpl<T> implements HttpAccessHandler<T> {
 				response = client.execute(httpPut);
 			} catch (SocketException se) {
 				// We force the reconnection, and we retry this method. 
-				if (BROKEN_PIPE_WRITE_FAILED.equals(se.getMessage())) {
+				if (firstSocketFailure && BROKEN_PIPE_WRITE_FAILED.equals(se.getMessage())) {
 					if (log.isWarnEnabled()) {
 						log.warn("We retry this method after a force reconnection");
 					}
 					httpClient = null;
+					httpConnectionHandler.reconnect();
+					firstSocketFailure = false;
 					return put(url, o, typeReference);
 				}
 				throw se;

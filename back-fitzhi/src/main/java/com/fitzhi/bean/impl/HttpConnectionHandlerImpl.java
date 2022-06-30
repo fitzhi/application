@@ -74,6 +74,10 @@ public class HttpConnectionHandlerImpl implements HttpConnectionHandler {
 
 	private String secret = "secret";
 
+	private String login;
+
+	private String pass;
+
 	@Override
 	public void connect(String login, String pass) throws ApplicationException {
 		final String url = applicationUrl + "/oauth/token";
@@ -96,6 +100,9 @@ public class HttpConnectionHandlerImpl implements HttpConnectionHandler {
 			int statusCode = response.getStatusLine().getStatusCode();
 			if (statusCode == HttpStatus.SC_OK) {
 				token = objectMapper.readValue(EntityUtils.toString(response.getEntity()), Token.class);
+				// We saved the login/pass pair in order to be able to reconnect() the application if needed.
+				this.login = login;
+				this.pass = pass;
 			} else {
 				if (log.isWarnEnabled()) {
 					log.warn(String.format(HTTP_ERROR_WITH_S_S_S, url, response.getStatusLine().getStatusCode(), response.getStatusLine().getReasonPhrase()));
@@ -106,6 +113,11 @@ public class HttpConnectionHandlerImpl implements HttpConnectionHandler {
 		} catch (final IOException ioe) {
 			throw new ApplicationException(CODE_HTTP_CLIENT_ERROR, MessageFormat.format(MESSAGE_HTTP_CLIENT_ERROR, url), ioe);
 		}
+	}
+
+	@Override
+	public void reconnect() throws ApplicationException {
+		connect(login, pass);
 	}
 
 	@Override
