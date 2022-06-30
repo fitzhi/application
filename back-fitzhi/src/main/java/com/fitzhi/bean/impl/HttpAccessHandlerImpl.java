@@ -160,6 +160,7 @@ public class HttpAccessHandlerImpl<T> implements HttpAccessHandler<T> {
 						log.warn("We retry this method after a force reconnection");
 					}
 					httpClient = null;
+					httpConnectionHandler.setHttpClient(null);
 					httpConnectionHandler.reconnect();
 					firstSocketFailure = false;
 					return put(url, o, typeReference);

@@ -88,8 +88,6 @@ public class HttpConnectionHandlerImpl implements HttpConnectionHandler {
 
 	@Override
 	public void connect(String login, String pass) throws ApplicationException {
-		// We initialize the HttpClient object.
-		client = null;
 		final String url = applicationUrl + "/oauth/token";
 		if (log.isDebugEnabled()) {
 			log.debug(String.format("Login %s into %s.", login, url));
