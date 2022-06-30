@@ -21,7 +21,6 @@ import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPut;
 import org.apache.http.entity.ContentType;
 import org.apache.http.entity.StringEntity;
-import org.apache.http.impl.client.HttpClientBuilder;
 import org.apache.http.util.EntityUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Profile;
@@ -73,13 +72,15 @@ public class HttpAccessHandlerImpl<T> implements HttpAccessHandler<T> {
 	@Override
 	public Map<Integer, T> loadMap(String url, TypeReference<Map<Integer, T>> typeReference) throws ApplicationException {
 		try {
-			HttpClient client = (httpClient != null) ? httpClient : HttpClientBuilder.create().build();
-			HttpGet httpGet = new HttpGet(url);
 			
 			// Slave has not been connected to the backend. Cannot proceed the request then.
 			if (!httpConnectionHandler.isConnected()) {
 				throw new ApplicationException(CODE_HTTP_NOT_CONNECTED, MESSAGE_HTTP_NOT_CONNECTED);
 			}
+
+			HttpClient client = (httpClient != null) ? httpClient : httpConnectionHandler.httpClient();
+			HttpGet httpGet = new HttpGet(url);
+
 			httpGet.setHeader(HttpHeaders.AUTHORIZATION, "Bearer " + httpConnectionHandler.getToken().getAccess_token());
 			
 			HttpResponse response = client.execute(httpGet);
@@ -101,13 +102,14 @@ public class HttpAccessHandlerImpl<T> implements HttpAccessHandler<T> {
 	@Override
 	public List<T> loadList(String url, TypeReference<List<T>> typeReference) throws ApplicationException {
 		try {
-			HttpClient client = (httpClient != null) ? httpClient : HttpClientBuilder.create().build();
-			HttpGet httpGet = new HttpGet(url);
-			
 			// Slave has not been connected to the backend. Cannot proceed the request then.
 			if (!httpConnectionHandler.isConnected()) {
 				throw new ApplicationException(CODE_HTTP_NOT_CONNECTED, MESSAGE_HTTP_NOT_CONNECTED);
 			}
+
+			HttpClient client = (httpClient != null) ? httpClient : httpConnectionHandler.httpClient();
+			HttpGet httpGet = new HttpGet(url);
+			
 			httpGet.setHeader(HttpHeaders.AUTHORIZATION, "Bearer " + httpConnectionHandler.getToken().getAccess_token());
 
 			HttpResponse response = client.execute(httpGet);
@@ -129,13 +131,15 @@ public class HttpAccessHandlerImpl<T> implements HttpAccessHandler<T> {
 	@Override
 	public T put(String url, Object o, TypeReference<T> typeReference) throws ApplicationException {
 		try {
-			HttpClient client = (httpClient != null) ? httpClient : HttpClientBuilder.create().build();
-			HttpPut httpPut = new HttpPut(url);
 			
 			// Slave has not been connected to the backend. Cannot proceed the request then.
 			if (!httpConnectionHandler.isConnected()) {
 				throw new ApplicationException(CODE_HTTP_NOT_CONNECTED, MESSAGE_HTTP_NOT_CONNECTED);
 			}
+
+			HttpClient client = (httpClient != null) ? httpClient : httpConnectionHandler.httpClient();
+			HttpPut httpPut = new HttpPut(url);
+
 			httpPut.setHeader(HttpHeaders.AUTHORIZATION, "Bearer " + httpConnectionHandler.getToken().getAccess_token());
 
 			if (o instanceof String) {
@@ -211,13 +215,15 @@ public class HttpAccessHandlerImpl<T> implements HttpAccessHandler<T> {
 	@Override
 	public void putList(String url, List<T> list) throws ApplicationException {
 		try {
-			HttpClient client = (httpClient != null) ? httpClient : HttpClientBuilder.create().build();
-			HttpPut httpPut = new HttpPut(url);
 			
 			// Slave has not been connected to the backend. Cannot proceed the request then.
 			if (!httpConnectionHandler.isConnected()) {
 				throw new ApplicationException(CODE_HTTP_NOT_CONNECTED, MESSAGE_HTTP_NOT_CONNECTED);
 			}
+
+			HttpClient client = (httpClient != null) ? httpClient : httpConnectionHandler.httpClient();
+			HttpPut httpPut = new HttpPut(url);
+
 			httpPut.setHeader(HttpHeaders.AUTHORIZATION, "Bearer " + httpConnectionHandler.getToken().getAccess_token());
 
 			String s = objectMapper.writeValueAsString(list);

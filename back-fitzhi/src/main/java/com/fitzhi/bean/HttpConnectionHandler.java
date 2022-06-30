@@ -51,4 +51,10 @@ public interface HttpConnectionHandler {
 	 */
 	void setHttpClient(HttpClient httpClient);
 
+
+	/**
+	 * @return a <strong>configured</strong> instance of {@code HttpClient}.
+	 */
+	HttpClient httpClient();
+
 }

@@ -31,7 +31,7 @@ import org.springframework.test.context.junit4.SpringRunner;
 @ActiveProfiles("slave")
 public class HttpConnectionHandlerTest {
 	
-	@Autowired()
+	@Autowired
 	HttpConnectionHandler httpConnectionHandler;
  
 	private HttpClient httpClient;

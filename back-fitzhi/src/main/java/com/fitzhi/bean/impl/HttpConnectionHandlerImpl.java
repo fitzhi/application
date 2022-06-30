@@ -21,8 +21,10 @@ import org.apache.http.HttpResponse;
 import org.apache.http.HttpStatus;
 import org.apache.http.NameValuePair;
 import org.apache.http.client.HttpClient;
+import org.apache.http.client.config.RequestConfig;
 import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.methods.HttpPost;
+import org.apache.http.config.SocketConfig;
 import org.apache.http.impl.client.HttpClientBuilder;
 import org.apache.http.message.BasicNameValuePair;
 import org.apache.http.util.EntityUtils;
@@ -60,6 +62,12 @@ public class HttpConnectionHandlerImpl implements HttpConnectionHandler {
 	 */
 	@Value("${organization}")
 	private String organization;
+
+	/**
+	 * Socket timeout.
+	 */
+	@Value("${socket.timeout}")
+	private int timeout;
 
 	/**
 	 * The authentication token sent back by the server.
@@ -168,9 +176,15 @@ public class HttpConnectionHandlerImpl implements HttpConnectionHandler {
 		client = httpClient;
 	}
 
-	private HttpClient httpClient() {
+	@Override
+	public HttpClient httpClient() {
 		if (client == null) {
-			client = HttpClientBuilder.create().build();
+			RequestConfig config = RequestConfig.custom().setSocketTimeout(timeout * 1000).build();
+			SocketConfig sockerConfig = SocketConfig.custom().setSoTimeout(timeout * 1000).build();
+			client = HttpClientBuilder.create().setDefaultSocketConfig(sockerConfig).setDefaultRequestConfig(config).build();
+			if (log.isInfoEnabled()) {
+				log.info(MessageFormat.format("Client connected with a socket timeout of {0}.", timeout));
+			}
 		} 
 		return client;
 	}
