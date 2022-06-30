@@ -19,6 +19,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.context.ActiveProfiles;
+import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import com.fitzhi.ApplicationRuntimeException;
@@ -40,6 +41,7 @@ import com.fitzhi.exception.ApplicationException;
 @RunWith(SpringRunner.class)
 @SpringBootTest
 @ActiveProfiles("slave")
+@TestPropertySource(properties = { "applicationUrl=http://localhost:8080" }) 
 public class HttpCacheDataHandlerImplTest {
 	
 	@Autowired
