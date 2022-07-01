@@ -1,4 +1,3 @@
-import { HttpClient } from '@angular/common/http';
 import { Component, NgZone, OnDestroy, ViewChild } from '@angular/core';
 import { MatStepper } from '@angular/material/stepper';
 import { Router } from '@angular/router';
@@ -56,7 +55,6 @@ export class StartingSetupComponent extends BaseDirective implements OnDestroy {
 		private skillService: SkillService,
 		public installService: InstallService,
 		private router: Router,
-		private httpClient: HttpClient,
 		private ngZone: NgZone) { super(); }
 
 	/**
@@ -147,17 +145,19 @@ export class StartingSetupComponent extends BaseDirective implements OnDestroy {
 		if (traceOn()) {
 			console.log('staff updated for :', $event.lastName);
 		}
-
-		if (!this.installService.isComplete()) {
-			if (traceOn()) {
-				console.log('We have already installed Fitzhi. This is not the mode "very first connection".');
-			}
+		if (!this.installService.isVeryFirstInstall()) {
+			(traceOn()) && console.log('We have already installed Fitzhi. This is not the mode "very first connection".');
 			this.nextStepAfterStaffUpdate($event);
 		} else {
 			this.backendSetupService.saveVeryFirstConnection$().subscribe({
-				next: state => this.nextStepAfterStaffUpdate($event)
+				next: state => {
+					traceOn() && console.log (`SaveVeryFirstConnection$() has returned ${state}`);
+					this.installService.setVeryFirstConnection(state);
+					this.nextStepAfterStaffUpdate($event);
+				}
 			});
 		}
+
 	}
 
 	/**

@@ -5,6 +5,7 @@ import { LoginEvent } from 'src/app/data/login-event';
 import { LoginMode } from 'src/app/data/login-mode';
 import { traceOn } from 'src/app/global';
 import { MessageService } from 'src/app/interaction/message/message.service';
+import { BackendSetupService } from 'src/app/service/backend-setup/backend-setup.service';
 import { GoogleService } from 'src/app/service/google/google.service';
 import { ProjectService } from 'src/app/service/project/project.service';
 import { ReferentialService } from 'src/app/service/referential/referential.service';
@@ -60,7 +61,8 @@ export class RegisterUserComponent extends BaseDirective implements OnInit, OnDe
 		private projectService: ProjectService,
 		private messageService: MessageService,
 		private ngZone: NgZone,
-		private staffListService: StaffListService) {
+		private staffListService: StaffListService,
+		private backendSetupService: BackendSetupService) {
 		super();
 	}
 
@@ -134,7 +136,7 @@ export class RegisterUserComponent extends BaseDirective implements OnInit, OnDe
 	public skip() {
 		this.installService.installComplete();
 		// We do know at this point the staff identifier corresponding to this user.
-		// We reload the application in production mode the production mode.
+		// We reload the application in production mode.
 		if (!environment.test) {
 			window.location.reload();
 		}

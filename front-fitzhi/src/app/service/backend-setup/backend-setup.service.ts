@@ -75,9 +75,9 @@ export class BackendSetupService {
 	 * The first user in Fitzhi has been registered.
 	 * @returns an **observable** emitting a **TRUE** if the Rest CALL is OK.
 	 */
-	public saveVeryFirstConnection$(): Observable<Boolean> {
+	public saveVeryFirstConnection$(): Observable<boolean> {
 
-		return this.httpClient.post<Boolean>(`${this.url()}/admin/saveVeryFirstConnection`, '')
+		return this.httpClient.post<boolean>(`${this.url()}/admin/saveVeryFirstConnection`, '')
 				.pipe(
 					take(1),
 					tap(veryFirstConnectionIsRegistered => {
