@@ -70,6 +70,7 @@ public class AdministrationControllerVeryFirstUserTest {
 
 	@Autowired
 	public Administration administration;
+	
 	@Test
 	public void creationVeryFirstUserOK() throws Exception {
 				
