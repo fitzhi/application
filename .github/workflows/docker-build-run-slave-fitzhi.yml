@@ -38,6 +38,7 @@ jobs:
           -e "pass=${FITZHI_PASSWORD}" \
           -d fitzhi/slave:${VERSION_FITZHI}
         sleep 1m
+        curl http://localhost:8081/api/test/ping
         curl -v -X PUT -H "Content-Type:  application/json"  -d '{"urlRepository": ${GITHUB_URL}' http://localhost:8081/api/project/analysis
       env:
         FITZHI_LOGIN: ${{ secrets.FITZHI_LOGIN }}
