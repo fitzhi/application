@@ -37,8 +37,8 @@ jobs:
           -e "login=${FITZHI_LOGIN}" \
           -e "pass=${FITZHI_PASSWORD}" \
           -d fitzhi/slave:${VERSION_FITZHI}
-        timeout 4m echo "..."
-        timeout 5m curl -v -X PUT -H "Content-Type:  application/json"  -d '{"urlRepository": ${GITHUB_URL}' http://localhost:8081/api/project/analysis
+        timeout 5m curl http://localhost:8081/api/test/ping
+        # timeout 5m curl -v -X PUT -H "Content-Type:  application/json"  -d '{"urlRepository": ${GITHUB_URL}' http://localhost:8081/api/project/analysis
       env:
         FITZHI_LOGIN: ${{ secrets.FITZHI_LOGIN }}
         FITZHI_PASSWORD: ${{ secrets.FITZHI_PASSWORD }}
