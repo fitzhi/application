@@ -25,18 +25,18 @@ jobs:
       run: |
         export VERSION_FITZHI=`cat ./back-fitzhi/VERSION_FITZHI`
         export FITZHI_URL="http://spoq.fitzhi.com:8082"
+        echo "Calling the slave for the project..."
+        echo "------------------------------------"
+        echo ""
+        export GITHUB_URL = `git remote get-url origin`
+        echo ${GITHUB_URL} 
         docker pull fitzhi/slave:${VERSION_FITZHI}
         docker run --network host --name slave  \
           -e "organization=fitzhi" \
           -e "applicationUrl=${FITZHI_URL}" \
           -e "login=${FITZHI_LOGIN}" \
           -e "pass=${FITZHI_PASSWORD}" \
-          --rm fitzhi/slave:${VERSION_FITZHI} &
-        echo "Calling the slave for the project..."
-        echo "------------------------------------"
-        echo ""
-        export GITHUB_URL = `git remote get-url origin`
-        echo ${GITHUB_URL} 
+          -d fitzhi/slave:${VERSION_FITZHI} &
         curl -v -X PUT -H "Content-Type:  application/json"  -d '{"urlRepository": ${GITHUB_URL}' http://localhost:8081/api/project/analysis
       env:
         FITZHI_LOGIN: ${{ secrets.FITZHI_LOGIN }}
