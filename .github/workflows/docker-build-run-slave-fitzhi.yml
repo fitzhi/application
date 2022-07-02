@@ -3,7 +3,7 @@
 # 
 # Author : Frederic VIDAL (July 2022)
 #
-name: Docker Fitzhi Image CI for slave
+name: Fitzhi slave runner
 
 on:
   push:
@@ -24,7 +24,7 @@ jobs:
     - name: Pull and run the slave of Fitzhi
       run: |
         export VERSION_FITZHI=`cat ./back-fitzhi/VERSION_FITZHI`
-        export FITZHI_URL = 'http://spoq.fitzhi.com:8082'
+        export FITZHI_URL="http://spoq.fitzhi.com:8082"
         docker pull fitzhi/slave:${VERSION_FITZHI}
         docker run --network host --name slave  \
           -e "organization=fitzhi" \
