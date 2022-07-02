@@ -41,6 +41,7 @@ jobs:
         sleep 1m
         curl -v http://localhost:8081/api/test/ping
         sleep 1m
+        echo '{"urlRepository":"${GITHUB_URL}"}'
         curl -v -X PUT -H "Content-Type:  application/json"  -d '{"urlRepository":"${GITHUB_URL}"}' http://localhost:8081/api/project/analysis
       env:
         FITZHI_LOGIN: ${{ secrets.FITZHI_LOGIN }}
