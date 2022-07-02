@@ -30,6 +30,7 @@ jobs:
         echo ""
         export GITHUB_URL=`git remote get-url origin`
         echo ${GITHUB_URL} 
+        echo ${FITZHI_URL} 
         docker pull fitzhi/slave:${VERSION_FITZHI}
         docker run --network host --name slave  \
           -e "organization=fitzhi" \
