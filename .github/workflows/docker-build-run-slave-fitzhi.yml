@@ -48,7 +48,7 @@ jobs:
 
     - name: Testing the slave with spring
       run: |
-        export VERSION_FITZHI=`cat ../back-fitzhi/VERSION_FITZHI`
+        export VERSION_FITZHI=`cat ./back-fitzhi/VERSION_FITZHI`
         export FITZHI_URL="http://spoq.fitzhi.com:8082"
         mkdir ../spring-test
         cd ../spring-test
