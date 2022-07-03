@@ -43,6 +43,7 @@ jobs:
              http://localhost:8081/api/project/analysis
         date
         docker stop slave
+        docker rm slave
       env:
         FITZHI_LOGIN: ${{ secrets.FITZHI_LOGIN }}
         FITZHI_PASSWORD: ${{ secrets.FITZHI_PASSWORD }}
@@ -57,7 +58,7 @@ jobs:
         cd ./spring-framework
         export GITHUB_URL=`git remote get-url origin`
         echo $GITHUB_URL
-        docker run --network host --name slave  \
+        docker run --network host --name slave \
           -e "organization=fitzhi" \
           -e "applicationUrl=${FITZHI_URL}" \
           -e "login=${FITZHI_LOGIN}" \
