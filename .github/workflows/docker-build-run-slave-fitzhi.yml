@@ -40,8 +40,9 @@ jobs:
           -d fitzhi/slave:${VERSION_FITZHI}
         sleep 1m
         curl -v http://localhost:8081/api/test/ping
-        echo '{"urlRepository":"http://spoq.fitzhi.com:8082"}'
-        curl -v -X PUT -H "Content-Type:  application/json"  -d '{"urlRepository":"http://spoq.fitzhi.com:8082"}' http://localhost:8081/api/project/analysis
+        curl -v -X PUT -H "Content-Type:  application/json" \
+             -d "{\"urlRepository\":\"${GITHUB_URL}\"}" \
+             http://localhost:8081/api/project/analysis
       env:
         FITZHI_LOGIN: ${{ secrets.FITZHI_LOGIN }}
         FITZHI_PASSWORD: ${{ secrets.FITZHI_PASSWORD }}
