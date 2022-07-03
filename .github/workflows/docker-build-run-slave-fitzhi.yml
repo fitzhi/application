@@ -53,7 +53,7 @@ jobs:
         mkdir ../spring-test
         cd ../spring-test
         git clone --branch main https://github.com/spring-projects/spring-framework.git
-        cd ./spring-boot
+        cd ./spring-framework
         export GITHUB_URL=`git remote get-url origin`
         echo $GITHUB_URL
         docker run --network host --name slave  \
