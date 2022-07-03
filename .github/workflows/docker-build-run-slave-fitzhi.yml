@@ -29,8 +29,6 @@ jobs:
         echo "------------------------------------"
         echo ""
         export GITHUB_URL=`git remote get-url origin`
-        echo ${GITHUB_URL} 
-        echo ${FITZHI_URL} 
         docker pull fitzhi/slave:${VERSION_FITZHI}
         docker run --network host --name slave  \
           -e "organization=fitzhi" \
@@ -38,13 +36,21 @@ jobs:
           -e "login=${FITZHI_LOGIN}" \
           -e "pass=${FITZHI_PASSWORD}" \
           -d fitzhi/slave:${VERSION_FITZHI}
-        sleep 1m
-        curl -v http://localhost:8081/api/test/ping
+        sleep 30s
         curl -v -X PUT -H "Content-Type:  application/json" \
              -d "{\"urlRepository\":\"${GITHUB_URL}\"}" \
              http://localhost:8081/api/project/analysis
       env:
         FITZHI_LOGIN: ${{ secrets.FITZHI_LOGIN }}
         FITZHI_PASSWORD: ${{ secrets.FITZHI_PASSWORD }}
+
+    - name: Testing the slave with spring
+      run: |
+        mkdir ../spring-test
+        cd ../spring-test
+        git clone --branch main https://github.com/spring-projects/spring-boot.git
+        cd ./spring-boot
+        export GITHUB_URL=`git remote get-url origin`
+        echo $GITHUB_URL
 
   
