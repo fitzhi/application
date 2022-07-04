@@ -70,5 +70,10 @@ jobs:
              -d "{\"urlRepository\":\"${GITHUB_URL}\"}" \
              http://localhost:8081/api/project/analysis
         date
+        docker stop slave
+        docker rm slave
+      env:
+        FITZHI_LOGIN: ${{ secrets.FITZHI_LOGIN }}
+        FITZHI_PASSWORD: ${{ secrets.FITZHI_PASSWORD }}
 
   
