@@ -1,5 +1,7 @@
 package com.fitzhi.util;
 
+import com.fitzhi.ApplicationRuntimeException;
+
 /**
  * Public static usefull functions. 
  */
@@ -16,6 +18,9 @@ public abstract class CommonUtil {
             repo = repo.substring(0, len - 4);
         }
         int last = repo.lastIndexOf("/");
+        if (last == -1) {
+            throw new ApplicationRuntimeException(String.format("Invalid url %s.", repo));
+        }
         return repo.substring(last + 1);
     }
 }
