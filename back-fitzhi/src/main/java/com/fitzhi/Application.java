@@ -5,15 +5,6 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
-import com.fitzhi.bean.DataHandler;
-import com.fitzhi.bean.StaffHandler;
-import com.fitzhi.service.StorageService;
-import com.fitzhi.service.impl.storageservice.ApplicationStorageProperties;
-import com.fitzhi.service.impl.storageservice.AuditAttachmentStorageProperties;
-import com.fitzhi.source.crawler.git.GitCrawler;
-
-import lombok.extern.slf4j.Slf4j;
-
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -25,9 +16,19 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Bean;
+import org.springframework.core.env.Environment;
 import org.springframework.scheduling.annotation.EnableAsync;
 import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.web.filter.ShallowEtagHeaderFilter;
+
+import com.fitzhi.bean.DataHandler;
+import com.fitzhi.bean.StaffHandler;
+import com.fitzhi.service.StorageService;
+import com.fitzhi.service.impl.storageservice.ApplicationStorageProperties;
+import com.fitzhi.service.impl.storageservice.AuditAttachmentStorageProperties;
+import com.fitzhi.source.crawler.git.GitCrawler;
+
+import lombok.extern.slf4j.Slf4j;
 
 /**
  * @author Fr&eacute;d&eacute;ric VIDAL Starting class for the application
@@ -39,6 +40,8 @@ import org.springframework.web.filter.ShallowEtagHeaderFilter;
 @Slf4j
 public class Application {
 
+	@Autowired
+	private Environment env;
 	
 	/**
 	 * @see {@link GitCrawler#patternsInclusion}
@@ -51,8 +54,7 @@ public class Application {
 	 */
 	@Value("${dependenciesMarker}")
 	private String dependenciesMarker;
-	
-	
+		
 	/**
 	 * @see {@link GitCrawler#collapseEmptyDirectory}
 	 */
@@ -109,18 +111,22 @@ public class Application {
 			storageServiceApplication.init();
 			storageServiceAttachment.init();
 		  	
-			LoggerFactory.getLogger(Application.class.getCanonicalName()).info("Source code crawling settings : ");
-			LoggerFactory.getLogger(Application.class.getCanonicalName()).info("--------------------------------");
-			LoggerFactory.getLogger(Application.class.getCanonicalName()).info("Most of the settings below are configured inside the file 'applications.properties', which is just aside of Fitzhì.jar.");
-			LoggerFactory.getLogger(Application.class.getCanonicalName()).info("\tFiles pattern on-boarded in the evaluation : ");
-			LoggerFactory.getLogger(Application.class.getCanonicalName()).info("\t {}", patternsInclusion);
-			LoggerFactory.getLogger(Application.class.getCanonicalName()).info("\t Inactivity delay : {}", this.inactivityDelay);
-			LoggerFactory.getLogger(Application.class.getCanonicalName()).info("\tExternal directories which are excluded from the evaluation : ");
-			LoggerFactory.getLogger(Application.class.getCanonicalName()).info("\t {}", dependenciesMarker);
-			LoggerFactory.getLogger(Application.class.getCanonicalName()).info(((collapseEmptyDirectory) ? "\tDirectories should be collapsed" : "\tDirectories should NOT be collaped"));
-			LoggerFactory.getLogger(Application.class.getCanonicalName()).info(((prefilterEligibility) ? "\tFile eligibility is PREfiltered" : "\tFile eligibility id POSTfiltered"));
-			LoggerFactory.getLogger(Application.class.getCanonicalName()).info( dataHandler.isLocal() ? "This is the main application" : "This is a slave");
-			LoggerFactory.getLogger(Application.class.getCanonicalName()).info( "\tCRON settings for the detection of experiences is \"{}\"", cronExperencesDetection);
+			// Logger log = LoggerFactory.getLogger(Application.class.getCanonicalName());
+			log.info("Source code crawling settings : ");
+			log.info("--------------------------------");
+			log.info("Most of the settings below are configured inside the file 'applications.properties', which is just aside of Fitzhì.jar.");
+			log.info("\tFiles pattern on-boarded in the evaluation : ");
+			log.info("\t {}", patternsInclusion);
+			log.info("\t Inactivity delay : {}", this.inactivityDelay);
+			log.info("\tExternal directories which are excluded from the evaluation : ");
+			log.info("\t {}", dependenciesMarker);
+			log.info(((collapseEmptyDirectory) ? "\tDirectories should be collapsed" : "\tDirectories should NOT be collaped"));
+			log.info(((prefilterEligibility) ? "\tFile eligibility is PREfiltered" : "\tFile eligibility id POSTfiltered"));
+			log.info( dataHandler.isLocal() ? "This is the main application" : "This is a slave");
+			log.info( "\tCRON settings for the detection of experiences is \"{}\"", cronExperencesDetection);
+			if (dataHandler.isLocal()) {
+				log.info( (Boolean.valueOf(env.getProperty("autoProjectCreation"))) ? "Slave will create unexisting project." : "Slave will reject unexisting project.");
+			}
 			
 			if (reposDir == null) {
 				LoggerFactory.getLogger(Application.class.getCanonicalName()).info("\tLocal repositories are hosted in a temporary destination") ;

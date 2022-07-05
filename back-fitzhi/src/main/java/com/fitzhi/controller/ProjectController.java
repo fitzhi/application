@@ -6,18 +6,18 @@ import static com.fitzhi.Error.CODE_ENDPOINT_SLAVE_URL_GIT_MANDATORY;
 import static com.fitzhi.Error.CODE_GIT_ERROR;
 import static com.fitzhi.Error.CODE_IO_EXCEPTION;
 import static com.fitzhi.Error.CODE_MULTIPLE_TASK;
+import static com.fitzhi.Error.CODE_PROJECT_ALREADY_EXIST;
 import static com.fitzhi.Error.CODE_PROJECT_IS_NOT_EMPTY;
 import static com.fitzhi.Error.CODE_PROJECT_NOFOUND;
-import static com.fitzhi.Error.CODE_PROJECT_ALREADY_EXIST;
 import static com.fitzhi.Error.CODE_PROJECT_NOT_FOUND_URL_GIT;
 import static com.fitzhi.Error.MESSAGE_DASHBOARD_START;
 import static com.fitzhi.Error.MESSAGE_ENDPOINT_SLAVE_ONLY;
 import static com.fitzhi.Error.MESSAGE_ENDPOINT_SLAVE_URL_GIT_MANDATORY;
 import static com.fitzhi.Error.MESSAGE_GIT_ERROR;
 import static com.fitzhi.Error.MESSAGE_MULTIPLE_TASK_WITH_PARAM;
+import static com.fitzhi.Error.MESSAGE_PROJECT_ALREADY_EXIST;
 import static com.fitzhi.Error.MESSAGE_PROJECT_IS_NOT_EMPTY;
 import static com.fitzhi.Error.MESSAGE_PROJECT_NOFOUND;
-import static com.fitzhi.Error.MESSAGE_PROJECT_ALREADY_EXIST;
 import static com.fitzhi.Error.MESSAGE_PROJECT_NOT_FOUND_URL_GIT;
 import static com.fitzhi.Error.UNKNOWN_PROJECT;
 import static com.fitzhi.Global.DASHBOARD_GENERATION;
@@ -40,6 +40,28 @@ import java.util.stream.Collectors;
 
 import javax.annotation.PostConstruct;
 import javax.servlet.http.HttpServletResponse;
+
+import org.apache.http.HttpHeaders;
+import org.eclipse.jgit.api.errors.GitAPIException;
+import org.eclipse.jgit.lib.Ref;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.core.env.Environment;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.util.UriComponents;
+import org.springframework.web.util.UriComponentsBuilder;
 
 import com.fitzhi.Application;
 import com.fitzhi.ApplicationRuntimeException;
@@ -74,28 +96,6 @@ import com.fitzhi.exception.InformationException;
 import com.fitzhi.exception.NotFoundException;
 import com.fitzhi.source.crawler.RepoScanner;
 import com.fitzhi.util.CommonUtil;
-
-import org.apache.http.HttpHeaders;
-import org.eclipse.jgit.api.errors.GitAPIException;
-import org.eclipse.jgit.lib.Ref;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PatchMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.util.UriComponents;
-import org.springframework.web.util.UriComponentsBuilder;
 
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -159,19 +159,8 @@ public class ProjectController  {
 	@Autowired
 	AsyncTask tasks;
 
-	/**
-	 * <p>Do we create dynamicaly the projects based on their Git url?</p>
-	 * <p>
-	 * For example, the repository url "https://github.com/spring-projects/spring-framework"
-	 * will create a project with the project name <em>"spring-framework"</em>.
-	 * </p>
-	 * <ul>
-	 * <li><strong>true</strong> : The slave automaticaly creates the project, if no project is found with the given Git url.</li>
-	 * <li><strong>false</strong>: the slave rejects the analysis with a "project not found" exception.</li>
-	 * </ul>
-	 */
-	@Value("${autoProjectCreation}")
-	boolean autoProjectCreation = false;
+	@Autowired
+	private Environment env;
 	
 	/**
 	 * Utility class in charge of loading the project.
@@ -684,7 +673,7 @@ public class ProjectController  {
 		//
 		Optional<Project> oProject = projectHandler.lookup(settings.getUrlRepository(), ProjectLookupCriteria.UrlRepository);
 		if (oProject.isEmpty()) {
-			if (autoProjectCreation) {
+			if (autoProjectCreation()) {
 				String projectName = CommonUtil.extractProjectNameFromUrl(settings.getUrlRepository());
 				if (projectHandler.lookup(projectName).isPresent()) {
 					throw new ApplicationException(CODE_PROJECT_ALREADY_EXIST, MessageFormat.format(MESSAGE_PROJECT_ALREADY_EXIST,projectName));					
@@ -1100,6 +1089,21 @@ public class ProjectController  {
 				log.error("Internal error", e);
 			}
 		}
+	}
+
+	/**
+	 * <p>Do we create dynamicaly the projects based on their Git url?</p>
+	 * <p>
+	 * For example, the repository url "https://github.com/spring-projects/spring-framework"
+	 * will create a project with the project name <em>"spring-framework"</em>.
+	 * </p>
+	 * <ul>
+	 * <li><strong>true</strong> : The slave automaticaly creates the project, if no project is found with the given Git url.</li>
+	 * <li><strong>false</strong>: the slave rejects the analysis with a "project not found" exception.</li>
+	 * </ul>
+	 */
+	private boolean autoProjectCreation() {
+		return Boolean.valueOf(env.getProperty("autoProjectCreation"));
 	}
 
 }
