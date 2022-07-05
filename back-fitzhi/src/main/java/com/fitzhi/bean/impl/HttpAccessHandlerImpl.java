@@ -13,11 +13,13 @@ import java.text.MessageFormat;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.http.Header;
 import org.apache.http.HttpHeaders;
 import org.apache.http.HttpResponse;
 import org.apache.http.HttpStatus;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpGet;
+import org.apache.http.client.methods.HttpPost;
 import org.apache.http.client.methods.HttpPut;
 import org.apache.http.entity.ContentType;
 import org.apache.http.entity.StringEntity;
@@ -32,6 +34,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fitzhi.ApplicationRuntimeException;
 import com.fitzhi.bean.HttpAccessHandler;
 import com.fitzhi.bean.HttpConnectionHandler;
+import com.fitzhi.data.internal.Project;
 import com.fitzhi.exception.ApplicationException;
 
 import lombok.extern.slf4j.Slf4j;
@@ -211,6 +214,81 @@ public class HttpAccessHandlerImpl<T> implements HttpAccessHandler<T> {
 				log.error(ioe.getMessage(), ioe);
 				throw new ApplicationException(CODE_HTTP_CLIENT_ERROR, MessageFormat.format(MESSAGE_HTTP_CLIENT_ERROR, url), ioe);
 			}
+	}
+
+	@Override
+	public void post(String url, Object o) throws ApplicationException {
+		try {
+			
+			// Slave has not been connected to the backend. Cannot proceed the request then.
+			if (!httpConnectionHandler.isConnected()) {
+				throw new ApplicationException(CODE_HTTP_NOT_CONNECTED, MESSAGE_HTTP_NOT_CONNECTED);
+			}
+
+			HttpClient client = (httpClient != null) ? httpClient : httpConnectionHandler.httpClient();
+			HttpPost httpPost = new HttpPost(url);
+
+			httpPost.setHeader(HttpHeaders.AUTHORIZATION, "Bearer " + httpConnectionHandler.getToken().getAccess_token());
+
+			if (o instanceof String) {
+				httpPost.setEntity(new StringEntity((String) o));
+				httpPost.setHeader(HttpHeaders.CONTENT_TYPE, MediaType.TEXT_PLAIN_VALUE);
+			} else {
+				httpPost.setEntity(new StringEntity(objectMapper.writeValueAsString(o), ContentType.APPLICATION_JSON));
+				httpPost.setHeader(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_UTF8.toString());
+			}
+
+			HttpResponse response = null;
+			response = client.execute(httpPost);
+			int statusCode = response.getStatusLine().getStatusCode();
+			switch (statusCode) {
+				case HttpStatus.SC_CREATED:
+					Header[] headers = response.getHeaders(HttpHeaders.LOCATION);
+					if (headers.length != 1) {
+						throw new ApplicationRuntimeException(String.format("headers.length() %d", headers.length));
+					} else {
+						String location = headers[0].getValue();
+						if (log.isInfoEnabled()) {
+							log.info ("Project creation has returned the location %s.", location);
+						}
+						if (o instanceof Project) {
+							int id = Integer.valueOf(location.substring(location.lastIndexOf("/") + 1));
+							if (log.isInfoEnabled()) {
+								log.info ("New project identifier %d.", id);
+							}
+							((Project) o).setId(id);
+						}
+					}
+					break;
+				case HttpStatus.SC_UNAUTHORIZED:
+					if (firstLaunch) {
+						firstLaunch = false;
+						httpConnectionHandler.refreshToken();
+						post(url, o);
+						return;
+					} else {
+						throw new ApplicationException(CODE_HTTP_ERROR, MessageFormat.format(MESSAGE_HTTP_ERROR, response.getStatusLine().getReasonPhrase(), url));
+					}
+				case HttpStatus.SC_OK:
+					if (log.isWarnEnabled()) {
+						log.warn(String.format("Unattempted response with a OK/200 from a POST %s.", url));
+					}
+					break;
+				case HttpStatus.SC_NO_CONTENT:
+					// Operation is successfull but nothing to deserialize from the response.
+					break;
+				default:
+					if (log.isWarnEnabled()) {
+						log.warn(String.format(HTTP_ERROR_WITH_S_S_S, url, response.getStatusLine().getStatusCode(), response.getStatusLine().getReasonPhrase()));
+					}
+					throw new ApplicationException(CODE_HTTP_ERROR, MessageFormat.format(MESSAGE_HTTP_ERROR, response.getStatusLine().getReasonPhrase(), url));
+			}
+
+		} catch (final IOException ioe) {
+			log.error(ioe.getMessage(), ioe);
+			throw new ApplicationException(CODE_HTTP_CLIENT_ERROR, MessageFormat.format(MESSAGE_HTTP_CLIENT_ERROR, url), ioe);
+		}
+
 	}
 
 	@Override

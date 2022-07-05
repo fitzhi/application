@@ -90,6 +90,9 @@ import lombok.extern.slf4j.Slf4j;
 @Service
 public class FileDataHandlerImpl implements DataHandler {
 
+	private static final String METHOD_WITH_THE_PROJECT_PARAMETER_DEDICATED_SLAVES 
+		= "SHOULD NOT PASS HERE : This method with the Project parameter is dedicated to slaves.";
+
 	/**
 	 * Are we in shuffle-mode? In that scenario, the saving process will be
 	 * unplugged.
@@ -112,7 +115,6 @@ public class FileDataHandlerImpl implements DataHandler {
 	 * Logging constant
 	 */
 	private static final String LOADING_FILE_S = "Loading file %s";
-
 
 	/**
 	 * Directory where the GIT change records are saved.
@@ -194,6 +196,12 @@ public class FileDataHandlerImpl implements DataHandler {
 	}
 
 	@Override
+	public void saveProject(Project project) throws ApplicationException {
+		throw new ApplicationRuntimeException(METHOD_WITH_THE_PROJECT_PARAMETER_DEDICATED_SLAVES);
+	}
+
+
+	@Override
 	public Map<Integer, Project> loadProjects() throws ApplicationException {
 
 		Map<Integer, Project> projects = new HashMap<>();
@@ -247,7 +255,7 @@ public class FileDataHandlerImpl implements DataHandler {
 
 	@Override
 	public void saveStaff(Project project, Map<Integer, Staff> staff) throws ApplicationException {
-		throw new ApplicationRuntimeException("SHOULD NOT PASS HERE : This method with the Project parameter is dedicated to slaves.");
+		throw new ApplicationRuntimeException(METHOD_WITH_THE_PROJECT_PARAMETER_DEDICATED_SLAVES);
 	}
 
 	@Override

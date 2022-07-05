@@ -47,11 +47,26 @@ public interface DataHandler {
 
 	/**
 	 * Save projects on a persistent media
-	 * @param projects list of projects
+	 * @param project list of projects
 	 * @throws ApplicationException thrown if exception occurs during the saving process
 	 */
 	void saveProjects(Map<Integer, Project> projects) throws ApplicationException;
 	
+	/**
+	 * <p>
+	 * Save one single project on a persistent media.
+	 * </p>
+	 * <p>
+	 * This method is reserved ONLY for the slave which might need to create a project corresponding with the given Git url.
+	 * </p>
+	 * <p>
+	 * The project identifier will be updated with the génerated ID on server.
+	 * </p>
+	 * @param project The project to be saved
+	 * @throws ApplicationException thrown if exception occurs during the saving process
+	 */
+	void saveProject(Project project) throws ApplicationException;
+
 	/**
 	 * Load the projects from a persistent media
 	 * @return the map of projects
