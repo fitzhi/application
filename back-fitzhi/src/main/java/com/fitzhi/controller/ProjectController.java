@@ -159,6 +159,9 @@ public class ProjectController  {
 	@Autowired
 	AsyncTask tasks;
 
+	/**
+	 * The Spring environment
+	 */
 	@Autowired
 	private Environment env;
 	
@@ -667,28 +670,31 @@ public class ProjectController  {
 			throw new ApplicationException(CODE_ENDPOINT_SLAVE_URL_GIT_MANDATORY, MESSAGE_ENDPOINT_SLAVE_URL_GIT_MANDATORY);
 		}
 
-
 		//
 		// We filter the collection of projects on one single element, corresponding to the current project being analyzed.
 		//
 		Optional<Project> oProject = projectHandler.lookup(settings.getUrlRepository(), ProjectLookupCriteria.UrlRepository);
+		Project project = null;
 		if (oProject.isEmpty()) {
 			if (autoProjectCreation()) {
 				String projectName = CommonUtil.extractProjectNameFromUrl(settings.getUrlRepository());
 				if (projectHandler.lookup(projectName).isPresent()) {
 					throw new ApplicationException(CODE_PROJECT_ALREADY_EXIST, MessageFormat.format(MESSAGE_PROJECT_ALREADY_EXIST,projectName));					
 				}
-
+				project = new Project(-1, projectName);
+				project.setUrlRepository(settings.getUrlRepository());
+				dataHandler.saveProject(project);
+			} else {
+				throw new NotFoundException(CODE_PROJECT_NOT_FOUND_URL_GIT, MessageFormat.format(MESSAGE_PROJECT_NOT_FOUND_URL_GIT, settings.getUrlRepository()));
 			}
-			throw new NotFoundException(CODE_PROJECT_NOT_FOUND_URL_GIT, MessageFormat.format(MESSAGE_PROJECT_NOT_FOUND_URL_GIT, settings.getUrlRepository()));
+		} else {
+			project = oProject.get();
 		}
-		Project project = oProject.get();
 
 		// You cannot anymore update an INACTIVE project
 		if (!project.isActive()) {
 			return ResponseEntity.status(HttpStatus.METHOD_NOT_ALLOWED).build();
 		}
-		
 		
 		// We cleanup the project with information non-related to this analysis 
 		project.setSonarProjects(Collections.emptyList());
@@ -702,7 +708,7 @@ public class ProjectController  {
 		projectHandler.setProjects(projects);
 
 		if (log.isInfoEnabled()) {
-			log.info(String.format("Starting the analysis of %d %s", oProject.get().getId(), oProject.get().getName()));
+			log.info(String.format("Starting the analysis of %d %s", project.getId(), project.getName()));
 		}
 
 		tasks.addTask(DASHBOARD_GENERATION, PROJECT, project.getId());
@@ -716,9 +722,9 @@ public class ProjectController  {
 		try {
 			scanner.generate(project, settings);
 		} catch (IOException | GitAPIException e) {
-			log.error(String.format("generateAsync for (%d, %s)", oProject.get().getId(), oProject.get().getName()), e);
+			log.error(String.format("generateAsync for (%d, %s)", project.getId(), project.getName()), e);
 			throw new ApplicationException(
-				CODE_GIT_ERROR, MessageFormat.format(MESSAGE_GIT_ERROR, oProject.get().getId(), oProject.get().getName()), e);
+				CODE_GIT_ERROR, MessageFormat.format(MESSAGE_GIT_ERROR, project.getId(), project.getName()), e);
 		}
 				
 		// We save the project analysis data
@@ -728,7 +734,7 @@ public class ProjectController  {
 		// We save the staff impacted by the analysis to the main application.
 		dataHandler.saveStaff(project, staffHandler.getStaff());
 
-		tasks.completeTask(DASHBOARD_GENERATION, PROJECT, oProject.get().getId());
+		tasks.completeTask(DASHBOARD_GENERATION, PROJECT, project.getId());
 
 		// We schedule the termination of the application.
 		Application.scheduleEnd(1, 10);
