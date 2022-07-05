@@ -66,6 +66,17 @@ public interface HttpAccessHandler<T> {
 	T put(String url, Object o, TypeReference<T> typeReference) throws ApplicationException;
 
 	/**
+	 * Send data on network through an <strong>HTTP POST</strong> to the backend server. 
+	 * The server is expected to return a status code of CREATED with a location.
+	 * 
+	 * @param url the <b>url</b> of the backend server
+	 * @param o the object to be sent in the body of the request
+	 * 
+	 * @throws ApplicationException thrown if any problem occurs. It might be either a NETWORK error, or a BACKEND error. 
+	 */
+	void post(String url, Object o) throws ApplicationException;
+
+	/**
 	 * Send a <strong>LIST</strong> of data on network through an <strong>HTTP PUT</strong> to the backend server. 
 	 * We assume that the body of the server response is a void.
 	 * 
