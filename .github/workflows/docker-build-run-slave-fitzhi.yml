@@ -48,7 +48,7 @@ jobs:
         FITZHI_LOGIN: ${{ secrets.FITZHI_LOGIN }}
         FITZHI_PASSWORD: ${{ secrets.FITZHI_PASSWORD }}
 
-    - name: Testing the slave with spring
+    - name: Testing the slave with spring framework
       run: |
         export VERSION_FITZHI=`cat ./back-fitzhi/VERSION_FITZHI`
         export FITZHI_URL="http://spoq.fitzhi.com:8082"
@@ -66,9 +66,9 @@ jobs:
           -d fitzhi/slave:${VERSION_FITZHI}
         sleep 30s
         date
-        # curl -v -X PUT -H "Content-Type:  application/json" \
-        #     -d "{\"urlRepository\":\"${GITHUB_URL}\"}" \
-        #     http://localhost:8081/api/project/analysis
+        curl -v -X PUT -H "Content-Type:  application/json" \
+             -d "{\"urlRepository\":\"${GITHUB_URL}\"}" \
+             http://localhost:8081/api/project/analysis
         date
         docker stop slave
         docker rm slave
