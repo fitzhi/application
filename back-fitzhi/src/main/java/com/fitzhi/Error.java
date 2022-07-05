@@ -175,6 +175,9 @@ public class Error {
 	public static final int CODE_METHOD_NOT_FOUND_EXCEPTION = -1053;
 	public static final String MESSAGE_METHOD_NOT_FOUND_EXCEPTION = "slave does not save the analysis. Therefore, loading will throw a NotFoundException!";
 
+	public static final int CODE_PROJECT_ALREADY_EXIST = -1054;
+	public static final String MESSAGE_PROJECT_ALREADY_EXIST = "The project {0} already exists!";
+
 	private Error() {
 	}
 

@@ -8,6 +8,7 @@ import static com.fitzhi.Error.CODE_IO_EXCEPTION;
 import static com.fitzhi.Error.CODE_MULTIPLE_TASK;
 import static com.fitzhi.Error.CODE_PROJECT_IS_NOT_EMPTY;
 import static com.fitzhi.Error.CODE_PROJECT_NOFOUND;
+import static com.fitzhi.Error.CODE_PROJECT_ALREADY_EXIST;
 import static com.fitzhi.Error.CODE_PROJECT_NOT_FOUND_URL_GIT;
 import static com.fitzhi.Error.MESSAGE_DASHBOARD_START;
 import static com.fitzhi.Error.MESSAGE_ENDPOINT_SLAVE_ONLY;
@@ -16,6 +17,7 @@ import static com.fitzhi.Error.MESSAGE_GIT_ERROR;
 import static com.fitzhi.Error.MESSAGE_MULTIPLE_TASK_WITH_PARAM;
 import static com.fitzhi.Error.MESSAGE_PROJECT_IS_NOT_EMPTY;
 import static com.fitzhi.Error.MESSAGE_PROJECT_NOFOUND;
+import static com.fitzhi.Error.MESSAGE_PROJECT_ALREADY_EXIST;
 import static com.fitzhi.Error.MESSAGE_PROJECT_NOT_FOUND_URL_GIT;
 import static com.fitzhi.Error.UNKNOWN_PROJECT;
 import static com.fitzhi.Global.DASHBOARD_GENERATION;
@@ -71,12 +73,14 @@ import com.fitzhi.exception.ApplicationException;
 import com.fitzhi.exception.InformationException;
 import com.fitzhi.exception.NotFoundException;
 import com.fitzhi.source.crawler.RepoScanner;
+import com.fitzhi.util.CommonUtil;
 
 import org.apache.http.HttpHeaders;
 import org.eclipse.jgit.api.errors.GitAPIException;
 import org.eclipse.jgit.lib.Ref;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -155,6 +159,20 @@ public class ProjectController  {
 	@Autowired
 	AsyncTask tasks;
 
+	/**
+	 * <p>Do we create dynamicaly the projects based on their Git url?</p>
+	 * <p>
+	 * For example, the repository url "https://github.com/spring-projects/spring-framework"
+	 * will create a project with the project name <em>"spring-framework"</em>.
+	 * </p>
+	 * <ul>
+	 * <li><strong>true</strong> : The slave automaticaly creates the project, if no project is found with the given Git url.</li>
+	 * <li><strong>false</strong>: the slave rejects the analysis with a "project not found" exception.</li>
+	 * </ul>
+	 */
+	@Value("${autoProjectCreation}")
+	boolean autoProjectCreation = false;
+	
 	/**
 	 * Utility class in charge of loading the project.
 	 */
@@ -666,6 +684,13 @@ public class ProjectController  {
 		//
 		Optional<Project> oProject = projectHandler.lookup(settings.getUrlRepository(), ProjectLookupCriteria.UrlRepository);
 		if (oProject.isEmpty()) {
+			if (autoProjectCreation) {
+				String projectName = CommonUtil.extractProjectNameFromUrl(settings.getUrlRepository());
+				if (projectHandler.lookup(projectName).isPresent()) {
+					throw new ApplicationException(CODE_PROJECT_ALREADY_EXIST, MessageFormat.format(MESSAGE_PROJECT_ALREADY_EXIST,projectName));					
+				}
+
+			}
 			throw new NotFoundException(CODE_PROJECT_NOT_FOUND_URL_GIT, MessageFormat.format(MESSAGE_PROJECT_NOT_FOUND_URL_GIT, settings.getUrlRepository()));
 		}
 		Project project = oProject.get();
@@ -675,14 +700,15 @@ public class ProjectController  {
 			return ResponseEntity.status(HttpStatus.METHOD_NOT_ALLOWED).build();
 		}
 		
-		Map<Integer, Project> projects = new HashMap<>();
-
+		
 		// We cleanup the project with information non-related to this analysis 
 		project.setSonarProjects(Collections.emptyList());
 		project.setAudit(Collections.emptyMap());
 		project.setAuditEvaluation(-1);
 		// We reset the location repository. We might inject later the GIT local repository.
-		project.setLocationRepository(null);	
+		project.setLocationRepository(null);
+		// We limit the projects collection to one single project
+		Map<Integer, Project> projects = new HashMap<>();
 		projects.put(project.getId(), project);
 		projectHandler.setProjects(projects);
 
