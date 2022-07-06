@@ -29,6 +29,9 @@ jobs:
         echo "------------------------------------"
         echo ""
         export GITHUB_URL=`git remote get-url origin`
+        echo $GITHUB_URL
+        export GITHUB_BRANCH=`git rev-parse --abbrev-ref HEAD`
+        echo $GITHUB_BRANCH
         docker pull fitzhi/slave:${VERSION_FITZHI}
         docker run --network host --name slave  \
           -e "organization=fitzhi" \
@@ -39,7 +42,7 @@ jobs:
         sleep 30s
         date
         curl -v -X PUT -H "Content-Type:  application/json" \
-             -d "{\"urlRepository\":\"${GITHUB_URL}\"}" \
+             -d "{\"urlRepository\":\"${GITHUB_URL}\", \"branch\":\"${GITHUB_BRANCH}\"}" \
              http://localhost:8081/api/project/analysis
         date
         docker stop slave
@@ -58,6 +61,8 @@ jobs:
         cd ./spring-framework
         export GITHUB_URL=`git remote get-url origin`
         echo $GITHUB_URL
+        export GITHUB_BRANCH=`git rev-parse --abbrev-ref HEAD`
+        echo $GITHUB_BRANCH
         docker run --network host --name slave \
           -e "organization=fitzhi" \
           -e "applicationUrl=${FITZHI_URL}" \
@@ -67,7 +72,7 @@ jobs:
         sleep 30s
         date
         curl -v -X PUT -H "Content-Type:  application/json" \
-             -d "{\"urlRepository\":\"${GITHUB_URL}\"}" \
+             -d "{\"urlRepository\":\"${GITHUB_URL}\", \"branch\":\"${GITHUB_BRANCH}\"}" \
              http://localhost:8081/api/project/analysis
         date
         docker stop slave
@@ -86,6 +91,8 @@ jobs:
         cd ./spring-boot
         export GITHUB_URL=`git remote get-url origin`
         echo $GITHUB_URL
+        export GITHUB_BRANCH=`git rev-parse --abbrev-ref HEAD`
+        echo $GITHUB_BRANCH
         docker run --network host --name slave \
           -e "organization=fitzhi" \
           -e "applicationUrl=${FITZHI_URL}" \
@@ -95,7 +102,7 @@ jobs:
         sleep 30s
         date
         curl -v -X PUT -H "Content-Type:  application/json" \
-             -d "{\"urlRepository\":\"${GITHUB_URL}\"}" \
+             -d "{\"urlRepository\":\"${GITHUB_URL}\", \"branch\":\"${GITHUB_BRANCH}\"}" \
              http://localhost:8081/api/project/analysis
         date
         docker stop slave
