@@ -71,6 +71,11 @@ public class Global {
 	public static final String REFS_HEAD = "refs/heads/";
 
 	/**
+	 * The default branch in the application.
+	 */
+	public static final String DEFAULT_BRANCH = "master";
+
+	/**
 	 * Deep cloning of an object by serialization.
 	 * @param object the given object to be cloned
 	 * @return a new deep copy of the passed object

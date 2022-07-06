@@ -10,6 +10,7 @@ import static com.fitzhi.service.ConnectionSettingsType.DIRECT_LOGIN;
 import static com.fitzhi.service.ConnectionSettingsType.NO_LOGIN;
 import static com.fitzhi.service.ConnectionSettingsType.PUBLIC_LOGIN;
 import static com.fitzhi.service.ConnectionSettingsType.REMOTE_FILE_LOGIN;
+import static com.fitzhi.Global.DEFAULT_BRANCH;
 
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -217,6 +218,10 @@ public class ProjectHandlerImpl extends AbstractDataSaverLifeCycleImpl implement
 			Map<Integer, Project> theProjects = getProjects();
 			final int nextId = (project.getId() < 0) ? nextIdProject() : project.getId();
 			project.setId(nextId);
+			// If a repository URL is given but not a branch name, we force to the default branch name.
+			if ((project.getUrlRepository() != null) && (project.getUrlRepository().length() > 0) && (project.getBranch() == null)) {
+				project.setBranch(DEFAULT_BRANCH);
+			}
 			theProjects.put(nextId, project);
 			this.dataUpdated = true;
 		}
@@ -299,7 +304,7 @@ public class ProjectHandlerImpl extends AbstractDataSaverLifeCycleImpl implement
 
 			// Default branch name is "master" if none is given
 			if ((project.getUrlRepository() != null) && (project.getBranch() == null)) {
-				savedProject.setBranch("master");
+				savedProject.setBranch(DEFAULT_BRANCH);
 			} else {
 				savedProject.setBranch(project.getBranch());
 			}
