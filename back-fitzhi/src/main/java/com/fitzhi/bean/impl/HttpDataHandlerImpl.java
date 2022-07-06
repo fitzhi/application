@@ -125,7 +125,11 @@ public class HttpDataHandlerImpl<T> implements DataHandler {
 
 	@Override
 	public void saveProject(Project project) throws ApplicationException {
-		throw new ApplicationRuntimeException (NOT_IMPLEMENTED_YET);
+		if (!httpConnectionHandler.isConnected()) {
+			httpConnectionHandler.connect(login, pass);
+		}
+		String url = applicationUrl + API_PROJECT;
+		httpAccessVoid.post(url, project);
 	}
 
 	@Override
