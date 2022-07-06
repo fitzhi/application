@@ -63,14 +63,15 @@ public interface ProjectHandler extends DataSaverLifeCycle {
 	/**
 	 * Search for a project associated to the passed criteria.
 	 * 
-	 * @param search the sarch string to retrieve a project in a criteria
+	 * @param search the search string to retrieve a project in a criteria
+	 * @param optionalSearch an optional search string, to retrieve a project in a criteria
 	 * @param criteria the criteria to filter the data
 	 * 
 	 * @throws ApplicationException thrown most probably if an IO exception occurs
 	 * @return an optional object containing a project, or not
 	 * @see ProjectLookupCriteria
 	 */
-	Optional<Project> lookup(String search, ProjectLookupCriteria criteria) throws ApplicationException;
+	Optional<Project> lookup(String search, String optionalSearch, ProjectLookupCriteria criteria) throws ApplicationException;
 
 	/**
 	 * Retrieve a project from the portfolio on the given ID.

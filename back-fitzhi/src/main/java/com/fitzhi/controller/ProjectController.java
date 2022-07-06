@@ -674,7 +674,7 @@ public class ProjectController  {
 		//
 		// We filter the collection of projects on one single element, corresponding to the current project being analyzed.
 		//
-		Optional<Project> oProject = projectHandler.lookup(settings.getUrlRepository(), ProjectLookupCriteria.UrlRepository);
+		Optional<Project> oProject = projectHandler.lookup(settings.getUrlRepository(), settings.getBranch(), ProjectLookupCriteria.UrlRepository);
 		Project project = null;
 		if (oProject.isEmpty()) {
 			if (autoProjectCreation()) {

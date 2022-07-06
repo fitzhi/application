@@ -22,6 +22,12 @@ public @Data class SettingsGeneration {
 	private String urlRepository = null;
 
 	/**
+	 * Branch of the repository URL to be used. 
+	 * <em>This url set by the <code>Github action</code> will be used to retrieve the corresponding Fitzhi project.
+	 */
+	private String branch = null;
+
+	/**
 	 * Starting date of investigation.
 	 */
 	private long startingDate;

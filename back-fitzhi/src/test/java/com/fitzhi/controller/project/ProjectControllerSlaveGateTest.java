@@ -146,7 +146,8 @@ public class ProjectControllerSlaveGateTest {
 		when(dataHandler.isLocal()).thenReturn(false);
 		Project p = new Project(1789, "Revolution", "https://myUrlRepository");
 		p.setActive(true);
-		when(projectHandler.lookup("https://myUrlRepository", ProjectLookupCriteria.UrlRepository)).thenReturn(
+		p.setBranch("master");
+		when(projectHandler.lookup("https://myUrlRepository", "master", ProjectLookupCriteria.UrlRepository)).thenReturn(
 			Optional.of(p));
 
 		when(scanner.generate(any(Project.class), any(SettingsGeneration.class))).thenReturn(
@@ -158,6 +159,7 @@ public class ProjectControllerSlaveGateTest {
 
 		SettingsGeneration settings = new SettingsGeneration();
 		settings.setUrlRepository("https://myUrlRepository");
+		settings.setBranch("master");
 
 		this.mvc.perform(put("/api/project/analysis")
 			.content(objectMapper.writeValueAsString(settings))

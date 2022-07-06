@@ -43,7 +43,7 @@ public class ProjectHandlerLookupNameTest {
 		projects.put(79, new Project(70, "Destruction of the temple of Jerusalem", "http//noGitAtALl"));
 		when(spy.getProjects()).thenReturn(projects);
 
-		Optional<Project> oP = spy.lookup("The Revolution", Name);
+		Optional<Project> oP = spy.lookup("The Revolution", null, Name);
 		Assert.assertTrue(oP.isPresent());
 		Assert.assertEquals(1789, oP.get().getId());
 	}
@@ -58,7 +58,7 @@ public class ProjectHandlerLookupNameTest {
 		projects.put(79, new Project(70, "Destruction of the temple of Jerusalem", "http//noGitAtALl"));
 		when(spy.getProjects()).thenReturn(projects);
 
-		Optional<Project> oP = spy.lookup("The Revolution", Name);
+		Optional<Project> oP = spy.lookup("The Revolution", null, Name);
 		Assert.assertTrue(oP.isPresent());
 		Assert.assertEquals(1789, oP.get().getId());
 	}
@@ -73,7 +73,7 @@ public class ProjectHandlerLookupNameTest {
 		projects.put(79, new Project(70, "Destruction of the temple of Jerusalem", "http//noGitAtALl"));
 		when(spy.getProjects()).thenReturn(projects);
 
-		Optional<Project> oP = spy.lookup("Unknown", Name);
+		Optional<Project> oP = spy.lookup("Unknown", null, Name);
 		Assert.assertTrue(oP.isEmpty());
 	}
 
@@ -84,7 +84,7 @@ public class ProjectHandlerLookupNameTest {
 		Map<Integer, Project> projects = new HashMap<>();
 		when(spy.getProjects()).thenReturn(projects);
 
-		Optional<Project> oP = spy.lookup("http//urlRepositoryOfProject", Name);
+		Optional<Project> oP = spy.lookup("http//urlRepositoryOfProject",null, Name);
 		Assert.assertTrue(oP.isEmpty());
 	}
 }

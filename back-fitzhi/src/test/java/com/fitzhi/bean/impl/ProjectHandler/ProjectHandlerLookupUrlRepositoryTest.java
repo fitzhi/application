@@ -21,7 +21,7 @@ import org.springframework.test.context.junit4.SpringRunner;
 
 /**
  * <p>
- * Test of the method {@link ProjectHandler#lookup(String, com.fitzhi.data.internal.ProjectLookupCriteria)}
+ * Test of the method {@link ProjectHandler#lookup(String, String, com.fitzhi.data.internal.ProjectLookupCriteria)}
  * </p>
  * @author Fr&eacute;d&eacute;ric VIDAL
  *
@@ -33,17 +33,34 @@ public class ProjectHandlerLookupUrlRepositoryTest {
 	@Autowired
 	private ProjectHandler projectHandler;
 
+	private Map<Integer, Project> projects() {
+		Map<Integer, Project> projects = new HashMap<>();
+		Project p = new Project(1789, "The Revolution", "http//theUrlRepositoryOfProject");
+		p.setBranch("branch-master");
+		projects.put(1789, p);
+
+		p = new Project(1790, "One year after the Revolution", "http//theUrlRepositoryOfProjectV2");
+		p.setBranch("branch-master");		
+		projects.put(1790, p);
+
+		p = new Project(1791, "two year after the Revolution", "http//theUrlRepositoryOfProjectV2");
+		p.setBranch("branch-master");		
+		projects.put(1791, p);
+
+		p = new Project(70, "Destruction of the temple of Jerusalem", "http//noGitAtALl");
+		p.setBranch("branch-master");		
+		projects.put(70, p);
+
+		return projects;
+	}
+
 	@Test
 	public void found() throws ApplicationException {
 		ProjectHandler spy = spy(projectHandler);
 		
-		Map<Integer, Project> projects = new HashMap<>();
-		projects.put(1789, new Project(1789, "The Revolution", "http//theUrlRepositoryOfProject"));
-		projects.put(1790, new Project(1790, "One year after the Revolution", "http//theUrlRepositoryOfProjectV2"));
-		projects.put(79, new Project(70, "Destruction of the temple of Jerusalem", "http//noGitAtALl"));
-		when(spy.getProjects()).thenReturn(projects);
+		when(spy.getProjects()).thenReturn(projects());
 
-		Optional<Project> oP = spy.lookup("http//theUrlRepositoryOfProject", UrlRepository);
+		Optional<Project> oP = spy.lookup("http//theUrlRepositoryOfProject", "branch-master", UrlRepository);
 		Assert.assertTrue(oP.isPresent());
 		Assert.assertEquals(1789, oP.get().getId());
 		Assert.assertEquals("The Revolution", oP.get().getName());
@@ -53,29 +70,21 @@ public class ProjectHandlerLookupUrlRepositoryTest {
 	public void takeFirstOne() throws ApplicationException {
 		ProjectHandler spy = spy(projectHandler);
 		
-		Map<Integer, Project> projects = new HashMap<>();
-		projects.put(1789, new Project(1789, "The Revolution", "http//theUrlRepositoryOfProject"));
-		projects.put(1790, new Project(1790, "One year after the Revolution", "http//theUrlRepositoryOfProject"));
-		projects.put(79, new Project(70, "Destruction of the temple of Jerusalem", "http//noGitAtALl"));
-		when(spy.getProjects()).thenReturn(projects);
+		when(spy.getProjects()).thenReturn(projects());
 
-		Optional<Project> oP = spy.lookup("http//theUrlRepositoryOfProject", UrlRepository);
+		Optional<Project> oP = spy.lookup("http//theUrlRepositoryOfProjectV2", "branch-master", UrlRepository);
 		Assert.assertTrue(oP.isPresent());
-		Assert.assertEquals(1789, oP.get().getId());
-		Assert.assertEquals("The Revolution", oP.get().getName());
+		Assert.assertEquals(1790, oP.get().getId());
+		Assert.assertEquals("One year after the Revolution", oP.get().getName());
 	}
 
 	@Test
-	public void notfound() throws ApplicationException {
+	public void urlNotfound() throws ApplicationException {
 		ProjectHandler spy = spy(projectHandler);
 		
-		Map<Integer, Project> projects = new HashMap<>();
-		projects.put(1789, new Project(1789, "The Revolution", "http//theUrlRepositoryOfProject"));
-		projects.put(1790, new Project(1790, "One year after the Revolution", "http//theUrlRepositoryOfProjectV2"));
-		projects.put(79, new Project(70, "Destruction of the temple of Jerusalem", "http//noGitAtALl"));
-		when(spy.getProjects()).thenReturn(projects);
-
-		Optional<Project> oP = spy.lookup("http//anotherUrlRepositoryOfProject", UrlRepository);
+		when(spy.getProjects()).thenReturn(projects());
+		
+		Optional<Project> oP = spy.lookup("http//anotherUrlRepositoryOfProject", "branch-master", UrlRepository);
 		Assert.assertTrue(oP.isEmpty());
 	}
 
@@ -86,7 +95,7 @@ public class ProjectHandlerLookupUrlRepositoryTest {
 		Map<Integer, Project> projects = new HashMap<>();
 		when(spy.getProjects()).thenReturn(projects);
 
-		Optional<Project> oP = spy.lookup("http//urlRepositoryOfProject", UrlRepository);
+		Optional<Project> oP = spy.lookup("http//urlRepositoryOfProject", "n/a", UrlRepository);
 		Assert.assertTrue(oP.isEmpty());
 	}
 }
