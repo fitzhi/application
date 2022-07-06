@@ -33,6 +33,7 @@ import com.fitzhi.controller.ProjectController;
 import com.fitzhi.controller.in.SettingsGeneration;
 import com.fitzhi.data.internal.Project;
 import com.fitzhi.source.crawler.RepoScanner;
+import static com.fitzhi.service.ConnectionSettingsType.PUBLIC_LOGIN;
 
 /**
  * <p>
@@ -70,7 +71,7 @@ public class ProjectControllerSlaveGateTest2 {
 	 * @throws Exception
 	 */
 	@Test
-	public void projectNotFoundShouldBeCreated() throws Exception {
+	public void unknownProjectShouldBeCreated() throws Exception {
 
 		when(dataHandler.isLocal()).thenReturn(false);
 		when(projectHandler.lookup("myProject")).thenReturn(Optional.empty());
@@ -91,6 +92,8 @@ public class ProjectControllerSlaveGateTest2 {
 		Project project = new Project(-1, "myProject");
 		project.setUrlRepository("https://myUrlRepository/myProject");
 		project.setAuditEvaluation(-1);
+		// By default, "auto-creation" actually only works with public repositories.
+		project.setConnectionSettings(PUBLIC_LOGIN);
 		verify(dataHandler, times(1)).saveProject(project);
 	
 	}

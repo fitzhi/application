@@ -100,6 +100,7 @@ import com.fitzhi.util.CommonUtil;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
+import static com.fitzhi.service.ConnectionSettingsType.PUBLIC_LOGIN;
 
 @Slf4j
 @RestController
@@ -683,6 +684,7 @@ public class ProjectController  {
 				}
 				project = new Project(-1, projectName);
 				project.setUrlRepository(settings.getUrlRepository());
+				project.setConnectionSettings(PUBLIC_LOGIN);
 				dataHandler.saveProject(project);
 			} else {
 				throw new NotFoundException(CODE_PROJECT_NOT_FOUND_URL_GIT, MessageFormat.format(MESSAGE_PROJECT_NOT_FOUND_URL_GIT, settings.getUrlRepository()));
