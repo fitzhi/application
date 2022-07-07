@@ -10,6 +10,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
+import static com.fitzhi.service.ConnectionSettingsType.PUBLIC_LOGIN;
 
 import java.util.Optional;
 
@@ -32,8 +33,8 @@ import com.fitzhi.bean.StaffHandler;
 import com.fitzhi.controller.ProjectController;
 import com.fitzhi.controller.in.SettingsGeneration;
 import com.fitzhi.data.internal.Project;
+import com.fitzhi.data.internal.ProjectLookupCriteria;
 import com.fitzhi.source.crawler.RepoScanner;
-import static com.fitzhi.service.ConnectionSettingsType.PUBLIC_LOGIN;
 
 /**
  * <p>
@@ -71,47 +72,18 @@ public class ProjectControllerSlaveGateTest2 {
 	 * @throws Exception
 	 */
 	@Test
-	public void unknownProjectShouldBeCreated() throws Exception {
-
-		when(dataHandler.isLocal()).thenReturn(false);
-		when(projectHandler.lookup("myProject")).thenReturn(Optional.empty());
-		doNothing().when(dataHandler).saveProject(any(Project.class));
-
-		SettingsGeneration settings = new SettingsGeneration();
-		settings.setUrlRepository("https://myUrlRepository/myProject");
-
-		this.mvc.perform(put("/api/project/analysis")
-			.content(objectMapper.writeValueAsString(settings))
-			.contentType(MediaType.APPLICATION_JSON_UTF8))
-
-			.andExpect(status().isNoContent())
-
-			.andDo(print())
-			.andReturn();
-		
-		Project project = new Project(-1, "myProject");
-		project.setUrlRepository("https://myUrlRepository/myProject");
-		project.setAuditEvaluation(-1);
-		// By default, "auto-creation" actually only works with public repositories.
-		project.setConnectionSettings(PUBLIC_LOGIN);
-		verify(dataHandler, times(1)).saveProject(project);
-	
-	}
-
-	/**
-	 * Test project not found when autoProjectCreation is FALSE.
-	 * @throws Exception
-	 */
-	@Test
 	public void cannotDuplicateProject() throws Exception {
 
 		when(dataHandler.isLocal()).thenReturn(false);
 		Optional<Project> oProject = Optional.of(new Project(1789, "myProject"));
 		when(projectHandler.lookup("myProject")).thenReturn(oProject);
+		when(projectHandler.lookup("https://myUrlRepository/myProject", "test-branch", ProjectLookupCriteria.UrlRepository))
+			.thenReturn(Optional.empty());
 		doNothing().when(dataHandler).saveProject(any(Project.class));
 
 		SettingsGeneration settings = new SettingsGeneration();
 		settings.setUrlRepository("https://myUrlRepository/myProject");
+		settings.setBranch("test-branch");
 
 		this.mvc.perform(put("/api/project/analysis")
 			.content(objectMapper.writeValueAsString(settings))
@@ -125,4 +97,40 @@ public class ProjectControllerSlaveGateTest2 {
 			.andReturn();		
 	}
 
+	/**
+	 * Test project not found when autoProjectCreation is FALSE.
+	 * @throws Exception
+	 */
+	@Test
+	public void canCreateUnknownProject() throws Exception {
+
+		when(dataHandler.isLocal()).thenReturn(false);
+		when(projectHandler.lookup("https://myUrlRepository/myProject", "test-branch", ProjectLookupCriteria.UrlRepository))
+			.thenReturn(Optional.empty());
+		doNothing().when(dataHandler).saveProject(any(Project.class));
+
+		SettingsGeneration settings = new SettingsGeneration();
+		settings.setUrlRepository("https://myUrlRepository/myProject");
+		settings.setBranch("test-branch");
+
+		Project p = new Project(-1, "myProject");
+		p.setUrlRepository("https://myUrlRepository/myProject");
+		p.setBranch("test-branch");
+		p.setAuditEvaluation(-1);
+		p.setConnectionSettings(PUBLIC_LOGIN);
+
+		this.mvc.perform(put("/api/project/analysis")
+			.content(objectMapper.writeValueAsString(settings))
+			.contentType(MediaType.APPLICATION_JSON_UTF8))
+
+			.andExpect(status().isNoContent())
+
+			.andDo(print())
+			.andReturn();
+
+		verify(projectHandler, times(1))
+			.lookup("https://myUrlRepository/myProject", "test-branch", ProjectLookupCriteria.UrlRepository);
+		verify(dataHandler, times(1)).saveProject(p);
+	
+	}
 }

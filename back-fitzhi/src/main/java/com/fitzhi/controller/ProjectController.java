@@ -23,6 +23,7 @@ import static com.fitzhi.Error.UNKNOWN_PROJECT;
 import static com.fitzhi.Global.DASHBOARD_GENERATION;
 import static com.fitzhi.Global.PROJECT;
 import static com.fitzhi.Global.deepClone;
+import static com.fitzhi.service.ConnectionSettingsType.PUBLIC_LOGIN;
 
 import java.io.IOException;
 import java.text.MessageFormat;
@@ -100,7 +101,6 @@ import com.fitzhi.util.CommonUtil;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
-import static com.fitzhi.service.ConnectionSettingsType.PUBLIC_LOGIN;
 
 @Slf4j
 @RestController
@@ -684,6 +684,7 @@ public class ProjectController  {
 				}
 				project = new Project(-1, projectName);
 				project.setUrlRepository(settings.getUrlRepository());
+				project.setBranch(settings.getBranch());
 				project.setConnectionSettings(PUBLIC_LOGIN);
 				dataHandler.saveProject(project);
 			} else {
