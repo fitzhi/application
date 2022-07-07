@@ -10,7 +10,7 @@ on:
   push:
     branches: [ release-1.9 ]
   schedule:
-    - cron: '20 1 * * *'
+    - cron: '25 1 * * *'
 
 jobs:
   build:
