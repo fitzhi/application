@@ -13,8 +13,10 @@ import com.fitzhi.bean.ProjectHandler;
 import com.fitzhi.bean.StaffHandler;
 import com.fitzhi.controller.ProjectController;
 import com.fitzhi.data.internal.Project;
+import com.fitzhi.exception.ApplicationException;
 import com.fitzhi.source.crawler.RepoScanner;
 
+import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -71,6 +73,7 @@ public class ProjectControllerResetDashboardTest {
 		Project project1789 = new Project(1789, "revolutionary project");
 		project1789.setLocationRepository("myLocationRepository");
 		projectHandler.addNewProject(project1789);
+		projectHandler.disableDataSaving();
 	}
 	
 	@Test
@@ -93,4 +96,8 @@ public class ProjectControllerResetDashboardTest {
 		Assert.assertNull("The location repository should be reset", projectHandler.lookup(1789).getLocationRepository());
 	}
 
+	@After
+	public void after() throws ApplicationException {
+		projectHandler.removeProject(1789);
+	}
 }

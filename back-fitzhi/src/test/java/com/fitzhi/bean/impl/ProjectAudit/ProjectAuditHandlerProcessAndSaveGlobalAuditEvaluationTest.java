@@ -41,7 +41,8 @@ public class ProjectAuditHandlerProcessAndSaveGlobalAuditEvaluationTest {
 	
 	@Before
 	public void before() throws ApplicationException {
-		project = projectHandler.addNewProject(new Project(1789, "Revolutionary project"));
+		project = projectHandler.addNewProject(new Project(1789, "Great revolutionary project"));
+		projectHandler.disableDataSaving();
 		project.setAudit(new HashMap<Integer, AuditTopic>());
 		
 		AuditTopic at1 = new AuditTopic();
@@ -53,7 +54,6 @@ public class ProjectAuditHandlerProcessAndSaveGlobalAuditEvaluationTest {
 		at2.setWeight(70);
 		at2.setEvaluation(40);
 		project.getAudit().put(2, at2);
-		
 	}
 	
 	@Test(expected = ApplicationException.class)

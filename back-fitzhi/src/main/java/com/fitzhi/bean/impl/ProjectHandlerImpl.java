@@ -1100,4 +1100,8 @@ public class ProjectHandlerImpl extends AbstractDataSaverLifeCycleImpl implement
 		}
 	}
 
+	@Override
+	public void disableDataSaving() {
+		this.dataUpdated = false;
+	}
 }

@@ -63,9 +63,10 @@ public class ProjectControllerReloadDashboardTest {
 
 	@Before
 	public void before() throws Exception {
-		Project project1789 = new Project(1789, "revolutionary project");
+		Project project1789 = new Project(1789, "One revolutionary project");
 		project1789.setLocationRepository("myLocationRepository");
 		projectHandler.addNewProject(project1789);
+		projectHandler.disableDataSaving();
 	}
 	
 	@Test

@@ -460,4 +460,11 @@ public interface ProjectHandler extends DataSaverLifeCycle {
 	 */
 	void setProjects(Map<Integer, Project> projects) throws ApplicationException;
 
+	/**
+	 * <p>
+	 * Disable the dataSaving process.
+	 * </p>
+	 * <em>This method does exist only for testing purpose</em>
+	 */
+	void disableDataSaving();
 }

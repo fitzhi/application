@@ -51,6 +51,7 @@ public class ProjectControllerUpdateProjectTest {
 	public void before() throws Exception {
 		Project project1789 = new Project(1789, "revolutionary project");
 		projectHandler.addNewProject(project1789);
+		projectHandler.disableDataSaving();
 	}
 	
 	@Test
