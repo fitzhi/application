@@ -122,7 +122,7 @@ public class ScheduledTasks {
 			synchronized(lockObj) {
 				if ((minute != Calendar.getInstance().get(Calendar.MINUTE)) && (minute != Calendar.getInstance().get(Calendar.MINUTE) - 1)) {
 					minute = Calendar.getInstance().get(Calendar.MINUTE);
-					if (log.isInfoEnabled()) {
+					if (log.isInfoEnabled() && !asyncTask.isEmpty()) {
 						log.info(Global.LN + "Current active tasks :" + Global.LN + asyncTask.trace() + Global.LN);
 					}
 				}

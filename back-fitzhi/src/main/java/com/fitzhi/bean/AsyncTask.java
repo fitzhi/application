@@ -103,4 +103,9 @@ public interface AsyncTask {
 	 * @return the content of the collection if String format.
 	 */
 	String trace();
+
+	/**
+	 * @return {@code TRUE} if the tasks collection is empty, {@code FALSE otherwise}.
+	 */
+	boolean isEmpty();
 }

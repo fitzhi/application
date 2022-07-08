@@ -53,23 +53,7 @@ public class ConsoleTaskLoggerImpl implements AsyncTask {
 	public Task getTask(String operation, String title, int id) {
 		return null;
 	}
-
-	@Override
-	public String trace() {
-		StringBuilder sb = new StringBuilder();
-		tasks.values().stream()
-				.filter(t -> !t.isComplete())
-				.sorted(Comparator.comparingInt(Task::getId))
-				.forEach(task -> {
-					sb.append(String.format("%s %s %d %d%%",
-							task.getOperation(),
-							task.getTitle(),
-							task.getId(),
-							task.getCurrentProgressionPercentage())).append(LN);
-				});
-		return sb.toString();
-	}
-
+	
 	@Override
 	public boolean logMessage(String operation, String title, int id, String message, int progressionPercentage) {
 		return logMessage(operation, title, id, 0, message, progressionPercentage);
@@ -90,6 +74,28 @@ public class ConsoleTaskLoggerImpl implements AsyncTask {
 	@Override
 	public void completeTaskOnError(String operation, String title, int id) throws ApplicationException {
 		log.info(String.format("ERROR in %s %s for project ID %d", operation, title, id));
+	}
+
+
+	@Override
+	public String trace() {
+		StringBuilder sb = new StringBuilder();
+		tasks.values().stream()
+				.filter(t -> !t.isComplete())
+				.sorted(Comparator.comparingInt(Task::getId))
+				.forEach(task -> {
+					sb.append(String.format("%s %s %d %d%%",
+							task.getOperation(),
+							task.getTitle(),
+							task.getId(),
+							task.getCurrentProgressionPercentage())).append(LN);
+				});
+		return sb.toString();
+	}
+
+	@Override
+	public boolean isEmpty() {
+		return tasks.isEmpty();
 	}
 
 }

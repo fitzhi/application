@@ -76,22 +76,6 @@ public class AsyncTaskImpl implements AsyncTask {
 	}
 	
 	@Override
-	public String trace() {
-		StringBuilder sb = new StringBuilder();
-		tasks.values().stream()
-			.filter(t -> !t.isComplete())
-			.sorted(Comparator.comparingInt(Task::getId))
-			.forEach(task -> 
-				sb.append(String.format("%s %s %d %d%%", 
-					task.getOperation(), 
-					task.getTitle(), 
-					task.getId(), 
-					task.getCurrentProgressionPercentage()) ).append(LN)
-			);
-		return sb.toString();
-	}
-	
-	@Override
 	public boolean logMessage(String operation, String title, int id, String message, int progressionPercentage) {
 		return logMessage(operation, title, id, 0, message, progressionPercentage);
 	}
@@ -145,6 +129,27 @@ public class AsyncTaskImpl implements AsyncTask {
 		this.completeTask(operation, title, id, false);
 	}
 
+	
+	@Override
+	public String trace() {
+		StringBuilder sb = new StringBuilder();
+		tasks.values().stream()
+			.filter(t -> !t.isComplete())
+			.sorted(Comparator.comparingInt(Task::getId))
+			.forEach(task -> 
+				sb.append(String.format("%s %s %d %d%%", 
+					task.getOperation(), 
+					task.getTitle(), 
+					task.getId(), 
+					task.getCurrentProgressionPercentage()) ).append(LN)
+			);
+		return sb.toString();
+	}
+
+	@Override
+	public boolean isEmpty() {
+		return tasks.isEmpty();
+	}
 	/**
 	 * Generate the key associated to this task.
 	 * @param task the given task
