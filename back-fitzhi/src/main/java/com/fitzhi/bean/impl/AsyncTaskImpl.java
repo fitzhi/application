@@ -147,8 +147,10 @@ public class AsyncTaskImpl implements AsyncTask {
 	}
 
 	@Override
-	public boolean isEmpty() {
-		return tasks.isEmpty();
+	public boolean hasOpenTasks() {
+		return tasks.values().stream()
+			.filter(t -> !t.isComplete())
+			.findAny().isPresent();
 	}
 	/**
 	 * Generate the key associated to this task.

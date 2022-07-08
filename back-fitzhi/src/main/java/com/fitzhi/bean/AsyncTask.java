@@ -105,7 +105,7 @@ public interface AsyncTask {
 	String trace();
 
 	/**
-	 * @return {@code TRUE} if the tasks collection is empty, {@code FALSE otherwise}.
+	 * @return {@code TRUE} if the tasks collection is empty, or does contain only completed tasks, {@code FALSE otherwise}.
 	 */
-	boolean isEmpty();
+	boolean hasOpenTasks();
 }

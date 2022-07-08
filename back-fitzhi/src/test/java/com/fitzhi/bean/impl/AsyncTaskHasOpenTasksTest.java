@@ -9,6 +9,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import com.fitzhi.bean.AsyncTask;
+import com.fitzhi.data.internal.Task;
 import com.fitzhi.exception.ApplicationException;
 
 /**
@@ -17,21 +18,29 @@ import com.fitzhi.exception.ApplicationException;
  */
 @RunWith(SpringRunner.class)
 @SpringBootTest
-public class AsyncTaskIsEmptyTest {
+public class AsyncTaskHasOpenTasksTest {
 
 	@Autowired
 	@Qualifier("default")
 	AsyncTask asyncTask;
 
 	@Test 
-	public void testIsEmpty() {
-		Assert.assertTrue(asyncTask.isEmpty());
+	public void hasNoTask() {
+		Assert.assertFalse(asyncTask.hasOpenTasks());
 	}
 
 	@Test 
-	public void testIsNonEmpty() throws ApplicationException {
+	public void hasNoActiveTask() throws ApplicationException {
 		asyncTask.addTask("nope", "nope", 1789);
-		Assert.assertFalse(asyncTask.isEmpty());
+		Task t = asyncTask.getTask("nope", "nope", 1789);
+		t.setComplete(true);
+		Assert.assertFalse(asyncTask.hasOpenTasks());
+	}
+
+	@Test 
+	public void hasOpenTasks() throws ApplicationException {
+		asyncTask.addTask("nope", "nope", 1789);
+		Assert.assertTrue(asyncTask.hasOpenTasks());
 		asyncTask.removeTask("nope", "nope", 1789);
 	}
 
