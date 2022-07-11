@@ -1,6 +1,6 @@
-#!/bin/sh
+#!/bin/bash
 
-export FITZHI_URL=http://spoq.fitzhi.com:8082
+export FITZHI_URL=http://localhost:8080
 
 echo "Creating Admin User"
 echo "-------------------"
