@@ -34,6 +34,7 @@ COPY fitzhi fitzhi
 RUN	cd /; \
 	cp fitzhi/deploy/docker-server/default /etc/nginx/sites-enabled/default; \
 	cp fitzhi/deploy/docker-server/start-fitzhi.sh fitzhi/deploy/back-fitzhi/start-fitzhi.sh; \
+	cp fitzhi/deploy/docker-server/idle-fitzhi-control.sh fitzhi/deploy/back-fitzhi/idle-fitzhi-control.sh; \
 	cp fitzhi/deploy/docker-server/sonar-servers.json fitzhi/deploy/data/referential/sonar-servers.json; \
 	echo "export DOCKER_FITZHI_BUILDTIME=#buildingTime" >> ~/.bashrc
 
