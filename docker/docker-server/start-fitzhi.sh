@@ -35,5 +35,5 @@ fi
 
 service nginx start 
 
-echo "Starting the server"
+echo " * Starting server fitzhi"
 java -Xmx1g -jar fitzhi-1.9-SNAPSHOT.jar --spring.profiles.active="application, HTTP" > out.txt

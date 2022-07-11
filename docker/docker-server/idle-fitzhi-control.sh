@@ -1,10 +1,12 @@
 #!/bin/bash
 
+echo " * Starting fitzhi idle control"
+
 MPHR=60    # Minutes per hour.
 
 sleep 5m
-stat -c '%Y' "./spring-boot-logger.log"
-LOG_lastModified=$(date '+%s' -d "@$( stat -c '%Y' "./spring-boot-logger.log"; )")
+stat -c '%Y' "./logs/spring-boot-logger.log"
+LOG_lastModified=$(date '+%s' -d "@$( stat -c '%Y' "./logs/spring-boot-logger.log"; )")
 echo $LOG_lastModified
 MINUTES=0
 while [[ $MINUTES < 10 ]]
