@@ -18,4 +18,6 @@ else
 fi
 
 rm ./deploy/backend-fitzhi/application-slave.properties
-./deploy/backend-fitzhi/fitzhi-1.9-SNAPSHOT.jar --spring.profiles.active="application, $1"
+
+cd ./deploy/backend-fitzhi/
+java -Xmx1g -jar fitzhi-1.9-SNAPSHOT.jar --spring.profiles.active="application, $1" & echo $! > ./pid.file &

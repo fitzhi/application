@@ -133,3 +133,4 @@ back-fitzhi/data/referential/openid-servers-github-google-spoq-io.json
 slave
 
 docker/SONAR_TOKEN_LOGIN
+pid.file
