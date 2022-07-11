@@ -671,24 +671,23 @@ public class ProjectController  {
 			throw new ApplicationException(CODE_ENDPOINT_SLAVE_URL_GIT_MANDATORY, MESSAGE_ENDPOINT_SLAVE_URL_GIT_MANDATORY);
 		}
 
+		int pos = settings.getUrlRepository().length() - 4;
+		String urlRepository = (settings.getUrlRepository().substring(pos) == ".git") ? 
+			settings.getUrlRepository().substring(0, pos) : settings.getUrlRepository();
+
 		//
 		// We filter the collection of projects on one single element, corresponding to the current project being analyzed.
 		//
-		Optional<Project> oProject = projectHandler.lookup(settings.getUrlRepository(), settings.getBranch(), ProjectLookupCriteria.UrlRepository);
+		Optional<Project> oProject = projectHandler.lookup(urlRepository, settings.getBranch(), ProjectLookupCriteria.UrlRepository);
 		Project project = null;
 		if (oProject.isEmpty()) {
 			if (autoProjectCreation()) {
-				String projectName = CommonUtil.extractProjectNameFromUrl(settings.getUrlRepository());
+				String projectName = CommonUtil.extractProjectNameFromUrl(urlRepository);
 				if (projectHandler.lookup(projectName).isPresent()) {
 					throw new ApplicationException(CODE_PROJECT_ALREADY_EXIST, MessageFormat.format(MESSAGE_PROJECT_ALREADY_EXIST,projectName));					
 				}
 				project = new Project(-1, projectName);
-				int pos = settings.getUrlRepository().length() - 4;
-				if (settings.getUrlRepository().substring(pos) == ".git") {
-					project.setUrlRepository(settings.getUrlRepository().substring(pos));
-				} else {
-					project.setUrlRepository(settings.getUrlRepository());
-				}
+				project.setUrlRepository(urlRepository);
 				project.setBranch(settings.getBranch());
 				project.setConnectionSettings(PUBLIC_LOGIN);
 				dataHandler.saveProject(project);
