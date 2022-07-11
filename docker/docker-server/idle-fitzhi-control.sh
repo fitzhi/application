@@ -2,6 +2,7 @@
 
 MPHR=60    # Minutes per hour.
 
+sleep 1m
 stat -c '%Y' "./spring-boot-logger.log"
 LOG_lastModified=$(date '+%s' -d "@$( stat -c '%Y' "./spring-boot-logger.log"; )")
 echo $LOG_lastModified
