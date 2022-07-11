@@ -1,6 +1,6 @@
 #!/bin/bash
 
-echo " * Starting fitzhi idle control"
+echo " * starting fitzhi idle control"
 
 MPHR=60    # Minutes per hour.
 
