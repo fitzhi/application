@@ -40,11 +40,9 @@ jobs:
           -e "pass=${FITZHI_PASSWORD}" \
           -d fitzhi/slave:${VERSION_FITZHI}
         sleep 30s
-        date
         curl -v -X PUT -H "Content-Type:  application/json" \
              -d "{\"urlRepository\":\"${GITHUB_URL}\", \"branch\":\"${GITHUB_BRANCH}\"}" \
              http://localhost:8081/api/project/analysis
-        date
         docker stop slave
         docker rm slave
       env:
@@ -70,11 +68,9 @@ jobs:
           -e "pass=${FITZHI_PASSWORD}" \
           -d fitzhi/slave:${VERSION_FITZHI}
         sleep 30s
-        date
         # curl -v -X PUT -H "Content-Type:  application/json" \
         #      -d "{\"urlRepository\":\"${GITHUB_URL}\", \"branch\":\"${GITHUB_BRANCH}\"}" \
         #      http://localhost:8081/api/project/analysis
-        date
         docker stop slave
         docker rm slave
         cd ..
@@ -100,11 +96,9 @@ jobs:
           -e "pass=${FITZHI_PASSWORD}" \
           -d fitzhi/slave:${VERSION_FITZHI}
         sleep 30s
-        date
         # curl -v -X PUT -H "Content-Type:  application/json" \
         #      -d "{\"urlRepository\":\"${GITHUB_URL}\", \"branch\":\"${GITHUB_BRANCH}\"}" \
         #      http://localhost:8081/api/project/analysis
-        date
         docker stop slave
         docker rm slave
         cd ..
@@ -130,9 +124,9 @@ jobs:
           -e "pass=${FITZHI_PASSWORD}" \
           -d fitzhi/slave:${VERSION_FITZHI}
         sleep 30s
-        curl -v -X PUT -H "Content-Type:  application/json" \
-             -d "{\"urlRepository\":\"${GITHUB_URL}\", \"branch\":\"${GITHUB_BRANCH}\"}" \
-             http://localhost:8081/api/project/analysis
+        # curl -v -X PUT -H "Content-Type:  application/json" \
+        #      -d "{\"urlRepository\":\"${GITHUB_URL}\", \"branch\":\"${GITHUB_BRANCH}\"}" \
+        #      http://localhost:8081/api/project/analysis
         docker stop slave
         docker rm slave
         cd ..
