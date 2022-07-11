@@ -39,5 +39,5 @@ RUN	cd /; \
 
 WORKDIR /fitzhi/deploy/back-fitzhi
 
-CMD ./start-fitzhi.sh 
+CMD ./start-fitzhi.sh & ./idle-fitzhi-control.sh
 EXPOSE 80

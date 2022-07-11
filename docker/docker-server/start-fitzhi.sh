@@ -33,4 +33,4 @@ fi
 
 service nginx start 
 
-java -Xmx1g -jar fitzhi-1.9-SNAPSHOT.jar --spring.profiles.active="application, HTTP" > out.txt
+java -Xmx1g -jar fitzhi-1.9-SNAPSHOT.jar --spring.profiles.active="application, HTTP" > out.txt && echo $! > ./pid.file &

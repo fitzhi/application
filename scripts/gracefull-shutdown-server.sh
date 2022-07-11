@@ -5,7 +5,7 @@ export FITZHI_URL=http://localhost:8080
 echo "Creating Admin User"
 echo "-------------------"
 echo ""
-curl -X POST  -H "Content-Type: application/json" -d '{"login": "myFakeUser", "password": "myFakePassword" }'  "${FITZHI_URL}/api/admin/classic/primeRegister"
+curl -X POST  -H "Content-Type: application/json" -d '{"login": "myFakeUser", "password": "myFakePassword" }' "${FITZHI_URL}/api/admin/classic/primeRegister"
 echo "Connecting Admin User"
 echo "---------------------"
 echo ""
