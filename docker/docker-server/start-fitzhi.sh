@@ -31,6 +31,9 @@ then
 	sed -i 's/"organization": "#organization"/"organization": "'${organization}'"/g' ../data/referential/sonar-servers.json
 fi
 
+./idle-fitzhi-control.sh &
+
 service nginx start 
 
-java -Xmx1g -jar fitzhi-1.9-SNAPSHOT.jar --spring.profiles.active="application, HTTP" > out.txt && echo $! > ./pid.file &
+echo "Starting the server"
+java -Xmx1g -jar fitzhi-1.9-SNAPSHOT.jar --spring.profiles.active="application, HTTP" > out.txt

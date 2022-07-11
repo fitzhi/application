@@ -12,7 +12,10 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.ExitCodeGenerator;
 import org.springframework.boot.SpringApplication;
+import org.springframework.boot.WebApplicationType;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.boot.builder.SpringApplicationBuilder;
+import org.springframework.boot.context.ApplicationPidFileWriter;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Bean;
@@ -98,8 +101,10 @@ public class Application {
 	static ApplicationContext fitzhiContext;
 
 	public static void main(String[] args) {
-		LoggerFactory.getLogger(Application.class.getCanonicalName()).info("Starting Backend 质 Fitzhì");
-		fitzhiContext = SpringApplication.run(Application.class, args);
+		log.info("Starting Backend 质 Fitzhì");
+		SpringApplicationBuilder app = new SpringApplicationBuilder(Application.class);
+	  	app.build().addListeners(new ApplicationPidFileWriter("./pid.file"));
+	  	fitzhiContext = app.run(args);
 	}
 	
 	@Bean
