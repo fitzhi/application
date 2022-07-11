@@ -93,7 +93,7 @@ public class ProjectHandlerImpl extends AbstractDataSaverLifeCycleImpl implement
 	/**
 	 * The Project collection.
 	 */
-	private Map<Integer, Project> projects;
+	private Map<Integer, Project> projects = null;
 
 	/**
 	 * Component in charge of handling the staff members.
