@@ -683,7 +683,12 @@ public class ProjectController  {
 					throw new ApplicationException(CODE_PROJECT_ALREADY_EXIST, MessageFormat.format(MESSAGE_PROJECT_ALREADY_EXIST,projectName));					
 				}
 				project = new Project(-1, projectName);
-				project.setUrlRepository(settings.getUrlRepository());
+				int pos = settings.getUrlRepository().length() - 4;
+				if (settings.getUrlRepository().substring(pos) == ".git") {
+					project.setUrlRepository(settings.getUrlRepository().substring(pos));
+				} else {
+					project.setUrlRepository(settings.getUrlRepository());
+				}
 				project.setBranch(settings.getBranch());
 				project.setConnectionSettings(PUBLIC_LOGIN);
 				dataHandler.saveProject(project);
