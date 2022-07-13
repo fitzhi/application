@@ -41,9 +41,9 @@ jobs:
           -e "pass=${FITZHI_PASSWORD}" \
           -d fitzhi/slave:${VERSION_FITZHI}
         sleep 30s
-        # curl -v -X PUT -H "Content-Type:  application/json" \
-        #      -d "{\"urlRepository\":\"${GITHUB_URL}\", \"branch\":\"${GITHUB_BRANCH}\"}" \
-        #     http://localhost:8081/api/project/analysis
+        curl -v -X PUT -H "Content-Type:  application/json" \
+             -d "{\"urlRepository\":\"${GITHUB_URL}\", \"branch\":\"${GITHUB_BRANCH}\"}" \
+            http://localhost:8081/api/project/analysis
         docker stop slave
         docker rm slave
       env:
@@ -81,6 +81,7 @@ jobs:
         FITZHI_PASSWORD: ${{ secrets.FITZHI_PASSWORD }}
 
     - name: Testing the slave with Spring boot
+      timeout-minutes: 1200
       run: |
         export VERSION_FITZHI=`cat ./back-fitzhi/VERSION_FITZHI`
         export FITZHI_URL="http://spoq.fitzhi.com:8082"
@@ -97,9 +98,9 @@ jobs:
           -e "pass=${FITZHI_PASSWORD}" \
           -d fitzhi/slave:${VERSION_FITZHI}
         sleep 30s
-        # curl -v -X PUT -H "Content-Type:  application/json" \
-        #      -d "{\"urlRepository\":\"${GITHUB_URL}\", \"branch\":\"${GITHUB_BRANCH}\"}" \
-        #      http://localhost:8081/api/project/analysis
+        curl -v -X PUT -H "Content-Type:  application/json" \
+             -d "{\"urlRepository\":\"${GITHUB_URL}\", \"branch\":\"${GITHUB_BRANCH}\"}" \
+             http://localhost:8081/api/project/analysis
         docker stop slave
         docker rm slave
         cd ..
