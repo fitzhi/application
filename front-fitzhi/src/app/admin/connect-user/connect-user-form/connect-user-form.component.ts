@@ -47,9 +47,7 @@ export class ConnectUserFormComponent implements OnInit {
 		if (environment.autoConnect) {
 			this.backendSetupService.saveUrl(environment.apiUrl);
 			setTimeout(() => {
-				if (traceOn()) {
-					console.log ('Auto connnection to Fitzhi.');
-				}
+				traceOn() && console.log ('Auto connnection to Fitzhi.');
 				// This is not a security leak. This is just an "anonymous" password
 				this.connectionGroup.setValue({ username: 'guest', password: 'anonymous' }); // tslint:disable-line:comment-format //NOSONAR
 				this.onSubmit();
@@ -69,9 +67,7 @@ export class ConnectUserFormComponent implements OnInit {
 	 * Cancel the installation.
 	 */
 	onCancel() {
-		if (traceOn()) {
-			console.log('onCancel');
-		}
+		traceOn() && console.log('onCancel');
 		this.router.navigate(['/ciao']);
 	}
 
@@ -87,9 +83,7 @@ export class ConnectUserFormComponent implements OnInit {
 				//
 				// If the connection has succeeded, we load the projects and the staff members.
 				//
-				if (traceOn()) {
-					console.log ('Successful connection');
-				}
+				traceOn() && console.log ('Successful connection');
 				if (connectionStatus) {
 					// We load the projects and start the refresh process.
 					this.projectService.startLoadingProjects();
@@ -98,9 +92,7 @@ export class ConnectUserFormComponent implements OnInit {
 				}
 
 				if (this.directLogin) {
-					if (traceOn()) {
-						console.log ('Redirecting to /welcome');
-					}
+					traceOn() && console.log ('Redirecting to /welcome');
 					this.router.navigate(['/welcome'], {});
 				}
 			}

@@ -61,9 +61,7 @@ export class BackendSetupComponent extends BaseDirective implements OnInit, OnDe
 	 */
 	onSubmit() {
 		const urlCandidate = this.backendSetupForm.get('url').value;
-		if (traceOn()) {
-			console.log('Testing the URL', urlCandidate);
-		}
+		traceOn() && console.log('Testing the URL', urlCandidate);
 		this.backendSetupService.isVeryFirstConnection$(urlCandidate)
 			.pipe(take(1))
 			.subscribe({
@@ -74,9 +72,7 @@ export class BackendSetupComponent extends BaseDirective implements OnInit, OnDe
 							this.currentState = this.BUTTON_INVALID_URL;
 							this.messageService.error('Error ! Either this URL is invalid, or your server is offline');
 						} else {
-							if (traceOn() && data.first) {
-								console.log('This is the very first connection into fitzhì');
-							}
+							traceOn() && data.first && console.log('This is the very first connection into fitzhì');
 							this.installService.setVeryFirstConnection(data.first);
 							this.backendSetupService.saveUrl(urlCandidate);
 							this.currentState = this.BUTTON_VALID_URL;
@@ -85,9 +81,7 @@ export class BackendSetupComponent extends BaseDirective implements OnInit, OnDe
 						}
 					},
 				error: error => {
-					if (traceOn()) {
-						console.log('Connection error', error);
-					}
+					traceOn() && console.log('Connection error', error);
 					this.currentState = this.BUTTON_INVALID_URL;
 					this.messageService.error('Error ! Either this URL is invalid, or your server is offline');
 				}

@@ -69,9 +69,7 @@ export class AuthService extends InternalService {
 				}),
 				catchError(
 					error => {
-						if (traceOn() && (error)) {
-							console.log ('Error', error);
-						}
+						traceOn() && (error) && console.log ('Error', error);
 						this.connected = false;
 						return of (this.connected);
 					}
@@ -94,15 +92,11 @@ export class AuthService extends InternalService {
 				tap({
 					next: oits => {
 						const staff = oits.staff;
-						if (traceOn()) {
-							console.log('Identity retrieved : %d %s %s', staff.idStaff, staff.firstName, staff.lastName);
-						}
+						traceOn() && console.log('Identity retrieved : %d %s %s', staff.idStaff, staff.firstName, staff.lastName);
 						this.setConnect();
 					},
 					error: error => {
-						if (traceOn() && (error)) {
-							console.log ('Error', error);
-						}
+						traceOn() && (error) && console.log ('Error', error);
 						this.setDisconnect();
 					}
 				}));

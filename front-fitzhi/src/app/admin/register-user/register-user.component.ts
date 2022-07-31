@@ -72,9 +72,7 @@ export class RegisterUserComponent extends BaseDirective implements OnInit, OnDe
 				.subscribe({
 					next: doneAndOk => {
 						if (doneAndOk) {
-							if (traceOn()) {
-								console.log ('Show or Hide the %d openID panel.', this.referentialService.openidServers.length);
-							}
+							traceOn() && console.log ('Show or Hide the %d openID panel.', this.referentialService.openidServers.length);
 							this.localOnly$.next((this.referentialService.openidServers.length === 0));
 						}
 					}
@@ -88,15 +86,11 @@ export class RegisterUserComponent extends BaseDirective implements OnInit, OnDe
 				.subscribe({
 					next: authenticated => {
 						if (authenticated) {
-							if (traceOn()) {
-								console.log ('%s is logged in', this.googleService.googleToken.name);
-							}
+							traceOn() && console.log ('%s is logged in', this.googleService.googleToken.name);
 							this.staffService.openIdRegisterUser$(this.veryFirstConnection, 'GOOGLE', this.googleService.jwt).subscribe({
 								next: (openIdStaff) => {
 									const staff = openIdStaff.staff;
-									if (traceOn()) {
-										console.log ('%s has been created in Fitzi from its Google token', staff.lastName);
-									}
+									traceOn() && console.log ('%s has been created in Fitzi from its Google token', staff.lastName);
 									this.staffService.changeCollaborator(staff);
 									const token = new Token();
 									// We use the JWT as access token for this authenticated user.
@@ -116,9 +110,7 @@ export class RegisterUserComponent extends BaseDirective implements OnInit, OnDe
 									this.messengerUserRegistered$.emit(new LoginEvent(staff.idStaff, LoginMode.OPENID));
 								},
 								error: response => {
-									if (traceOn()) {
-										console.log ('error', response.error.message);
-									}
+									traceOn() && console.log ('error', response.error.message);
 									setTimeout(() => {
 										this.ngZone.run(() => this.messageService.error(response.error.message) );
 									}, 0);
@@ -142,11 +134,8 @@ export class RegisterUserComponent extends BaseDirective implements OnInit, OnDe
 		}
 	}
 
-
 	public onRegisterUser($event: LoginEvent) {
-		if (traceOn()) {
-			console.log('onRegisterUser(%d)', $event.idStaff);
-		}
+		traceOn() && console.log('onRegisterUser(%d)', $event.idStaff);
 		this.messengerUserRegistered$.emit($event);
 	}
 

@@ -18,9 +18,7 @@ export class DevOnOffComponent implements OnInit {
 	constructor() { }
 
 	ngOnInit() {
-		if (traceOn()) {
-			console.log (localStorage.getItem('dev'));
-		}
+		traceOn() && console.log (localStorage.getItem('dev'));
 		const dev = localStorage.getItem('dev');
 		if ((!dev) || (dev === '0')) {
 			this.devOnOff = this.devON;

@@ -77,16 +77,12 @@ export class RegisterUserFormComponent extends BaseDirective implements OnInit, 
 					password)
 				.subscribe({
 					next: (staff: Collaborator) => {
-						if (traceOn()) {
-							console.log('Empty staff created with id ' + staff.idStaff);
-						}
+						traceOn() && console.log('Empty staff created with id ' + staff.idStaff);
 						this.staffService.changeCollaborator(staff);
 						this.messengerUserRegistered$.emit(new LoginEvent(staff.idStaff, LoginMode.CLASSIC));
 					},
 					error: error => {
-						if (traceOn()) {
-							console.log('Connection error ', error);
-						}
+						traceOn() && console.log('Connection error ', error);
 					}
 				})
 			);

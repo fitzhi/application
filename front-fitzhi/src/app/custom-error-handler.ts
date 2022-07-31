@@ -29,11 +29,7 @@ export class CustomErrorHandler implements ErrorHandler {
 						const return_code = error.headers.get('backend.return_code');
 						if (typeof return_code !== 'undefined') {
 							const return_message = error.headers.get('backend.return_message');
-							if (traceOn()) {
-								console.log('Error ' + error.status
-								+ ' with back-end error code/message '
-								+ return_code + '/' + return_message);
-							}
+							traceOn() && console.log(`Error ${error.status} with back-end error code/message ${return_code}/${return_message}`);
 							setTimeout(() => messageService.error(return_message + '(' + return_code + ')'), 0);
 						} else {
 							messageService.error(error.message + ' (' + error.status + ')');

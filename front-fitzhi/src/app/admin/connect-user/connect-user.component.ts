@@ -58,9 +58,7 @@ export class ConnectUserComponent extends BaseDirective implements OnInit, OnDes
 				.subscribe({
 					next: doneAndOk => {
 						if (doneAndOk) {
-							if (traceOn()) {
-								console.log ('%d declared openID server(s)', this.referentialService.openidServers.length);
-							}
+							traceOn() && console.log ('%d declared openID server(s)', this.referentialService.openidServers.length);
 							this.localOnlyOauthSubject$.next(
 								(this.referentialService.openidServers.length === 0)
 							);
@@ -75,9 +73,7 @@ export class ConnectUserComponent extends BaseDirective implements OnInit, OnDes
 				.subscribe({
 					next: authenticated => {
 						if (authenticated) {
-							if (traceOn()) {
-								console.log ('%s is logged in', this.googleService.googleToken.name);
-							}
+							traceOn() && console.log ('%s is logged in', this.googleService.googleToken.name);
 							this.authService.connectOpenId$(new OpenIdCredentials(this.googleService.GOOGLE_SERVER_ID, this.googleService.jwt))
 								.subscribe({
 									next: (oits: OpenIdTokenStaff) => {
@@ -99,9 +95,7 @@ export class ConnectUserComponent extends BaseDirective implements OnInit, OnDes
 										this.ngZone.run(() => { this.router.navigate(['/welcome'], {}); });
 									},
 									error: response => {
-										if (traceOn()) {
-											console.log ('connection error', response.error.message);
-										}
+										traceOn() && console.log ('connection error', response.error.message);
 										this.ngZone.run(() => this.messageService.error(response.error.message) );
 									}
 								});
@@ -117,9 +111,7 @@ export class ConnectUserComponent extends BaseDirective implements OnInit, OnDes
 	 * @param $event boolean corresponding to the connection status
 	 */
 	public onUserConnected($event) {
-		if (traceOn()) {
-			console.log ('Tranfering the connection status', $event);
-		}
+		traceOn() && console.log ('Tranfering the connection status', $event);
 		this.messengerUserConnected$.emit($event);
 	}
 
