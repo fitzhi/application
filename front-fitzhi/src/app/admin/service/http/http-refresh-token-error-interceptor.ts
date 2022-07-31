@@ -58,9 +58,7 @@ export class HttpRefreshTokenErrorInterceptor implements HttpInterceptor {
 		if (!wwwAuthenticate) {
 			wwwAuthenticate = response.headers.get(this.WWW_AUTHENTICATE.toLowerCase());
 		}
-		if (traceOn()) {
-			console.log ('www-authenticate found : %s', wwwAuthenticate);
-		}
+		traceOn() && console.log ('www-authenticate found : %s', wwwAuthenticate);
 		return wwwAuthenticate;
 	}
 
@@ -88,9 +86,7 @@ export class HttpRefreshTokenErrorInterceptor implements HttpInterceptor {
 
 								// This is the scenario of the ACCESSS refresh token.
 								if (wwwAuthenticate.includes(this.WWW_AUTHENTICATE_INVALID_ACCESS_TOKEN)) {
-									if (traceOn()) {
-										console.log('Access token has expired.');
-									}
+									traceOn() && console.log('Access token has expired.');
 									return throwError(response);
 								}
 

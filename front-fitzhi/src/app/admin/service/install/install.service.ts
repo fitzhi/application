@@ -60,9 +60,7 @@ export class InstallService {
 	 * @param veryFirstConnection a boolean representing the fact that we are currenty installing Fitzhi for the first time.
 	 */
 	public setVeryFirstConnection(veryFirstConnection: boolean) {
-		if (traceOn()) {
-			console.log ('setVeryFirstConnection(%s)', veryFirstConnection);
-		}
+		traceOn() && console.log ('setVeryFirstConnection(%s)', veryFirstConnection);
 		localStorage.setItem('firstInstallation', veryFirstConnection ? '1' : '0');
 		this.veryFirstConnectionSubject$.next(veryFirstConnection);
 	}

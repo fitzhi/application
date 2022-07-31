@@ -62,9 +62,7 @@ export class StartingSetupComponent extends BaseDirective implements OnDestroy {
 	 */
 	onChangeVeryFirstConnection($event: boolean) {
 
-		if (traceOn()) {
-			console.log('veryFirstConnection :', $event);
-		}
+		traceOn() && console.log('veryFirstConnection :', $event);
 
 		this.installService.setVeryFirstConnection($event);
 
@@ -83,9 +81,7 @@ export class StartingSetupComponent extends BaseDirective implements OnDestroy {
 	 */
 	setRegisteredUser($event: LoginEvent) {
 
-		if (traceOn()) {
-			console.log(`idStaff created : ${$event.idStaff}`);
-		}
+		traceOn() && console.log(`idStaff created : ${$event.idStaff}`);
 
 		// Operation has been cancelled. We skip backward.
 		if ($event.idStaff === -1) {
@@ -131,9 +127,7 @@ export class StartingSetupComponent extends BaseDirective implements OnDestroy {
 		} else {
 			this.completed[2] = false;
 			this.completed[3] = false;
-			if (traceOn()) {
-				console.log('Connection failed. Invalid User/Password');
-			}
+			traceOn() && console.log('Connection failed. Invalid User/Password');
 		}
 	}
 
@@ -142,9 +136,7 @@ export class StartingSetupComponent extends BaseDirective implements OnDestroy {
 	 * @param $event the staff member created
 	 */
 	setStaffUpdatedForUser($event: Collaborator) {
-		if (traceOn()) {
-			console.log('staff updated for :', $event.lastName);
-		}
+		traceOn() && console.log('staff updated for :', $event.lastName);
 		if (!this.installService.isVeryFirstInstall()) {
 			(traceOn()) && console.log('We have already installed Fitzhi. This is not the mode "very first connection".');
 			this.nextStepAfterStaffUpdate($event);

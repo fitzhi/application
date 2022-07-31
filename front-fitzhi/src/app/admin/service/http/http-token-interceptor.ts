@@ -85,9 +85,7 @@ export class HttpTokenInterceptor implements HttpInterceptor {
 						if (!this.isConnectionRequest(req)) {
 							return this.retryAfterRefresh$(req, next);
 						} else {
-							if (traceOn()) {
-								console.log ('Invalid authentification credentials');
-							}
+							traceOn() && console.log ('Invalid authentification credentials');
 							return EMPTY;
 						}
 					} else {
@@ -132,17 +130,12 @@ export class HttpTokenInterceptor implements HttpInterceptor {
 					switchMap(token => {
 						// store the new tokens
 						this.tokenService.saveToken(token);
-						if (traceOn() && token) {
-							console.log('access_token %s expires in %s', token.access_token, token.expires_in);
-						}
-
+						traceOn() && token && console.log('access_token %s expires in %s', token.access_token, token.expires_in);
 						this.authToken$.next(token);
 						return next.handle(this.tokenService.addToken(req));
 					}),
 					catchError(response => {
-						if (traceOn()) {
-							console.log ('Error', response);
-						}
+						traceOn() && console.log ('Error', response);
 						return EMPTY;
 					}),
 					finalize(() => this.isRefreshingToken = false)

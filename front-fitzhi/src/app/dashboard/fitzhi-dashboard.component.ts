@@ -154,9 +154,7 @@ export class FitzhiDashboardComponent extends BaseDirective implements OnInit, O
 	}
 
 	onChangeFileredProjects(projects: FilteredProject[]) {
-		if (traceOn()) {
-			console.log ('onChangeFileredProjects(...) %d projects', projects.length);
-		}
+		traceOn() && console.log ('onChangeFileredProjects(...) %d projects', projects.length);
 	}
 
 	/**

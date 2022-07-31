@@ -89,9 +89,7 @@ export class HttpErrorInterceptorService implements HttpInterceptor {
 							messageService.info(Constants.SERVER_DOWN + ' ' + request.url);
 							return throwError(Constants.SERVER_DOWN + ' @ ' + request.url);
 						case NOT_FOUND:
-							if (traceOn()) {
-								console.log ('Unreachable URL %s', request.urlWithParams);
-							}
+							traceOn() && console.log ('Unreachable URL %s', request.urlWithParams);
 							return throwError(response);
 						case METHOD_NOT_ALLOWED:
 							return throwError(response);
@@ -106,9 +104,7 @@ export class HttpErrorInterceptorService implements HttpInterceptor {
 							return throwError (response);
 						default:
 							if (response) {
-								if (traceOn()) {
-									console.log('Error ' + response.status + ' ' + response.message);
-								}
+								traceOn() && console.log('Error %s %s', response.status, response.message);
 								errorMessage = response.message + ' (' + response.status + ')';
 								setTimeout(() => messageService.error(errorMessage), 0);
 							}
