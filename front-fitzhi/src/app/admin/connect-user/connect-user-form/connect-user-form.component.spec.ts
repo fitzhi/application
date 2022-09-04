@@ -12,6 +12,7 @@ import { CinematicService } from 'src/app/service/cinematic.service';
 import { FileService } from 'src/app/service/file.service';
 import { ProjectService } from 'src/app/service/project/project.service';
 import { StaffListService } from 'src/app/service/staff-list-service/staff-list.service';
+import { CiaoComponent } from '../../ciao/ciao.component';
 import { AuthService } from '../../service/auth/auth.service';
 import { ConnectUserFormComponent } from './connect-user-form.component';
 
@@ -60,10 +61,10 @@ describe('ConnectUserFormComponent', () => {
 
 	beforeEach(async () => {
 		await TestBed.configureTestingModule({
-			declarations: [ ConnectUserFormComponent, TestHostComponent ],
+			declarations: [ ConnectUserFormComponent, TestHostComponent, CiaoComponent ],
 			providers: [AuthService, BackendSetupService, ProjectService, CinematicService, FileService, MessageBoxService, FormBuilder],
 			imports: [HttpClientTestingModule, MatDialogModule,
-			RouterTestingModule.withRoutes([]),
+			RouterTestingModule.withRoutes([{ path: 'ciao', component: CiaoComponent }]),
 			FormsModule, ReactiveFormsModule]
 		})
 		.compileComponents();
