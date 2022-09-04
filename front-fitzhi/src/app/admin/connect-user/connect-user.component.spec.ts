@@ -20,6 +20,7 @@ import { StaffListService } from 'src/app/service/staff-list-service/staff-list.
 import { StaffListComponent } from 'src/app/tabs-staff-list/staff-list/staff-list.component';
 import { StaffComponent } from 'src/app/tabs-staff/staff.component';
 import { WelcomeComponent } from 'src/app/welcome/welcome.component';
+import { CiaoComponent } from '../ciao/ciao.component';
 import { AuthService } from '../service/auth/auth.service';
 import { InstallService } from '../service/install/install.service';
 import { TokenService } from '../service/token/token.service';
@@ -50,12 +51,13 @@ describe('ConnectUserComponent', () => {
 
 	beforeEach(async () => {
 		await TestBed.configureTestingModule({
-			declarations: [ ConnectUserFormComponent, ConnectUserComponent, TestHostComponent, AlternativeOpenidConnectionComponent ],
+			declarations: [ ConnectUserFormComponent, ConnectUserComponent, TestHostComponent, AlternativeOpenidConnectionComponent, CiaoComponent ],
 			providers: [ProjectService, CinematicService, FileService, MessageBoxService, FormBuilder, ReferentialService,
 					GoogleService, AuthService, ProjectService, StaffListService],
 			imports: [HttpClientTestingModule, MatDialogModule, RouterTestingModule, FormsModule, ReactiveFormsModule,
 				RouterTestingModule.withRoutes([
-					{ path: 'welcome', component: WelcomeComponent }
+					{ path: 'welcome', component: WelcomeComponent },
+					{ path: 'ciao', component: CiaoComponent }
 				])]
 		})
 		.compileComponents();
