@@ -1,13 +1,14 @@
 #!/bin/bash
 
-echo " * starting fitzhi idle control"
+echo " * Starting fitzhi idle control with an idle timeout limit of " $idle_timeout_limit
 
 MPHR=60    # Minutes per hour.
 
 sleep 2m
 MINUTES=0
 
-while [[ $MINUTES -lt $IDLE_TIMEOUT_LIMIT ]]
+
+while [[ $MINUTES -lt $idle_timeout_limit ]]
 do
   LOG_lastModified=$(date '+%s' -d "@$( stat -c '%Y' "./logs/spring-boot-logger.log"; )")
   echo $LOG_lastModified

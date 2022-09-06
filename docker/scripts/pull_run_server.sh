@@ -23,16 +23,18 @@ docker pull fitzhi/application:${VERSION_FITZHI}
 # Test inside the Fitzhi infrastructure.
 docker volume create fitzhi-data
 docker run --name fitzhi  \
--e "organization=fitzhi" \
--e "urlSonarServer=${SONAR_HOST_URL}" \
--e "login=${SONAR_TOKEN_LOGIN}" \
--v fitzhi-data:/fitzhi/deploy/ \
--p 80:80 -d --rm fitzhi/application:${VERSION_FITZHI}
+ -e "organization=fitzhi" \
+ -e "urlSonarServer=${SONAR_HOST_URL}" \
+ -e "login=${SONAR_TOKEN_LOGIN}" \
+ -e "idle_timeout_limit=5" \
+ -v fitzhi-data:/fitzhi/deploy/ \
+ -p 80:80 -d --rm fitzhi/application:${VERSION_FITZHI}
 
 # For debugging purpose only...
 # docker run --name fitzhi  \
 #  -e "organization=fitzhi" \
-#  -e "urlSonarServer=${SONAR_HOST_URL}" \
-#  -e "login=${SONAR_TOKEN_LOGIN}" \
-#  -v fitzhi-data:/fitzhi/deploy/ \
-#  -p 80:80 -ti --rm fitzhi/application:1.8-SNAPSHOT /bin/bash
+#   -e "urlSonarServer=${SONAR_HOST_URL}" \
+#   -e "login=${SONAR_TOKEN_LOGIN}" \
+#   -e "IDLE_TIMEOUT_LIMIT=5" \
+#   -v fitzhi-data:/fitzhi/deploy/ \
+#   -p 80:80 -ti --rm fitzhi/application:1.9-SNAPSHOT /bin/bash

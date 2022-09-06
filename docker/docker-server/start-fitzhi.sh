@@ -31,7 +31,12 @@ then
 	sed -i 's/"organization": "#organization"/"organization": "'${organization}'"/g' ../data/referential/sonar-servers.json
 fi
 
-./idle-fitzhi-control.sh &
+# This process listen the acivity of Fitzhi across the log activities
+# The environment variable idle_timeout_limit (in minutes) setup the limit of idle time for Fitzhi
+# If the server is passive during a delay greater than this limit, this process will stop the server.
+if [ ${idle_timeout_limit} ] && [ ${idle_timeout_limit} -gt 0 ]
+	./idle-fitzhi-control.sh &
+fi
 
 service nginx start 
 

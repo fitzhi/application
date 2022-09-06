@@ -27,8 +27,8 @@ ARG password
 ARG login
 
 # idle timeout in minutes.
-# After $IDLE_TIMEOUT_LIMIT minutes without activity the container will stop. 
-ARG IDLE_TIMEOUT_LIMIT
+# After $idle_timeout_limit minutes without activity the container will stop. 
+ARG idle_timeout_limit
 
 COPY spoq spoq
 
