@@ -35,6 +35,7 @@ fi
 # The environment variable idle_timeout_limit (in minutes) setup the limit of idle time for Fitzhi
 # If the server is passive during a delay greater than this limit, this process will stop the server.
 if [ ${idle_timeout_limit} ] && [ ${idle_timeout_limit} -gt 0 ]
+then
 	./idle-fitzhi-control.sh &
 fi
 
