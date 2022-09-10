@@ -1,4 +1,4 @@
-# This workflow will build an Angular project with npm.
+# This workflow will build, test and deploy the java project of Fitzhi with maven.
 
 name: Java CI with Maven
 
